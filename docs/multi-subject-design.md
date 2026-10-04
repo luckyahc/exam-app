@@ -50,7 +50,7 @@ export interface SubjectDef {
   color: { light: string; dark: string };  // 대표 색상 (hex), §1-3
   sourceDir: string;       // 'source/os' — 근거 PDF 위치 (문서/검수용)
   chapters: ChapterDef[];  // 배열 순서 = 화면 표시 순서
-  generators?: GeneratorMap;  // lib/sim/{과목}/generators.ts (§6)
+  loadGenerators?: () => Promise<GeneratorMap>;  // lib/sim/{과목}/generators.ts를 동적 import (§6)
 }
 ```
 
@@ -363,18 +363,20 @@ lib/sim/
 
 ```ts
 // lib/sim/_shared/types.ts
-export interface Generator<P = Record<string, unknown>> {
-  name: string;                 // 과목 안에서 유일: 'buddy', 'replacement'
+export interface Generator<P extends Record<string, unknown> = Record<string, unknown>> {
+  name: string;                 // 과목 안에서 유일, 문제 id에 들어가므로 소문자·숫자·하이픈: 'buddy', 'cpu-time'
   chapter: string; topic: string;
-  generate(seed: number, params?: Partial<P>): Question;   // 결정적: 같은 seed → 같은 문제
+  description: string;
+  generate(seed: number, params?: Partial<P>): Question;   // 결정적: 같은 seed·params → 같은 문제
 }
 export type GeneratorMap = Record<string, Generator>;
 ```
 
 - 계산 함수(시뮬레이터)와 문제 생성기는 분리한다. 시뮬레이터는 seed와 무관한 순수 계산, 생성기는 seed로 파라미터를 뽑고 시뮬레이터로 정답을 계산해 `Question`을 만든다. **정답을 손으로 쓰지 않는다.**
-- "비슷한 문제 새로 생성"은 `subject.generators[q.generator.name].generate(newSeed, q.generator.params)`.
+- 생성기는 과목 정의의 `loadGenerators()`로 **동적 import**한다(과목 레지스트리는 헤더 등 모든 화면이 쓰므로 시뮬레이터 코드가 전 페이지 번들에 실리지 않게). 빌드 결과 OS 생성기는 별도 청크(약 25KB)로 분리됨을 확인(Sprint 4).
+- "비슷한 문제 새로 생성"은 `(await subject.loadGenerators())[q.generator.name].generate(newSeed, q.generator.params)` — `params`에는 변형 선택(예: `{ variant: "p2l", pageSize: 4096 }`)이 저장되어 같은 종류의 문제가 다시 나온다.
 - **OS 테스트 계속 통과**: 현재 OS 테스트는 `lib/storage/safeStorage.test.ts`(4건)뿐이고 시뮬레이터 테스트는 아직 없다. 시뮬레이터는 Sprint 4에서 처음부터 `lib/sim/os/`에 작성하므로 경로 이동으로 깨질 테스트는 없다. Sprint 2에서는 기존 테스트 + 새 구조 회귀 테스트(§7)를 통과 기준으로 삼는다. Vitest `include: ["**/*.test.ts"]`는 하위 폴더를 이미 포함하므로 설정 변경 불필요.
-- 공용 테스트: 모든 과목의 모든 생성기에 대해 seed 20개로 생성한 문제가 무결성 검사(§2-4)와 유형 `validate`를 통과하고, 같은 seed 두 번 호출 결과가 같은지 확인하는 스모크 테스트.
+- 공용 테스트(`lib/sim/generators.test.ts`): 모든 과목의 모든 생성기에 대해 seed 20개로 생성한 문제가 무결성 검사(§2-4)와 유형 `validate`를 통과하고, 같은 seed 두 번 호출 결과가 같고, **`answerKey(q)`(정답 답안)로 채점하면 정답**이며, params가 유지되고, 생성기 이름이 id 규칙을 따르는지 확인한다.
 
 ## 7. OS 회귀 기준 (Sprint 2 DoD에 사용)
 

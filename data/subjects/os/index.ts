@@ -6,6 +6,7 @@ const os = {
   shortName: "OS",
   color: { light: "#4f46e5", dark: "#818cf8" },
   sourceDir: "source/os",
+  loadGenerators: () => import("@/lib/sim/os/generators").then((m) => m.OS_GENERATORS),
   chapters: [
     {
       id: "ch02",

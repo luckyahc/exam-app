@@ -166,7 +166,7 @@ export const QTYPE_FIXTURES: Question[] = [
     difficulty: 3,
     slideRef: "Ch08 p.48",
     prompt:
-      "프레임 3개, 참조열 2 3 2 1 5 에 대한 **FIFO** 진행 표의 빈칸을 채우시오. (F = 페이지 폴트)",
+      "프레임 3개, 참조열 2 3 2 1 5 에 대한 **FIFO** 진행 표의 빈칸을 채우시오. (F = 프레임이 처음 다 채워진 뒤의 페이지 폴트, F가 아니면 -)",
     columns: ["2", "3", "2", "1", "5"],
     rows: [
       {
@@ -194,18 +194,18 @@ export const QTYPE_FIXTURES: Question[] = [
         cells: [{ value: "" }, { value: "" }, { value: "" }, { value: "1" }, { value: "1" }],
       },
       {
-        label: "폴트",
+        label: "F",
         cells: [
-          { value: "F" },
-          { value: "F" },
+          { value: "-" },
+          { value: "-" },
           { value: "-", blank: true, options: ["F", "-"] },
-          { value: "F" },
+          { value: "-" },
           { value: "F", blank: true, options: ["F", "-"] },
         ],
       },
     ],
     explanation:
-      "2·3 적재 후 2는 히트, 1은 빈 프레임에 적재, 5는 프레임이 가득 차 가장 먼저 들어온 2를 교체한다. (이 표는 처음 적재도 F로 표시한 단순 예시 — 슬라이드 Figure 8.15의 집계 규칙은 Sprint 4에서 확정)",
+      "2·3 적재 후 2는 히트, 1은 빈 프레임에 적재 — 여기까지는 프레임을 처음 채우는 중이라 F가 아니다. 5는 프레임이 가득 찬 뒤의 폴트(F)이며 가장 먼저 들어온 2를 교체한다(Figure 8.15 집계 규칙).",
   },
   {
     id: "os-ch08-demo-graph-001",

@@ -25,7 +25,7 @@ npm run test:os-regression  # OS 회귀 점검 — 먼저 `npm run build && npx 
 - `/playground` — 10가지 문제 유형 미리보기(키보드: 1~5 선택, Enter 제출/다음, ←/→ 이동)
 - `components/` — 그 밖의 UI (`layout/SiteHeader`·`HeaderNav`, `subject/SubjectTabs`, `theme/ThemeToggle`, `storage/StorageBootstrap`)
 - `lib/subjects.ts` — 과목/챕터 조회, 문제 id → 과목 판별
-- `lib/sim/{과목}/` — 시뮬레이터·생성기 (`lib/sim/README.md`)
+- `lib/sim/{과목}/` — 시뮬레이터·문제 생성기 (`lib/sim/README.md`). OS: `lib/sim/os/` 8종 + `generators.ts`(과목 정의의 `loadGenerators()`로 지연 로딩). 계산 문제의 정답은 반드시 여기서 계산하고 슬라이드 기준값을 Vitest로 고정한다
 - `lib/storage/` — `safeStorage`(localStorage 안전 래퍼), `keys`(키 이름), `migrate`(스키마 v1→v2 자동 마이그레이션), `upgrade`(변환 순수 함수)
 - `lib/theme/` — 테마(system/light/dark) 스토어 + FOUC 방지 인라인 스크립트
 - `app/fonts/PretendardVariable.woff2` — Pretendard 로컬 자체 호스팅 (외부 CDN 사용 금지). 로드 실패 시 시스템 한글 폰트로 폴백

@@ -7,7 +7,7 @@
 | 1 | [프로젝트 기반 구축](./sprints/sprint-01-foundation.md) | 스캐폴딩, 다크모드, 라우팅 틀, safeStorage | DONE |
 | 2 | [다과목 구조 전환 + OS 회귀](./sprints/sprint-02-multi-subject.md) | 과목 레지스트리, `/s/[subject]` 라우팅, 과목별 localStorage + 자동 마이그레이션, `lib/sim/{과목}` 규칙 | DONE |
 | 3 | [문제 유형 엔진](./sprints/sprint-03-question-engine.md) | 데이터 모델(`subject` 포함), 문제 유형 레지스트리, 10종 렌더러/채점기 + 단위 테스트 | DONE |
-| 4 | [OS 시뮬레이터/생성기](./sprints/sprint-04-simulators.md) | `lib/sim/os/*` 8종 + Vitest 기준값 테스트 | TODO |
+| 4 | [OS 시뮬레이터/생성기](./sprints/sprint-04-simulators.md) | `lib/sim/os/*` 8종 + Vitest 기준값 테스트 | DONE |
 | 5 | [OS 콘텐츠: Ch02·Ch03](./sprints/sprint-05-content-os-ch02-ch03.md) | 정적 문제 ≥130문항 | TODO |
 | 6 | [OS 콘텐츠: Ch07·Ch08](./sprints/sprint-06-content-os-ch07-ch08.md) | 정적 문제 ≥200문항 + 생성기 연동 문제 | TODO |
 | 7 | [화면/UX 구현](./sprints/sprint-07-screens-ux.md) | 홈(과목)/과목 홈/챕터/퀴즈/결과/오답노트(과목 탭+전체) | TODO |
@@ -45,3 +45,4 @@ Sprint 1 ──▶ Sprint 2 ──▶ Sprint 3 ──▶ Sprint 5 ─┐
 - 2026-10-04: **Sprint 3 구현.** 문제 데이터 모델(`examBasis` 포함), 문제 유형 레지스트리(core/UI 2곳, UI 등록 누락 시 빌드 실패 확인), 10종 채점기·렌더러, 키보드 훅, `/playground` 유형 미리보기. Vitest 104건·lint·build 통과. 결정: multi 부분점수 = max(0,(맞게 고른 수−잘못 고른 수)/정답 수), order = 상대 순서 일치 쌍 비율·items는 정답 순서로 저장 후 고정 셔플, graph = 정규화 좌표 곡선 데이터→인라인 SVG, 숫자키 동작은 core의 `applyChoice`.
 - 2026-10-04: **Sprint 3 완료.** 브라우저(Chrome, 프로덕션 빌드)에서 키보드만으로 mcq/ox 풀이 확인, 10종 입력·채점 화면 텍스트 대비 라이트 902개·다크 1,108개 모두 기준 통과, OS 회귀 14/14, 콘솔 오류 없음.
 - 2026-10-04: **채점 결과 표시·판정 규칙 변경.** 결과 화면 맨 위에 "✓ 정답 / ✗ 오답" 큰 배너, 완전히 맞았을 때만 정답(부분 점수가 있어도 하나라도 틀리면 오답), 부분 점수는 아래에 작게 보조 표시. 학습 기록·통계·오답노트도 완전히 맞음 기준으로 세고 부분 점수는 `lastScore`에 저장만 — `lib/storage/records.ts`(`recordAttempt`, `summarize`) 추가. 판정·기록 테스트 15건 추가(전체 119건). 배너 대비 라이트·다크 모두 4.5:1 이상 확인. Sprint 7·8 문서에 규칙 반영.
+- 2026-10-04: **Sprint 4 완료.** `lib/sim/os/` 시뮬레이터 8종(페이징·세그먼테이션·버디(분할 트리)·배치·CPU 시간·페이지 교체(OPT/LRU/FIFO/Clock/Enhanced Clock)·메모리 용량·프로세스 시나리오) + 생성기 8개(지연 로딩). Ch08 p.48 Figure 8.15를 200dpi로 재렌더링해 전 칸 전사(F: OPT 3·LRU 4·FIFO 6·CLOCK 5) — source-diff의 마지막 주요 "확인 필요" 해소. 기준값 테스트 73건 + 전 과목 생성기 스모크 테스트, 전체 Vitest 200건·lint·build·OS 회귀 14/14 통과.

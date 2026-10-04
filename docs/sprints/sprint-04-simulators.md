@@ -6,26 +6,26 @@
 
 ## 작업 항목
 
-- [ ] 공용 기반: `lib/sim/_shared/rng.ts`(seed PRNG), `lib/sim/_shared/types.ts`(`Generator` 인터페이스) — [`multi-subject-design.md`](../multi-subject-design.md) §6
-- [ ] `lib/sim/os/generators.ts`에 OS 생성기 맵을 모으고 `data/subjects/os/index.ts`의 `generators`에 연결 (생성 문제 id: `os-{chapter}-gen-{name}-{seed}`, `subject: 'os'`)
-- [ ] `lib/sim/os/paging.ts` — 논리→물리, 물리→논리(선형탐색), 페이지 테이블 빈칸(x) 역산, 비트 슬라이싱(2^k 페이지)
-  - [ ] 테스트: 페이지 크기 1024 기준값(논리 3→물리 1027, 논리 1026→물리 2050, 물리 2050→논리 1026, 논리 2049→물리 1·x=0), 페이지 크기 1000 예시(논리 1179→물리 5179)
-- [ ] `lib/sim/os/segmentation.ts` — 세그먼트 변환 + 길이 초과 시 보호위반(트랩) 판정
-  - [ ] 테스트: 세그먼트 테이블 기준값(논리 3→물리 1027, 논리 1026→물리 2050, 논리 2049→물리 1·x=0), 길이초과 트랩 케이스
-- [ ] `lib/sim/os/buddy.ts` — 2^k 올림 할당, 분할(왼쪽 할당), 반납 시 buddy 병합(연쇄), 트리/표 상태 출력
-  - [ ] **중요(실사 확인됨, `source-diff.md` Ch07 참고)**: 두 블록이 단순히 둘 다 free라고 병합되는 게 아니라, **같은 분할(split)에서 나온 buddy 쌍이 둘 다 비분할·free 상태일 때만** 병합된다(Ch07 p.23 Release A 사례: A의 buddy가 C+64K로 더 쪼개져 있어 둘 다 비어도 병합 불가). 따라서 내부적으로 이진 트리(또는 분할 계보를 추적하는 등가 구조)로 구현해야 하며, 단순 "인접 free 블록 병합"으로 구현하면 틀린다.
-  - [ ] 테스트: 1MB 시나리오(A=100K→B=240K→C=64K→D=256K→Release B→Release A→E=75K→Release C→Release E→Release D ⇒ 최종 1MB 완전 병합). 슬라이드(Ch07 p.23)에서 직접 전사한 단계별 전체 상태를 그대로 고정: Request100K(A=128K|128K|256K|512K) → Request240K(…B=256K|512K) → Request64K(…C=64K|64K|B=256K|512K) → Request256K(…D=256K|256K) → ReleaseB → ReleaseA(병합 안 됨 확인) → Request75K(E가 A 자리 재사용) → ReleaseC(C+64K→128K 병합) → ReleaseE(E+128K+256K→512K 병합) → ReleaseD(전체 1M 병합)
-- [ ] `lib/sim/os/placement.ts` — First/Best/Next/Worst-fit 블록 선택, Next-fit wrap-around 처리
-  - [ ] 테스트: 각 알고리즘 선택 결과가 다르게 나오는 케이스 + wrap-around 케이스
-- [ ] `lib/sim/os/cpuTime.ts` — 다중프로그램 일괄처리/시분할 첫 응답시간, 유효 CPU 이용률
-  - [ ] 테스트: N=10,T=1,s=0.01,q=0.1 ⇒ 일괄 9.2초/시분할 1.1초, 이용률 10/11≈0.91 vs 10/10.1≈0.99; 별도 예시 7/10=0.7
-- [ ] `lib/sim/os/replacement.ts` — OPT/FIFO/LRU/Clock/Enhanced Clock, 단계별 상태표(프레임 내용/폴트 F/use bit/next pointer) 반환
-  - [ ] 테스트: Clock 규칙(참조 시 use=1, 포인터는 교체 시에만 이동, 모든 use=1이면 한 바퀴 돌며 전부 0 후 두 바퀴째 교체), Enhanced Clock 4분류 스캔 순서
-  - [ ] **추가 기준값(실사 확인됨, Stallings 교과서 표준 예시, `source-diff.md` Ch08 참고)**: Ch08 슬라이드 p.48 "Figure 8.15 Behavior of Four Page-Replacement Algorithms" — 참조열 `2,3,2,1,5,2,4,5,3,2,5,2`(12개), 프레임 3개, OPT/LRU/FIFO/CLOCK 4개 알고리즘 비교. **집계 규칙**: F(폴트)는 "3개 프레임이 최초로 다 채워진 이후"에만 집계(최초 3회의 compulsory miss는 F로 세지 않음). 이 스프린트 시작 시 해당 페이지를 다시 고해상도로 렌더링해 셀 값을 한 칸씩 재대조하고 정확한 기준값으로 확정할 것(참조열·프레임수·F 집계 규칙은 이미 확정, 셀별 수치만 재확인 필요).
-  - [ ] **추가 기준값**: Ch08 p.49-50 "Figure 8.16 Example of Clock Policy Operation" — 10개 프레임 원형 버퍼 예시. (a) pointer가 frame2(use=1)에서 시작해 frame3(use=1→0 변경)을 지나 frame4(page556, use=0)에서 교체. (b) 교체 후 frame4=새page(use=1), pointer는 frame5로 이동. "이 상태에서 또 폴트가 나면 어느 프레임이 교체되는가" 질문의 정답은 frame5(이미 use=0이므로 즉시 교체) — Clock 포인터 이동 규칙의 mcq/calc 테스트 케이스로 활용.
-- [ ] `lib/sim/os/processScenario.ts` — 상태전이/인터럽트 분류용 시나리오 생성기 (정적 데이터 + 랜덤 조합)
-- [ ] `lib/sim/os/memoryCapacity.ts` — n비트 주소공간/페이지 크기/엔트리 크기 → 페이지 수·테이블 크기·2단계 필요 여부, Inverted page table 엔트리 수
-  - [ ] 테스트: 4GB/4KB/4B 엔트리 ⇒ 약 100만 엔트리·4MB 테이블·4KB 페이지 1024개 필요(2단계), Inverted table 프레임 100만개
+- [x] 공용 기반: `lib/sim/_shared/rng.ts`(seed PRNG), `lib/sim/_shared/types.ts`(`Generator` 인터페이스) — [`multi-subject-design.md`](../multi-subject-design.md) §6
+- [x] `lib/sim/os/generators.ts`에 OS 생성기 맵을 모으고 `data/subjects/os/index.ts`의 `generators`에 연결 (생성 문제 id: `os-{chapter}-gen-{name}-{seed}`, `subject: 'os'`)
+- [x] `lib/sim/os/paging.ts` — 논리→물리, 물리→논리(선형탐색), 페이지 테이블 빈칸(x) 역산, 비트 슬라이싱(2^k 페이지)
+  - [x] 테스트: 페이지 크기 1024 기준값(논리 3→물리 1027, 논리 1026→물리 2050, 물리 2050→논리 1026, 논리 2049→물리 1·x=0), 페이지 크기 1000 예시(논리 1179→물리 5179)
+- [x] `lib/sim/os/segmentation.ts` — 세그먼트 변환 + 길이 초과 시 보호위반(트랩) 판정
+  - [x] 테스트: 세그먼트 테이블 기준값(논리 3→물리 1027, 논리 1026→물리 2050, 논리 2049→물리 1·x=0), 길이초과 트랩 케이스
+- [x] `lib/sim/os/buddy.ts` — 2^k 올림 할당, 분할(왼쪽 할당), 반납 시 buddy 병합(연쇄), 트리/표 상태 출력
+  - [x] **중요(실사 확인됨, `source-diff.md` Ch07 참고)**: 두 블록이 단순히 둘 다 free라고 병합되는 게 아니라, **같은 분할(split)에서 나온 buddy 쌍이 둘 다 비분할·free 상태일 때만** 병합된다(Ch07 p.23 Release A 사례: A의 buddy가 C+64K로 더 쪼개져 있어 둘 다 비어도 병합 불가). 따라서 내부적으로 이진 트리(또는 분할 계보를 추적하는 등가 구조)로 구현해야 하며, 단순 "인접 free 블록 병합"으로 구현하면 틀린다.
+  - [x] 테스트: 1MB 시나리오(A=100K→B=240K→C=64K→D=256K→Release B→Release A→E=75K→Release C→Release E→Release D ⇒ 최종 1MB 완전 병합). 슬라이드(Ch07 p.23)에서 직접 전사한 단계별 전체 상태를 그대로 고정: Request100K(A=128K|128K|256K|512K) → Request240K(…B=256K|512K) → Request64K(…C=64K|64K|B=256K|512K) → Request256K(…D=256K|256K) → ReleaseB → ReleaseA(병합 안 됨 확인) → Request75K(E가 A 자리 재사용) → ReleaseC(C+64K→128K 병합) → ReleaseE(E+128K+256K→512K 병합) → ReleaseD(전체 1M 병합)
+- [x] `lib/sim/os/placement.ts` — First/Best/Next/Worst-fit 블록 선택, Next-fit wrap-around 처리
+  - [x] 테스트: 각 알고리즘 선택 결과가 다르게 나오는 케이스 + wrap-around 케이스
+- [x] `lib/sim/os/cpuTime.ts` — 다중프로그램 일괄처리/시분할 첫 응답시간, 유효 CPU 이용률
+  - [x] 테스트: N=10,T=1,s=0.01,q=0.1 ⇒ 일괄 9.2초/시분할 1.1초, 이용률 10/11≈0.91 vs 10/10.1≈0.99; 별도 예시 7/10=0.7
+- [x] `lib/sim/os/replacement.ts` — OPT/FIFO/LRU/Clock/Enhanced Clock, 단계별 상태표(프레임 내용/폴트 F/use bit/next pointer) 반환
+  - [x] 테스트: Clock 규칙(참조 시 use=1, 포인터는 교체 시에만 이동, 모든 use=1이면 한 바퀴 돌며 전부 0 후 두 바퀴째 교체), Enhanced Clock 4분류 스캔 순서
+  - [x] **추가 기준값(실사 확인됨, Stallings 교과서 표준 예시, `source-diff.md` Ch08 참고)**: Ch08 슬라이드 p.48 "Figure 8.15 Behavior of Four Page-Replacement Algorithms" — 참조열 `2,3,2,1,5,2,4,5,3,2,5,2`(12개), 프레임 3개, OPT/LRU/FIFO/CLOCK 4개 알고리즘 비교. **집계 규칙**: F(폴트)는 "3개 프레임이 최초로 다 채워진 이후"에만 집계(최초 3회의 compulsory miss는 F로 세지 않음). 이 스프린트 시작 시 해당 페이지를 다시 고해상도로 렌더링해 셀 값을 한 칸씩 재대조하고 정확한 기준값으로 확정할 것(참조열·프레임수·F 집계 규칙은 이미 확정, 셀별 수치만 재확인 필요).
+  - [x] **추가 기준값**: Ch08 p.49-50 "Figure 8.16 Example of Clock Policy Operation" — 10개 프레임 원형 버퍼 예시. (a) pointer가 frame2(use=1)에서 시작해 frame3(use=1→0 변경)을 지나 frame4(page556, use=0)에서 교체. (b) 교체 후 frame4=새page(use=1), pointer는 frame5로 이동. "이 상태에서 또 폴트가 나면 어느 프레임이 교체되는가" 질문의 정답은 frame5(이미 use=0이므로 즉시 교체) — Clock 포인터 이동 규칙의 mcq/calc 테스트 케이스로 활용.
+- [x] `lib/sim/os/processScenario.ts` — 상태전이/인터럽트 분류용 시나리오 생성기 (정적 데이터 + 랜덤 조합)
+- [x] `lib/sim/os/memoryCapacity.ts` — n비트 주소공간/페이지 크기/엔트리 크기 → 페이지 수·테이블 크기·2단계 필요 여부, Inverted page table 엔트리 수
+  - [x] 테스트: 4GB/4KB/4B 엔트리 ⇒ 약 100만 엔트리·4MB 테이블·4KB 페이지 1024개 필요(2단계), Inverted table 프레임 100만개
 
 ## 완료 기준 (DoD)
 
@@ -37,3 +37,54 @@
 
 - Sprint 6(Ch07·Ch08 콘텐츠)의 버디/배치/페이지교체/주소변환 문제들이 이 모듈을 직접 호출한다.
 - Sprint 8(비슷한 문제 새로 생성)도 이 모듈의 생성기 함수를 재사용한다.
+
+## 결과 (2026-10-04, 완료)
+
+| 완료 기준 | 결과 |
+|---|---|
+| 8개 모듈 + 원본 §6 기준값 Vitest | `lib/sim/os/` 8개 모듈 구현, 기준값 테스트 73건(paging·segmentation·buddy·placement·cpuTime·replacement·memoryCapacity·processScenario) 통과 |
+| 순수 함수·전역 상태 없음 | 모든 시뮬레이터는 입력만으로 결과를 내는 순수 함수. 버디 상태도 불변 트리(연산마다 새 트리) |
+| 전 과목 생성기 스모크 테스트 | `lib/sim/generators.test.ts`: 레지스트리의 **모든 과목**을 순회, 생성기마다 seed 20개 × (같은 seed 결정성, 무결성·유형 검증, 정답 키로 채점하면 정답, params 유지, 생성기 이름이 id 규칙) — OS 생성기 8개 통과, 데이터 통신은 Sprint 9에서 자동 편입 |
+| 회귀 | 전체 Vitest 16개 파일 200건, lint, build 통과, OS 회귀 14/14 |
+
+### 슬라이드에서 새로 확정한 기준값
+
+- **Ch08 p.48 Figure 8.15 전사 완료**(200dpi 재렌더링, 손글씨 겹친 칸 포함 전 칸 판독) — 참조열 `2 3 2 1 5 2 4 5 3 2 5 2`, 프레임 3개:
+
+  | 단계 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | F |
+  |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+  | OPT | 2 | 2 3 | 2 3 | 2 3 1 | 2 3 5 F | 2 3 5 | 4 3 5 F | 4 3 5 | 4 3 5 | 2 3 5 F | 2 3 5 | 2 3 5 | 3 |
+  | LRU | 2 | 2 3 | 2 3 | 2 3 1 | 2 5 1 F | 2 5 1 | 2 5 4 F | 2 5 4 | 3 5 4 F | 3 5 2 F | 3 5 2 | 3 5 2 | 4 |
+  | FIFO | 2 | 2 3 | 2 3 | 2 3 1 | 5 3 1 F | 5 2 1 F | 5 2 4 F | 5 2 4 | 3 2 4 F | 3 2 4 | 3 5 4 F | 3 5 2 F | 6 |
+  | CLOCK | 2* | 2* 3* | 2* 3* | 2* 3* 1* | 5* 3 1 F | 5* 2* 1 F | 5* 2* 4* F | 5* 2* 4* | 3* 2 4 F | 3* 2* 4 | 3* 2 5* F | 3* 2* 5* | 5 |
+
+  (`*` = use bit 1.) 손글씨 "3번의 F"(OPT)·"4번의 F"(LRU)와 일치. CLOCK pointer 위치(각 단계 직후): 1, 2, 2, 0, 1, 2, 0, 0, 1, 1, 0, 0.
+- **OPT 동점 규칙**: 앞으로 다시 참조되지 않는 페이지가 여럿이면 맨 위 프레임을 뺀다(10번째 참조에서 4·3 중 4 교체, 필기 "뒤에 정보가 없을 경우에는 맨 앞에 먼저 걸리는 녀석을 빼냄").
+- **Figure 8.16**(p.49-50): 10프레임 원형 버퍼, pointer 2 → 프레임 2·3의 use를 0으로 바꾸며 프레임 4(page 556) 교체 → page 727, pointer 5 → 다음 폴트는 프레임 5.
+- **Enhanced Clock 스캔**(p.53): (0,0) 1차 스캔(비트 변경 없음) → (0,1) 스캔(지나친 u=1을 0으로) → 실패 시 반복. 슬라이드에 수치 예제가 없어 규칙 기반 테스트 6건으로 고정.
+- **Ch07 p.33 비트 분해 예**: 논리 `000001 0111011110`(=1502, 페이지 1·offset 478), 테이블 0→5·1→6·2→25 → 물리 `000110 0111011110`(=6622).
+- **Ch07 p.15 Figure 7.4**(64M, OS 8M, P1~P4 적재·반납)를 First-fit 전체 시뮬레이션 기준값으로 사용 — (b)~(h) 7단계 배치 전부 일치. 배치 알고리즘 슬라이드(p.16-19)에는 수치 예제가 없어, 네 알고리즘의 선택이 서로 다른 사례·wrap-around 사례는 직접 만든 데이터로 테스트.
+- Ch07 p.23 버디 표 10단계, p.34-36 페이징·p.41 세그먼테이션 기준값, Ch02 p.21-24 시간 계산, Ch08 p.13-17 테이블 크기 — 원본 §6 값과 슬라이드가 모두 일치함을 다시 확인.
+
+### 구현 중 확정한 설계
+
+- **F 집계 규칙**: 시뮬레이터는 `miss`(처음 채우는 적재 포함)와 `fault`(프레임이 다 찬 뒤 = 슬라이드 F)를 둘 다 돌려준다. 문제·해설은 슬라이드처럼 `fault`만 F로 쓴다. Sprint 3 유형 미리보기의 trace 예시도 이 규칙으로 고쳤고, 시뮬레이터와 일치하는지 테스트로 묶었다.
+- **버디**: 분할 트리로 구현(같은 분할에서 나온 buddy 쌍만 병합). 할당 블록 선택은 "맞는 크기 중 가장 작은 것 → 같은 크기면 낮은 주소". 오답 보기 생성용 옵션 `merge: false`, `allocate: "right"`(정답 계산에는 쓰지 않음).
+- **배치**: 동점이면 낮은 주소. Next-fit은 "마지막 배치가 끝난 주소" 이후 첫 맞는 블록, 없으면 처음으로(wrap). 메모리 전체 시뮬레이션의 반납 시 이웃 빈 블록 합치기는 슬라이드에 명시가 없어 코드 주석에 "보충"으로 표시.
+- **생성기 8개**(`lib/sim/os/generators.ts`, 이름은 문제 id 규칙에 맞게 소문자·하이픈):
+
+  | 생성기 | 챕터·주제 | 유형 | 변형 |
+  |---|---|---|---|
+  | `paging` | Ch07 주소 변환 ⭐ | calc | 논리→물리, 물리→논리(선형 탐색), 빈칸 x |
+  | `segmentation` | Ch07 세그먼테이션 | mcq | 정상 변환 / 트랩 (오답: 길이 검사 누락, 세그먼트 번호 미분리, 다른 세그먼트 base) |
+  | `buddy` | Ch07 버디 시스템 ⭐ | mcq·calc | 최종 블록 상태(오답: 병합 안 함·오른쪽 할당·한 단계 전), 블록 시작 주소, 내부 단편화 |
+  | `placement` | Ch07 배치 알고리즘 ⭐ | mcq | First/Best/Next/Worst — 다른 알고리즘과 답이 같은 쉬운 문제는 버림, Next-fit은 절반이 wrap-around |
+  | `cpu-time` | Ch02 시간 계산 ⭐ | calc | 일괄/시분할 첫 응답, 일괄/시분할 이용률 |
+  | `replacement` | Ch08 교체 알고리즘 ⭐ | calc·trace | F 횟수(OPT/LRU/FIFO/Clock), 진행 표 빈칸(OPT/LRU/FIFO) |
+  | `process-switch` | Ch03 Process switch·상태 전이 ⭐ | classify | 원인 5가지 / 상태 전이 |
+  | `memory-capacity` | Ch08 2단계·역 페이지 테이블 | calc | 엔트리 수, 테이블 크기, 테이블용 페이지 수, 역 페이지 테이블 엔트리 |
+
+- **지연 로딩**: 과목 정의의 `loadGenerators()`가 생성기를 동적 import한다. 빌드 결과 생성기 코드는 별도 청크(약 25KB)이며 어떤 페이지 HTML도 직접 불러오지 않음을 확인.
+- **정답 키 헬퍼** `lib/qtypes/answerKey.ts`: 문제 데이터에서 정답 답안을 만든다(스모크 테스트에서 "정답 키로 채점하면 정답" 확인용, 콘텐츠 무결성 검사에도 재사용 가능).
+- 생성 문제 샘플 18개(모든 변형)를 직접 읽어 검수 — 정답·오답 보기·풀이 단계 모두 손계산과 일치. 검수 중 발견해 고친 것: Next-fit "마지막 배치 주소"가 빈 블록 안에 놓일 수 있던 문제(테스트 200 seed로 고정), 교체 문제 안내문 괄호 중첩, 계산 결과 화면의 천 단위 쉼표.
+

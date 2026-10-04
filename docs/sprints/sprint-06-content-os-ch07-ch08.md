@@ -10,6 +10,8 @@
 
 ## 작업 항목
 
+> Sprint 4에서 만든 생성기(`lib/sim/os/generators.ts`)를 그대로 쓸 수 있다: `paging`·`segmentation`·`buddy`·`placement`(Ch07), `replacement`·`memory-capacity`(Ch08). 정적 문제를 쓸 때도 정답은 같은 시뮬레이터 함수로 계산하고, trace 표의 F는 Figure 8.15 규칙(프레임이 다 찬 뒤의 폴트만)을 따른다.
+
 - [ ] `content-checklist.md`의 Ch07 항목을 모두 커버 (⭐ 배치 알고리즘 4가지, ⭐ 버디 시스템, ⭐ 주소 변환은 최소 6~10문항씩)
 - [ ] `content-checklist.md`의 Ch08 항목을 모두 커버 (⭐ 7개 항목: 페이지폴트 처리과정/지역성/TLB/페이지크기 그래프/스래싱/반입정책/교체알고리즘, 각 최소 6~10문항)
 - [ ] 배치 알고리즘 문제는 `lib/sim/os/placement.ts` 호출로 정답 산출

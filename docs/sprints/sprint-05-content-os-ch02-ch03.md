@@ -11,6 +11,8 @@
 
 ## 작업 항목
 
+> Sprint 4 생성기 중 `cpu-time`(Ch02 시간 계산), `process-switch`(Ch03 Process switch 원인·상태 전이)를 쓸 수 있다.
+
 - [ ] `content-checklist.md`의 Ch02 항목을 모두 커버하는 문제 작성 (⭐ 항목은 최소 6~10문항씩, 유형 다각화)
 - [ ] `content-checklist.md`의 Ch03 항목을 모두 커버하는 문제 작성 (⭐ 항목은 최소 6~10문항씩)
 - [ ] Ch02 §다중프로그램 일괄처리 vs 시분할 시간 계산 문제는 `lib/sim/os/cpuTime.ts` 생성기 기반으로 작성(파라미터 다양화)

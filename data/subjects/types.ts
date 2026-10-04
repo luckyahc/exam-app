@@ -1,3 +1,4 @@
+import type { GeneratorMap } from "@/lib/sim/_shared/types";
 import type { Question } from "@/types/question";
 
 export interface ChapterDef {
@@ -26,4 +27,6 @@ export interface SubjectDef {
   sourceDir: string;
   /** 배열 순서 = 화면 표시 순서 */
   chapters: readonly ChapterDef[];
+  /** 문제 생성기(lib/sim/{과목}/generators.ts)를 동적 import로 불러온다 — 시뮬레이터 코드가 모든 화면 번들에 실리지 않게 */
+  loadGenerators?: () => Promise<GeneratorMap>;
 }

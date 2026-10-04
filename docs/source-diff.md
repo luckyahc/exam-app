@@ -119,7 +119,7 @@ PDF 62페이지. 1차 조사(텍스트 추출, `-layout`)로 대부분의 서술
 - **p.29 — ⭐ 스래싱 곡선.** Figure 제목 "스래싱(Thrashing)". x축 Multiprogramming Level, y축 Processor Utilization, 포물선 모양으로 상승 후 급락, 정점에 점선으로 "스래싱(Thrashing)" 표시. 보충 설명: "프로그램 개수가 작아지면 cpu이용률이 떨어지는 이유 → 스와핑 하는데 시간을 많이 소비함". §7 서술과 **완전 일치**.
 - **p.43-49 — ⭐ 기본 교체 알고리즘.** p.47에서 Clock 규칙 전문(use bit 설정 시점, next frame pointer 이동 규칙, 모든 use=1일 때 두 바퀴째 교체) 확인 — §6-6/§7과 **정확히 일치**.
   - **p.48 — Figure 8.15 "Behavior of Four Page-Replacement Algorithms"(Stallings 교과서 표준 예시)가 실제로 존재함을 확인.** 참조열: `2,3,2,1,5,2,4,5,3,2,5,2` (12개), 프레임 3개, OPT/LRU/FIFO/CLOCK 4개 알고리즘의 단계별 상태를 모두 보여주는 표. 하단에 "F = page fault occurring after the frame allocation is initially filled"(초기 3개 프레임이 다 채워진 **이후**에 발생한 폴트만 F로 표시, 즉 최초 3회의 compulsory miss는 F로 세지 않음)라는 집계 규칙이 명시되어 있음. 왼쪽에 "3번의 F"(OPT), "4번의 F"(LRU) 주석 확인.
-    - **주의**: 이 표의 셀 값은 손글씨 동그라미·화살표가 많이 겹쳐 있어, 정확한 전체 수치 전사는 이번 조사에서 완결하지 못했다. **Sprint 4(`lib/sim/replacement.ts` 구현) 시작 시 이 페이지(Ch08 p.48)를 다시 고해상도로 렌더링해 표를 한 칸씩 재대조하고 Vitest 기준값으로 확정할 것.** (최소한 참조열·프레임수·F 집계 규칙은 이미 확정되었으므로 전사 작업만 남음.)
+    - **→ 해소(Sprint 4, 2026-10-04)**: 200dpi로 재렌더링해 전 칸을 판독·전사했다. F 개수 OPT 3 / LRU 4 / FIFO 6 / CLOCK 5, OPT 동점 시 맨 위 프레임 교체 규칙까지 확인. 전사표와 기준값은 [`sprints/sprint-04-simulators.md`](./sprints/sprint-04-simulators.md) "결과" 절, 테스트는 `lib/sim/os/replacement.test.ts`.
   - **p.49-50 — Figure 8.16 "Example of Clock Policy Operation"(Stallings 교과서 표준 예시)도 확인.** 원형 버퍼에 프레임 10개(0~9, n-1 표기), 각 프레임에 page 번호와 use bit. (a) 교체 직전 상태: next frame pointer가 프레임2(page45,use=1)를 가리키며, 프레임2→3(use=1→0 변경하며 지나감)→4(page556,use=0)에서 교체. (b) 교체 직후 상태: 프레임4에 새 page727(use=1) 적재, pointer는 프레임5(page13,use=0)로 이동. 질문: "이 상태에서 또 page fault가 발생했을 때 어떤걸 교체해야할까: **5번 프레임**"(정답, 이미 use=0이라 즉시 교체). **이 두 그림은 Clock 알고리즘의 mcq/calc 문제용 기준 예시로 그대로 사용 가능.**
 - **p.30, p.32-37 (세그먼트 다이어그램)**: 이번 조사에서는 재확인하지 않았다. 1차 조사에서 "본문이 거의 없어 순수 다이어그램으로 추정"이라 했고, 관련 세부사항은 Ch07 §7에 이미 포함되어 있어 Ch08 콘텐츠 작성에 필수는 아니다. **"확인 필요" 유지 — 콘텐츠 작성 중 세그먼테이션+가상메모리 결합 문제를 그림 기반으로 만들 경우에만 추가 확인.**
 
@@ -131,7 +131,7 @@ PDF 62페이지. 1차 조사(텍스트 추출, `-layout`)로 대부분의 서술
 2. 1차 조사의 "확인 필요" 항목 대부분은 poppler 설치 후 직접 이미지 재확인으로 해소되었다. 남은 "확인 필요"는:
    - Ch02 p.9 보충 설명 뒷부분(문제 없음, 보충 표시만 필요)
    - Ch03 p.2 오답 보기 문구(재사용 안 하기로 결정), p.13 낙서(영향 없음)
-   - Ch08 p.48 Figure 8.15의 셀별 정확한 수치(Sprint 4에서 재전사 필요 — 참조열·프레임수·F 집계규칙은 확정됨)
+   - ~~Ch08 p.48 Figure 8.15의 셀별 정확한 수치~~ → Sprint 4에서 전사 완료(해소)
    - Ch08 p.30, p.32-37 세그먼트 다이어그램(필요 시에만 추가 확인)
 3. **버디 시스템은 "두 블록이 모두 free"가 아니라 "같은 분할에서 나온 buddy 쌍이 모두 free(미분할)"일 때만 병합된다**는 규칙이 Ch07 p.23(Release A 사례)·p.24(트리 그림)에서 명확히 확인되었다. `lib/sim/buddy.ts`는 내부적으로 분할 트리를 유지해야 한다 (이미 `01-architecture.md`에 반영되어 있던 방향과 일치, 변경 불필요).
 4. Ch08 Figure 8.15(교체 알고리즘 비교)와 Figure 8.16(Clock 정책 예시)은 Stallings 교과서의 표준 예시로, md의 §6-6에는 구체적 참조열 예시가 없었으나 **슬라이드에 실존하는 추가 검증 자료**로 확보했다. Sprint 4에서 활용 권장.

@@ -2,6 +2,9 @@
 
 import { parseNumber } from "@/lib/qtypes/calc";
 import type { InputProps, QTypeUI, ReviewProps } from "./types";
+
+/** 34881 → "34,881" (소수는 그대로) */
+const num = (n: number) => n.toLocaleString("en-US", { maximumFractionDigits: 10 });
 import { Mark, ReviewList, ReviewRow, Tag } from "./ui";
 
 function Input({ question, answer, onChange, disabled }: InputProps<"calc">) {
@@ -42,11 +45,12 @@ function Review({ question, answer, result }: ReviewProps<"calc">) {
         >
           <span className="flex flex-wrap gap-1.5 text-sm">
             <Tag tone="primary">
-              내 답: {result.detail.value ?? (answer.trim() || "없음")}
+              내 답:{" "}
+              {result.detail.value !== null ? num(result.detail.value) : answer.trim() || "없음"}
               {result.detail.value !== null ? unit : ""}
             </Tag>
             <Tag tone="correct">
-              정답: {question.answer}
+              정답: {num(question.answer)}
               {unit}
               {question.tolerance > 0 ? ` (±${question.tolerance})` : ""}
             </Tag>
