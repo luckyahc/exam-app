@@ -91,7 +91,7 @@
 
 ## 과목 2 — 데이터 통신 (data-comm)
 
-근거: [`dc-source-analysis.md`](./dc-source-analysis.md). ⭐ 3개 — 근거는 모두 `printed-emphasis`(슬라이드에 인쇄된 "very important", 필기 아님). Sprint 10에서 체크하고 실제 문항 수를 괄호에 기록한다.
+근거: [`dc-source-analysis.md`](./dc-source-analysis.md). ⭐ 3개 — `examBasis`는 모두 `printed-emphasis`(슬라이드에 인쇄된 "very important", 필기 아님). 근거 구분은 항목마다 적었다. s.41 "important"는 ⭐ 제외. Sprint 10에서 체크하고 실제 문항 수를 괄호에 기록한다.
 
 ### Ch01. 개요 (목표 ≥ 57문항)
 
@@ -127,11 +127,11 @@
 - [ ] 전송 장애 3원인, 감쇠·증폭(dB) — mcq/multi/ox/calc · s.24-27 · 목표 4
 - [ ] 왜곡, 잡음 4종 — mcq/match/graph · s.28-29 · 목표 3
 - [ ] SNR / SNR_dB — ox/calc/graph · s.30-32 · 목표 3
-- [ ] ⭐ (printed-emphasis) 데이터 전송률 한계 3요소, Nyquist 비트율 — mcq/multi/blank/calc/trace/graph · s.33-35 · 목표 8 — **최소 6~10문항**
-- [ ] ⭐ (printed-emphasis) Shannon 용량, 두 한계 함께 쓰기 — mcq/multi/ox/blank/calc/trace · s.36-40 · 목표 8 — **최소 6~10문항**
+- [ ] ⭐ (printed-emphasis · 인쇄 강조 직접(s.33)) 데이터 전송률 한계 3요소, Nyquist 비트율 — mcq/multi/blank/calc/trace/graph · s.33-35 · 목표 8 — **최소 6~10문항**
+- [ ] ⭐ (printed-emphasis · s.33 인쇄 강조의 범위 확장(s.36~40에는 강조 문구 없음)) Shannon 용량, 두 한계 함께 쓰기 — mcq/multi/ox/blank/calc/trace · s.36-40 · 목표 8 — **최소 6~10문항**
 - [ ] 성능 지표 5종, 대역폭 두 의미, 처리량 — mcq/multi/ox/calc · s.41-45 · 목표 4
 - [ ] 지연(4요소, 전파·전송 시간) — multi/blank/calc · s.46-47 · 목표 4
-- [ ] ⭐ (printed-emphasis) 대역폭-지연 곱, 지터 — mcq/ox/blank/calc/trace/graph · s.48-52 · 목표 8 — **최소 6~10문항**
+- [ ] ⭐ (printed-emphasis · 인쇄 강조 직접(s.48)) 대역폭-지연 곱, 지터 — mcq/ox/blank/calc/trace/graph · s.48-52 · 목표 8 — **최소 6~10문항**
 - [ ] 디지털→디지털 변환, 블록 코딩 mB/nB — mcq/blank/order · s.53-57 · 목표 3
 - [ ] PCM 3과정, Nyquist 표본화율 — mcq/blank/order/calc · s.58-62 · 목표 4
 - [ ] 델타 변조(PCM과 비교, 구성요소) — mcq/match · s.63-66 · 목표 2

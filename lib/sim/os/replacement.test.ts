@@ -115,6 +115,17 @@ describe("replacement — Ch08 p.48 Figure 8.15 (참조열 2 3 2 1 5 2 4 5 3 2 5
     expect(simulateReplacement(REFS, 3, "fifo").misses).toBe(9);
   });
 
+  it.each([
+    ["opt", 6],
+    ["lru", 7],
+    ["fifo", 9],
+    ["clock", 8],
+  ] as const)("%s: misses(초기 적재 포함 전체 폴트) = %i = 초기 적재 3 + F 수", (algo, misses) => {
+    const r = simulateReplacement(REFS, 3, algo);
+    expect(r.misses).toBe(misses);
+    expect(r.misses).toBe(3 + r.faults);
+  });
+
   it("CLOCK use bit(*)가 슬라이드와 같다", () => {
     expect(simulateReplacement(REFS, 3, "clock").steps.map((s) => s.use)).toEqual(FIG815.clock.use);
   });

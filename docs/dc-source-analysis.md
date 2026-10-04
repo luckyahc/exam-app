@@ -40,10 +40,22 @@
 
 필기는 아니지만, 키워드 "중요(important)"가 **슬라이드 본문에 인쇄돼 있는** 곳이다. 사용자 확인(2026-10-04)으로 **⭐로 확정**했다. OS의 필기 기반 ⭐(`handwritten`)와 구분하기 위해 근거를 **`printed-emphasis`**로 표시한다(문제 데이터의 `examBasis` 필드, `multi-subject-design.md` §2-2).
 
-| 챕터 | 슬라이드 | 본문 원문 | ⭐ 소주제 (§7 번호) | 근거 |
+| ⭐ 소주제 (§7 번호) | 근거 구분 | 근거 슬라이드 | 인쇄된 문구(원문) | PDF | `examBasis` |
+|---|---|---|---|---|---|
+| 12. 데이터 전송률 한계·Nyquist (s.33~35) | **인쇄 강조 직접(s.33)** | s.33 | "**A very important consideration** in data communications is how fast we can send data, in bits per second, over a channel." | `DC-2-PhyLayer.pdf` p.17 | `printed-emphasis` |
+| 13. Shannon·두 한계 (s.36~40) | **s.33 인쇄 강조의 범위 확장(s.36~40에는 강조 문구 없음)** | s.33 | 위 s.33 문장 | `DC-2-PhyLayer.pdf` p.17 | `printed-emphasis` |
+| 16. 대역폭-지연 곱·지터 (s.48~52) | **인쇄 강조 직접(s.48)** | s.48 | "The product of the two, bandwidth-delay product, is **very important** in data communications." | `DC-2-PhyLayer.pdf` p.24 | `printed-emphasis` |
+
+- **13번을 ⭐로 두는 이유(사용자 결정, 2026-10-04)**: s.33은 "very important" 문장 바로 뒤에서 "Two theoretical formulas … One by Nyquist for a noiseless channel / Another by Shannon for a noisy channel"로 두 방법을 함께 소개하므로, 강조 범위에 Shannon도 포함된다고 본다. 12·13번이 둘로 나뉜 것은 s.33~40(8장)을 분량 때문에 Nyquist(s.33~35)와 Shannon·두 한계(s.36~40)로 쪼갰기 때문이다. 13번 자체의 슬라이드(s.36~40)에는 강조 문구가 없다.
+- `examBasis` 값은 세 소주제 모두 `printed-emphasis`로 같다(구분은 이 표와 커버리지 매트릭스·체크리스트의 "근거 구분"에만 적는다).
+
+**검토했으나 ⭐ 제외**
+
+| 소주제 (§7 번호) | 슬라이드 | 인쇄된 문구(원문) | PDF | 제외 이유 |
 |---|---|---|---|---|
-| Ch02 | s.33 | "**A very important consideration** in data communications is how fast we can send data … Data rate depends on three factors" | 12. 데이터 전송률 한계·Nyquist (s.33~35), 13. Shannon·두 한계 (s.36~40) | `printed-emphasis` |
-| Ch02 | s.48 | "The product of the two, bandwidth-delay product, is **very important** in data communications." | 16. 대역폭-지연 곱·지터 (s.48~52) | `printed-emphasis` |
+| 14. 성능 지표 5종·대역폭 두 의미·처리량 (s.41~45) | s.41 | "One **important** issue in networking is the performance of the network – how good is it?" | `DC-2-PhyLayer.pdf` p.21 | "very"가 없는 일반 도입 문장 — 단원(성능)을 여는 문장일 뿐 특정 내용을 강조하지 않는다(사용자 결정, 2026-10-04). 처음 분석 때 이 문장을 목록에 올리지 않은 누락이 있어 재조사(2026-10-04)에서 추가 기록함 |
+
+재조사 방법: 두 PDF 전 쪽을 텍스트로 다시 훑어 `very important / important / 중요 / exam / 시험 / essential / critical / key / note / must / 반드시 / 나옴`을 찾았다. 인쇄 강조는 위 3곳(s.33, s.41, s.48)뿐이고 `DC-1-Introduction.pdf`에는 없다. "exam" 검색 결과는 모두 "Example"이었다.
 
 참고(⭐ 아님, 기록만): 빨간 글씨·기울임 강조는 거의 모든 슬라이드에 있어 판단 기준으로 쓰지 않는다. "most common technique"(PCM, s.59), "QAM is the most efficient and commonly used today"(s.68)는 출제 포인트로 쓸 수 있는 **사실 진술**이지 시험 표시가 아니다.
 
@@ -167,11 +179,11 @@
 | 9 | 전송 장애 3원인, 감쇠·증폭(dB) | s.24~27 |
 | 10 | 왜곡, 잡음 4종 | s.28~29 |
 | 11 | SNR / SNR_dB | s.30~32 |
-| 12 | ⭐ 데이터 전송률 한계 3요소, Nyquist 비트율 (`printed-emphasis`, s.33) | s.33~35 |
-| 13 | ⭐ Shannon 용량, 두 한계 함께 쓰기 (`printed-emphasis`, s.33) | s.36~40 |
+| 12 | ⭐ 데이터 전송률 한계 3요소, Nyquist 비트율 (`printed-emphasis` — 인쇄 강조 직접(s.33)) | s.33~35 |
+| 13 | ⭐ Shannon 용량, 두 한계 함께 쓰기 (`printed-emphasis` — s.33 인쇄 강조의 범위 확장(s.36~40에는 강조 문구 없음)) | s.36~40 |
 | 14 | 성능 지표 5종, 대역폭 두 의미, 처리량 | s.41~45 |
 | 15 | 지연(4요소, 전파·전송 시간) | s.46~47 |
-| 16 | ⭐ 대역폭-지연 곱 (`printed-emphasis`, s.48), 지터 | s.48~52 |
+| 16 | ⭐ 대역폭-지연 곱 (`printed-emphasis` — 인쇄 강조 직접(s.48)), 지터 | s.48~52 |
 | 17 | 디지털→디지털 변환(라인 코딩 항상, 블록 코딩·스크램블링 선택), 블록 코딩 mB/nB 3단계 | s.53~57 |
 | 18 | 아날로그→디지털: PCM 3과정, Nyquist 표본화율 | s.58~62 |
 | 19 | 델타 변조(PCM과 비교, 구성요소) | s.63~66 |
@@ -187,7 +199,7 @@
 ## 8. 결론
 
 - **챕터**: `ch01` 개요(소주제 18개), `ch02` 물리 계층(소주제 27개).
-- **⭐**: 3개 확정 — Ch02 소주제 12·13(s.33)·16(s.48), 근거 `printed-emphasis`. 필기 기반(`handwritten`) ⭐는 0개(필기본 없음).
+- **⭐**: 3개 확정 — Ch02 소주제 12(인쇄 강조 직접(s.33))·13(s.33 인쇄 강조의 범위 확장(s.36~40에는 강조 문구 없음))·16(인쇄 강조 직접(s.48)), `examBasis`는 셋 다 `printed-emphasis`. 필기 기반(`handwritten`) ⭐는 0개(필기본 없음). s.41 "important"는 검토했으나 ⭐ 제외.
 - **챕터 최소 문항 수**: 소주제 목표 합계로 확정 — Ch01 ≥ 57, Ch02 ≥ 106.
 - **코드 유형**: 불필요(코드 0줄) → 계획에서 제외.
 - **새 문제 유형**: 불필요. 기본 10종으로 모든 출제 형태를 표현할 수 있다. 단 `calc` 입력에 **지수 표기(3×10⁸, 3e8)와 단위 접두어** 처리를 보강해야 한다(`dc-question-types.md` §2).

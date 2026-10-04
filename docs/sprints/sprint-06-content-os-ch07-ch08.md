@@ -12,6 +12,10 @@
 
 > Sprint 4에서 만든 생성기(`lib/sim/os/generators.ts`)를 그대로 쓸 수 있다: `paging`·`segmentation`·`buddy`·`placement`(Ch07), `replacement`·`memory-capacity`(Ch08). 정적 문제를 쓸 때도 정답은 같은 시뮬레이터 함수로 계산하고, trace 표의 F는 Figure 8.15 규칙(프레임이 다 찬 뒤의 폴트만)을 따른다.
 
+> **폴트 수 기준 규칙** (Sprint 4 문서 "구현 중 확정한 설계" 참고): Figure 8.15의 F는 프레임이 처음 다 찬 뒤의 폴트만 센다(CLOCK F = 5, 초기 적재 포함 시 8).
+> - 정답은 시뮬레이터의 두 값 — 초기 적재 포함 전체 폴트 수(`misses`)와 초기 적재 이후 폴트 수(`faults`, 슬라이드 F) — 에서 가져온다.
+> - 폴트 횟수를 묻는 모든 문제(calc/mcq)는 **문제 문장에 어느 기준인지 명시**하고, **해설에 다른 기준의 값도 한 줄로** 적는다.
+
 - [ ] `content-checklist.md`의 Ch07 항목을 모두 커버 (⭐ 배치 알고리즘 4가지, ⭐ 버디 시스템, ⭐ 주소 변환은 최소 6~10문항씩)
 - [ ] `content-checklist.md`의 Ch08 항목을 모두 커버 (⭐ 7개 항목: 페이지폴트 처리과정/지역성/TLB/페이지크기 그래프/스래싱/반입정책/교체알고리즘, 각 최소 6~10문항)
 - [ ] 배치 알고리즘 문제는 `lib/sim/os/placement.ts` 호출로 정답 산출

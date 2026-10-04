@@ -81,3 +81,36 @@ describe("OS 생성기 세부 규칙", () => {
     }
   });
 });
+
+describe("폴트 수 기준 규칙: 교체 문제 해설에 다른 기준(초기 적재 포함) 값", () => {
+  it("F 횟수 문제(calc)는 문장에 슬라이드 F 기준을 밝히고, 해설에 '초기 적재까지 포함하면 N회'가 있다", async () => {
+    const { OS_GENERATORS } = await import("./os/generators");
+    const { simulateReplacement } = await import("./os/replacement");
+    for (const algo of ["opt", "lru", "fifo", "clock"] as const) {
+      for (let seed = 1; seed <= 25; seed++) {
+        const q = OS_GENERATORS.replacement.generate(seed, { variant: "count", algo });
+        if (q.type !== "calc") throw new Error("count 변형은 calc");
+        const refs = /참조열 `([\d ]+)`/.exec(q.prompt)![1].split(" ").map(Number);
+        const r = simulateReplacement(refs, 3, algo);
+        expect(q.prompt).toContain("처음 다 채워진 **뒤**의 페이지 폴트만");
+        expect(q.answer).toBe(r.faults);
+        expect(q.explanation, `${algo}#${seed}`).toContain(`초기 적재까지 포함하면 ${r.misses}회`);
+      }
+    }
+  });
+
+  it("trace 변형 해설에도 F 수와 초기 적재 포함 값을 함께 적는다", async () => {
+    const { OS_GENERATORS } = await import("./os/generators");
+    for (let seed = 1; seed <= 10; seed++) {
+      const q = OS_GENERATORS.replacement.generate(seed, { variant: "trace", algo: "fifo" });
+      expect(q.explanation).toMatch(/F는 총 \d+번\. 초기 적재까지 포함하면 \d+회/);
+    }
+  });
+
+  it("Figure 8.15 CLOCK 기준 문구: F 5회 → 초기 적재까지 포함하면 8회", async () => {
+    const { otherBasis } = await import("./os/generators");
+    expect(otherBasis({ faults: 5, misses: 8 })).toBe(
+      "초기 적재까지 포함하면 8회(초기 적재 3회 + F 5회).",
+    );
+  });
+});

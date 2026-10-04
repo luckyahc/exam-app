@@ -490,13 +490,14 @@ export const replacementGen: Generator<ReplParams> = {
               `${i + 1}. 참조 ${s.ref}: [${s.frames.map((f, j) => (f === null ? "·" : algo === "clock" && s.use?.[j] ? `${f}*` : f)).join(" ")}]${s.fault ? " F" : s.hit ? " (히트)" : " (적재)"}`,
           ),
           explanation:
-            algo === "clock"
+            (algo === "clock"
               ? "Clock: 참조·적재 때 use=1, 교체는 pointer부터 처음 만나는 use=0 프레임이며 지나치는 use=1은 0으로 바꾼다. 히트 때는 pointer가 움직이지 않는다. (* = use bit 1)"
               : algo === "opt"
                 ? "OPT: 앞으로 가장 오랫동안 참조되지 않을 페이지를 교체한다. 다시 참조되지 않는 페이지가 여럿이면 맨 위 프레임을 뺀다."
                 : algo === "lru"
                   ? "LRU: 가장 오랫동안 참조되지 않은(가장 최근 사용이 오래된) 페이지를 교체한다."
-                  : "FIFO: 가장 먼저 들어온 페이지를 교체한다(참조 여부와 무관).",
+                  : "FIFO: 가장 먼저 들어온 페이지를 교체한다(참조 여부와 무관).") +
+            ` ${otherBasis(r)}`,
           summary: "성능: OPT(구현 불가) > LRU > Clock(LRU 근사) > FIFO",
         };
         return q;
@@ -533,7 +534,7 @@ export const replacementGen: Generator<ReplParams> = {
         prompt: `프레임 3개, 참조열 \`${refText}\`에 대한 **${ALGO_LABEL[algo]}** 진행 표의 빈칸을 채우시오(F가 아니면 -). ${rule}`,
         columns: refs.map(String),
         rows,
-        explanation: `${ALGO_LABEL[algo]}의 F는 총 ${r.faults}번. 빈 프레임은 위부터 채우고, 교체 시 ${
+        explanation: `${ALGO_LABEL[algo]}의 F는 총 ${r.faults}번. ${otherBasis(r)} 빈 프레임은 위부터 채우고, 교체 시 ${
           algo === "fifo"
             ? "가장 먼저 들어온"
             : algo === "lru"
@@ -698,6 +699,11 @@ export const memoryCapacityGen: Generator<CapParams> = {
     return q;
   },
 };
+
+/** 폴트 수 기준 규칙: 해설에 다른 기준(초기 적재 포함)의 값을 한 줄로 적는다 */
+export function otherBasis(r: { faults: number; misses: number }): string {
+  return `초기 적재까지 포함하면 ${r.misses}회(초기 적재 ${r.misses - r.faults}회 + F ${r.faults}회).`;
+}
 
 /** os 과목 생성기 맵 — data/subjects/os/index.ts의 loadGenerators가 동적 import로 가져간다 */
 export const OS_GENERATORS: GeneratorMap = Object.fromEntries(
