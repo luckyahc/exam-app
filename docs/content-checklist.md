@@ -93,7 +93,7 @@
 > - **Ch02(59)**: mcq 18 · ox 12 · blank 10 · calc 7 · multi 4 · match 3 · order 3 · classify 2. **Ch03(95)**: mcq 32 · ox 22 · blank 16 · match 7 · order 7 · multi 6 · classify 5. 합계 154: mcq 32.5% · ox 22.1% · blank 16.9%(2026-10-05 blank 11문항 추가로 10.6%에서 보정). mcq·ox는 여전히 가이드(25%·15%)보다 많다 — Ch07·08(Sprint 6)에서 계산·trace 비중으로 전체 비율을 맞춘다.
 > - 문제 내 보기·순서 항목·짝 중복 없음, 정답 키 채점 = 1점, 렌더링 오류 없음 — `data/subjects/integrity.test.ts`, `components/qtypes/render.test.ts`로 자동 검사(전 과목·전 챕터).
 > - 챕터 안에서 문제 본문+보기가 완전히 같은 문항 0건(스크립트 점검). 해설은 슬라이드 근거만 사용해 "(보충)" 표시 대상 없음.
-> - 문항별 PDF 대조 기록: [`verification/os-ch02-ch03.md`](./verification/os-ch02-ch03.md) (154문항: 기존 일치 138 · 수정 3 · 신규 13).
+> - 문항별 PDF 대조 기록: [`verification/os-ch02-ch03.md`](./verification/os-ch02-ch03.md) (154문항: 기존 일치 126 · 수정 15 · 신규 13(그중 수정 7) · 필기 근거 31 — blank 정답 유일성 점검 반영).
 
 ## 과목 2 — 데이터 통신 (data-comm)
 

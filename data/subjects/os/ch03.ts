@@ -123,7 +123,7 @@ const questions: readonly Question[] = [
     slideRef: "Ch03 p.2",
     prompt: "빈칸에 알맞은 말을 쓰시오.",
     text: "프로세스 = 프로그램 코드 + 데이터 집합 + {{0}}",
-    blanks: [{ accept: ["PCB", "프로세스 제어 블록", "Process Control Block", "프로세스 구조체"] }],
+    blanks: [{ accept: ["PCB", "프로세스 제어 블록", "Process Control Block", "프로세스 구조체", "프로세스 제어 블록(PCB)", "Process Structure"] }],
     explanation: "p.2: 세 번째 구성 요소는 프로세스 제어 블록(PCB)이다. 커널이 프로세스를 관리하는 데 쓰는 구조체다(p.5).",
   },
   {
@@ -178,7 +178,7 @@ const questions: readonly Question[] = [
     slideRef: "Ch03 p.3",
     prompt: "빈칸에 알맞은 말을 쓰시오.",
     text: "모든 프로세스는 트리 구조를 이루며, 뿌리(root)는 부팅 후 첫 프로세스인 init 또는 {{0}}이고 PID는 {{1}}이다.",
-    blanks: [{ accept: ["systemd"] }, { accept: ["1"] }],
+    blanks: [{ accept: ["systemd", "systemd(PID 1)"] }, { accept: ["1", "PID 1", "1번"] }],
     explanation: "p.3: 프로세스 트리의 뿌리는 init 또는 systemd(PID 1)이며, pstree 명령으로 트리를 확인할 수 있다.",
   },
   {
@@ -329,7 +329,7 @@ const questions: readonly Question[] = [
     prompt: "빈칸에 알맞은 종료 사유를 쓰시오.",
     text: "작업을 마치고 exit 하는 것을 {{0}}라 하고, 허용된 실행 시간을 넘기는 것을 {{1}}라 한다.",
     blanks: [
-      { accept: ["정상 종료", "normal completion", "정상종료"] },
+      { accept: ["정상 종료", "normal completion", "정상종료", "정상 종료(normal completion)"] },
       { accept: ["시간 초과", "time limit exceeded", "시간초과"] },
     ],
     explanation: "p.4의 첫 두 항목이다.",
@@ -405,7 +405,7 @@ const questions: readonly Question[] = [
     slideRef: "Ch03 p.6, p.19",
     prompt: "빈칸에 알맞은 자료구조를 쓰시오.",
     text: "준비 큐와 대기 큐는 프로세스 구조체(PCB)들을 {{0}}로 연결해 관리한다.",
-    blanks: [{ accept: ["연결 리스트", "linked list", "링크드 리스트", "이중 연결 리스트", "double linked list"] }],
+    blanks: [{ accept: ["연결 리스트", "linked list", "링크드 리스트", "이중 연결 리스트", "double linked list", "doubly linked list", "더블 링크드 리스트"] }],
     explanation: "p.6 필기·p.19: 큐는 process 구조체들을 (이중) 연결 리스트로 관리한다.",
   },
   {
@@ -468,9 +468,10 @@ const questions: readonly Question[] = [
     difficulty: 2,
     slideRef: "Ch03 p.7, p.29",
     prompt: "빈칸에 알맞은 말을 쓰시오.",
-    text: "processor를 한 프로세스에서 다른 프로세스로 전환하는 것, 즉 레지스터 세트를 CPU에 밀어 넣어 넘겨 주는 것을 {{0}}라 한다.",
-    blanks: [{ accept: ["디스패처", "dispatcher", "디스패치", "dispatch"] }],
-    explanation: "p.7: 디스패처(Dispatcher)는 프로세서를 한 프로세스에서 다른 프로세스로 전환한다. p.29 필기: 레지스터 세트를 CPU 쪽으로 밀어 넣는 것이 dispatcher다.",
+    text: "프로세서를 한 프로세스에서 다른 프로세스로 전환하는 일을 맡는 구성 요소를 {{0}}라 한다. 필기에서는 이것을 레지스터 세트를 CPU 쪽으로 순간적으로 밀어 넣는 것이라고 설명한다.",
+    blanks: [{ accept: ["디스패처", "dispatcher", "디스패처(Dispatcher)", "Dispatcher(디스패처)"] }],
+    explanation:
+      "p.7: 디스패처(Dispatcher)는 프로세서를 한 프로세스에서 다른 프로세스로 전환한다. 교수님 필기 기준(p.29): 레지스터 세트를 CPU 쪽으로 순간적으로 밀어 넣는 것이 dispatcher다. 그 결과 일어나는 사건(P1 → P2로 processor가 넘어감)은 process switch(p.40)라 부르므로, 전환을 맡는 '구성 요소'를 묻는 이 문항의 답은 디스패처다.",
   },
 
   // ───────────────────────────── 프로세스 이미지 (p.22-25)
@@ -646,7 +647,7 @@ const questions: readonly Question[] = [
     slideRef: "Ch03 p.31",
     prompt: "빈칸에 알맞은 레지스터 이름을 쓰시오.",
     text: "스택의 최상단(top)을 가리키는 레지스터는 {{0}}이다.",
-    blanks: [{ accept: ["SP", "스택 포인터", "Stack Pointer", "스택포인터"] }],
+    blanks: [{ accept: ["SP", "스택 포인터", "Stack Pointer", "스택포인터", "스택 포인터(SP)", "SP 레지스터", "스택 포인터 레지스터"] }],
     explanation: "p.31: 스택 포인터 레지스터(SP)는 stack top을 가리킨다.",
   },
   {
@@ -901,7 +902,7 @@ const questions: readonly Question[] = [
     prompt: "빈칸에 알맞은 말을 쓰시오.",
     text: "swap out된 프로세스는 Blocked 상태에서 {{0}} 상태가 되고, 기다리던 이벤트가 들어오면 디스크에서 메모리로 {{1}}되어 Ready 상태가 된다.",
     blanks: [
-      { accept: ["Suspend", "서스펜드", "보류", "Suspended", "보류 상태"] },
+      { accept: ["Suspend", "서스펜드", "보류", "Suspended", "보류 상태", "Suspend 상태", "suspend state"] },
       { accept: ["swap in", "스왑 인", "swap-in", "swapin", "스왑인"] },
     ],
     explanation: "p.20: Blocked → Suspend(swap out), Suspend → Ready(swap in).",
@@ -1106,7 +1107,7 @@ const questions: readonly Question[] = [
     slideRef: "Ch03 p.7",
     prompt: "빈칸에 알맞은 말을 쓰시오.",
     text: "한 프로세스를 위해 실행되는 명령어들의 순서를 프로세스 {{0}}이라 한다.",
-    blanks: [{ accept: ["추적", "Trace", "트레이스", "추적(Trace)", "trace(추적)"] }],
+    blanks: [{ accept: ["추적", "Trace", "트레이스", "추적(Trace)", "trace(추적)", "프로세스 추적", "process trace"] }],
     explanation:
       "p.7: 프로세스 추적(Trace)은 한 프로세스를 위해 실행되는 명령어들의 순서다. p.10의 추적 그림에서는 프로세스 A·B·C 사이마다 Scheduler 코드가 실행된다.",
   },
@@ -1308,7 +1309,7 @@ const questions: readonly Question[] = [
     text: "현재 실행 중인 프로세스의 레지스터를 {{0}}에 저장하는 것을 문맥 저장이라 하고, 모든 ISR의 마지막에는 항상 {{1}} 함수를 호출한다.",
     blanks: [
       { accept: ["PCB", "프로세스 제어 블록", "프로세스 구조체", "Process Control Block"] },
-      { accept: ["scheduler", "scheduler()", "스케줄러", "Scheduler()"] },
+      { accept: ["scheduler", "scheduler()", "스케줄러", "스케줄러 함수", "scheduler 함수"] },
     ],
     explanation: "p.38: 문맥(registers)은 PCB에 저장하고(문맥 저장), 모든 ISR의 마지막에 scheduler()를 호출해 다음에 실행할 프로세스를 고른다.",
   },
@@ -1435,7 +1436,7 @@ const questions: readonly Question[] = [
     text: "포인터 변수가 잘못되었을 때 메모리 장치가 발생시키는 Trap은 {{0}}이고, 명령어가 깨졌을 때 CPU가 발생시키는 Trap은 {{1}}이다.",
     blanks: [
       { accept: ["Segment fault", "segmentation fault", "세그먼트 폴트", "세그멘테이션 폴트", "segfault"] },
-      { accept: ["Illegal instruction", "illegal instructions", "잘못된 명령", "불법 명령어"] },
+      { accept: ["Illegal instruction", "illegal instructions", "잘못된 명령", "불법 명령어", "잘못된 명령어"] },
     ],
     explanation: "p.42: Segment fault(pointer 변수가 잘못되었을 때; memory 장치), Illegal instructions(명령어가 깨졌을 때; CPU).",
   },

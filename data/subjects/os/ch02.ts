@@ -101,7 +101,7 @@ const questions: readonly Question[] = [
     slideRef: "Ch02 p.5",
     prompt: "빈칸에 알맞은 운영체제 서비스를 쓰시오.",
     text: "편집기와 디버거를 제공하는 운영체제 서비스는 {{0}}이다.",
-    blanks: [{ accept: ["프로그램 개발", "프로그램개발", "program development"] }],
+    blanks: [{ accept: ["프로그램 개발", "프로그램개발", "program development", "프로그램 개발 서비스"] }],
     explanation:
       "p.5: '프로그램 개발' 서비스의 예가 편집기와 디버거다. '프로그램 실행'은 실행 과정·자원 관리·스케줄링을 다루는 별개 서비스다.",
   },
@@ -331,11 +331,11 @@ const questions: readonly Question[] = [
     type: "blank",
     difficulty: 2,
     slideRef: "Ch02 p.7",
-    prompt: "슬라이드 필기 기준으로 빈칸에 알맞은 자원을 쓰시오.",
-    text: "운영체제가 관리하는 자원 중 I/O 디바이스가 아닌 것은 CPU, 메모리, {{0}}이고, 디스크·키보드·네트워크 카드 등 나머지는 모두 I/O 디바이스다.",
+    prompt: "교수님 필기 기준으로 빈칸에 알맞은 자원을 쓰시오.",
+    text: "p.7의 자원 목록(프로세서, 메모리, 디스크, 프린터, 키보드, 마우스, 모니터, 네트워크 카드, 직렬/병렬 포트, USB 포트, 타이머) 중 I/O 디바이스가 아닌 것은 CPU, 메모리, 그리고 {{0}} 하나뿐이다.",
     blanks: [{ accept: ["타이머", "timer", "타이머(timer)"] }],
     explanation:
-      "p.7 필기: 'IO디바이스: CPU, 메모리, 타이머 빼고 전부다', '네트워크 카드 또한 입출력 장치'. 타이머는 p.7 인쇄 자원 목록에 있지만 I/O 디바이스로 분류하지 않는다.",
+      "교수님 필기 기준(p.7): 'IO디바이스: CPU, 메모리. 타이머 빼고 전부다', '네트워크 카드 또한 입출력 장치'. 타이머는 p.7 인쇄 자원 목록에 있지만 I/O 디바이스로 분류하지 않는다.",
   },
 
   // ───────────────────────────── 발전성 (p.9)
@@ -419,7 +419,7 @@ const questions: readonly Question[] = [
     slideRef: "Ch02 p.10",
     prompt: "빈칸에 알맞은 말을 쓰시오.",
     text: "OS = {{0}} + 시스템 프로그램(System Programs)",
-    blanks: [{ accept: ["커널", "Kernel"] }],
+    blanks: [{ accept: ["커널", "Kernel", "커널(Kernel)", "kernel(커널)"] }],
     explanation: "p.10: 운영체제는 메모리에 상주하는 커널과 디스크에 실행 파일로 존재하는 시스템 프로그램으로 이루어진다.",
   },
   {
@@ -556,8 +556,8 @@ const questions: readonly Question[] = [
     prompt: "빈칸에 알맞은 말을 쓰시오.",
     text: "단순 일괄처리 시스템에서 최초의 운영체제는 {{0}}이며, 각 작업의 처리 방법은 작업 제어 언어인 {{1}}로 기술한다.",
     blanks: [
-      { accept: ["모니터", "Monitor"] },
-      { accept: ["JCL", "작업 제어 언어", "Job Control Language"] },
+      { accept: ["모니터", "Monitor", "모니터(Monitor)"] },
+      { accept: ["JCL", "작업 제어 언어", "Job Control Language", "작업제어언어", "JCL(작업 제어 언어)"] },
     ],
     explanation: "p.13: 모니터(Monitor)가 최초의 운영체제이고, JCL(작업 제어 언어)로 각 작업의 처리 방법을 기술한다.",
   },
@@ -644,7 +644,7 @@ const questions: readonly Question[] = [
     slideRef: "Ch02 p.20",
     prompt: "빈칸에 알맞은 말을 쓰시오.",
     text: "시분할 시스템에서 CPU가 각 프로그램을 번갈아 가며 실행시키는 일정 시간을 time quantum 또는 {{0}}라 한다.",
-    blanks: [{ accept: ["time slice", "timeslice", "time-slice", "타임 슬라이스", "타임슬라이스"] }],
+    blanks: [{ accept: ["time slice", "timeslice", "time-slice", "타임 슬라이스", "타임슬라이스", "타임 슬라이스(time slice)", "time slice(타임 슬라이스)"] }],
     explanation:
       "p.20: CPU가 각 프로그램을 일정시간(time quantum or time slice) 동안 번갈아 가면서 실행시킨다. 이 시간 동안 I/O 없이 계속 실행하면 CPU가 다른 프로그램으로 넘어간다(세 번째 양도 조건).",
   },
@@ -693,7 +693,7 @@ const questions: readonly Question[] = [
     slideRef: "Ch02 p.17",
     prompt: "빈칸에 알맞은 말을 쓰시오.",
     text: "프로세서가 I/O 명령이 완료될 때까지 기다린 후에야 다음 작업을 진행할 수 있는 방식을 {{0}}이라 한다.",
-    blanks: [{ accept: ["단일프로그래밍", "단일 프로그래밍", "Uniprogramming", "uni-programming", "유니프로그래밍"] }],
+    blanks: [{ accept: ["단일프로그래밍", "단일 프로그래밍", "Uniprogramming", "uni-programming", "유니프로그래밍", "단일프로그래밍(Uniprogramming)"] }],
     explanation:
       "p.17: 단일프로그래밍(Uniprogramming)의 설명이다. 다중프로그래밍(p.18)은 한 작업이 I/O를 기다릴 때 프로세서가 다른 작업으로 전환할 수 있다.",
   },
@@ -883,7 +883,7 @@ const questions: readonly Question[] = [
     difficulty: 2,
     slideRef: "Ch02 p.24",
     prompt: "빈칸에 알맞은 함수 이름을 쓰시오.",
-    text: "시분할에서는 0.1초마다 CPU를 다른 프로그램에 넘기기 위해 커널 내에서 timer interrupt handler, {{0}} 등의 함수 코드를 수행해야 하며, 이것이 시분할을 위해 지불하는 추가적인 CPU overhead다.",
+    text: "p.24에서 시분할의 스위칭 오버헤드는 0.1초 타임 슬라이스마다 '타이머·{{0}} 실행'에 드는 시간이다. 사용자 프로그램 대신 이 커널 코드가 도는 시간만큼이 시분할을 위해 지불하는 추가적인 CPU overhead다.",
     blanks: [{ accept: ["scheduler()", "scheduler", "스케줄러", "스케줄러 함수", "scheduler 함수", "Scheduler()"] }],
     explanation:
       "p.24: timer interrupt handler, scheduler() 등의 함수 코드 수행이 시분할의 추가 CPU overhead다. 다중프로그램 일괄처리는 종료 시에만 스위칭하므로 이 과정이 필요 없어 유효 CPU 이용률이 더 높다.",
@@ -931,7 +931,7 @@ const questions: readonly Question[] = [
     slideRef: "Ch02 p.21",
     prompt: "빈칸에 알맞은 말을 쓰시오.",
     text: "다중프로그램 일괄처리의 주 목표(Principal objective)는 CPU 이용률 최대화이고, 시분할의 주 목표는 {{0}} 최소화다.",
-    blanks: [{ accept: ["응답시간", "응답 시간", "response time", "responsetime"] }],
+    blanks: [{ accept: ["응답시간", "응답 시간", "response time", "responsetime", "응답시간(response time)"] }],
     explanation:
       "p.21 표: Batch Multiprogramming = Maximize processor use(필기: cpu 이용률을 최대화), Time Sharing = Minimize response time(필기: 응답 시간을 최소화).",
   },
@@ -998,7 +998,7 @@ const questions: readonly Question[] = [
     slideRef: "Ch02 p.25",
     prompt: "빈칸에 알맞은 구조를 쓰시오.",
     text: "코어 간 통신이 빠르고 전력 효율이 우수해 오늘날 PC·스마트폰의 표준 구조가 된 것은 {{0}}다.",
-    blanks: [{ accept: ["멀티코어", "멀티 코어", "Multicore", "multi-core", "다중 코어", "다중코어"] }],
+    blanks: [{ accept: ["멀티코어", "멀티 코어", "Multicore", "multi-core", "multi core", "다중 코어", "다중코어", "멀티코어(Multicore)"] }],
     explanation:
       "p.25: 멀티코어(Multicore)는 한 칩에 여러 코어와 캐시를 통합한 구조로, 코어 간 통신이 빠르고 전력 효율이 우수해 오늘날 PC·스마트폰의 표준 구조다. SMP는 동등한 여러 프로세서가 메모리·I/O를 공유하는 구조이고 장점은 성능·가용성·점진적 확장이다.",
   },
