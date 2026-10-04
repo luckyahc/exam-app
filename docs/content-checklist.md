@@ -56,30 +56,30 @@
 - [x] 페이지 크기 2^k 비트 슬라이싱(상위/하위 비트 분해) — calc/blank (5문항)
 - [x] 기본 세그먼테이션(세그먼트 테이블=길이+시작주소, 보호 트랩) — §6-2 생성기 연동 calc/mcq/ox (9문항) — 생성기 `segmentation` 1 포함, Figure 7.12(p.40) 비트 예제
 
-### Ch08. 가상 메모리 (목표 ≥ 120문항, 비중 최대)
+### Ch08. 가상 메모리 (목표 ≥ 120문항 → 작성 138 = 정적 134 + 생성기 4, ⭐ 71)
 
-- [ ] 가상메모리 개념(실제메모리 vs 가상메모리), MMU 역할 — mcq/ox/blank
-- [ ] ⭐ 페이지 폴트 처리 과정(p.5-6, Resident set→폴트→인터럽트 핸들러→디스크 I/O→재실행) — **최소 6~10문항**, order/blank/mcq
-- [ ] ⭐ 지역성의 원리(Locality) — **최소 6~10문항**, blank(한 단어)/mcq/ox
-- [ ] 가상메모리 HW/OS 지원 역할 분담 — mcq/blank
-- [ ] 페이지 테이블 엔트리 제어비트(P/M/Use/Protection/Lock), 32비트 엔트리 비트분해 — mcq/calc/blank
-- [ ] 2단계 페이지 테이블(§6-8 계산: 4GB/4KB→100만 엔트리→4MB→재귀 테이블) — calc
-- [ ] 역 페이지 테이블(PowerPC/UltraSPARC/IA-64, 프레임당 엔트리, 해시+chain pointer) — mcq/blank/order
-- [ ] ⭐ TLB 주소변환 과정(TLB 검사→히트/미스→페이지테이블→폴트 분기) — **최소 6~10문항**, order/mcq/calc(메모리 접근 횟수 비교)
-- [ ] ⭐ 페이지 크기 vs 폴트율 그래프(내부단편화↓/테이블크기↑, 올라갔다 내려가는 곡선) + 프레임 수 vs 폴트율(knee) — **최소 6~10문항**, graph/blank(↑↓)/mcq/ox, 두 그래프 x축 구분 문제 포함
-- [ ] 워킹 셋(W(t,Δ)) 정의 및 계산 — blank/calc
-- [ ] ⭐ 스래싱과 부하 제어(곡선/최적 멀티프로그래밍 수준) — **최소 6~10문항**, graph/mcq/ox
-- [ ] 가상메모리 세그먼테이션, 페이징+세그먼테이션 결합 — mcq/blank
-- [ ] 정책 분류(반입/배치/교체/청소/상주집합관리/부하제어) 전체 나열 — blank/match
-- [ ] ⭐ 반입 정책(Demand Paging vs Prepaging) — **최소 6~10문항**, match/mcq/ox/blank
-- [ ] 배치 정책(페이징=중요X vs 세그먼테이션=중요) — mcq/ox
-- [ ] 교체 정책 개념(미래 참조 가능성 예측) — mcq/blank
-- [ ] 프레임 잠금(Lock bit, 대상: 커널/제어구조체/IO버퍼) — mcq/match
-- [ ] ⭐ 기본 교체 알고리즘(Optimal/LRU/FIFO/LFU·MFU/Clock) 특징·성능 비교 + §6-6 생성기 연동 trace(빈 칸 채우기, pointer 이동, 두 바퀴째 교체 등) — **최소 6~10문항**, trace/mcq/calc/match
-- [ ] 개선된 클럭(Enhanced Clock, u/m 4분류, 1차/2차 스캔) — mcq/trace/calc
-- [ ] 청소 정책(Demand Cleaning vs Precleaning) — match/mcq/ox
-- [ ] 페이지 버퍼링(free list/modified list, reclaim) — mcq/blank (난이도 낮게, 문항 수 적게 — 교수님 코멘트 반영)
-- [ ] 상주 집합 관리(고정/가변 할당 × 지역/전역 교체, 고정+전역 불가능) — classify/match/mcq
+- [x] 가상메모리 개념(실제메모리 vs 가상메모리), MMU 역할 — mcq/ox/blank (4문항)
+- [x] ⭐ 페이지 폴트 처리 과정(p.5-6, Resident set→폴트→인터럽트 핸들러→디스크 I/O→재실행) — **최소 6~10문항**, order/blank/mcq (9문항)
+- [x] ⭐ 지역성의 원리(Locality) — **최소 6~10문항**, blank(한 단어)/mcq/ox (7문항)
+- [x] 가상메모리 HW/OS 지원 역할 분담 — mcq/blank (2문항)
+- [x] 페이지 테이블 엔트리 제어비트(P/M/Use/Protection/Lock), 32비트 엔트리 비트분해 — mcq/calc/blank (6문항 — 32비트 엔트리 비트 분해는 calc 대신 pte-006 해설(20비트 프레임 번호, p.47 필기)로 다룸)
+- [x] 2단계 페이지 테이블(§6-8 계산: 4GB/4KB→100만 엔트리→4MB→재귀 테이블) — calc (4문항 + 생성기 memory-capacity 2)
+- [x] 역 페이지 테이블(PowerPC/UltraSPARC/IA-64, 프레임당 엔트리, 해시+chain pointer) — mcq/blank/order (5문항)
+- [x] ⭐ TLB 주소변환 과정(TLB 검사→히트/미스→페이지테이블→폴트 분기) — **최소 6~10문항**, order/mcq/calc(메모리 접근 횟수 비교) (10문항 — tlb-009가 TLB 히트 / 미스·페이지 테이블 히트 / 페이지 폴트별 메모리·디스크 접근 비교(match))
+- [x] ⭐ 페이지 크기 vs 폴트율 그래프(내부단편화↓/테이블크기↑, 올라갔다 내려가는 곡선) + 프레임 수 vs 폴트율(knee) — **최소 6~10문항**, graph/blank(↑↓)/mcq/ox, 두 그래프 x축 구분 문제 포함 (10문항 (graph 2))
+- [x] 워킹 셋(W(t,Δ)) 정의 및 계산 — blank/calc (6문항 — W(t,Δ) 계산은 lib/sim/os/workingSet.ts)
+- [x] ⭐ 스래싱과 부하 제어(곡선/최적 멀티프로그래밍 수준) — **최소 6~10문항**, graph/mcq/ox (10문항 (graph 1))
+- [x] 가상메모리 세그먼테이션, 페이징+세그먼테이션 결합 — mcq/blank (5문항)
+- [x] 정책 분류(반입/배치/교체/청소/상주집합관리/부하제어) 전체 나열 — blank/match (1문항 — 정책을 한 장에 모은 슬라이드가 없어 정책별 첫 정의를 match 1문항으로)
+- [x] ⭐ 반입 정책(Demand Paging vs Prepaging) — **최소 6~10문항**, match/mcq/ox/blank (9문항)
+- [x] 배치 정책(페이징=중요X vs 세그먼테이션=중요) — mcq/ox (3문항)
+- [x] 교체 정책 개념(미래 참조 가능성 예측) — mcq/blank (3문항)
+- [x] 프레임 잠금(Lock bit, 대상: 커널/제어구조체/IO버퍼) — mcq/match (4문항)
+- [x] ⭐ 기본 교체 알고리즘(Optimal/LRU/FIFO/LFU·MFU/Clock) 특징·성능 비교 + §6-6 생성기 연동 trace(빈 칸 채우기, pointer 이동, 두 바퀴째 교체 등) — **최소 6~10문항**, trace/mcq/calc/match (20문항 = ⭐ 교체 알고리즘 10(Figure 8.15 trace 4 + 생성기 2) + ⭐ Clock 정책 동작 6(Figure 8.16, p.48 "시험"·p.50 필기) + LFU/MFU·비교 4(출제 표시 없음, Figure 8.17 graph))
+- [x] 개선된 클럭(Enhanced Clock, u/m 4분류, 1차/2차 스캔) — mcq/trace/calc (5문항 — trace 1(simulateEnhancedClock) + 다음 교체 대상 mcq 1(enhancedClockVictim))
+- [x] 청소 정책(Demand Cleaning vs Precleaning) — match/mcq/ox (4문항)
+- [x] 페이지 버퍼링(free list/modified list, reclaim) — mcq/blank (난이도 낮게, 문항 수 적게 — 교수님 코멘트 반영) (2문항(난이도 1))
+- [x] 상주 집합 관리(고정/가변 할당 × 지역/전역 교체, 고정+전역 불가능) — classify/match/mcq (5문항)
 
 ## 공통 체크
 
@@ -94,6 +94,8 @@
 > - 문제 내 보기·순서 항목·짝 중복 없음, 정답 키 채점 = 1점, 렌더링 오류 없음 — `data/subjects/integrity.test.ts`, `components/qtypes/render.test.ts`로 자동 검사(전 과목·전 챕터).
 > - 챕터 안에서 문제 본문+보기가 완전히 같은 문항 0건(스크립트 점검). 해설은 슬라이드 근거만 사용해 "(보충)" 표시 대상 없음.
 > - **Ch07(89)**: mcq 23 · blank 18 · ox 14 · calc 14 · multi 5 · match 5 · classify 4 · trace 4 · order 2 — blank 20.2%, mcq 25.8%, ox 15.7%로 처음부터 비율 기준(blank 18~22%, mcq ≤30%, ox ≤18%, trace ≥3) 안에서 작성. 대조 기록 [`verification/os-ch07.md`](./verification/os-ch07.md).
+> - **Ch08(138)**: mcq 32 · blank 28 · ox 23 · match 10 · multi 9 · classify 9 · calc 9 · order 7 · trace 7 · graph 4 — blank 20.3%, mcq 23.2%, ox 16.7%. 대조 기록 [`verification/os-ch08.md`](./verification/os-ch08.md).
+> - **OS 전체 4챕터**: 381문항(Ch02 59 · Ch03 95 · Ch07 89 · Ch08 138, 생성기 문항 11 포함). Ch02·03의 mcq·ox 과다는 Ch07·08을 처음부터 비율 안에서 써서 전체로 보정.
 > - 문항별 PDF 대조 기록: [`verification/os-ch02-ch03.md`](./verification/os-ch02-ch03.md) (154문항: 기존 일치 126 · 수정 15 · 신규 13(그중 수정 7) · 필기 근거 31 — blank 정답 유일성 점검 반영).
 
 ## 과목 2 — 데이터 통신 (data-comm)

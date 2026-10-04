@@ -442,7 +442,7 @@ type ReplParams = { variant: "count" | "trace"; algo: Algo };
 const REPL: Meta = {
   chapter: "ch08",
   topic: "교체 알고리즘",
-  slideRef: "Ch08 p.42-49",
+  slideRef: "Ch08 p.43-50",
   exam: true,
   examBasis: "handwritten",
 };
@@ -633,7 +633,7 @@ export const memoryCapacityGen: Generator<CapParams> = {
       const q: CalcQ = {
         ...baseOf(
           "memory-capacity",
-          { chapter: "ch08", topic: "역 페이지 테이블", slideRef: "Ch08 p.15-17", exam: false },
+          { chapter: "ch08", topic: "역 페이지 테이블", slideRef: "Ch08 p.16-18", exam: false },
           seed,
           { variant },
           1,
@@ -681,7 +681,7 @@ export const memoryCapacityGen: Generator<CapParams> = {
         {
           chapter: "ch08",
           topic: "2단계 페이지 테이블 계산",
-          slideRef: "Ch08 p.13-14",
+          slideRef: "Ch08 p.13-15",
           exam: false,
         },
         seed,

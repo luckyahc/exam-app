@@ -9,7 +9,7 @@
 | 3 | [문제 유형 엔진](./sprints/sprint-03-question-engine.md) | 데이터 모델(`subject` 포함), 문제 유형 레지스트리, 10종 렌더러/채점기 + 단위 테스트 | DONE |
 | 4 | [OS 시뮬레이터/생성기](./sprints/sprint-04-simulators.md) | `lib/sim/os/*` 8종 + Vitest 기준값 테스트 | DONE |
 | 5 | [OS 콘텐츠: Ch02·Ch03](./sprints/sprint-05-content-os-ch02-ch03.md) | 정적 문제 ≥130문항 | DONE |
-| 6 | [OS 콘텐츠: Ch07·Ch08](./sprints/sprint-06-content-os-ch07-ch08.md) | 정적 문제 ≥200문항 + 생성기 연동 문제 | IN PROGRESS (Ch07 완료) |
+| 6 | [OS 콘텐츠: Ch07·Ch08](./sprints/sprint-06-content-os-ch07-ch08.md) | 정적 문제 ≥200문항 + 생성기 연동 문제 | DONE |
 | 7 | [화면/UX 구현](./sprints/sprint-07-screens-ux.md) | 홈(과목)/과목 홈/챕터/퀴즈/결과/오답노트(과목 탭+전체) | TODO |
 | 8 | [학습 기능 고도화](./sprints/sprint-08-learning-features.md) | 과목별·전체 대시보드, 비슷한 문제 생성, 버전 있는 JSON 내보내기/가져오기 | TODO |
 | 9 | [데이터 통신: 계산 생성기 + calc 보강](./sprints/sprint-09-dc-calc-generators.md) | `lib/sim/data-comm/*` 생성기 10개, `calc` 지수 표기·상대 오차, graph SVG 12종 | TODO |
@@ -56,3 +56,4 @@ Sprint 1 ──▶ Sprint 2 ──▶ Sprint 3 ──▶ Sprint 5 ─┐
 - 2026-10-05: **다크모드 하이드레이션 경고 수정.** `<html>`에 `suppressHydrationWarning`(noFlashScript가 하이드레이션 전에 dark 클래스를 붙여 생기던 className 불일치). 시스템·라이트·다크 새로고침에서 경고 없음 확인.
 - 2026-10-05: **Sprint 6 착수 — Ch07 완료(Ch08 대기).** `data/subjects/os/ch07.ts` 89문항(정적 82 + 생성기 7, ⭐ 30), 유형 비율 기준(blank 18~22%·mcq ≤30%·ox ≤18%·trace ≥3) 충족. 슬라이드 기준값 테스트 `ch07.test.ts`, `lib/sim/os/baseBounds.ts` 신규, Ch07 생성기 slideRef 정정. 대조 기록 `docs/verification/os-ch07.md`(일치 80·수정 9·필기 근거 14). coverage-matrix Ch07 slideRef가 실제보다 1쪽 앞인 점 기록.
 - 2026-10-05: **Ch07 마무리.** "물리→논리 변환은 선형 탐색이라 느리다"를 p.32-36 이미지로 재확인 — 인쇄·필기 어디에도 없어 해설의 (보충) 유지, source-diff에 "요구사항 §6-1·§7에는 있으나 슬라이드에 없음"으로 기록. coverage-matrix Ch07 slideRef를 실제 PDF 페이지로 정정.
+- 2026-10-05: **Sprint 6 완료.** `data/subjects/os/ch08.ts` 138문항(정적 134 + 생성기 4, ⭐ 71) — blank 20.3%·mcq 23.2%·ox 16.7%, trace 7·graph 4. `lib/sim/os/workingSet.ts` 신규, Ch08 생성기 slideRef 정정, 슬라이드 기준값 테스트 `ch08.test.ts`. p.43-51 출제 표시는 p.48뿐 — Clock 정책 동작(Figure 8.16)을 별도 ⭐ 소주제로(지시), LFU/MFU는 ⭐ 아님. TLB 히트/미스/폴트 비교 문항(`tlb-009`). coverage-matrix Ch08 slideRef를 실제 페이지로 정정하고 실제 문항 수 기록(OS 전체 381문항). 대조 기록 `docs/verification/os-ch08.md`.
