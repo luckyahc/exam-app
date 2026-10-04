@@ -9,7 +9,7 @@
 | 3 | [문제 유형 엔진](./sprints/sprint-03-question-engine.md) | 데이터 모델(`subject` 포함), 문제 유형 레지스트리, 10종 렌더러/채점기 + 단위 테스트 | DONE |
 | 4 | [OS 시뮬레이터/생성기](./sprints/sprint-04-simulators.md) | `lib/sim/os/*` 8종 + Vitest 기준값 테스트 | DONE |
 | 5 | [OS 콘텐츠: Ch02·Ch03](./sprints/sprint-05-content-os-ch02-ch03.md) | 정적 문제 ≥130문항 | DONE |
-| 6 | [OS 콘텐츠: Ch07·Ch08](./sprints/sprint-06-content-os-ch07-ch08.md) | 정적 문제 ≥200문항 + 생성기 연동 문제 | TODO |
+| 6 | [OS 콘텐츠: Ch07·Ch08](./sprints/sprint-06-content-os-ch07-ch08.md) | 정적 문제 ≥200문항 + 생성기 연동 문제 | IN PROGRESS (Ch07 완료) |
 | 7 | [화면/UX 구현](./sprints/sprint-07-screens-ux.md) | 홈(과목)/과목 홈/챕터/퀴즈/결과/오답노트(과목 탭+전체) | TODO |
 | 8 | [학습 기능 고도화](./sprints/sprint-08-learning-features.md) | 과목별·전체 대시보드, 비슷한 문제 생성, 버전 있는 JSON 내보내기/가져오기 | TODO |
 | 9 | [데이터 통신: 계산 생성기 + calc 보강](./sprints/sprint-09-dc-calc-generators.md) | `lib/sim/data-comm/*` 생성기 10개, `calc` 지수 표기·상대 오차, graph SVG 12종 | TODO |
@@ -53,3 +53,6 @@ Sprint 1 ──▶ Sprint 2 ──▶ Sprint 3 ──▶ Sprint 5 ─┐
 - 2026-10-05: **Sprint 5 결과 점검(PDF 대조).** OS 서비스는 p.5(6개)+p.6(1개) 인쇄 7가지로 확인 — `coverage-matrix.md`의 "6종"을 7종으로 정정. '잘못된 명령'은 종료 사유 맥락(p.4)만 출제 보류, Process switch 맥락(p.42)은 출제로 결정을 구체화(`source-diff.md`·`content-checklist.md`·sprint-05·ch03.ts 머리 주석). PDF 대조로 해설 3건 수정(`os-ch02-not-supported-008` 오류 탐지 대상 계층, `os-ch03-state-002` 필기 근거 표시, `os-ch03-process-switch-002` 근거 p.36 추가). 정답 변경 없음.
 - 2026-10-05: **Sprint 5 보강.** blank 11문항 추가(15→26, 10.6%→16.9%), Ch02 p.24 필기 "과거 CPU 이용률/오늘날 응답시간" 개념 문항 추가(처음 제외 판단 정정) — Ch02 59·Ch03 95, 합계 154. 문항별 PDF 대조 기록 `docs/verification/os-ch02-ch03.md` 신설(기존 141 = 일치 138 + 수정 3, 신규 13), 문제 작성 스프린트마다 같은 형식의 기록을 남기는 규칙을 sprint-06·sprint-10에 추가.
 - 2026-10-05: **blank 정답 유일성 점검.** blank 26문항 전수 확인 — `os-ch03-context-003`은 "전환하는 것"이 process switch(p.40)와 겹쳐 답이 둘이라 "전환을 맡는 구성 요소"로 좁힘, `os-ch02-resource-004`·`time-calc-011` 지문을 좁힘, 16문항 accept 보강. 대조 기록의 필기 근거를 문항별로 다시 분류(41 → 31, 단어 검색 과다 집계 정정).
+- 2026-10-05: **다크모드 하이드레이션 경고 수정.** `<html>`에 `suppressHydrationWarning`(noFlashScript가 하이드레이션 전에 dark 클래스를 붙여 생기던 className 불일치). 시스템·라이트·다크 새로고침에서 경고 없음 확인.
+- 2026-10-05: **Sprint 6 착수 — Ch07 완료(Ch08 대기).** `data/subjects/os/ch07.ts` 89문항(정적 82 + 생성기 7, ⭐ 30), 유형 비율 기준(blank 18~22%·mcq ≤30%·ox ≤18%·trace ≥3) 충족. 슬라이드 기준값 테스트 `ch07.test.ts`, `lib/sim/os/baseBounds.ts` 신규, Ch07 생성기 slideRef 정정. 대조 기록 `docs/verification/os-ch07.md`(일치 80·수정 9·필기 근거 14). coverage-matrix Ch07 slideRef가 실제보다 1쪽 앞인 점 기록.
+- 2026-10-05: **Ch07 마무리.** "물리→논리 변환은 선형 탐색이라 느리다"를 p.32-36 이미지로 재확인 — 인쇄·필기 어디에도 없어 해설의 (보충) 유지, source-diff에 "요구사항 §6-1·§7에는 있으나 슬라이드에 없음"으로 기록. coverage-matrix Ch07 slideRef를 실제 PDF 페이지로 정정.

@@ -351,7 +351,7 @@ lib/sim/
   _shared/types.ts          # Generator 인터페이스
   os/
     paging.ts segmentation.ts buddy.ts placement.ts cpuTime.ts
-    replacement.ts processScenario.ts memoryCapacity.ts
+    replacement.ts processScenario.ts memoryCapacity.ts baseBounds.ts
     generators.ts           # os 생성기 맵 → data/subjects/os/index.ts에서 연결
     *.test.ts               # 원본 §6 기준값 고정 테스트 (source-diff.md 보강값 포함)
   data-comm/

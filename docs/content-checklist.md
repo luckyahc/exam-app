@@ -39,22 +39,22 @@
 - [x] ⭐ Process switch 발생 5가지 경우(Clock/IO interrupt/IO 함수호출/Trap/Memory fault) — **최소 6~10문항**, classify/mcq/blank/match (10문항)
 - [x] 재실행 위치(scheduler() return;부터 vs 인터럽트 직전 다음 명령어부터) — mcq/ox (3문항)
 
-### Ch07. 메모리 관리 (목표 ≥ 80문항)
+### Ch07. 메모리 관리 (목표 ≥ 80문항 → 작성 89 = 정적 82 + 생성기 7, ⭐ 30)
 
-- [ ] 메모리 관리 요구사항 5가지(재배치/보호/공유/논리적구성/물리적구성) — order/blank/match
-- [ ] 재배치 필요 2가지 경우, 논리주소=가짜주소 개념 — mcq/ox
-- [ ] 보호(실행 시점 MMU 검사, trap+process switch), Base·Bounds 레지스터 — mcq/calc/blank
-- [ ] 공유(코드 공유, 정적 vs 동적(DLL) 라이브러리, 데이터 공유) — mcq/match/ox
-- [ ] 논리적 구성(모듈, 세그먼테이션과의 관계) — mcq/blank
-- [ ] 물리적 구성(오버레이→가상메모리) — mcq/ox
-- [ ] 고정분할(내부단편화) vs 동적분할(외부단편화/압축) — mcq/classify
-- [ ] ⭐ 동적 분할 배치 알고리즘 4가지(Best/First/Next/Worst-fit) 특징·성능 비교 — **최소 6~10문항**, match + §6-4 생성기 연동 calc/mcq
-- [ ] ⭐ 버디 시스템 할당/병합 과정(2^k 올림, 내부단편화, buddy 병합, 트리구조) — **최소 6~10문항**, §6-3 생성기 연동 trace/calc/mcq
-- [ ] 주소 용어(논리/상대/물리주소) 구분 — mcq/ox
-- [ ] 기본 페이징(프레임/페이지, 페이지 테이블 구조) — mcq/blank
-- [ ] ⭐ 주소 변환(페이지 테이블 기준 논리↔물리, 선형탐색 속도 차이) — **최소 6~10문항**, §6-1 생성기 연동 calc/trace
-- [ ] 페이지 크기 2^k 비트 슬라이싱(상위/하위 비트 분해) — calc/blank
-- [ ] 기본 세그먼테이션(세그먼트 테이블=길이+시작주소, 보호 트랩) — §6-2 생성기 연동 calc/mcq/ox
+- [x] 메모리 관리 요구사항 5가지(재배치/보호/공유/논리적구성/물리적구성) — order/blank/match (3문항) — order 대신 multi(요구사항 5가지 목록 순서는 지식 포인트가 아님)
+- [x] 재배치 필요 2가지 경우, 논리주소=가짜주소 개념 — mcq/ox (5문항)
+- [x] 보호(실행 시점 MMU 검사, trap+process switch), Base·Bounds 레지스터 — mcq/calc/blank (6문항)
+- [x] 공유(코드 공유, 정적 vs 동적(DLL) 라이브러리, 데이터 공유) — mcq/match/ox (6문항)
+- [x] 논리적 구성(모듈, 세그먼테이션과의 관계) — mcq/blank (4문항)
+- [x] 물리적 구성(오버레이→가상메모리) — mcq/ox (4문항)
+- [x] 고정분할(내부단편화) vs 동적분할(외부단편화/압축) — mcq/classify (7문항)
+- [x] ⭐ 동적 분할 배치 알고리즘 4가지(Best/First/Next/Worst-fit) 특징·성능 비교 — **최소 6~10문항**, match + §6-4 생성기 연동 calc/mcq (10문항) — 생성기 `placement` 2 포함, Figure 7.5(p.20) trace
+- [x] ⭐ 버디 시스템 할당/병합 과정(2^k 올림, 내부단편화, buddy 병합, 트리구조) — **최소 6~10문항**, §6-3 생성기 연동 trace/calc/mcq (10문항) — 생성기 `buddy` 2 포함, p.23 표 trace(10행 슬라이드 전사와 테스트로 일치 확인)
+- [x] 주소 용어(논리/상대/물리주소) 구분 — mcq/ox (4문항)
+- [x] 기본 페이징(프레임/페이지, 페이지 테이블 구조) — mcq/blank (6문항)
+- [x] ⭐ 주소 변환(페이지 테이블 기준 논리↔물리, 선형탐색 속도 차이) — **최소 6~10문항**, §6-1 생성기 연동 calc/trace (10문항) — 생성기 `paging` 2 포함. "선형 탐색이라 느림"은 슬라이드 문장이 없어 해설에 (보충)
+- [x] 페이지 크기 2^k 비트 슬라이싱(상위/하위 비트 분해) — calc/blank (5문항)
+- [x] 기본 세그먼테이션(세그먼트 테이블=길이+시작주소, 보호 트랩) — §6-2 생성기 연동 calc/mcq/ox (9문항) — 생성기 `segmentation` 1 포함, Figure 7.12(p.40) 비트 예제
 
 ### Ch08. 가상 메모리 (목표 ≥ 120문항, 비중 최대)
 
@@ -93,6 +93,7 @@
 > - **Ch02(59)**: mcq 18 · ox 12 · blank 10 · calc 7 · multi 4 · match 3 · order 3 · classify 2. **Ch03(95)**: mcq 32 · ox 22 · blank 16 · match 7 · order 7 · multi 6 · classify 5. 합계 154: mcq 32.5% · ox 22.1% · blank 16.9%(2026-10-05 blank 11문항 추가로 10.6%에서 보정). mcq·ox는 여전히 가이드(25%·15%)보다 많다 — Ch07·08(Sprint 6)에서 계산·trace 비중으로 전체 비율을 맞춘다.
 > - 문제 내 보기·순서 항목·짝 중복 없음, 정답 키 채점 = 1점, 렌더링 오류 없음 — `data/subjects/integrity.test.ts`, `components/qtypes/render.test.ts`로 자동 검사(전 과목·전 챕터).
 > - 챕터 안에서 문제 본문+보기가 완전히 같은 문항 0건(스크립트 점검). 해설은 슬라이드 근거만 사용해 "(보충)" 표시 대상 없음.
+> - **Ch07(89)**: mcq 23 · blank 18 · ox 14 · calc 14 · multi 5 · match 5 · classify 4 · trace 4 · order 2 — blank 20.2%, mcq 25.8%, ox 15.7%로 처음부터 비율 기준(blank 18~22%, mcq ≤30%, ox ≤18%, trace ≥3) 안에서 작성. 대조 기록 [`verification/os-ch07.md`](./verification/os-ch07.md).
 > - 문항별 PDF 대조 기록: [`verification/os-ch02-ch03.md`](./verification/os-ch02-ch03.md) (154문항: 기존 일치 126 · 수정 15 · 신규 13(그중 수정 7) · 필기 근거 31 — blank 정답 유일성 점검 반영).
 
 ## 과목 2 — 데이터 통신 (data-comm)

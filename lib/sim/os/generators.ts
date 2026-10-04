@@ -130,7 +130,7 @@ export const pagingGen: Generator<PagingParams> = {
       steps,
       explanation:
         variant === "p2l"
-          ? "실제주소 → 논리주소는 프레임 번호를 값으로 가진 페이지를 테이블에서 **선형 탐색**해야 하므로, 페이지 번호를 인덱스로 바로 쓰는 논리 → 실제 변환보다 느리다."
+          ? "실제주소 → 논리주소는 프레임 번호를 값으로 가진 페이지(index)를 테이블에서 찾아야 한다(p.35). (보충) 처음부터 훑는 **선형 탐색**이므로, 페이지 번호를 인덱스로 바로 쓰는 논리 → 실제 변환보다 느리다."
           : "페이지 번호 = 주소 / 페이지 크기, offset = 주소 % 페이지 크기. 페이지 번호를 인덱스로 테이블에서 프레임 번호를 바로 찾는다(빠름).",
       summary: "실제주소 = 프레임 번호 × 페이지 크기 + offset",
     };
@@ -143,7 +143,7 @@ type SegParams = { trap: boolean };
 const SEG: Meta = {
   chapter: "ch07",
   topic: "기본 세그먼테이션",
-  slideRef: "Ch07 p.37-41",
+  slideRef: "Ch07 p.38-41",
   exam: false,
 };
 const TRAP = "보호 위반(트랩) 발생";
@@ -197,7 +197,7 @@ type BuddyParams = { variant: "state" | "start" | "frag" };
 const BUDDY: Meta = {
   chapter: "ch07",
   topic: "버디 시스템",
-  slideRef: "Ch07 p.20-24",
+  slideRef: "Ch07 p.21-24",
   exam: true,
   examBasis: "handwritten",
 };
@@ -294,7 +294,7 @@ type PlacementParams = { fit: Fit };
 const PLACE: Meta = {
   chapter: "ch07",
   topic: "배치 알고리즘",
-  slideRef: "Ch07 p.15-19",
+  slideRef: "Ch07 p.16-20",
   exam: true,
   examBasis: "handwritten",
 };

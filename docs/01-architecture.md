@@ -32,6 +32,7 @@ lib/
     replacement.ts          # FIFO/LRU/OPT/Clock/Enhanced Clock
     processScenario.ts      # 인터럽트/상태전이 시나리오 생성
     memoryCapacity.ts        # n비트 주소공간/페이지테이블 크기 계산
+    baseBounds.ts            # Base·Bounds 레지스터 재배치·보호 (Ch07 p.7)
   grading/
     index.ts                 # type → grade 함수 디스패치
     mcq.ts, multi.ts, ox.ts, blank.ts, order.ts, match.ts,
