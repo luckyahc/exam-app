@@ -202,6 +202,7 @@ export interface QTypeCore<Q extends BaseQ<string>, A> {
   grade(q: Q, a: A): GradeResult;        // 순수 함수
   validate(q: Q): string[];              // 데이터 오류 메시지 (무결성 테스트용)
   choiceCount?(q: Q): number;            // 1~5 숫자키 단축키 대상 개수 (선택형만)
+  applyChoice?(q: Q, a: A, i: number): A; // 숫자키 i의 새 답 (mcq 선택, multi 토글, ox 1=O·2=X, graph 선택)
 }
 
 export const QTYPE_CORE = {

@@ -19,7 +19,11 @@ npm run test:os-regression  # OS 회귀 점검 — 먼저 `npm run build && npx 
 
 - `app/` — 라우트: `/`(과목 선택), `/s/[subject]`(과목 홈), `/s/[subject]/chapter/[id]`, `/quiz`, `/result`, `/review?subject=`, `/stats?subject=`. 옛 `/chapter/[id]`는 `/s/os/chapter/[id]`로 리다이렉트
 - `data/subjects/registry.ts` — **과목 등록 지점**. 새 과목 = `data/subjects/{과목}/` 폴더(`index.ts` + 챕터별 문제 파일) + 이 파일에 한 줄
-- `components/` — UI 컴포넌트 (`layout/SiteHeader`·`HeaderNav`, `subject/SubjectTabs`, `theme/ThemeToggle`, `storage/StorageBootstrap`)
+- `types/question.ts` — 문제 데이터 모델 공개 진입점 (`Question`, `BaseQ`, `QType`)
+- `lib/qtypes/` — **문제 유형 레지스트리(순수 로직)**: 10종 채점·검증(`registry.ts`가 등록 지점 1), 유형별 예시 문제 `fixtures.ts`
+- `components/qtypes/` — 유형별 입력·비교 화면(`registry.ts`가 등록 지점 2, 빠뜨리면 빌드 실패), `QuestionRenderer`
+- `/playground` — 10가지 문제 유형 미리보기(키보드: 1~5 선택, Enter 제출/다음, ←/→ 이동)
+- `components/` — 그 밖의 UI (`layout/SiteHeader`·`HeaderNav`, `subject/SubjectTabs`, `theme/ThemeToggle`, `storage/StorageBootstrap`)
 - `lib/subjects.ts` — 과목/챕터 조회, 문제 id → 과목 판별
 - `lib/sim/{과목}/` — 시뮬레이터·생성기 (`lib/sim/README.md`)
 - `lib/storage/` — `safeStorage`(localStorage 안전 래퍼), `keys`(키 이름), `migrate`(스키마 v1→v2 자동 마이그레이션), `upgrade`(변환 순수 함수)

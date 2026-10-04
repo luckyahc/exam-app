@@ -53,15 +53,15 @@ __tests__/ 또는 각 lib 옆 *.test.ts
 - 원본 §5의 `BaseQ` + `QType` discriminated union을 그대로 채택한다.
 - 유형별 payload 필드:
   - `mcq`: `choices: string[]`, `answerIndex: number`
-  - `multi`: `choices: string[]`, `answerIndexes: number[]` (부분점수: 선택 집합과 정답 집합의 자카드 또는 맞춘 개수/전체 비율)
-  - `ox`: `answer: boolean`
-  - `blank`: `blanks: { accept: string[] }[]`, 비교 시 trim + 소문자화 + 공백 정규화 후 `accept` 배열과 매칭. 단어 은행 모드는 `bank?: string[]` 추가
-  - `order`: `items: string[]`, `correctOrder: number[]`, 부분점수는 Kendall tau 등 상대 순서 일치 비율 사용
-  - `match`: `pairs: { left: string; right: string }[]`, 셀렉트/드롭다운 UI
+  - `multi`: `choices: string[]`, `answerIndexes: number[]` (부분점수 = max(0, (맞게 고른 수 − 잘못 고른 수) / 정답 수) — Sprint 3 확정)
+  - `ox`: `answer: boolean`, `falseReason?: string` (거짓 진술이면 틀린 이유 필수)
+  - `blank`: `text`(빈칸 자리 `{{0}}`…), `blanks: { accept: string[] }[]`, 비교 시 NFKC + 소문자화 + 모든 공백 제거 후 `accept` 배열과 매칭. 단어 은행 모드는 `bank?: string[]` 추가
+  - `order`: `items: string[]`(**정답 순서로 저장**, 화면은 문제 id로 고정 셔플), 부분점수 = 상대 순서가 맞는 쌍의 비율 — Sprint 3 확정
+  - `match`: `pairs: { left: string; right: string }[]`, `distractors?: string[]`, 셀렉트/드롭다운 UI
   - `classify`: `buckets: string[]`, `items: { label: string; bucket: string }[]`
-  - `calc`: `answer: number`, `tolerance: number`, `unit?: string`
-  - `trace`: `table: Cell[][]` 중 일부 `blank: true` 셀을 입력/드롭다운으로, 칸별 채점
-  - `graph`: `options: { svgKey: string; label: string }[]`, `answerKey: string`
+  - `calc`: `answer: number`, `tolerance: number`, `unit?: string`, `steps?: string[]`(풀이 단계)
+  - `trace`: `columns: string[]`, `rows: { label, cells: { value, blank?, options? }[] }[]` — `blank: true` 칸을 입력(또는 `options`면 드롭다운)으로, 칸별 채점
+  - `graph`: `xLabel`, `yLabel`, `options: { key, label, figure: { kind: "curve", points: [x, y][] (0..1) } }[]`, `answerKey: string` — 이미지 대신 좌표 데이터를 인라인 SVG로 (Sprint 3 확정)
 - 생성기 기반 문제: `{ generator: 'buddy' | 'replacement' | ..., params: Record<string, unknown>, seed: number }` 형태로 저장. 런타임에 `lib/sim/*`를 호출해 정답/표를 계산 — **정답을 손으로 하드코딩하지 않는다.**
 - 모든 채점 함수는 `(question, userAnswer) => { correct: boolean; score: number; detail: ... }` 형태의 순수 함수로 작성해 유닛 테스트 가능하게 한다.
 
