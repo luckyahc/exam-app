@@ -28,11 +28,13 @@
 - [ ] 모든 문제에 `slideRef`, `topic`, `exam`, `examBasis: 'handwritten'`(⭐일 때), `difficulty` 채우기 + 해설 3요소(근거/오답이유/출처) 포함
 - [ ] 페이지 버퍼링 항목은 교수님 코멘트대로 **난이도 낮게, 문항 수 적게** 유지
 - [ ] 유형 비율 점검 및 중복 문제 검수
+- [ ] **문항별 PDF 대조 기록** `docs/verification/os-ch07-ch08.md`을 작성한다 — [`os-ch02-ch03.md`](../verification/os-ch02-ch03.md)와 같은 형식(문항 한 줄: id / slideRef / ⭐ / 근거(인쇄·필기) / 대조 결과(일치·수정·신규) / 수정 내용, 맨 위에 개수 요약). 챕터 전 문항을 빠짐없이 기록하고, 요약 숫자는 표에서 센 값과 같아야 한다
 
 ## 완료 기준 (DoD)
 
 - `data/subjects/os/ch07.ts` ≥80문항, `data/subjects/os/ch08.ts` ≥120문항
 - `content-checklist.md`의 Ch07/Ch08 모든 체크박스 완료 + 실제 문항 수 기록
+- `docs/verification/os-ch07-ch08.md`에 전 문항 대조 기록(과목-챕터별 파일 규칙)
 - 생성기 연동 문제(버디/배치/교체/주소변환) 각각 최소 1개 이상 실제 렌더링해 시뮬레이터 결과와 UI 표시가 일치하는지 수동 확인
 - `graph` 유형이 라이트/다크 모드 모두에서 충분한 대비로 보이는지 확인
 

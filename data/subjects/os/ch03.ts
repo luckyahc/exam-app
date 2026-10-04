@@ -4,8 +4,11 @@ import type { Question } from "@/types/question";
 // ⭐(handwritten): p.2 "다음 중 프로세스에 대한 설명이 아닌것은?", p.4 "시험: 프로그램이 언제 종료되나?",
 //   p.13 "시험", p.21 "언제 swap out/in되고 각각이 뭔지 suspend가 뭔지 시험", p.25 "스택에 저장되지 않는 것은?",
 //   p.39 "시험!", p.41 "Process switch가 발생하는 5가지 케이스 무조건 시험"
-// 출제 보류: '잘못된 명령(invalid instruction)'의 처리 결과 — p.4 필기(보통 프로그램이 에러 메시지)와
-//   p.42(Illegal instruction → Trap → Exit)가 엇갈려 정답이 하나로 정해지지 않는다(원본 §8).
+// '잘못된 명령' 맥락 구분:
+//   - 종료 사유 맥락(p.4): 출제 보류 — 인쇄는 종료 사유 목록에 있지만 필기는 "운영체제가 죽이진 않고 보통
+//     프로그램이 에러메시지를 줌"이라 '종료되는가'의 정답이 하나로 정해지지 않는다.
+//   - Process switch 맥락(p.42): 출제 — Illegal instructions(명령어가 깨졌을 때, CPU) → Trap interrupt → Exit.
+//     이 맥락의 문항은 근거를 p.42로만 쓰고 p.4 종료 사유와 섞지 않는다.
 
 const base = { subject: "os", chapter: "ch03" } as const;
 const star = { exam: true, examBasis: "handwritten" } as const;
@@ -530,6 +533,21 @@ const questions: readonly Question[] = [
     explanation: "p.24: Kernel은 실행파일을 메모리에 로딩한 후 실행 시작 전에 bss의 데이터를 0이나 null pointer로 초기화한다.",
   },
 
+  {
+    ...base,
+    ...plain,
+    id: "os-ch03-image-005",
+    topic: "프로세스 이미지",
+    type: "blank",
+    difficulty: 1,
+    slideRef: "Ch03 p.24",
+    prompt: "빈칸에 알맞은 이름을 쓰시오.",
+    text: "초기화되지 않은 변수들이 저장되는 Uninitialized data segment는 종종 {{0}} segment라고도 불린다.",
+    blanks: [{ accept: ["bss", "BSS", "block started by symbol", "bss segment"] }],
+    explanation:
+      "p.24: Uninitialized data segment는 bss(block started by symbol) segment라고도 불린다. 커널이 실행 시작 전에 이 영역을 0이나 null pointer로 초기화한다.",
+  },
+
   // ───────────────────────────── ⭐ 스택 (p.22-25, p.31)
   {
     ...base,
@@ -686,7 +704,8 @@ const questions: readonly Question[] = [
       { left: "Blocked", right: "I/O 또는 동기화를 기다려 processor를 줘도 실행할 수 없음" },
       { left: "Exit", right: "실행이 완료되어 폐기, 메모리 반납" },
     ],
-    explanation: "p.12의 5-상태 모델 정의 그대로다.",
+    explanation:
+      "p.12의 5-상태 모델 정의다. New의 '디스크의 프로그램을 메인 메모리로 옮김'과 Exit의 '메모리 반납'은 p.12 필기로 덧붙여진 설명이다.",
   },
   {
     ...base,
@@ -793,6 +812,21 @@ const questions: readonly Question[] = [
     answerIndexes: [0, 1],
     explanation:
       "p.13: Running → Blocked는 I/O 함수를 호출할 때(데이터 대기)와 Memory fault가 발생할 때(프로그램이 메모리에 없어 디스크에서 읽어 올 때까지 대기)다. 타임슬라이스 소진은 Ready로, I/O interrupt는 Blocked → Ready, 정상 종료는 Exit로 간다.",
+  },
+
+  {
+    ...base,
+    ...star,
+    id: "os-ch03-state-010",
+    topic: "5-상태 모델 / 상태 전이",
+    type: "blank",
+    difficulty: 2,
+    slideRef: "Ch03 p.12",
+    prompt: "빈칸에 알맞은 말을 쓰시오.",
+    text: "Blocked 상태에는 키보드·파일·네트워크 등 I/O 디바이스의 데이터를 기다리는 상태뿐 아니라, {{0}} lock을 얻기 위해 기다리는 상태도 포함된다.",
+    blanks: [{ accept: ["세마포어", "semaphore", "세마포", "세마포아"] }],
+    explanation:
+      "p.12: Blocked는 I/O 또는 동기화 대기 상태로, ① I/O 디바이스의 데이터 대기(도착하면 ready) ② 세마포어 lock을 위한 대기(lock에 성공하면 ready)를 포함한다.",
   },
 
   // ───────────────────────────── ⭐ Suspend (p.20-21)
@@ -971,6 +1005,32 @@ const questions: readonly Question[] = [
     explanation: "키보드·디스크·네트워크·타이머 대기는 각 장치의 인터럽트로 깨어나지만, 세마포어는 예외다.",
   },
 
+  {
+    ...base,
+    ...plain,
+    id: "os-ch03-wait-event-004",
+    topic: "대기 이벤트표",
+    type: "blank",
+    difficulty: 2,
+    slideRef: "Ch03 p.17",
+    prompt: "빈칸에 알맞은 말을 쓰시오.",
+    text: "키보드 대기 큐, 하드디스크 대기 큐, 네트워크 대기 큐, 타이머 대기 큐처럼 I/O 장치(함수)마다 따로 두는 대기 큐 구조를 {{0}}라 한다.",
+    blanks: [
+      {
+        accept: [
+          "다중 블록 큐",
+          "다중블록큐",
+          "다중 블록큐",
+          "Multiple Blocked Queues",
+          "Multiple Blocked Queue",
+          "multiple blocked queues",
+        ],
+      },
+    ],
+    explanation:
+      "p.17: 다중 블록 큐(Multiple Blocked Queues) — 각 I/O 함수(장치)마다 각각 대기 큐가 있다(필기). p.19: 해당 디바이스에서 interrupt가 들어오면 ISR이 그 대기 큐에서 프로세스 구조체를 찾아 준비 큐로 옮긴다.",
+  },
+
   // ───────────────────────────── Scheduler / Dispatcher (p.7, p.15-19)
   {
     ...base,
@@ -1034,6 +1094,21 @@ const questions: readonly Question[] = [
     answerIndex: 0,
     explanation:
       "p.16: 새로 깨어난 프로세스가 우선순위가 제일 높으면 바로 실행되고, 그렇지 않으면 인터럽트 전에 실행되던 프로세스(인터럽트 전에는 우선순위가 제일 높았던)가 계속 실행된다.",
+  },
+
+  {
+    ...base,
+    ...plain,
+    id: "os-ch03-scheduler-005",
+    topic: "Scheduler / Dispatcher",
+    type: "blank",
+    difficulty: 1,
+    slideRef: "Ch03 p.7",
+    prompt: "빈칸에 알맞은 말을 쓰시오.",
+    text: "한 프로세스를 위해 실행되는 명령어들의 순서를 프로세스 {{0}}이라 한다.",
+    blanks: [{ accept: ["추적", "Trace", "트레이스", "추적(Trace)", "trace(추적)"] }],
+    explanation:
+      "p.7: 프로세스 추적(Trace)은 한 프로세스를 위해 실행되는 명령어들의 순서다. p.10의 추적 그림에서는 프로세스 A·B·C 사이마다 Scheduler 코드가 실행된다.",
   },
 
   // ───────────────────────────── 실행 모드 (p.36)
@@ -1328,7 +1403,7 @@ const questions: readonly Question[] = [
     ],
     answerIndex: 4,
     explanation:
-      "p.41-42의 5가지는 Clock interrupt, I/O interrupt, I/O 함수 호출(시스템 콜), Trap, Memory fault다. 커널 API가 아닌 일반 함수 호출은 사용자 모드에서 그대로 실행되므로 process switch를 일으키지 않는다.",
+      "p.41-42의 5가지는 Clock interrupt, I/O interrupt, I/O 함수 호출(시스템 콜), Trap, Memory fault다. 직접 만든 일반 함수는 사용자 모드에서 그대로 실행된다(p.36 필기: 직접 짠 프로그램을 실행할 때는 사용자 모드). 커널로 진입하는 경우는 API 함수 호출과 인터럽트뿐이므로(p.36) 일반 함수 호출로는 process switch가 일어나지 않는다.",
   },
   {
     ...base,
@@ -1446,6 +1521,32 @@ const questions: readonly Question[] = [
     ],
     explanation:
       "p.40: 인터럽트가 발생하면 ISR 마지막의 scheduler()가 다른 프로세스를 골라 강제로 넘어가고, I/O 함수를 호출해 데이터가 없으면 Blocked로 설정하고 스스로 scheduler()를 호출해 넘긴다.",
+  },
+
+  {
+    ...base,
+    ...star,
+    id: "os-ch03-process-switch-010",
+    topic: "Process switch 5가지 경우",
+    type: "blank",
+    difficulty: 2,
+    slideRef: "Ch03 p.41",
+    prompt: "빈칸에 알맞은 말을 쓰시오.",
+    text: "process switch를 일으키는 세 번째 경우인 'I/O 함수 호출'은 system call, 즉 OS API 함수 호출이며 슬라이드에서는 {{0}}라고도 부른다.",
+    blanks: [
+      {
+        accept: [
+          "software interrupt",
+          "소프트웨어 인터럽트",
+          "소프트웨어인터럽트",
+          "SW interrupt",
+          "SW 인터럽트",
+          "software interrupts",
+        ],
+      },
+    ],
+    explanation:
+      "p.41: '3. I/O 함수 호출 (system call: OS API 함수, software interrupt)'. 하드웨어 장치가 보내는 Clock·I/O interrupt와 달리, 실행 중인 프로세스가 scanf·fread·recv·sleep 같은 API 함수를 호출해 커널로 들어가는 경우다.",
   },
 
   // ───────────────────────────── 재실행 위치 (p.44-45)

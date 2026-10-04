@@ -4,39 +4,39 @@
 
 ## 과목 1 — 운영체제 (os)
 
-### Ch02. 운영체제 개요 (목표 ≥ 50문항 → 작성 51, ⭐ 18)
+### Ch02. 운영체제 개요 (목표 ≥ 50문항 → 작성 59, ⭐ 22)
 
 - [x] OS 정의 및 3대 목표(편리성/효율성/발전성) — mcq/blank/match (4문항)
-- [x] OS 서비스 7가지(편리성) — mcq/multi/blank (3문항)
+- [x] OS 서비스 7가지(편리성) — mcq/multi/blank (3문항) — 7가지는 p.5(6개)+p.6(오류 탐지 및 대응) 인쇄 기준으로 확인(2026-10-05). 이 소주제 문항 3개는 개수를 묻지 않고, 7가지 전체 목록은 ⭐ "지원하지 않는 것" 문항(not-supported-005 해설 등)에서 다룬다
 - [x] ⭐ "OS가 지원하지 않는 것 고르기" (바이러스 검사, AI 추론, DB 체킹 등 오답 보기) — **최소 6~10문항**, mcq/multi/ox 혼합 (8문항)
-- [x] 자원 관리자로서의 OS(자원 목록, 디바이스 드라이버 정의) — mcq/match/blank (3문항)
+- [x] 자원 관리자로서의 OS(자원 목록, 디바이스 드라이버 정의) — mcq/match/blank (4문항)
 - [x] 발전성(하드웨어 업그레이드/새 서비스/오류 수정 사례) — mcq/ox (3문항)
 - [x] 커널 vs 시스템 프로그램, 커널 주요 기능 7가지 — match/blank (3문항)
 - [x] 커널 함수가 호출되는 2가지 경우(API/인터럽트) — mcq/order/blank (2문항)
 - [x] I/O 흐름(커널 버퍼→사용자 버퍼, 입력 대기/출력 비대기), 장치 속도 순서 — mcq/ox/order (4문항)
 - [x] OS 발전 과정 4단계 순서(직렬→단순일괄→다중프로그램일괄→시분할) — **order 핵심 문제** (3문항)
-- [x] 다중프로그램 일괄처리 CPU 양도 2가지 vs 시분할 3가지(타임슬라이스 추가), 비선점/선점 구분 — mcq/classify (3문항)
-- [x] 단일 vs 다중프로그래밍 비교 — mcq/ox (2문항)
-- [x] ⭐ 다중프로그램 일괄처리 vs 시분할 "시간 계산"(응답시간/유효 CPU 이용률, §6-5 생성기 연동) — **최소 6~10문항**, calc/trace (10문항) — calc 7(`cpuTime.ts` 함수로 정답 계산, 허용오차 0.005) + mcq/ox 3. 파라미터 다양화 생성기는 Sprint 4 `cpu-time`
-- [x] SMP, 멀티코어, 동시성 vs 병렬성 — mcq/match/blank (3문항)
+- [x] 다중프로그램 일괄처리 CPU 양도 2가지 vs 시분할 3가지(타임슬라이스 추가), 비선점/선점 구분 — mcq/classify (4문항)
+- [x] 단일 vs 다중프로그래밍 비교 — mcq/ox (3문항)
+- [x] ⭐ 다중프로그램 일괄처리 vs 시분할 "시간 계산"(응답시간/유효 CPU 이용률, §6-5 생성기 연동) — **최소 6~10문항**, calc/trace (14문항) — calc 7(`cpuTime.ts` 함수로 정답 계산, 허용오차 0.005) + 개념 7(응답시간·CPU 이용률 정의, 주 목표, 시분할 오버헤드 함수, p.24 필기 "과거는 CPU 이용률·오늘날은 응답시간"). 파라미터 다양화 생성기는 Sprint 4 `cpu-time`
+- [x] SMP, 멀티코어, 동시성 vs 병렬성 — mcq/match/blank (4문항)
 
-### Ch03. 프로세스 기술과 제어 (목표 ≥ 80문항 → 작성 90, ⭐ 61)
+### Ch03. 프로세스 기술과 제어 (목표 ≥ 80문항 → 작성 95, ⭐ 63)
 
 - [x] 프로세스 정의(프로그램+데이터+PCB), Process vs Processor 구분 — ⭐ "프로세스 설명이 아닌 것" mcq (최소 6~10문항) (8문항)
 - [x] 프로세스 생성 사유 4가지, 부모-자식 트리(init/systemd, pstree) — mcq/match/blank (3문항)
-- [x] ⭐ 프로세스 종료 사유 전부(정상종료/시간초과/메모리부족/경계위반/보호오류/산술오류/잘못된명령/IO실패/부모종료요청) + 명백한 오답(TLB 히트 등) — **최소 6~10문항**, mcq/ox/blank (10문항) — '잘못된 명령'의 처리 결과는 p.4 필기와 p.42가 엇갈려 출제 보류(파일 머리 주석)
+- [x] ⭐ 프로세스 종료 사유 전부(정상종료/시간초과/메모리부족/경계위반/보호오류/산술오류/잘못된명령/IO실패/부모종료요청) + 명백한 오답(TLB 히트 등) — **최소 6~10문항**, mcq/ox/blank (10문항) — '잘못된 명령'은 **종료 사유 맥락에서 출제 보류**(p.4 인쇄=종료 사유, 필기="운영체제가 죽이진 않고 보통 프로그램이 에러메시지를 줌"). Process switch 맥락(p.42 Illegal instruction → Trap → Exit)은 Process switch 항목에서 출제(파일 머리 주석)
 - [x] PCB 3대 구성(식별정보/프로세서상태정보/제어정보), 이중연결리스트 큐 — match/blank (4문항)
 - [x] 문맥 데이터(PC/SP/PSW), dispatcher 역할 — mcq/blank (3문항)
-- [x] 프로세스 이미지 메모리 레이아웃(text~stack), exe에 저장되는 것(text+initialized data) — mcq/order (4문항)
+- [x] 프로세스 이미지 메모리 레이아웃(text~stack), exe에 저장되는 것(text+initialized data) — mcq/order (5문항)
 - [x] ⭐ 스택에 저장되는 것 vs 저장되지 않는 것(전역변수/힙 오답) — **최소 6~10문항**, mcq/classify (8문항)
-- [x] ⭐ 5-상태 모델과 상태 전이도(New/Ready/Running/Blocked/Exit, 전이 원인) — **최소 6~10문항**, classify/match/mcq/order (9문항)
+- [x] ⭐ 5-상태 모델과 상태 전이도(New/Ready/Running/Blocked/Exit, 전이 원인) — **최소 6~10문항**, classify/match/mcq/order (10문항)
 - [x] ⭐ Suspend(swap out/in, Blocked→Suspend→Ready) — **최소 6~10문항**, mcq/ox/blank (8문항)
-- [x] 대기 이벤트표(키보드/마우스/디스크/네트워크/타이머/세마포어 ↔ 함수호출·인터럽트) — match (3문항)
-- [x] Scheduler/Dispatcher 동작, ISR 마지막 scheduler() 호출 — mcq/ox/blank (4문항)
+- [x] 대기 이벤트표(키보드/마우스/디스크/네트워크/타이머/세마포어 ↔ 함수호출·인터럽트) — match (4문항)
+- [x] Scheduler/Dispatcher 동작, ISR 마지막 scheduler() 호출 — mcq/ox/blank (5문항)
 - [x] 실행 모드(사용자/커널) 구분 이유, 커널 모드 전환 2가지 — mcq/blank (3문항)
 - [x] 프로세스 생성/종료 시 수행 작업 순서 — order (2문항)
 - [x] ⭐ 인터럽트 발생 시 처리 과정 8단계(p.38-39) — **order 최소 6~10 변형**(전체 순서/일부 빈칸/일부 위치 고르기), mode switch ≠ process switch 구분 mcq (9문항) — order 3(전체·앞 4단계·ISR 고유 업무) + mcq/blank/ox 6(직후 단계·벡터링·mode≠process switch 등)
-- [x] ⭐ Process switch 발생 5가지 경우(Clock/IO interrupt/IO 함수호출/Trap/Memory fault) — **최소 6~10문항**, classify/mcq/blank/match (9문항)
+- [x] ⭐ Process switch 발생 5가지 경우(Clock/IO interrupt/IO 함수호출/Trap/Memory fault) — **최소 6~10문항**, classify/mcq/blank/match (10문항)
 - [x] 재실행 위치(scheduler() return;부터 vs 인터럽트 직전 다음 명령어부터) — mcq/ox (3문항)
 
 ### Ch07. 메모리 관리 (목표 ≥ 80문항)
@@ -90,9 +90,10 @@
 - [ ] 슬라이드에 없는 보충 설명은 해설에 "(보충)" 표시했는지 확인
 
 > 공통 체크는 모든 챕터가 끝나는 Sprint 11에서 일괄 체크한다. 지금까지의 점검 결과:
-> - **Ch02(51)**: mcq 17 · ox 11 · calc 7 · blank 4 · multi 4 · match 3 · order 3 · classify 2. **Ch03(90)**: mcq 32 · ox 22 · blank 11 · match 7 · order 7 · multi 6 · classify 5. 두 챕터 모두 mcq·ox가 가이드보다 많고(약 33~36% / 22~24%) blank가 적다(8~12%). Ch02·03은 개념 위주라 calc·trace·graph 대상이 적은 탓으로, Ch07·08(Sprint 6)에서 계산·trace 비중으로 전체 비율을 맞춘다.
+> - **Ch02(59)**: mcq 18 · ox 12 · blank 10 · calc 7 · multi 4 · match 3 · order 3 · classify 2. **Ch03(95)**: mcq 32 · ox 22 · blank 16 · match 7 · order 7 · multi 6 · classify 5. 합계 154: mcq 32.5% · ox 22.1% · blank 16.9%(2026-10-05 blank 11문항 추가로 10.6%에서 보정). mcq·ox는 여전히 가이드(25%·15%)보다 많다 — Ch07·08(Sprint 6)에서 계산·trace 비중으로 전체 비율을 맞춘다.
 > - 문제 내 보기·순서 항목·짝 중복 없음, 정답 키 채점 = 1점, 렌더링 오류 없음 — `data/subjects/integrity.test.ts`, `components/qtypes/render.test.ts`로 자동 검사(전 과목·전 챕터).
 > - 챕터 안에서 문제 본문+보기가 완전히 같은 문항 0건(스크립트 점검). 해설은 슬라이드 근거만 사용해 "(보충)" 표시 대상 없음.
+> - 문항별 PDF 대조 기록: [`verification/os-ch02-ch03.md`](./verification/os-ch02-ch03.md) (154문항: 기존 일치 138 · 수정 3 · 신규 13).
 
 ## 과목 2 — 데이터 통신 (data-comm)
 

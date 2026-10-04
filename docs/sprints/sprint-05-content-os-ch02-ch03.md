@@ -38,10 +38,21 @@
 | Ch03 | 90 (≥80) | 61 | mcq 32 · ox 22 · blank 11 · match 7 · order 7 · multi 6 · classify 5 |
 
 - Ch02 시간 계산 calc 7문항은 슬라이드 수치(n=10, t=1, s=0.01, q=0.1, 출력 0.1) 기반으로 `lib/sim/os/cpuTime.ts` 함수가 정답을 계산한다(손으로 쓴 숫자 없음). 파라미터를 바꾼 문제는 Sprint 4 `cpu-time` 생성기가 담당.
-- ⭐ 근거는 모두 교수님 필기(`examBasis: 'handwritten'`). Ch03 출제 보류: '잘못된 명령'의 처리 결과(p.4 필기 vs p.42 불일치), 슬라이드에 없는 "과거 CPU 이용률/오늘날 응답시간" 비교.
+- ⭐ 근거는 모두 교수님 필기(`examBasis: 'handwritten'`). Ch03 출제 보류: 종료 사유 맥락의 '잘못된 명령'(p.4 인쇄 vs 필기 불일치 — Process switch 맥락 p.42는 출제). ~~슬라이드에 없는 "과거 CPU 이용률/오늘날 응답시간" 비교~~ → **정정(2026-10-05)**: Ch02 p.24 필기에 있다. 처음 제외한 판단이 틀렸으며 보강 때 출제(아래).
 - 유형 비율: mcq·ox가 가이드보다 많고 blank가 적다 — 개념 챕터라 calc·trace·graph 대상이 적은 탓. Sprint 6에서 전체 비율을 맞춘다([content-checklist 공통 체크](../content-checklist.md#공통-체크)).
 - 검증 추가: `data/subjects/integrity.test.ts`에 "정답 키 채점 = 1점", "문제 내 보기·항목·짝 중복 없음" 검사, `components/qtypes/render.test.ts`에서 전 문항(141)을 Sprint 3 렌더러로 풀기 전/채점 후 두 상태로 렌더링(DoD의 '샘플 20문항'을 전 문항으로 확대).
 - 브라우저 화면은 챕터 화면이 아직 퀴즈를 띄우지 않아(Sprint 7) 확인하지 않았다. 렌더러 출력은 위 테스트로 검증.
+
+### 보강 (2026-10-05)
+
+| 챕터 | 문항 | ⭐ | 유형 분포 |
+|---|---|---|---|
+| Ch02 | 59 | 22 | mcq 18 · ox 12 · blank 10 · calc 7 · multi 4 · match 3 · order 3 · classify 2 |
+| Ch03 | 95 | 63 | mcq 32 · ox 22 · blank 16 · match 7 · order 7 · multi 6 · classify 5 |
+
+- blank 15 → 26(10.6% → 16.9%): blank가 0~1개이던 소주제 우선으로 11문항 추가, 기존 문항과 다른 지식 포인트.
+- Ch02 p.24 필기 "과거는 CPU 이용률·오늘날은 응답시간"과 p.21 주 목표를 ⭐ 시간 계산 개념 문항으로 추가(`time-calc-012~014`).
+- PDF 대조로 해설 3건 수정(정답 변경 없음). 문항별 기록: [`../verification/os-ch02-ch03.md`](../verification/os-ch02-ch03.md).
 
 ## 다음 스프린트와의 연결
 

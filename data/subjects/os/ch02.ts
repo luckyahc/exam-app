@@ -272,7 +272,7 @@ const questions: readonly Question[] = [
     ],
     answerIndex: 3,
     explanation:
-      "p.6의 오류 탐지 및 대응 대상은 하드웨어 오류(메모리 오류·장치 고장)와 소프트웨어 오류(산술 오버플로우·0으로 나누기, 금지된 메모리 접근, 허용할 수 없는 요청)다. 바이러스 탐지는 필기에서 운영체제가 지원하지 않는 것으로 든 예다.",
+      "p.6의 오류 탐지 및 대응 대상은 하드웨어 오류(메모리 오류·장치 고장), 소프트웨어 오류(산술 오버플로우·0으로 나누기, 접근이 금지된 메모리 영역 접근), 운영체제가 허용할 수 없는 응용 프로그램의 요청 세 가지다. 바이러스 탐지는 필기에서 운영체제가 지원하지 않는 것으로 든 예다.",
   },
 
   // ───────────────────────────── 자원 관리자 / 디바이스 드라이버 (p.7)
@@ -321,6 +321,21 @@ const questions: readonly Question[] = [
     answer: true,
     explanation:
       "p.7: 운영체제는 일반 컴퓨터 소프트웨어와 유사한 방식으로 동작하며, 프로세서가 실행하는 하나의 프로그램(또는 프로그램 집합)이다.",
+  },
+
+  {
+    ...base,
+    ...plain,
+    id: "os-ch02-resource-004",
+    topic: "자원 관리자 / 디바이스 드라이버",
+    type: "blank",
+    difficulty: 2,
+    slideRef: "Ch02 p.7",
+    prompt: "슬라이드 필기 기준으로 빈칸에 알맞은 자원을 쓰시오.",
+    text: "운영체제가 관리하는 자원 중 I/O 디바이스가 아닌 것은 CPU, 메모리, {{0}}이고, 디스크·키보드·네트워크 카드 등 나머지는 모두 I/O 디바이스다.",
+    blanks: [{ accept: ["타이머", "timer", "타이머(timer)"] }],
+    explanation:
+      "p.7 필기: 'IO디바이스: CPU, 메모리, 타이머 빼고 전부다', '네트워크 카드 또한 입출력 장치'. 타이머는 p.7 인쇄 자원 목록에 있지만 I/O 디바이스로 분류하지 않는다.",
   },
 
   // ───────────────────────────── 발전성 (p.9)
@@ -619,6 +634,21 @@ const questions: readonly Question[] = [
     explanation: "타이머로 강제로 CPU를 빼앗는 선점 방식은 시분할 시스템(p.20)의 특징이다.",
   },
 
+  {
+    ...base,
+    ...plain,
+    id: "os-ch02-batch-switch-004",
+    topic: "CPU 양도 / 비선점",
+    type: "blank",
+    difficulty: 1,
+    slideRef: "Ch02 p.20",
+    prompt: "빈칸에 알맞은 말을 쓰시오.",
+    text: "시분할 시스템에서 CPU가 각 프로그램을 번갈아 가며 실행시키는 일정 시간을 time quantum 또는 {{0}}라 한다.",
+    blanks: [{ accept: ["time slice", "timeslice", "time-slice", "타임 슬라이스", "타임슬라이스"] }],
+    explanation:
+      "p.20: CPU가 각 프로그램을 일정시간(time quantum or time slice) 동안 번갈아 가면서 실행시킨다. 이 시간 동안 I/O 없이 계속 실행하면 CPU가 다른 프로그램으로 넘어간다(세 번째 양도 조건).",
+  },
+
   // ───────────────────────────── 단일 vs 다중프로그래밍 (p.15-19)
   {
     ...base,
@@ -651,6 +681,21 @@ const questions: readonly Question[] = [
     answer: true,
     explanation:
       "p.16: 프로그램 A(scanf, 키보드)·B(fscanf, 파일)·C(receive, 네트워크) 모두 입력을 받을 때 대기한다. 그래서 대기 중 다른 프로그램을 실행하는 다중프로그래밍이 효과적이다.",
+  },
+
+  {
+    ...base,
+    ...plain,
+    id: "os-ch02-uniprog-003",
+    topic: "단일 vs 다중프로그래밍",
+    type: "blank",
+    difficulty: 1,
+    slideRef: "Ch02 p.17",
+    prompt: "빈칸에 알맞은 말을 쓰시오.",
+    text: "프로세서가 I/O 명령이 완료될 때까지 기다린 후에야 다음 작업을 진행할 수 있는 방식을 {{0}}이라 한다.",
+    blanks: [{ accept: ["단일프로그래밍", "단일 프로그래밍", "Uniprogramming", "uni-programming", "유니프로그래밍"] }],
+    explanation:
+      "p.17: 단일프로그래밍(Uniprogramming)의 설명이다. 다중프로그래밍(p.18)은 한 작업이 I/O를 기다릴 때 프로세서가 다른 작업으로 전환할 수 있다.",
   },
 
   // ───────────────────────────── ⭐ 시간 계산 (p.21-24) — 정답은 cpuTime.ts로 계산
@@ -829,6 +874,68 @@ const questions: readonly Question[] = [
       "p.21 정의 그대로다. 유효 CPU 이용률은 이와 달리 스위칭 시간 등을 뺀 '유효 프로그램 실행시간 / 총 경과시간'이다.",
   },
 
+  {
+    ...base,
+    ...star,
+    id: "os-ch02-time-calc-011",
+    topic: "시간 계산(응답시간/유효 CPU 이용률)",
+    type: "blank",
+    difficulty: 2,
+    slideRef: "Ch02 p.24",
+    prompt: "빈칸에 알맞은 함수 이름을 쓰시오.",
+    text: "시분할에서는 0.1초마다 CPU를 다른 프로그램에 넘기기 위해 커널 내에서 timer interrupt handler, {{0}} 등의 함수 코드를 수행해야 하며, 이것이 시분할을 위해 지불하는 추가적인 CPU overhead다.",
+    blanks: [{ accept: ["scheduler()", "scheduler", "스케줄러", "스케줄러 함수", "scheduler 함수", "Scheduler()"] }],
+    explanation:
+      "p.24: timer interrupt handler, scheduler() 등의 함수 코드 수행이 시분할의 추가 CPU overhead다. 다중프로그램 일괄처리는 종료 시에만 스위칭하므로 이 과정이 필요 없어 유효 CPU 이용률이 더 높다.",
+  },
+  {
+    ...base,
+    ...star,
+    id: "os-ch02-time-calc-012",
+    topic: "시간 계산(응답시간/유효 CPU 이용률)",
+    type: "ox",
+    difficulty: 1,
+    slideRef: "Ch02 p.21, p.24",
+    prompt:
+      "교수님 필기에 따르면, 과거에는 CPU 이용률이 더 중요했지만 오늘날에는 응답시간(요청(입력)이 주어지고 난 후 첫 출력이 나오는 데 걸린 시간)이 더 중요하다.",
+    answer: true,
+    explanation:
+      "p.24 필기: '과거는 cpu이용률이 더 중요했음, 오늘날은 응답시간이 더 중요함'. 응답시간의 정의는 p.21 인쇄: 요청(입력)이 주어지고 난 후 첫 출력이 나오는 데 걸린 시간.",
+  },
+  {
+    ...base,
+    ...star,
+    id: "os-ch02-time-calc-013",
+    topic: "시간 계산(응답시간/유효 CPU 이용률)",
+    type: "mcq",
+    difficulty: 2,
+    slideRef: "Ch02 p.24",
+    prompt: "오늘날 응답시간이 더 중요해지면서 생긴 변화로 p.24 필기에 적힌 것은?",
+    choices: [
+      "스케줄링이 더 복잡해졌다 — 응답시간이 중요하지 않은 작업에는 스케줄링 시스템이 알아서 오래 시간을 준다",
+      "모든 프로그램에 항상 같은 길이의 시간을 고정 배정하게 되었다",
+      "CPU 스위칭이 필요 없어졌다",
+      "다시 다중프로그램 일괄처리 방식으로 돌아갔다",
+    ],
+    answerIndex: 0,
+    explanation:
+      "p.24 필기: '오늘날은 응답시간이 더 중요함. 따라서 스케줄링이 더 복잡해짐. 응답시간이 중요하지 않은 것은 알아서 스케줄링 시스템이 오래 시간을 준다.' 작업마다 시간을 다르게 주므로 고정 배정이 아니고, 응답시간을 줄이려면 시분할의 스위칭이 계속 필요하다.",
+  },
+  {
+    ...base,
+    ...star,
+    id: "os-ch02-time-calc-014",
+    topic: "시간 계산(응답시간/유효 CPU 이용률)",
+    type: "blank",
+    difficulty: 1,
+    slideRef: "Ch02 p.21",
+    prompt: "빈칸에 알맞은 말을 쓰시오.",
+    text: "다중프로그램 일괄처리의 주 목표(Principal objective)는 CPU 이용률 최대화이고, 시분할의 주 목표는 {{0}} 최소화다.",
+    blanks: [{ accept: ["응답시간", "응답 시간", "response time", "responsetime"] }],
+    explanation:
+      "p.21 표: Batch Multiprogramming = Maximize processor use(필기: cpu 이용률을 최대화), Time Sharing = Minimize response time(필기: 응답 시간을 최소화).",
+  },
+
   // ───────────────────────────── SMP / 멀티코어 / 동시성 vs 병렬성 (p.25)
   {
     ...base,
@@ -880,6 +987,20 @@ const questions: readonly Question[] = [
     answer: false,
     falseReason: "p.25 필기: CPU마다 역할이 다르면 대칭이 아니다. SMP는 모든 CPU가 동등한 자격을 가진다.",
     explanation: "SMP(Symmetric Multiprocessing)의 '대칭'은 동등한 여러 프로세서가 같은 자격으로 메모리·I/O를 공유한다는 뜻이다.",
+  },
+  {
+    ...base,
+    ...plain,
+    id: "os-ch02-smp-004",
+    topic: "SMP / 멀티코어 / 동시성 vs 병렬성",
+    type: "blank",
+    difficulty: 1,
+    slideRef: "Ch02 p.25",
+    prompt: "빈칸에 알맞은 구조를 쓰시오.",
+    text: "코어 간 통신이 빠르고 전력 효율이 우수해 오늘날 PC·스마트폰의 표준 구조가 된 것은 {{0}}다.",
+    blanks: [{ accept: ["멀티코어", "멀티 코어", "Multicore", "multi-core", "다중 코어", "다중코어"] }],
+    explanation:
+      "p.25: 멀티코어(Multicore)는 한 칩에 여러 코어와 캐시를 통합한 구조로, 코어 간 통신이 빠르고 전력 효율이 우수해 오늘날 PC·스마트폰의 표준 구조다. SMP는 동등한 여러 프로세서가 메모리·I/O를 공유하는 구조이고 장점은 성능·가용성·점진적 확장이다.",
   },
 ];
 

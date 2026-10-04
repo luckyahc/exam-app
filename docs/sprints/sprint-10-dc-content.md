@@ -21,11 +21,13 @@
 - [ ] 객관식 오답 보기는 슬라이드 안의 혼동 쌍으로(대역폭 vs 처리량, 비트율 vs 보오율, Nyquist vs Shannon, 기저대역 vs 광대역, 유도 vs 비유도, LAN vs WAN, 다이얼업 vs DSL, ISO vs OSI)
 - [ ] 빈칸 `accept`에 한/영 표기 변형(지터/Jitter, 보호 대역/guard band, 클래딩/피복/cladding, 꼬임쌍선/twisted-pair …)
 - [ ] 유형 비율(원본 §8) 점검, 중복 문제 검수
+- [ ] **문항별 PDF 대조 기록** `docs/verification/data-comm-ch01-ch02.md`을 작성한다 — [`os-ch02-ch03.md`](../verification/os-ch02-ch03.md)와 같은 형식(문항 한 줄: id / slideRef / ⭐ / 근거(인쇄·필기) / 대조 결과(일치·수정·신규) / 수정 내용, 맨 위에 개수 요약). 챕터 전 문항을 빠짐없이 기록하고, 요약 숫자는 표에서 센 값과 같아야 한다
 
 ## 완료 기준 (DoD)
 
 - 챕터별 목표 문항 수 충족, `data/subjects/integrity.test.ts` 통과
 - `content-checklist.md` 데이터 통신 체크박스 완료 + 실제 문항 수 기록
+- `docs/verification/data-comm-ch01-ch02.md`에 전 문항 대조 기록(과목-챕터별 파일 규칙)
 - 홈의 데이터 통신 카드가 "준비 중"에서 활성으로 바뀌고, 과목 홈 → 챕터 → 퀴즈 → 결과 → 오답노트(과목 탭/전체) 전체 흐름이 데이터 통신에서도 동작 (화면 코드 수정 없이)
 - 생성기 문제(`calc`·`trace`)와 `graph` 문제 각각 최소 1개를 실제 렌더링해 정답·비교 UI 확인
 
