@@ -19,7 +19,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ko" className={`${pretendard.variable} h-full antialiased`}>
+    // noFlashScript가 하이드레이션 전에 dark 클래스를 붙이므로 <html>만 className 불일치를 허용한다.
+    <html lang="ko" className={`${pretendard.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: noFlashScript() }} />
       </head>
