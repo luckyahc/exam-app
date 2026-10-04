@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+/* Tailwind v4: switch `dark:` variants to be driven by a `.dark` class on <html>
+   (toggled by lib/theme) instead of the OS `prefers-color-scheme` media query. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --surface: #f8f9fb;
+  --border: #e2e5ea;
+  --muted: #6b7280;
+  --primary: #2563eb;
+  --correct: #15803d;
+  --incorrect: #b91c1c;
+}
+
+.dark {
+  --background: #0b0f17;
+  --foreground: #e6e8eb;
+  --surface: #151a24;
+  --border: #262c38;
+  --muted: #9aa3b2;
+  --primary: #60a5fa;
+  --correct: #4ade80;
+  --incorrect: #f87171;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+  --color-correct: var(--correct);
+  --color-incorrect: var(--incorrect);
+  --color-subject: var(--subject);
+  --font-sans:
+    var(--font-pretendard), -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+    "Malgun Gothic", "맑은 고딕", sans-serif;
+}
+
+/* 과목 대표 색: 과목 영역 래퍼에 data-subject + 인라인 --subject-l/--subject-d(lib/subjects.ts의
+   subjectStyle)를 붙이면 테마에 맞는 값이 --subject로 선택된다. 과목이 늘어도 이 규칙은 그대로다. */
+[data-subject] {
+  --subject: var(--subject-l);
+}
+
+.dark [data-subject],
+[data-subject].dark {
+  --subject: var(--subject-d);
+}
+
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
