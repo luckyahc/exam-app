@@ -8,7 +8,7 @@
 | 2 | [다과목 구조 전환 + OS 회귀](./sprints/sprint-02-multi-subject.md) | 과목 레지스트리, `/s/[subject]` 라우팅, 과목별 localStorage + 자동 마이그레이션, `lib/sim/{과목}` 규칙 | DONE |
 | 3 | [문제 유형 엔진](./sprints/sprint-03-question-engine.md) | 데이터 모델(`subject` 포함), 문제 유형 레지스트리, 10종 렌더러/채점기 + 단위 테스트 | DONE |
 | 4 | [OS 시뮬레이터/생성기](./sprints/sprint-04-simulators.md) | `lib/sim/os/*` 8종 + Vitest 기준값 테스트 | DONE |
-| 5 | [OS 콘텐츠: Ch02·Ch03](./sprints/sprint-05-content-os-ch02-ch03.md) | 정적 문제 ≥130문항 | TODO |
+| 5 | [OS 콘텐츠: Ch02·Ch03](./sprints/sprint-05-content-os-ch02-ch03.md) | 정적 문제 ≥130문항 | DONE |
 | 6 | [OS 콘텐츠: Ch07·Ch08](./sprints/sprint-06-content-os-ch07-ch08.md) | 정적 문제 ≥200문항 + 생성기 연동 문제 | TODO |
 | 7 | [화면/UX 구현](./sprints/sprint-07-screens-ux.md) | 홈(과목)/과목 홈/챕터/퀴즈/결과/오답노트(과목 탭+전체) | TODO |
 | 8 | [학습 기능 고도화](./sprints/sprint-08-learning-features.md) | 과목별·전체 대시보드, 비슷한 문제 생성, 버전 있는 JSON 내보내기/가져오기 | TODO |
@@ -48,3 +48,4 @@ Sprint 1 ──▶ Sprint 2 ──▶ Sprint 3 ──▶ Sprint 5 ─┐
 - 2026-10-04: **Sprint 4 완료.** `lib/sim/os/` 시뮬레이터 8종(페이징·세그먼테이션·버디(분할 트리)·배치·CPU 시간·페이지 교체(OPT/LRU/FIFO/Clock/Enhanced Clock)·메모리 용량·프로세스 시나리오) + 생성기 8개(지연 로딩). Ch08 p.48 Figure 8.15를 200dpi로 재렌더링해 전 칸 전사(F: OPT 3·LRU 4·FIFO 6·CLOCK 5) — source-diff의 마지막 주요 "확인 필요" 해소. 기준값 테스트 73건 + 전 과목 생성기 스모크 테스트, 전체 Vitest 200건·lint·build·OS 회귀 14/14 통과.
 - 2026-10-04: **Sprint 4 완료 상태 재확인 + 문서 정정.** lint·test·build 재실행 결과 통과(표의 Sprint 4는 이미 DONE). 데이터 통신 ⭐ 근거를 "인쇄 강조 직접(s.33·s.48)"과 "s.33 범위 확장(13번 Shannon)"으로 구분해 기록, s.41 "important"는 검토 후 ⭐ 제외(Ch02 목표 106 유지). Figure 8.16 프레임 수를 "n개(테스트는 10 가정)"로, "히트 시 pointer 이동 없음"의 근거를 p.48 필기 + Figure 8.15 그림으로 정정. 폴트 수 기준 규칙(초기 적재 포함/이후 둘 다 제공, 문제에 기준 명시·해설에 다른 기준 값) 추가 — 생성기 해설의 다른 기준 값은 미반영(코드 수정 필요) → 해결(다음 줄).
 - 2026-10-04: **폴트 수 기준 규칙 반영 완료.** `replacement` 생성기 해설에 "초기 적재까지 포함하면 N회" 추가(F 횟수·trace 변형), Figure 8.15 `misses` 고정(OPT 6·LRU 7·FIFO 9·CLOCK 8), 생성기 해설 검증 테스트 추가, `replacement.ts` 주석의 Clock 규칙 근거를 규칙별로 정정. 앞 줄의 미반영 항목 해결.
+- 2026-10-04: **Sprint 5 완료.** `data/subjects/os/ch02.ts` 51문항(⭐ 18, 시간 계산 calc 7은 `cpuTime.ts`로 정답 계산), `ch03.ts` 90문항(⭐ 61). content-checklist Ch02/Ch03 전 항목 체크 + 소주제별 문항 수 기록. 정답 키 채점·문제 내 중복 검사(integrity)와 전 문항 렌더링 테스트(`components/qtypes/render.test.ts`) 추가. 유형 비율은 mcq·ox 과다/blank 부족 — Sprint 6에서 보정.

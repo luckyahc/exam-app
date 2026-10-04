@@ -4,12 +4,13 @@ import { describe, expect, it } from "vitest";
 import { contrastRatio } from "@/lib/color/contrast";
 import { validateBase } from "@/lib/qtypes/base";
 import { QTYPE_FIXTURES } from "@/lib/qtypes/fixtures";
-import { coreFor, isQType } from "@/lib/qtypes/registry";
+import { answerKey } from "@/lib/qtypes/answerKey";
+import { coreFor, gradeQuestion, isQType } from "@/lib/qtypes/registry";
 import type { Question } from "@/types/question";
 import { SUBJECTS } from "./registry";
 
 // 전 과목 데이터 무결성. 과목이 레지스트리에 추가되면 자동으로 검사 대상이 된다.
-// 문제 단위 검사(id 형식·유형·validate)는 Sprint 3에서 문제 유형 레지스트리와 함께 추가한다.
+// 문제 단위 검사: id 형식·유형·validate(Sprint 3), 정답 키 채점 = 1점·문제 내 항목 중복 없음(Sprint 5).
 
 const ROOT = path.resolve(import.meta.dirname, "../..");
 const SUBJECT_ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
@@ -116,6 +117,42 @@ describe("문제 데이터 (전 과목·전 챕터)", () => {
       }
     }
     expect(errors).toEqual([]);
+  });
+
+  it("모든 문제의 정답 키를 채점하면 정확히 1점(정답)이다", async () => {
+    const wrong: string[] = [];
+    for (const s of SUBJECTS) {
+      for (const c of s.chapters) {
+        for (const q of await c.load()) {
+          const r = gradeQuestion(q, answerKey(q));
+          if (r.score !== 1) wrong.push(`${q.id}: ${r.score}`);
+        }
+      }
+    }
+    expect(wrong).toEqual([]);
+  });
+
+  it("같은 문제 안의 보기·순서 항목·짝 문자열이 서로 겹치지 않는다", async () => {
+    const dup: string[] = [];
+    const check = (id: string, what: string, xs: readonly string[] | undefined) => {
+      if (xs && new Set(xs).size !== xs.length) dup.push(`${id}: ${what}`);
+    };
+    for (const s of SUBJECTS) {
+      for (const c of s.chapters) {
+        for (const q of await c.load()) {
+          const any = q as {
+            choices?: string[];
+            items?: (string | { label: string })[];
+            pairs?: { left: string; right: string }[];
+          };
+          check(q.id, "choices", any.choices);
+          check(q.id, "items", any.items?.map((x) => (typeof x === "string" ? x : x.label)));
+          check(q.id, "pairs.left", any.pairs?.map((p) => p.left));
+          check(q.id, "pairs.right", any.pairs?.map((p) => p.right));
+        }
+      }
+    }
+    expect(dup).toEqual([]);
   });
 
   it("유형 미리보기용 더미 문제도 같은 검사를 통과한다 (과목·챕터가 레지스트리에 있음)", () => {
