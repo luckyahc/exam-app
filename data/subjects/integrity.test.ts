@@ -2,6 +2,10 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { contrastRatio } from "@/lib/color/contrast";
+import { validateBase } from "@/lib/qtypes/base";
+import { QTYPE_FIXTURES } from "@/lib/qtypes/fixtures";
+import { coreFor, isQType } from "@/lib/qtypes/registry";
+import type { Question } from "@/types/question";
 import { SUBJECTS } from "./registry";
 
 // 전 과목 데이터 무결성. 과목이 레지스트리에 추가되면 자동으로 검사 대상이 된다.
@@ -86,6 +90,45 @@ describe("과목 레지스트리", () => {
       }
     },
   );
+});
+
+/** 한 문제의 무결성 오류 목록 (빈 배열 = 정상) */
+function questionErrors(q: Question, subjectId: string, chapterId: string): string[] {
+  const e: string[] = [];
+  if (q.subject !== subjectId) e.push(`subject '${q.subject}' ≠ 파일 위치 '${subjectId}'`);
+  if (q.chapter !== chapterId) e.push(`chapter '${q.chapter}' ≠ 파일 위치 '${chapterId}'`);
+  if (!isQType(q.type)) return [...e, `등록되지 않은 유형 '${q.type}' (서술형 금지)`];
+  return [...e, ...validateBase(q), ...coreFor(q).validate(q as never)];
+}
+
+describe("문제 데이터 (전 과목·전 챕터)", () => {
+  it("모든 문제가 공통·유형별 검증을 통과하고 id가 전역 유일하다", async () => {
+    const errors: string[] = [];
+    const ids = new Map<string, string>();
+    for (const s of SUBJECTS) {
+      for (const c of s.chapters) {
+        for (const q of await c.load()) {
+          const where = `${s.id}/${c.id}/${q.id}`;
+          for (const msg of questionErrors(q, s.id, c.id)) errors.push(`${where}: ${msg}`);
+          if (ids.has(q.id)) errors.push(`${where}: id 중복 (${ids.get(q.id)})`);
+          ids.set(q.id, where);
+        }
+      }
+    }
+    expect(errors).toEqual([]);
+  });
+
+  it("유형 미리보기용 더미 문제도 같은 검사를 통과한다 (과목·챕터가 레지스트리에 있음)", () => {
+    for (const q of QTYPE_FIXTURES) {
+      const subject = SUBJECTS.find((s) => s.id === q.subject);
+      expect(subject, q.id).toBeDefined();
+      expect(
+        subject!.chapters.some((c) => c.id === q.chapter),
+        q.id,
+      ).toBe(true);
+      expect(questionErrors(q, q.subject, q.chapter), q.id).toEqual([]);
+    }
+  });
 });
 
 describe("챕터 최소 문항 수 (Sprint 11 전까지는 경고만)", () => {

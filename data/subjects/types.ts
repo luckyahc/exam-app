@@ -1,8 +1,4 @@
-/**
- * 문제 한 개의 데이터. 실제 타입(`types/question.ts`의 `Question`, 과목 필드 포함)은
- * Sprint 3(문제 유형 엔진)에서 정의하고 이 별칭을 그것으로 교체한다.
- */
-export type QuestionData = unknown;
+import type { Question } from "@/types/question";
 
 export interface ChapterDef {
   /** 과목 안에서만 유일. 예: 'ch08' */
@@ -14,7 +10,7 @@ export interface ChapterDef {
   /** 정적 문제 최소 문항 수 */
   minQuestions: number;
   /** 챕터 문제 배열을 동적 import로 불러온다(퀴즈 화면에서 필요한 챕터만 로드). */
-  load: () => Promise<readonly QuestionData[]>;
+  load: () => Promise<readonly Question[]>;
 }
 
 export interface SubjectDef {

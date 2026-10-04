@@ -236,7 +236,7 @@ export const QTYPE_UI = { mcq: McqUI, /* … */ } satisfies { [K in QType]: QTyp
 
 1. `lib/qtypes/new-type.ts` — payload 타입 + `QTypeCore` 구현 + `new-type.test.ts`
 2. `lib/qtypes/registry.ts`에 `"new-type": newTypeCore` 한 줄
-3. `components/qtypes/CodeBlank.tsx` — `Input`/`Review`
+3. `components/qtypes/NewType.tsx` — `Input`/`Review`
 4. `components/qtypes/registry.ts`에 한 줄 (빠뜨리면 빌드 실패)
 
 데이터 통신은 PDF 분석 결과 **새 유형이 필요 없다**(기본 10종 + `calc` 입력 보강) — [`dc-question-types.md`](./dc-question-types.md).
