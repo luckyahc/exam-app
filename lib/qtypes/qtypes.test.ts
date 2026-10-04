@@ -10,7 +10,15 @@ import { mcqCore, type McqQ } from "./mcq";
 import { multiCore, type MultiQ, multiScore } from "./multi";
 import { orderCore, type OrderQ } from "./order";
 import { oxCore, type OxQ } from "./ox";
-import { coreFor, type QType, QTYPES, type QuestionOf } from "./registry";
+import { mulberry32, shuffledIndexes } from "@/lib/random";
+import {
+  type AnyAnswer,
+  coreFor,
+  gradeQuestion,
+  type QType,
+  QTYPES,
+  type QuestionOf,
+} from "./registry";
 import { blankCells, cellKey, traceCore, type TraceQ } from "./trace";
 
 function fixture<K extends QType>(type: K): QuestionOf<K> {
@@ -325,5 +333,87 @@ describe("graph", () => {
       ],
     };
     expect(graphCore.validate(off)).not.toEqual([]);
+  });
+});
+
+describe("정답/오답 판정: 완전히 맞았을 때만 정답 (부분 점수는 보조 정보)", () => {
+  // 부분 점수가 나오는 유형마다 [일부만 맞은 답, 완전히 맞은 답]
+  const cases: [QType, AnyAnswer, AnyAnswer][] = (() => {
+    const multi = fixture("multi");
+    const match = fixture("match");
+    const classify = fixture("classify");
+    const trace = fixture("trace");
+    const right = (q: TraceQ) =>
+      Object.fromEntries(blankCells(q).map((b) => [b.key, b.cell.value]));
+    const traceHalf = { ...right(trace), [cellKey(0, 4)]: "2" };
+    const matchRights = match.pairs.map((p) => p.right);
+    const buckets = classify.items.map((it) => it.bucket);
+    return [
+      ["multi", [0, 1], [...multi.answerIndexes]],
+      ["blank", ["스래싱", "단편화"], ["스래싱", "지역성"]],
+      ["order", [1, 0, 2, 3], [0, 1, 2, 3]],
+      ["match", [matchRights[1], matchRights[0], ...matchRights.slice(2)], matchRights],
+      ["classify", [buckets[1], ...buckets.slice(1)], buckets],
+      ["trace", traceHalf, right(trace)],
+    ];
+  })();
+
+  it.each(cases)(
+    "%s: 일부만 맞으면 오답(부분 점수만 0~1 사이), 전부 맞아야 정답",
+    (type, partial, full) => {
+      const q = fixture(type);
+      const p = gradeQuestion(q, partial);
+      expect(p.correct).toBe(false);
+      expect(p.score).toBeGreaterThan(0);
+      expect(p.score).toBeLessThan(1);
+      const f = gradeQuestion(q, full);
+      expect(f).toMatchObject({ correct: true, score: 1 });
+    },
+  );
+
+  it("모든 유형·무작위 답안에서 correct는 정확히 score === 1과 같다", () => {
+    const rand = mulberry32(20261004);
+    const pick = <T>(xs: readonly T[]) => xs[Math.floor(rand() * xs.length)];
+    for (let n = 0; n < 300; n++) {
+      for (const q of QTYPE_FIXTURES) {
+        let a: AnyAnswer;
+        switch (q.type) {
+          case "mcq":
+            a = Math.floor(rand() * q.choices.length);
+            break;
+          case "multi":
+            a = q.choices.map((_, i) => i).filter(() => rand() < 0.5);
+            break;
+          case "ox":
+            a = rand() < 0.5;
+            break;
+          case "blank":
+            a = q.blanks.map((b) => (rand() < 0.6 ? b.accept[0] : "x"));
+            break;
+          case "order":
+            a = shuffledIndexes(q.items.length, `r${n}`);
+            break;
+          case "match":
+            a = q.pairs.map(() => pick(q.pairs).right);
+            break;
+          case "classify":
+            a = q.items.map(() => pick(q.buckets));
+            break;
+          case "calc":
+            a = rand() < 0.5 ? String(q.answer) : "0";
+            break;
+          case "trace":
+            a = Object.fromEntries(
+              blankCells(q).map((b) => [b.key, rand() < 0.6 ? b.cell.value : "?"]),
+            );
+            break;
+          case "graph":
+            a = pick(q.options).key;
+            break;
+        }
+        const r = gradeQuestion(q, a);
+        expect(r.correct, `${q.type} ${JSON.stringify(a)}`).toBe(r.score === 1);
+      }
+    }
   });
 });

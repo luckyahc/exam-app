@@ -3,7 +3,7 @@
 import type { ExamBasis, GradeResult } from "@/lib/qtypes/base";
 import { coreFor, type AnyAnswer, type Question } from "@/lib/qtypes/registry";
 import { uiFor } from "./registry";
-import { Mark, RichText } from "./ui";
+import { ResultBanner, RichText } from "./ui";
 
 const EXAM_LABEL: Record<ExamBasis, string> = {
   handwritten: "교수님 필기",
@@ -64,14 +64,7 @@ export function QuestionRenderer({ question, answer, onAnswer, result }: Props) 
 
       {result && (
         <section aria-label="채점 결과" className="flex flex-col gap-3 border-t border-border pt-4">
-          <p className="flex items-center gap-2" role="status">
-            <Mark ok={result.correct} />
-            {!result.correct && result.score > 0 && (
-              <span className="text-sm text-muted">
-                부분 점수 {Math.round(result.score * 100)}%
-              </span>
-            )}
-          </p>
+          <ResultBanner correct={result.correct} score={result.score} />
           <Review question={question as never} answer={answer as never} result={result as never} />
           <div className="flex flex-col gap-1 rounded-lg bg-surface p-3 text-sm leading-relaxed">
             {question.summary && (

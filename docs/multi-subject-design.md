@@ -270,10 +270,11 @@ export const QTYPE_UI = { mcq: McqUI, /* … */ } satisfies { [K in QType]: QTyp
 | `examapp:schema` | 전역 | 스키마 버전 숫자 (`2`) |
 | `examapp:settings` | 전역 | 모드 기본값, 타이머 등 |
 | `examapp:session` | 전역 | 진행 중 퀴즈 세션(문제 id 배열, 필터, 답안) |
-| `examapp:{subject}:progress` | 과목별 | `{ [questionId]: { attempts, correctCount, lastScore, lastAt } }` |
+| `examapp:{subject}:progress` | 과목별 | `{ [questionId]: { attempts, correctCount, lastScore, lastAt } }` — `correctCount`는 **완전히 맞은 횟수만**, `lastScore`는 마지막 부분 점수(0..1, 저장만 하고 판정·통계에 쓰지 않음) |
 | `examapp:{subject}:wrong` | 과목별 | `{ [questionId]: { wrongCount, attempts, lastWrongAt, resolved, gen? } }` — `gen`은 생성기 문제 재생성 정보 |
 | `examapp:{subject}:bookmarks` | 과목별 | `string[]` (문제 id) |
 
+- **정답/오답은 완전히 맞았을 때만 정답**(부분 점수가 있어도 하나라도 틀리면 오답). 정답 수·정답률·오답노트는 이 기준으로만 세고, 기록 반영은 `lib/storage/records.ts`의 `recordAttempt`, 요약은 `summarize`로만 한다(규칙 상세: Sprint 3 문서 "구현 중 확정한 설계").
 - 챕터·토픽별 진행률은 저장하지 않고 문제별 기록 + 문제 데이터(id→chapter/topic)에서 **계산**한다. 저장 중복을 없애 마이그레이션 대상을 줄인다.
 - 키 문자열은 `lib/storage/keys.ts`의 함수로만 만든다(`progressKey(subject)` 등). 문자열 직접 조립 금지.
 - 모든 접근은 기존 `safeStorage`(`try/catch`, `useEffect`/이벤트 핸들러 안에서만) 경유.

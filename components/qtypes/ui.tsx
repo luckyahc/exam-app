@@ -42,6 +42,36 @@ export function Mark({
   );
 }
 
+/**
+ * 채점 결과 배너 — 결과 화면 맨 위. 완전히 맞았을 때만 "정답", 하나라도 틀리면 "오답".
+ * 부분 점수는 오답일 때 그 아래에 작게 보조 정보로만 보여 준다(정답/오답 판정에는 쓰지 않음).
+ * 색 단독 금지: ✓/✗ 아이콘 + 글자를 함께 쓴다.
+ */
+export function ResultBanner({ correct, score }: { correct: boolean; score: number }) {
+  const partial = !correct && score > 0;
+  return (
+    <div
+      role="status"
+      className={
+        "flex flex-col gap-0.5 rounded-xl border-2 px-4 py-3 " +
+        (correct ? "border-correct bg-correct/5" : "border-incorrect bg-incorrect/5")
+      }
+    >
+      <p
+        className={`flex items-center gap-2 text-2xl font-bold ${correct ? "text-correct" : "text-incorrect"}`}
+      >
+        <span aria-hidden>{correct ? "✓" : "✗"}</span>
+        {correct ? "정답" : "오답"}
+      </p>
+      {partial && (
+        <p className="text-xs text-foreground">
+          부분 점수 {Math.round(score * 100)}% (일부만 맞음 — 오답으로 기록됩니다)
+        </p>
+      )}
+    </div>
+  );
+}
+
 /** 작은 꼬리표: "내 답", "정답" */
 export function Tag({
   children,
