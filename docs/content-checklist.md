@@ -102,6 +102,8 @@
 
 근거: [`dc-source-analysis.md`](./dc-source-analysis.md). ⭐ 3개 — `examBasis`는 모두 `printed-emphasis`(슬라이드에 인쇄된 "very important", 필기 아님). 근거 구분은 항목마다 적었다. s.41 "important"는 ⭐ 제외. Sprint 10에서 체크하고 실제 문항 수를 괄호에 기록한다.
 
+> **문항 수 판정 기준(2026-10-05 사용자 승인)**: 데이터 통신은 챕터 파일에 고정 seed로 넣은 생성기 문항(`{generator, params, seed}`로 저장, id `…-gen-{이름}-{seed}`)을 **최소 문항 수에 포함**해 판정한다 — Ch02 = 정적 90 + 고정 seed 생성기 22 = 112 ≥ 106(정적만으로는 90 < 106). Ch01은 생성기 문항이 없다(정적 58 ≥ 57). **OS와의 차이**: OS 챕터도 고정 seed 생성기 문항을 챕터 파일에 넣고 '실제' 합계에 포함해 적었지만(Ch07 정적 82 + 생성기 7, Ch08 정적 134 + 생성기 4), **정적 문항만으로도 최소 문항 수를 넘는다**(Ch07 82 ≥ 80, Ch08 134 ≥ 120). 데이터 통신 Ch02는 생성기 문항을 포함해야 최소 문항 수를 넘는다.
+
 ### Ch01. 개요 (목표 ≥ 57문항 — 실제 58, Sprint 10)
 
 - [x] 데이터·데이터 통신 정의, 4가지 특성(전달·정확성·적시성·지터) — mcq/multi/blank · s.2 · 목표 3 (실제 3)
@@ -125,32 +127,34 @@
 
 > Ch01 작성(2026-10-05): 58문항 = mcq 16 · blank 12 · ox 10 · match 7 · multi 5 · classify 4 · graph 2 · order 2, ⭐ 0. 문항별 대조 기록 [`verification/data-comm-ch01-ch02.md`](./verification/data-comm-ch01-ch02.md)(일치 38 · 수정 20 — 1차 PDF 대조 2, 2차 "화면에 없는 그림을 가리키는 문장" 18). 연결 유형·WAN은 해당 SVG가 없어 graph 대신 다른 유형으로 냈다.
 
-### Ch02. 물리 계층 (목표 ≥ 106문항)
+### Ch02. 물리 계층 (목표 ≥ 106문항 — 실제 112 = 정적 90 + 고정 seed 생성기 22, Sprint 10)
 
-- [ ] 물리 계층 역할 — mcq/ox · s.2-3 · 목표 2
-- [ ] 아날로그·디지털 데이터와 신호 — mcq/classify/graph · s.4-6 · 목표 3
-- [ ] 주기 신호(단순/복합), 사인파 3요소, 주파수·주기 — mcq/blank/calc/graph · s.7-10 · 목표 4
-- [ ] 위상(도·라디안) — mcq/calc/graph · s.11-12 · 목표 3
-- [ ] 파장(λ = c/f) — mcq/blank/calc · s.13 · 목표 3
-- [ ] 시간/주파수 영역, 복합 신호, 대역폭 — mcq/ox/calc/graph · s.14-17 · 목표 4
-- [ ] 디지털 신호: 레벨·r, 비트율, 비트 길이 — mcq/calc/graph · s.18-21 · 목표 4
-- [ ] 기저대역 vs 광대역(변조) — mcq/ox · s.22-23 · 목표 2
-- [ ] 전송 장애 3원인, 감쇠·증폭(dB) — mcq/multi/ox/calc · s.24-27 · 목표 4
-- [ ] 왜곡, 잡음 4종 — mcq/match/graph · s.28-29 · 목표 3
-- [ ] SNR / SNR_dB — ox/calc/graph · s.30-32 · 목표 3
-- [ ] ⭐ (printed-emphasis · 인쇄 강조 직접(s.33)) 데이터 전송률 한계 3요소, Nyquist 비트율 — mcq/multi/blank/calc/trace/graph · s.33-35 · 목표 8 — **최소 6~10문항**
-- [ ] ⭐ (printed-emphasis · s.33 인쇄 강조의 범위 확장(s.36~40에는 강조 문구 없음)) Shannon 용량, 두 한계 함께 쓰기 — mcq/multi/ox/blank/calc/trace · s.36-40 · 목표 8 — **최소 6~10문항**
-- [ ] 성능 지표 5종, 대역폭 두 의미, 처리량 — mcq/multi/ox/calc · s.41-45 · 목표 4
-- [ ] 지연(4요소, 전파·전송 시간) — multi/blank/calc · s.46-47 · 목표 4
-- [ ] ⭐ (printed-emphasis · 인쇄 강조 직접(s.48)) 대역폭-지연 곱, 지터 — mcq/ox/blank/calc/trace/graph · s.48-52 · 목표 8 — **최소 6~10문항**
-- [ ] 디지털→디지털 변환, 블록 코딩 mB/nB — mcq/blank/order · s.53-57 · 목표 3
-- [ ] PCM 3과정, Nyquist 표본화율 — mcq/blank/order/calc · s.58-62 · 목표 4
-- [ ] 델타 변조(PCM과 비교, 구성요소) — mcq/match · s.63-66 · 목표 2
-- [ ] 디지털→아날로그 분류, 비트율 vs 보오율 — mcq/classify/calc · s.67-68 · 목표 3
-- [ ] BASK·BFSK·BPSK 대역폭·구현, 성상도, QAM — mcq/match/calc/graph · s.69-76 · 목표 4
-- [ ] 아날로그→아날로그: AM·FM·PM 대역폭, 대역 할당 — mcq/match/calc/graph · s.77-80 · 목표 4
-- [ ] 다중화 개념·분류, FDM과 보호 대역 — mcq/blank/classify/calc · s.81-87 · 목표 4
-- [ ] WDM, TDM·동기식 TDM — mcq/calc/trace · s.88-90 · 목표 3
-- [ ] 전송 매체 분류(유도/비유도), 꼬임쌍선(UTP/STP) — mcq/ox/classify/graph · s.91-94 · 목표 4
-- [ ] 동축 케이블, 광섬유(임계각·클래딩) — mcq/ox/blank/graph · s.95-98 · 목표 4
-- [ ] 무선: 전파·마이크로파·적외선 — mcq/ox/match/classify · s.99-101 · 목표 4
+- [x] 물리 계층 역할 — mcq/ox · s.2-3 · 목표 2 (실제 2)
+- [x] 아날로그·디지털 데이터와 신호 — mcq/classify/graph · s.4-6 · 목표 3 (실제 3)
+- [x] 주기 신호(단순/복합), 사인파 3요소, 주파수·주기 — mcq/blank/calc/graph · s.7-10 · 목표 4 (실제 5)
+- [x] 위상(도·라디안) — mcq/calc/graph · s.11-12 · 목표 3 (실제 3)
+- [x] 파장(λ = c/f) — mcq/blank/calc · s.13 · 목표 3 (실제 4)
+- [x] 시간/주파수 영역, 복합 신호, 대역폭 — mcq/ox/calc/graph · s.14-17 · 목표 4 (실제 4)
+- [x] 디지털 신호: 레벨·r, 비트율, 비트 길이 — mcq/calc/graph · s.18-21 · 목표 4 (실제 5)
+- [x] 기저대역 vs 광대역(변조) — mcq/ox · s.22-23 · 목표 2 (실제 2)
+- [x] 전송 장애 3원인, 감쇠·증폭(dB) — mcq/multi/ox/calc · s.24-27 · 목표 4 (실제 4)
+- [x] 왜곡, 잡음 4종 — mcq/match/graph · s.28-29 · 목표 3 (실제 3)
+- [x] SNR / SNR_dB — ox/calc/graph · s.30-32 · 목표 3 (실제 3)
+- [x] ⭐ (printed-emphasis · 인쇄 강조 직접(s.33)) 데이터 전송률 한계 3요소, Nyquist 비트율 — mcq/multi/blank/calc/trace/graph · s.33-35 · 목표 8 — **최소 6~10문항** (실제 8)
+- [x] ⭐ (printed-emphasis · s.33 인쇄 강조의 범위 확장(s.36~40에는 강조 문구 없음)) Shannon 용량, 두 한계 함께 쓰기 — mcq/multi/ox/blank/calc/trace · s.36-40 · 목표 8 — **최소 6~10문항** (실제 8)
+- [x] 성능 지표 5종, 대역폭 두 의미, 처리량 — mcq/multi/ox/calc · s.41-45 · 목표 4 (실제 4)
+- [x] 지연(4요소, 전파·전송 시간) — multi/blank/calc · s.46-47 · 목표 4 (실제 4)
+- [x] ⭐ (printed-emphasis · 인쇄 강조 직접(s.48)) 대역폭-지연 곱, 지터 — mcq/ox/blank/calc/trace/graph · s.48-52 · 목표 8 — **최소 6~10문항** (실제 8)
+- [x] 디지털→디지털 변환, 블록 코딩 mB/nB — mcq/blank/order · s.53-57 · 목표 3 (실제 3)
+- [x] PCM 3과정, Nyquist 표본화율 — mcq/blank/order/calc · s.58-62 · 목표 4 (실제 4)
+- [x] 델타 변조(PCM과 비교, 구성요소) — mcq/match · s.63-66 · 목표 2 (실제 2)
+- [x] 디지털→아날로그 분류, 비트율 vs 보오율 — mcq/classify/calc · s.67-68 · 목표 3 (실제 3)
+- [x] BASK·BFSK·BPSK 대역폭·구현, 성상도, QAM — mcq/match/calc/graph · s.69-76 · 목표 4 (실제 5)
+- [x] 아날로그→아날로그: AM·FM·PM 대역폭, 대역 할당 — mcq/match/calc/graph · s.77-80 · 목표 4 (실제 5)
+- [x] 다중화 개념·분류, FDM과 보호 대역 — mcq/blank/classify/calc · s.81-87 · 목표 4 (실제 5)
+- [x] WDM, TDM·동기식 TDM — mcq/calc/trace · s.88-90 · 목표 3 (실제 3)
+- [x] 전송 매체 분류(유도/비유도), 꼬임쌍선(UTP/STP) — mcq/ox/classify/graph · s.91-94 · 목표 4 (실제 4)
+- [x] 동축 케이블, 광섬유(임계각·클래딩) — mcq/ox/blank/graph · s.95-98 · 목표 4 (실제 4)
+- [x] 무선: 전파·마이크로파·적외선 — mcq/ox/match/classify · s.99-101 · 목표 4 (실제 4)
+
+> Ch02 작성(2026-10-05): 112문항 = calc 38 · blank 18 · mcq 17 · graph 11 · ox 10 · classify 5 · multi 4 · trace 4 · match 3 · order 2 (정적 90 + 생성기 22), ⭐ 24(소주제 3개 × 8). 문항별 대조 기록 [`verification/data-comm-ch01-ch02.md`](./verification/data-comm-ch01-ch02.md) Ch02 절(일치 112).

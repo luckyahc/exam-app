@@ -1,5 +1,6 @@
 import type { CalcQ } from "@/lib/qtypes/calc";
 import type { TraceCell, TraceQ } from "@/lib/qtypes/trace";
+import type { Question } from "@/types/question";
 import { createRng, type Rng } from "../_shared/rng";
 import { type Generator, type GeneratorMap, genId } from "../_shared/types";
 import { bothLimits, nextPow2, nyquistBitRate, nyquistLevels, prevPow2, shannonCapacity } from "./capacity";
@@ -71,12 +72,18 @@ function baseOf(name: string, meta: Meta, seed: number, params: Record<string, u
  * 문제 문장에 요구 자릿수를 적고, 그 절반을 허용 오차로 쓴다.
  */
 const EXACT = { tolerance: 0, note: "" };
-const DP1 = { tolerance: 0.05, note: " (소수 첫째 자리까지)" };
-const DP3 = { tolerance: 0.0005, note: " (소수 셋째 자리까지)" };
+const DP1 = { tolerance: 0.05, note: " (소수 첫째 자리까지)", supplement: "(보충) 채점 규칙: 소수 첫째 자리까지 답하면 정답(허용 오차 ±0.05) — 반올림 자릿수는 슬라이드에 없는 앱 규칙이다." };
+const DP3 = { tolerance: 0.0005, note: " (소수 셋째 자리까지)", supplement: "(보충) 채점 규칙: 소수 셋째 자리까지 답하면 정답(허용 오차 ±0.0005) — 반올림 자릿수는 슬라이드에 없는 앱 규칙이다." };
 /** 지수 표기로 답하는 큰/작은 값: 유효숫자 3자리 → 상대 오차 0.5% (보충) */
-const SIG3 = { tolerance: 0, relTolerance: 0.005, note: " (유효숫자 3자리, 지수 표기 가능: 예 `3e8`, `3×10^8`)" };
+const SIG3 = {
+  tolerance: 0,
+  relTolerance: 0.005,
+  note: " (유효숫자 3자리, 지수 표기 가능: 예 `3e8`, `3×10^8`)",
+  supplement: "(보충) 채점 규칙: 유효숫자 3자리면 정답(상대 오차 ±0.5%) — 슬라이드에 없는 앱 규칙이다.",
+};
 
-type Precision = { tolerance: number; relTolerance?: number; note: string };
+/** supplement: 슬라이드에 없는 채점 규칙(보충) — 해설 끝에 붙는다 */
+type Precision = { tolerance: number; relTolerance?: number; note: string; supplement?: string };
 
 function calc(
   base: ReturnType<typeof baseOf>,
@@ -97,7 +104,7 @@ function calc(
     ...(precision.relTolerance ? { relTolerance: precision.relTolerance } : {}),
     unit,
     steps,
-    explanation,
+    explanation: precision.supplement ? `${explanation} ${precision.supplement}` : explanation,
   };
 }
 
@@ -182,7 +189,7 @@ export const signalGen: Generator<SignalParams> = {
         `사인파가 시간 0을 기준으로 **${n}/${d} 주기** 밀려 있다. 위상은 몇 **라디안(rad)**인가?`,
         p.rad,
         "rad",
-        { tolerance: 0.002, note: " (소수 셋째 자리까지, ±0.002)" },
+        { tolerance: 0.002, note: " (소수 셋째 자리까지, ±0.002)", supplement: "(보충) 허용 오차 ±0.002 rad는 슬라이드 근사값(π/3 = 1.046)도 받기 위한 앱 규칙이다." },
         [`위상(도) = ${n}/${d} × 360° = ${fmt(deg)}°`, `라디안 = ${fmt(deg)}° × 2π / 360° = ${fmt(p.rad, 4)} rad`],
         `360° = 2π rad이므로 도에 2π/360을 곱한다. 정확값은 ${fmt(p.rad, 4)} rad이다(슬라이드는 π/3을 1.046으로 적었다 — 반올림하면 1.047이라 ±0.002를 허용).`,
       );
@@ -225,7 +232,7 @@ export const signalGen: Generator<SignalParams> = {
       `실효(평균) 전압이 ${rms} V인 교류의 **피크 진폭**은 몇 V인가? (피크 = 2½ × 실효값, 정수로 답하면 ±1.5 V까지 정답)`,
       peak,
       "V",
-      { tolerance: 1.5, note: "" },
+      { tolerance: 1.5, note: "", supplement: "(보충) 허용 오차 ±1.5 V는 슬라이드 근사값(220 V → 310 V)도 받기 위한 앱 규칙이다." },
       [`피크 = 2½ × 실효 = √2 × ${rms}`, `= ${fmt(peak, 2)} V`],
       `피크 진폭은 실효값의 √2(= 2½)배다. 슬라이드는 220 V → 310 V로 적었는데 √2 × 220 = 311.1 V라 근사값이다(그래서 ±1.5 V 허용).`,
     );
@@ -330,7 +337,7 @@ const DECIBEL_VARIANTS = ["attenuation", "gain", "snr", "snrDb"] as const;
 type DecibelParams = { variant: (typeof DECIBEL_VARIANTS)[number] };
 
 /** dB 허용 오차 ±0.05 (docs/dc-source-analysis.md 확인 필요 7: 슬라이드 −3 dB는 −3.01의 근사) */
-const DB = { tolerance: 0.05, note: " (소수 첫째 자리까지)" };
+const DB = { tolerance: 0.05, note: " (소수 첫째 자리까지)", supplement: "(보충) dB 반올림 규칙은 슬라이드에 없다 — 소수 첫째 자리, ±0.05 dB 허용(슬라이드의 −3 dB는 정확값 −3.01의 근사)." };
 
 export const decibelGen: Generator<DecibelParams> = {
   name: "decibel",
@@ -396,12 +403,10 @@ type CapacityParams = { variant: (typeof CAPACITY_VARIANTS)[number] };
 
 const FRACTION_LOG = [0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875];
 
-export const capacityGen: Generator<CapacityParams> = {
-  name: "capacity",
-  chapter: "ch02",
-  topic: T.nyquist,
-  description: "Nyquist 2B log₂ L(비트율·L 역산·2의 거듭제곱), Shannon B log₂(1+SNR), 두 한계 함께(상한 → 고른 비트율 → L)",
-  generate(seed, params = {}) {
+/** ⭐ 13번(Shannon·두 한계) 근거 — s.36~40에는 강조 문구가 없어 s.33 인쇄 강조의 범위 확장으로 ⭐ */
+export const SHANNON_STAR_BASIS = "⭐ 근거: s.33 인쇄 강조의 범위 확장(s.36~40에는 강조 문구 없음).";
+
+function capacityQuestion(seed: number, params: Partial<CapacityParams>): Question {
     const rng = createRng(seed);
     const variant = pickVariant(rng, CAPACITY_VARIANTS, params.variant);
     const b = (m: Meta, d: 1 | 2 | 3) => baseOf("capacity", { ...m, exam: true }, seed, { variant }, d);
@@ -465,7 +470,7 @@ export const capacityGen: Generator<CapacityParams> = {
           `대역폭 ${fmt(hz)} Hz, SNR ${fmt(ratio)}인 전화선의 **Shannon 용량**은 몇 kbps인가? (±0.1% 이내면 정답)`,
           c / 1000,
           "kbps",
-          { tolerance: 0, relTolerance: 0.001, note: "" },
+          { tolerance: 0, relTolerance: 0.001, note: "", supplement: "(보충) 허용 오차 ±0.1%는 계산기마다 다른 로그 정밀도를 받기 위한 앱 규칙이다." },
           [`C = B × log₂(1 + SNR)`, `= ${fmt(hz)} × log₂ ${fmt(1 + ratio)} = ${fmt(hz)} × ${fmt(Math.log2(1 + ratio), 4)}`, `= ${fmt(round(c, 0))} bps ≈ ${fmt(c / 1000, 3)} kbps`],
           `잡음 있는 채널의 이론 최대 비트율은 Shannon 공식 B log₂(1 + SNR)이다(슬라이드 예: 3000 Hz, SNR 3162 → 34,881 bps). SNR_dB 값을 그대로 넣거나 1을 더하지 않으면 틀린다.`,
         );
@@ -499,6 +504,8 @@ export const capacityGen: Generator<CapacityParams> = {
     const capStep = `C = ${mhz} MHz × log₂(1 + ${fmt(ratio)}) = ${mhz} × ${k} = ${fmt(r.capacity / 1e6)} Mbps (상한)`;
     const lvlStep = `${chosen} Mbps = 2 × ${mhz} MHz × log₂ L → log₂ L = ${j} → L = ${r.levels}`;
     const explanation = `Shannon 공식이 상한(${fmt(r.capacity / 1e6)} Mbps)을 주고, 그보다 낮은 비트율을 골라 Nyquist 공식으로 레벨 수를 정한다(슬라이드 예: 1 MHz, SNR 63 → 상한 6 Mbps, 4 Mbps를 고르면 L = 4). 상한 그대로 Nyquist에 넣거나 Shannon 공식으로 레벨을 구하면 틀린다.`;
+    /** 고르는 비트율 규칙은 슬라이드에 없다(슬라이드는 "예를 들어 4 Mbps") */
+    const chosenNote = "(보충) 고르는 비트율은 log₂ L이 정수가 되도록(2의 거듭제곱 레벨) 앱이 정한 값이다 — 슬라이드는 '예를 들어 4 Mbps'라고만 한다.";
     if (variant === "bothCapacity")
       return calc(b(BOTH, 2), `${setup} 이 채널로 보낼 수 있는 **비트율의 상한**은 몇 Mbps인가?`, r.capacity / 1e6, "Mbps", EXACT, [capStep], explanation);
     if (variant === "bothLevels")
@@ -509,7 +516,7 @@ export const capacityGen: Generator<CapacityParams> = {
         "레벨",
         EXACT,
         [capStep, lvlStep],
-        explanation,
+        `${explanation} ${chosenNote}`,
       );
     // bothTrace
     const cell = (value: string, blank = false): TraceCell => (blank ? { value, blank } : { value });
@@ -524,9 +531,19 @@ export const capacityGen: Generator<CapacityParams> = {
         { label: "③ Nyquist로 구한 log₂ L", cells: [cell(String(j), true)] },
         { label: "④ 신호 레벨 수 L", cells: [cell(String(r.levels), true)] },
       ],
-      explanation: `${capStep}. ${lvlStep}. ${explanation}`,
+      explanation: `${capStep}. ${lvlStep}. ${explanation} ${chosenNote}`,
     };
     return q;
+}
+
+export const capacityGen: Generator<CapacityParams> = {
+  name: "capacity",
+  chapter: "ch02",
+  topic: T.nyquist,
+  description: "Nyquist 2B log₂ L(비트율·L 역산·2의 거듭제곱), Shannon B log₂(1+SNR), 두 한계 함께(상한 → 고른 비트율 → L)",
+  generate(seed, params = {}) {
+    const q = capacityQuestion(seed, params);
+    return q.topic === T.shannon ? { ...q, explanation: `${q.explanation} ${SHANNON_STAR_BASIS}` } : q;
   },
 };
 
@@ -887,7 +904,7 @@ export const linkFillGen: Generator<LinkFillParams> = {
           t === sec - 1 || t === countBlank ? { value: String(r.bitsInLink), blank: true } : { value: String(r.bitsInLink) },
         ],
       })),
-      explanation: `1초마다 ${bps}비트씩 새로 들어가고 이미 들어간 비트는 한 구간씩 수신 쪽으로 이동한다. ${sec}초 뒤 링크는 대역폭 × 지연 = ${bps} × ${sec} = ${bps * sec}비트로 가득 찬다 — 이것이 대역폭-지연 곱이다(슬라이드: 1 bps·5 s → 5비트, 5 bps·5 s → 25비트). t초 뒤 1번째 비트(묶음)는 구간 t에 있고, 링크가 가득 찬 ${sec}초 뒤에 수신 쪽 끝(구간 ${sec})에 닿는다.`,
+      explanation: `1초마다 ${bps}비트씩 새로 들어가고 이미 들어간 비트는 한 구간씩 수신 쪽으로 이동한다. ${sec}초 뒤 링크는 대역폭 × 지연 = ${bps} × ${sec} = ${bps * sec}비트로 가득 찬다 — 이것이 대역폭-지연 곱이다(슬라이드: 1 bps·5 s → 5비트, 5 bps·5 s → 25비트). t초 뒤 1번째 비트(묶음)는 구간 t에 있고, 링크가 가득 찬 ${sec}초 뒤에 수신 쪽 끝(구간 ${sec})에 닿는다. (보충) 표는 슬라이드 그림처럼 링크가 가득 찰 때(t ≤ 지연)까지만 다룬다.`,
     };
     return q;
   },
@@ -921,7 +938,7 @@ export const tdmFrameGen: Generator<TdmFrameParams> = {
     const q: TraceQ = {
       ...baseOf("tdm-frame", { topic: T.tdm, slideRef: "Ch02 s.89-90" }, seed, { variant: "table" }, 2),
       type: "trace",
-      prompt: `입력 ${n}줄(${lines.join(" / ")})을 동기식 TDM으로 합친다. 각 줄에서 단위 시간마다 하나씩 가져와 프레임을 만든다. 슬라이드 그림처럼 **오른쪽 칸이 먼저 나가는 쪽**으로 적을 때 각 프레임의 칸을 채우시오.`,
+      prompt: `입력 ${n}줄(${lines.join(" / ")})을 동기식 TDM으로 합친다. 각 줄에서 단위 시간마다 하나씩 가져와 프레임을 만든다. 각 프레임을 **오른쪽 칸이 먼저 나가는 쪽**(칸 1이 왼쪽 끝)으로 적을 때 각 프레임의 칸을 채우시오.`,
       columns: Array.from({ length: n }, (_, j) => (j === 0 ? "칸 1 (왼쪽)" : j === n - 1 ? `칸 ${n} (오른쪽, 먼저 전송)` : `칸 ${j + 1}`)),
       rows: table.map((row, i) => ({
         label: `프레임 ${i + 1}`,

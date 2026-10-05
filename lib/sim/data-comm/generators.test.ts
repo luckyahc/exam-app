@@ -44,12 +44,15 @@ describe("데이터 통신 생성기 — 변형마다 seed 300개", () => {
       if (q.type === "calc") {
         if (!Number.isFinite(q.answer)) errors.push(`${where}: 정답이 유한하지 않음`);
         if (!q.steps?.length) errors.push(`${where}: 단계별 풀이 없음`);
+        // 슬라이드에 없는 채점 규칙(허용 오차·반올림)이 적용되면 해설에 "(보충)"
+        if ((q.tolerance > 0 || q.relTolerance) && !q.explanation.includes("(보충)")) errors.push(`${where}: 허용 오차 규칙인데 (보충) 없음`);
         // 입력칸 옆에 정답 단위가 반드시 보인다(무차원 비율은 "(단위 없음)")
         if (!q.unit?.trim()) errors.push(`${where}: 답 단위 없음`);
       }
       expect(q.slideRef).toMatch(/^Ch02 s\.\d+(-\d+)?$/);
       expect(q.exam).toBe(STAR_TOPICS.includes(q.topic));
       if (q.exam) expect(q.examBasis).toBe("printed-emphasis");
+      if ((variant === "bothLevels" || variant === "bothTrace" || name === "link-fill") && !q.explanation.includes("(보충)")) errors.push(`${where}: 보충 규칙 표시 없음`);
       prompts.add(q.prompt + JSON.stringify(q.type === "trace" ? q.rows : null));
     }
     expect(errors).toEqual([]);
