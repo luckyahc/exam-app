@@ -95,10 +95,13 @@ const frameText = (algo: Algo, s: ReturnType<typeof fig815>["steps"][number], fi
   if (v === null) return "";
   return algo === "clock" && s.use?.[fi] ? `${v}*` : String(v);
 };
-/** Figure 8.15 진행 표: 프레임 3행 + F 행(+ Clock은 pointer 행). blanks = "행:열"(열은 0부터) */
+/**
+ * Figure 8.15 진행 표: 프레임 3행 + F 행(+ Clock은 pointer 행). blanks = "행:열"(열은 0부터).
+ * 프레임 칸(행 0~2)을 하나라도 비운 열은 프레임 3칸을 모두 비운다 — 그 시점의 프레임 상태 전체를 채우게 한다.
+ */
 function fig815Trace(algo: Algo, blanks: readonly string[]) {
   const r = fig815(algo);
-  const pick = new Set(blanks);
+  const pick = new Set(blanks.flatMap((b) => (/^[012]:/.test(b) ? [0, 1, 2].map((fi) => `${fi}:${b.split(":")[1]}`) : [b])));
   const frameOptions = [...new Set(r.steps.flatMap((s) => [0, 1, 2].map((fi) => frameText(algo, s, fi))).filter(Boolean))].sort();
   const rows: { label: string; cells: TraceCell[] }[] = [0, 1, 2].map((fi) => ({
     label: `프레임 ${fi + 1}`,

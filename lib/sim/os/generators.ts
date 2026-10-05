@@ -505,7 +505,7 @@ export const replacementGen: Generator<ReplParams> = {
         };
         return q;
       }
-      // trace: 프레임 행 3개 + F 행. 처음 다 찬 이후 구간에서 4~6칸을 비운다.
+      // trace: 프레임 행 3개 + F 행. 처음 다 찬 이후 구간에서 4~6칸을 고르고, 프레임 칸이 걸린 열은 프레임 3칸을 모두 비운다.
       const full = r.steps.findIndex((s) => s.frames.every((f) => f !== null));
       const candidates: [number, number][] = [];
       for (let c = full + 1; c < refs.length; c++)
@@ -514,6 +514,10 @@ export const replacementGen: Generator<ReplParams> = {
         rng.sample(candidates, rng.int(4, 6)).map(([row, c]) => `${row}:${c}`),
       );
       if (![...blanks].some((k) => k.startsWith("3:"))) continue; // F 행 빈칸 최소 1개
+      for (const k of [...blanks]) {
+        const [row, c] = k.split(":");
+        if (row !== "3") for (const fi of [0, 1, 2]) blanks.add(`${fi}:${c}`);
+      }
       const rows = [0, 1, 2].map((fi) => ({
         label: `프레임 ${fi + 1}`,
         cells: r.steps.map((s, c): TraceCell => {
