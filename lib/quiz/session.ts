@@ -1,5 +1,5 @@
 import type { GeneratorRef, GradeResult } from "@/lib/qtypes/base";
-import type { AnyAnswer, QType, Question } from "@/lib/qtypes/registry";
+import { type AnyAnswer, coreFor, gradeQuestion, type QType, type Question } from "@/lib/qtypes/registry";
 import { hashString, mulberry32 } from "@/lib/random";
 import { SESSION_KEY } from "@/lib/storage/keys";
 import { safeGetJSON, safeSetJSON } from "@/lib/storage/safeStorage";
@@ -126,6 +126,21 @@ function tally(keys: { key: string; ok: boolean }[]): Tally[] {
     map.set(key, t);
   }
   return [...map.values()];
+}
+
+/**
+ * 즉시 채점: 지금 문제를 채점해 결과와 **그 답**을 함께 세션에 넣는다(순수 함수).
+ * 순서 배치는 처음 섞인 배치가 이미 완성된 답이라 손대지 않고 제출할 수 있다 — 이때도 답을 저장해야
+ * 결과 화면이 답을 다시 그릴 수 있다(Sprint 10에서 찾은 결과 화면 오류의 원인).
+ */
+export function gradeInSession(session: QuizSession, q: Question, answer: AnyAnswer): { session: QuizSession; result: GradeResult } {
+  const result = gradeQuestion(q, answer);
+  return { session: { ...session, answers: { ...session.answers, [q.id]: answer }, results: { ...session.results, [q.id]: result } }, result };
+}
+
+/** 결과 화면에서 채점한 문제를 다시 그릴 때 쓰는 답: 저장된 답, 없으면(예전 세션) 그 유형의 빈 답 */
+export function answerForReview(session: QuizSession, q: Question): AnyAnswer {
+  return session.answers[q.id] ?? (coreFor(q).emptyAnswer(q as never) as AnyAnswer);
 }
 
 export function summarizeSession(session: QuizSession, questions: ReadonlyMap<string, Question>): SessionSummary {

@@ -7,7 +7,7 @@ import { QuestionRenderer } from "@/components/qtypes/QuestionRenderer";
 import { RichText } from "@/components/qtypes/ui";
 import { coreFor, type Question } from "@/lib/qtypes/registry";
 import { loadQuestions } from "@/lib/quiz/loadQuestions";
-import { loadSession, newSession, type QuizSession, saveSession, summarizeSession, type Tally } from "@/lib/quiz/session";
+import { answerForReview, loadSession, newSession, type QuizSession, saveSession, summarizeSession, type Tally } from "@/lib/quiz/session";
 import { subjectRecords } from "@/lib/storage/recordsStore";
 import { getSubject } from "@/lib/subjects";
 
@@ -148,7 +148,7 @@ export function ResultView() {
                   {q && (
                     <div className="border-t border-border p-3">
                       {r ? (
-                        <QuestionRenderer question={q} answer={session.answers[id]!} onAnswer={() => {}} result={r} />
+                        <QuestionRenderer question={q} answer={answerForReview(session, q)} onAnswer={() => {}} result={r} />
                       ) : (
                         <div className="flex flex-col gap-2 text-sm">
                           <p className="text-muted">답하지 않은 문제입니다. 해설:</p>

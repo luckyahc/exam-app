@@ -40,7 +40,14 @@ interface Props {
  * 너무 길면 120자에서 자른다. 출처(slideRef)는 아래 줄에 따로 보여 준다.
  */
 export function keyLine(explanation: string): string {
-  const body = explanation.replace(/^(교수님 필기 기준)?\(?p\.[\d\-·, p.]+\)?[:：]\s*/, "");
+  let body = explanation.replace(/^(교수님 필기 기준)?\(?p\.[\d\-·, p.]+\)?[:：]\s*/, "");
+  // 데이터 통신 해설의 출처 표기 "s.20 (p.10):", "s.28 (p.14)·s.29 (p.15):", "s.5 (p.3) 그림 a. Simplex:" — 짧은 그림 라벨까지 뗀다
+  const dc = /^(?:s\.\d+(?:~\d+)?\s*\(p\.\d+(?:~\d+)?\)[·,\s]*)+/.exec(body);
+  if (dc) {
+    body = body.slice(dc[0].length);
+    const colon = body.slice(0, 25).search(/[:：]/);
+    if (colon >= 0) body = body.slice(colon + 1).trimStart();
+  }
   const first = body.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? body;
   return first.length > 120 ? first.slice(0, 119) + "…" : first;
 }

@@ -102,26 +102,28 @@
 
 근거: [`dc-source-analysis.md`](./dc-source-analysis.md). ⭐ 3개 — `examBasis`는 모두 `printed-emphasis`(슬라이드에 인쇄된 "very important", 필기 아님). 근거 구분은 항목마다 적었다. s.41 "important"는 ⭐ 제외. Sprint 10에서 체크하고 실제 문항 수를 괄호에 기록한다.
 
-### Ch01. 개요 (목표 ≥ 57문항)
+### Ch01. 개요 (목표 ≥ 57문항 — 실제 58, Sprint 10)
 
-- [ ] 데이터·데이터 통신 정의, 4가지 특성(전달·정확성·적시성·지터) — mcq/multi/blank · s.2 · 목표 3
-- [ ] 5가지 구성 요소, 프로토콜 정의 — mcq/multi/blank · s.3 · 목표 3
-- [ ] 데이터 표현(유니코드 32비트, ASCII 7비트·128자, 확장 ASCII 8비트, 픽셀) — mcq/ox/blank · s.4 · 목표 3
-- [ ] 데이터 흐름: 단방향·반이중·전이중 — mcq/match/graph · s.5 · 목표 3
-- [ ] 네트워크 정의·장치, 네트워크 기준(성능·신뢰성·보안) — mcq/multi · s.6 · 목표 2
-- [ ] 연결 유형: 점대점·다중점 — mcq/graph · s.7 · 목표 2
-- [ ] 물리 토폴로지 4종(메시·스타·버스·링)과 구성품 — mcq/ox/match/graph · s.8-12 · 목표 4
-- [ ] LAN(범위, 주소·IP, 과거 공용 케이블 vs 현재 스위치) — mcq/ox/blank · s.13-14 · 목표 3
-- [ ] WAN, LAN과의 차이, 점대점·교환 WAN — mcq/ox/classify/graph · s.15-17 · 목표 4
-- [ ] 인터네트워크, internet vs Internet, 오늘날 인터넷 구조 — mcq/ox/blank · s.18-21 · 목표 3
-- [ ] 인터넷 접속 4가지(다이얼업·DSL·케이블·무선·직접 연결) — mcq/multi/ox/classify · s.22-25 · 목표 4
-- [ ] 프로토콜 계층화 필요성, 1계층·3계층 프로토콜 예 — mcq/ox/match · s.26-28 · 목표 3
-- [ ] 계층화 2원칙, 논리적 연결 — mcq/ox/blank · s.29-31 · 목표 3
-- [ ] TCP/IP 5계층 순서, 계층적 구조, 장비별 관여 계층 — mcq/blank/order/classify · s.32-35 · 목표 4
-- [ ] 계층별 동일 객체(메시지·세그먼트·데이터그램·프레임·비트) — mcq/blank/match · s.36 · 목표 3
-- [ ] 계층별 역할과 헤더(H2/T2, H3, H4) — mcq/ox/blank/match · s.37-41 · 목표 4
-- [ ] OSI 모델(ISO vs OSI, 1970년대 후반), 7계층 — mcq/ox/order · s.42-43 · 목표 3
-- [ ] TCP/IP vs OSI 대응(응용 = 응용+표현+세션) — mcq/blank/classify · s.43-44 · 목표 3
+- [x] 데이터·데이터 통신 정의, 4가지 특성(전달·정확성·적시성·지터) — mcq/multi/blank · s.2 · 목표 3 (실제 3)
+- [x] 5가지 구성 요소, 프로토콜 정의 — mcq/multi/blank · s.3 · 목표 3 (실제 3)
+- [x] 데이터 표현(유니코드 32비트, ASCII 7비트·128자, 확장 ASCII 8비트, 픽셀) — mcq/ox/blank · s.4 · 목표 3 (실제 3)
+- [x] 데이터 흐름: 단방향·반이중·전이중 — mcq/match/graph · s.5 · 목표 3 (실제 3)
+- [x] 네트워크 정의·장치, 네트워크 기준(성능·신뢰성·보안) — mcq/multi · s.6 · 목표 2 (실제 2)
+- [x] 연결 유형: 점대점·다중점 — mcq/graph · s.7 · 목표 2 (실제 2)
+- [x] 물리 토폴로지 4종(메시·스타·버스·링)과 구성품 — mcq/ox/match/graph · s.8-12 · 목표 4 (실제 4)
+- [x] LAN(범위, 주소·IP, 과거 공용 케이블 vs 현재 스위치) — mcq/ox/blank · s.13-14 · 목표 3 (실제 3)
+- [x] WAN, LAN과의 차이, 점대점·교환 WAN — mcq/ox/classify/graph · s.15-17 · 목표 4 (실제 4)
+- [x] 인터네트워크, internet vs Internet, 오늘날 인터넷 구조 — mcq/ox/blank · s.18-21 · 목표 3 (실제 3)
+- [x] 인터넷 접속 4가지(다이얼업·DSL·케이블·무선·직접 연결) — mcq/multi/ox/classify · s.22-25 · 목표 4 (실제 4)
+- [x] 프로토콜 계층화 필요성, 1계층·3계층 프로토콜 예 — mcq/ox/match · s.26-28 · 목표 3 (실제 3)
+- [x] 계층화 2원칙, 논리적 연결 — mcq/ox/blank · s.29-31 · 목표 3 (실제 3)
+- [x] TCP/IP 5계층 순서, 계층적 구조, 장비별 관여 계층 — mcq/blank/order/classify · s.32-35 · 목표 4 (실제 4)
+- [x] 계층별 동일 객체(메시지·세그먼트·데이터그램·프레임·비트) — mcq/blank/match · s.36 · 목표 3 (실제 3)
+- [x] 계층별 역할과 헤더(H2/T2, H3, H4) — mcq/ox/blank/match · s.37-41 · 목표 4 (실제 4)
+- [x] OSI 모델(ISO vs OSI, 1970년대 후반), 7계층 — mcq/ox/order · s.42-43 · 목표 3 (실제 4)
+- [x] TCP/IP vs OSI 대응(응용 = 응용+표현+세션) — mcq/blank/classify · s.43-44 · 목표 3 (실제 3)
+
+> Ch01 작성(2026-10-05): 58문항 = mcq 16 · blank 12 · ox 10 · match 7 · multi 5 · classify 4 · graph 2 · order 2, ⭐ 0. 문항별 대조 기록 [`verification/data-comm-ch01-ch02.md`](./verification/data-comm-ch01-ch02.md)(일치 38 · 수정 20 — 1차 PDF 대조 2, 2차 "화면에 없는 그림을 가리키는 문장" 18). 연결 유형·WAN은 해당 SVG가 없어 graph 대신 다른 유형으로 냈다.
 
 ### Ch02. 물리 계층 (목표 ≥ 106문항)
 

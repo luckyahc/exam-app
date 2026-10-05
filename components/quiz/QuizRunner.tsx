@@ -6,7 +6,7 @@ import { QuestionRenderer } from "@/components/qtypes/QuestionRenderer";
 import { useQuizShortcuts } from "@/lib/hooks/useQuizShortcuts";
 import type { GradeResult } from "@/lib/qtypes/base";
 import { type AnyAnswer, coreFor, gradeQuestion, type Question } from "@/lib/qtypes/registry";
-import { type QuizSession, saveSession } from "@/lib/quiz/session";
+import { gradeInSession, type QuizSession, saveSession } from "@/lib/quiz/session";
 import { makeSimilar } from "@/lib/quiz/similar";
 import { getSubject } from "@/lib/subjects";
 import { recordResult } from "@/lib/storage/recordsStore";
@@ -62,9 +62,10 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
   /** 즉시 채점: 지금 문제를 채점하고 기록 */
   const submit = () => {
     if (!q || answer === undefined || result || !complete) return;
-    const r = gradeQuestion(q, answer);
+    // 채점한 답도 세션에 저장한다(순서 배치를 손대지 않고 제출한 경우 포함) — lib/quiz/session.ts gradeInSession
+    const { session: next, result: r } = gradeInSession(session, q, answer);
     recordResult(item.subject, q.id, r, q.generator);
-    update({ ...session, results: { ...session.results, [q.id]: r } });
+    update(next);
   };
 
   /** 시험 모드: 답한 문제를 모두 채점·기록하고 결과로. 답하지 않은 문제는 미응답(오답으로 집계, 기록은 남기지 않음) */
