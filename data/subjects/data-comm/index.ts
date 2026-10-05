@@ -7,6 +7,8 @@ const dataComm = {
   shortName: "DC",
   color: { light: "#0f766e", dark: "#2dd4bf" },
   sourceDir: "source/data-communication",
+  // 생성기 10개(Sprint 9) — lib/sim/data-comm/generators.ts
+  loadGenerators: () => import("@/lib/sim/data-comm/generators").then((m) => m.DC_GENERATORS),
   chapters: [
     {
       id: "ch01",

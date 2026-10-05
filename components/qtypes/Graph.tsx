@@ -1,6 +1,7 @@
 "use client";
 
 import type { GraphFigure } from "@/lib/qtypes/graph";
+import { DcFigureSvg } from "./DcFigureSvg";
 import type { InputProps, QTypeUI, ReviewProps } from "./types";
 import { ChoiceButton, Mark, Tag } from "./ui";
 
@@ -8,21 +9,26 @@ const W = 160;
 const H = 110;
 const PAD = { l: 18, r: 6, t: 6, b: 18 };
 
-/** 정규화 좌표(0..1) 곡선을 인라인 SVG로. 색은 currentColor/테마 토큰이라 다크모드에서도 대비가 유지된다. */
-export function FigureSvg({
-  figure,
+/** 정규화 좌표(0..1) 곡선 또는 데이터 통신 그림(kind: "dc")을 인라인 SVG로. 색은 currentColor/테마 토큰이라 다크모드에서도 대비가 유지된다. */
+export function FigureSvg(props: { figure: GraphFigure; xLabel: string; yLabel: string; title: string }) {
+  if (props.figure.kind === "dc") return <DcFigureSvg figure={props.figure.figure} title={props.title} />;
+  return <CurveSvg {...props} points={props.figure.points} />;
+}
+
+function CurveSvg({
+  points,
   xLabel,
   yLabel,
   title,
 }: {
-  figure: GraphFigure;
+  points: [number, number][];
   xLabel: string;
   yLabel: string;
   title: string;
 }) {
   const x = (v: number) => PAD.l + v * (W - PAD.l - PAD.r);
   const y = (v: number) => H - PAD.b - v * (H - PAD.t - PAD.b);
-  const d = figure.points
+  const d = points
     .map(([px, py], i) => `${i ? "L" : "M"}${x(px).toFixed(1)},${y(py).toFixed(1)}`)
     .join(" ");
   return (

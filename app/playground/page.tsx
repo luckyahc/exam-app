@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { QTypePlayground } from "@/components/qtypes/QTypePlayground";
+import { dcPlaygroundQuestions } from "@/lib/qtypes/dcSamples";
 import { QTYPE_FIXTURES } from "@/lib/qtypes/fixtures";
 
 export const metadata: Metadata = {
@@ -18,6 +19,17 @@ export default function PlaygroundPage() {
         </p>
       </div>
       <QTypePlayground questions={QTYPE_FIXTURES} />
+      <section aria-labelledby="dc-preview" className="flex flex-col gap-4 border-t border-border pt-6">
+        <div className="flex flex-col gap-1">
+          <h2 id="dc-preview" className="text-lg font-bold">
+            데이터 통신 미리보기
+          </h2>
+          <p className="text-sm text-muted">
+            생성기 계산 문제(지수 표기 입력: 3e8, 3×10^8)와 그림 고르기 12종입니다. 정적 문제는 이후 스프린트에서 추가됩니다.
+          </p>
+        </div>
+        <QTypePlayground questions={dcPlaygroundQuestions()} shortcuts={false} />
+      </section>
     </div>
   );
 }

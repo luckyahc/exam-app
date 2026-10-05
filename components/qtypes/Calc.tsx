@@ -7,6 +7,12 @@ import type { InputProps, QTypeUI, ReviewProps } from "./types";
 const num = (n: number) => n.toLocaleString("en-US", { maximumFractionDigits: 10 });
 import { Mark, ReviewList, ReviewRow, Tag } from "./ui";
 
+/** 허용 오차 표시: 절대(±0.005), 상대(±0.1%), 둘 다면 함께 */
+function toleranceText(q: { tolerance: number; relTolerance?: number }) {
+  const parts = [q.tolerance > 0 ? `±${q.tolerance}` : "", q.relTolerance ? `±${+(q.relTolerance * 100).toPrecision(3)}%` : ""].filter(Boolean);
+  return parts.length ? ` (${parts.join(" 또는 ")})` : "";
+}
+
 function Input({ question, answer, onChange, disabled }: InputProps<"calc">) {
   const invalid = answer.trim() !== "" && parseNumber(answer) === null;
   return (
@@ -27,7 +33,7 @@ function Input({ question, answer, onChange, disabled }: InputProps<"calc">) {
       </label>
       {invalid && (
         <p id={`${question.id}-err`} className="text-xs text-incorrect">
-          ⚠ 숫자로 입력하세요 (예: 1.1, 34,881)
+          ⚠ 숫자로 입력하세요 (예: 1.1, 34,881, 3e8, 3×10^8, 3x10^8, 3*10^8, 10^6)
         </p>
       )}
     </div>
@@ -52,7 +58,7 @@ function Review({ question, answer, result }: ReviewProps<"calc">) {
             <Tag tone="correct">
               정답: {num(question.answer)}
               {unit}
-              {question.tolerance > 0 ? ` (±${question.tolerance})` : ""}
+              {toleranceText(question)}
             </Tag>
           </span>
         </ReviewRow>

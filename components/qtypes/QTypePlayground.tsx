@@ -10,7 +10,8 @@ import { QuestionRenderer } from "./QuestionRenderer";
  * 문제 유형 미리보기: 유형별 더미 문제를 즉시 채점 모드로 풀어 본다(Sprint 3 확인용).
  * 실제 퀴즈 화면(/quiz)은 Sprint 7에서 이 렌더러와 같은 부품으로 만든다.
  */
-export function QTypePlayground({ questions }: { questions: Question[] }) {
+/** shortcuts=false: 한 페이지에 미리 보기가 여럿일 때 키보드 단축키는 하나만 쓰게 한다 */
+export function QTypePlayground({ questions, shortcuts = true }: { questions: Question[]; shortcuts?: boolean }) {
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, AnyAnswer>>(() =>
     Object.fromEntries(questions.map((q) => [q.id, coreFor(q).emptyAnswer(q as never)])),
@@ -39,7 +40,7 @@ export function QTypePlayground({ questions }: { questions: Question[] }) {
     setAnswer(core.emptyAnswer(q as never));
   };
 
-  useQuizShortcuts({
+  useQuizShortcuts(shortcuts ? {
     onChoice: (i) => {
       if (result || !core.applyChoice || i >= (core.choiceCount?.(q as never) ?? 0)) return;
       setAnswer(core.applyChoice(q as never, answer as never, i));
@@ -47,7 +48,7 @@ export function QTypePlayground({ questions }: { questions: Question[] }) {
     onEnter: () => (result ? go(1) : submit()),
     onPrev: () => go(-1),
     onNext: () => go(1),
-  });
+  } : {});
 
   const solved = Object.keys(results).length;
   const correct = Object.values(results).filter((r) => r.correct).length;
@@ -151,7 +152,9 @@ export function QTypePlayground({ questions }: { questions: Question[] }) {
         </div>
       </div>
       <p className="text-xs text-muted">
-        단축키: 1~5 보기 선택 · Enter 제출/다음 · ←/→ 이전/다음 (입력칸에 커서가 있을 때는 꺼짐)
+        {shortcuts
+          ? "단축키: 1~5 보기 선택 · Enter 제출/다음 · ←/→ 이전/다음 (입력칸에 커서가 있을 때는 꺼짐)"
+          : "이 섹션은 단축키 없음 — 버튼으로 풀어 주세요(키보드 단축키는 위쪽 미리보기에서만 동작)."}
       </p>
     </div>
   );
