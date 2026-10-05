@@ -54,6 +54,7 @@ export function QuizEntry() {
         types,
         starOnly: params.get("star") === "1",
         topics: (params.get("topics") ?? "").split("|").filter(Boolean),
+        difficulties: (params.get("diff") ?? "").split(",").map(Number).filter((d) => d === 1 || d === 2 || d === 3),
         count,
         shuffle: params.get("shuffle") === "1",
         seed: `${key}-${Date.now()}`,

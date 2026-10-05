@@ -12,7 +12,9 @@ export interface ChapterMeta {
   /** 그 챕터 데이터에 있는 유형(레지스트리 순서), 라벨 포함 */
   types: { type: QType; label: string; count: number }[];
   /** 문제별 필터 키(시작 전 문제 수 미리 보기용) */
-  rows: { type: QType; topic: string; exam: boolean }[];
+  rows: { type: QType; topic: string; exam: boolean; difficulty: 1 | 2 | 3 }[];
+  /** 난이도별 문제 수(1~3, 0문항 난이도 포함) */
+  difficulties: { difficulty: 1 | 2 | 3; count: number }[];
   /** 토픽: 처음 나온 순서 */
   topics: { topic: string; count: number; star: boolean }[];
 }
@@ -38,7 +40,8 @@ export async function chapterMeta(subject: SubjectDef, chapter: ChapterDef): Pro
     types: [...typeCount]
       .sort((a, b) => QTYPES.indexOf(a[0]) - QTYPES.indexOf(b[0]))
       .map(([type, count]) => ({ type, label: coreFor({ type } as never).label, count })),
-    rows: qs.map((q) => ({ type: q.type, topic: q.topic, exam: q.exam })),
+    rows: qs.map((q) => ({ type: q.type, topic: q.topic, exam: q.exam, difficulty: q.difficulty })),
+    difficulties: ([1, 2, 3] as const).map((d) => ({ difficulty: d, count: qs.filter((q) => q.difficulty === d).length })),
     topics: [...topicMap.values()],
   };
 }

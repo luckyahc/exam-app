@@ -250,8 +250,8 @@ export const QTYPE_UI = { mcq: McqUI, /* … */ } satisfies { [K in QType]: QTyp
 |---|---|
 | `/` | 과목 카드 목록: 과목명, 대표 색, 챕터 수, 문제 수, 진행률, 정답률, ⭐ 문제 수. 상단에 "전체 오답노트", "전체 통계" 바로가기, 테마 토글 |
 | `/s/[subject]` | 과목 홈: 챕터 카드(원본 §3의 기존 홈 카드와 동일 항목), "이 과목 ⭐ 시험 포인트만 풀기", "이 과목 오답노트" |
-| `/s/[subject]/chapter/[id]` | 챕터 시작 화면: 유형(복수)/⭐/문항 수(10·20·30·전체)/섞기/토픽 필터, 모드(즉시 채점·시험) |
-| `/quiz` | 풀이. 문제 id가 전역 유일하므로 과목에 묶이지 않는 공용 경로. 조건은 쿼리로 전달(Sprint 7 구현): `?subject=os&chapter=ch08&types=mcq,trace&star=1&topics=A|B&count=20&shuffle=1&mode=instant|exam&timer=600`(`chapter`를 빼면 과목 전체, `timer`는 초·시험 모드만). 이 조건으로 세션을 만들어 `examapp:session`에 저장한 뒤 주소를 `?session={세션 id}`로 바꾼다(새로고침해도 같은 문제·순서). "틀린 문제만 다시 풀기"·오답노트 다시 풀기는 세션을 직접 만들어 `?session={id}`로 들어간다 |
+| `/s/[subject]/chapter/[id]` | 챕터 시작 화면: 유형(복수)/⭐/난이도(복수)/문항 수(10·20·30·전체)/섞기/토픽 필터, 모드(즉시 채점·시험) |
+| `/quiz` | 풀이. 문제 id가 전역 유일하므로 과목에 묶이지 않는 공용 경로. 조건은 쿼리로 전달(Sprint 7 구현): `?subject=os&chapter=ch08&types=mcq,trace&star=1&diff=1,3&topics=A|B&count=20&shuffle=1&mode=instant|exam&timer=600`(`chapter`를 빼면 과목 전체, `timer`는 초·시험 모드만). 이 조건으로 세션을 만들어 `examapp:session`에 저장한 뒤 주소를 `?session={세션 id}`로 바꾼다(새로고침해도 같은 문제·순서). "틀린 문제만 다시 풀기"·오답노트 다시 풀기는 세션을 직접 만들어 `?session={id}`로 들어간다 |
 | `/result?session={id}` | 결과(점수, 유형별/토픽별 정답률, 틀린 문제, 틀린 문제만 다시 풀기). 여러 과목이 섞인 세션이면 과목별 소계도 표시 |
 | `/review?subject=all\|os\|data-comm` | 오답노트 + 북마크. 상단 과목 탭 `[전체] [운영체제] [데이터 통신]`. 과목 홈에서 들어오면 그 과목 탭, 홈에서 들어오면 `전체`. `전체`는 과목별로 그룹핑하고 과목 이름 뱃지를 붙임 |
 | `/stats?subject=…` | 진행률/정답률/⭐ 달성도 대시보드 (원본 §9). 같은 과목 탭 + `전체` |

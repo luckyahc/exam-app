@@ -13,10 +13,15 @@ const meta: ChapterMeta = {
   starIds: ["a", "c"],
   types: [],
   rows: [
-    { type: "mcq", topic: "TLB", exam: true },
-    { type: "mcq", topic: "TLB", exam: false },
-    { type: "ox", topic: "Clock", exam: true },
-    { type: "ox", topic: "Clock", exam: false },
+    { type: "mcq", topic: "TLB", exam: true, difficulty: 1 },
+    { type: "mcq", topic: "TLB", exam: false, difficulty: 2 },
+    { type: "ox", topic: "Clock", exam: true, difficulty: 2 },
+    { type: "ox", topic: "Clock", exam: false, difficulty: 3 },
+  ],
+  difficulties: [
+    { difficulty: 1, count: 1 },
+    { difficulty: 2, count: 2 },
+    { difficulty: 3, count: 1 },
   ],
   topics: [
     { topic: "TLB", count: 2, star: true },

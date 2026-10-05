@@ -47,6 +47,8 @@ export interface QuizFilter {
   types?: readonly QType[];
   starOnly?: boolean;
   topics?: readonly string[];
+  /** 난이도(1~3, 여러 개). 비우면 전체 */
+  difficulties?: readonly number[];
   /** 문제 수. null/undefined = 전체 */
   count?: number | null;
   shuffle?: boolean;
@@ -59,7 +61,8 @@ export function filterQuestions(questions: readonly Question[], f: QuizFilter): 
     (q) =>
       (!f.types?.length || f.types.includes(q.type)) &&
       (!f.starOnly || q.exam) &&
-      (!f.topics?.length || f.topics.includes(q.topic)),
+      (!f.topics?.length || f.topics.includes(q.topic)) &&
+      (!f.difficulties?.length || f.difficulties.includes(q.difficulty)),
   );
   if (f.shuffle) {
     const rand = mulberry32(hashString(f.seed));

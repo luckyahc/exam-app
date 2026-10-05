@@ -14,6 +14,14 @@ describe("filterQuestions", () => {
     const topic = qs[0].topic;
     expect(filterQuestions(qs, { topics: [topic], seed: "x" }).every((q) => q.topic === topic)).toBe(true);
   });
+  it("난이도 필터: 고른 난이도만, 비우면 전체", () => {
+    for (const ds of [[1], [3], [1, 2]]) {
+      const out = filterQuestions(qs, { difficulties: ds, seed: "x" });
+      expect(out.every((q) => ds.includes(q.difficulty))).toBe(true);
+      expect(out).toHaveLength(qs.filter((q) => ds.includes(q.difficulty)).length);
+    }
+    expect(filterQuestions(qs, { difficulties: [], seed: "x" })).toHaveLength(qs.length);
+  });
   it("문제 수 제한과 섞기(같은 seed면 같은 순서, 원본은 바꾸지 않음)", () => {
     expect(filterQuestions(qs, { count: 3, seed: "x" })).toHaveLength(3);
     const a = filterQuestions(qs, { shuffle: true, seed: "s1" }).map((q) => q.id);

@@ -6,6 +6,7 @@ import type { ChapterMeta } from "@/lib/chapterMeta";
 
 const COUNTS = [10, 20, 30, 0] as const; // 0 = 전체
 const TIMERS = [0, 10, 20, 30, 60] as const; // 분, 0 = 없음
+const DIFF_LABEL = { 1: "쉬움", 2: "보통", 3: "어려움" } as const;
 
 function Chip({ on, onClick, children }: { on: boolean; onClick(): void; children: React.ReactNode }) {
   return (
@@ -52,18 +53,21 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
   const [types, setTypes] = useState<string[]>([]);
   const [topics, setTopics] = useState<string[]>([]);
   const [starOnly, setStarOnly] = useState(false);
+  const [diffs, setDiffs] = useState<number[]>([]);
   const [count, setCount] = useState<number>(20);
   const [shuffle, setShuffle] = useState(true);
   const [mode, setMode] = useState<"instant" | "exam">("instant");
   const [timer, setTimer] = useState<number>(0);
 
   // 함수형 갱신: 빠르게 연달아 눌러도 앞의 선택을 잃지 않는다
-  const toggle = (set: React.Dispatch<React.SetStateAction<string[]>>, v: string) =>
+  const toggle = <T,>(set: React.Dispatch<React.SetStateAction<T[]>>, v: NoInfer<T>) =>
     set((list) => (list.includes(v) ? list.filter((x) => x !== v) : [...list, v]));
 
   // 조건에 맞는 문제 수(시작 전 미리 보기) — 메타의 토픽·유형 집계로는 교집합을 알 수 없어 서버에서 받은 행으로 센다
   const available = meta.rows.filter(
-    (r) => (!types.length || types.includes(r.type)) && (!starOnly || r.exam) && (!topics.length || topics.includes(r.topic)),
+    (r) => (!types.length || types.includes(r.type)) && (!starOnly || r.exam) &&
+      (!topics.length || topics.includes(r.topic)) &&
+      (!diffs.length || diffs.includes(r.difficulty)),
   ).length;
   const willSolve = count ? Math.min(count, available) : available;
 
@@ -72,6 +76,7 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
     if (types.length) p.set("types", types.join(","));
     if (topics.length) p.set("topics", topics.join("|"));
     if (starOnly) p.set("star", "1");
+    if (diffs.length) p.set("diff", [...diffs].sort().join(","));
     if (count) p.set("count", String(count));
     if (shuffle) p.set("shuffle", "1");
     if (mode === "exam" && timer) p.set("timer", String(timer * 60));
@@ -100,6 +105,18 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
           <Chip on={starOnly} onClick={() => setStarOnly(!starOnly)}>
             <span aria-hidden>⭐</span> 시험 포인트만 ({meta.starIds.length})
           </Chip>
+        </div>
+      </div>
+
+      <div className={section}>
+        <h2 className={h}>난이도 (여러 개 선택, 선택 안 하면 전체)</h2>
+        <div className="flex flex-wrap gap-2">
+          {meta.difficulties.map(({ difficulty: d, count: n }) => (
+            <Chip key={d} on={diffs.includes(d)} onClick={() => toggle(setDiffs, d)}>
+              <span aria-hidden>{"●".repeat(d) + "○".repeat(3 - d)} </span>
+              {DIFF_LABEL[d]} {n}
+            </Chip>
+          ))}
         </div>
       </div>
 
