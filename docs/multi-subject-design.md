@@ -251,8 +251,8 @@ export const QTYPE_UI = { mcq: McqUI, /* … */ } satisfies { [K in QType]: QTyp
 | `/` | 과목 카드 목록: 과목명, 대표 색, 챕터 수, 문제 수, 진행률, 정답률, ⭐ 문제 수. 상단에 "전체 오답노트", "전체 통계" 바로가기, 테마 토글 |
 | `/s/[subject]` | 과목 홈: 챕터 카드(원본 §3의 기존 홈 카드와 동일 항목), "이 과목 ⭐ 시험 포인트만 풀기", "이 과목 오답노트" |
 | `/s/[subject]/chapter/[id]` | 챕터 시작 화면: 유형(복수)/⭐/문항 수(10·20·30·전체)/섞기/토픽 필터, 모드(즉시 채점·시험) |
-| `/quiz` | 풀이. 문제 id가 전역 유일하므로 과목에 묶이지 않는 공용 경로. 조건은 쿼리로 전달: `?subject=os&chapter=ch08&types=mcq,trace&exam=1&n=20&shuffle=1&mode=instant`. "틀린 문제만 다시 풀기"처럼 id 목록으로 푸는 경우는 `examapp:session` 키에 id 배열을 저장하고 `?session=1` |
-| `/result` | 결과(점수, 유형별/토픽별 정답률, 틀린 문제, 틀린 문제만 다시 풀기). 여러 과목이 섞인 세션이면 과목별 소계도 표시 |
+| `/quiz` | 풀이. 문제 id가 전역 유일하므로 과목에 묶이지 않는 공용 경로. 조건은 쿼리로 전달(Sprint 7 구현): `?subject=os&chapter=ch08&types=mcq,trace&star=1&topics=A|B&count=20&shuffle=1&mode=instant|exam&timer=600`(`chapter`를 빼면 과목 전체, `timer`는 초·시험 모드만). 이 조건으로 세션을 만들어 `examapp:session`에 저장한 뒤 주소를 `?session={세션 id}`로 바꾼다(새로고침해도 같은 문제·순서). "틀린 문제만 다시 풀기"·오답노트 다시 풀기는 세션을 직접 만들어 `?session={id}`로 들어간다 |
+| `/result?session={id}` | 결과(점수, 유형별/토픽별 정답률, 틀린 문제, 틀린 문제만 다시 풀기). 여러 과목이 섞인 세션이면 과목별 소계도 표시 |
 | `/review?subject=all\|os\|data-comm` | 오답노트 + 북마크. 상단 과목 탭 `[전체] [운영체제] [데이터 통신]`. 과목 홈에서 들어오면 그 과목 탭, 홈에서 들어오면 `전체`. `전체`는 과목별로 그룹핑하고 과목 이름 뱃지를 붙임 |
 | `/stats?subject=…` | 진행률/정답률/⭐ 달성도 대시보드 (원본 §9). 같은 과목 탭 + `전체` |
 
@@ -269,7 +269,7 @@ export const QTYPE_UI = { mcq: McqUI, /* … */ } satisfies { [K in QType]: QTyp
 | `theme` | 전역 | `'system' \| 'light' \| 'dark'` — **이름 유지**. FOUC 방지 인라인 스크립트가 읽는 키라 바꾸지 않는다 |
 | `examapp:schema` | 전역 | 스키마 버전 숫자 (`2`) |
 | `examapp:settings` | 전역 | 모드 기본값, 타이머 등 |
-| `examapp:session` | 전역 | 진행 중 퀴즈 세션(문제 id 배열, 필터, 답안) |
+| `examapp:session` | 전역 | 진행 중 퀴즈 세션 하나 — `{ v: 1, id, mode, timerSec, deadline, label, backHref, items: [{ id, subject, chapter }], answers, results, index, finished }`(`lib/quiz/session.ts`). 문제 본문은 저장하지 않고 id로 다시 불러온다. 저장소가 막혀 있으면 메모리 사본으로 동작 |
 | `examapp:{subject}:progress` | 과목별 | `{ [questionId]: { attempts, correctCount, lastScore, lastAt } }` — `correctCount`는 **완전히 맞은 횟수만**, `lastScore`는 마지막 부분 점수(0..1, 저장만 하고 판정·통계에 쓰지 않음) |
 | `examapp:{subject}:wrong` | 과목별 | `{ [questionId]: { wrongCount, attempts, lastWrongAt, resolved, gen? } }` — `gen`은 생성기 문제 재생성 정보 |
 | `examapp:{subject}:bookmarks` | 과목별 | `string[]` (문제 id) |
@@ -278,6 +278,7 @@ export const QTYPE_UI = { mcq: McqUI, /* … */ } satisfies { [K in QType]: QTyp
 - 챕터·토픽별 진행률은 저장하지 않고 문제별 기록 + 문제 데이터(id→chapter/topic)에서 **계산**한다. 저장 중복을 없애 마이그레이션 대상을 줄인다.
 - 키 문자열은 `lib/storage/keys.ts`의 함수로만 만든다(`progressKey(subject)` 등). 문자열 직접 조립 금지.
 - 모든 접근은 기존 `safeStorage`(`try/catch`, `useEffect`/이벤트 핸들러 안에서만) 경유.
+- 화면은 과목별 기록을 `lib/storage/recordsStore.ts`(`useSyncExternalStore` 스토어)로만 읽고 쓴다: 첫 구독 때 마이그레이션(`ensureStorageMigrated`) 후 읽기, 서버 스냅샷은 빈 기록(하이드레이션 일치), 쓰기는 `recordResult`(내부에서 `recordAttempt`)·`toggleBookmark`, 다른 탭의 변경은 `storage` 이벤트로 다시 읽기. 저장소가 막혀 있으면 메모리에만 남는다(새로고침하면 사라짐 — Sprint 7에서 확인).
 
 ### 5-2. v1 (기존 OS 단일 과목 형식)
 
@@ -351,7 +352,7 @@ lib/sim/
   _shared/types.ts          # Generator 인터페이스
   os/
     paging.ts segmentation.ts buddy.ts placement.ts cpuTime.ts
-    replacement.ts processScenario.ts memoryCapacity.ts baseBounds.ts
+    replacement.ts processScenario.ts memoryCapacity.ts baseBounds.ts workingSet.ts
     generators.ts           # os 생성기 맵 → data/subjects/os/index.ts에서 연결
     *.test.ts               # 원본 §6 기준값 고정 테스트 (source-diff.md 보강값 포함)
   data-comm/

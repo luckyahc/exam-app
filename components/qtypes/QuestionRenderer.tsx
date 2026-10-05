@@ -35,6 +35,16 @@ interface Props {
   result: GradeResult | null;
 }
 
+/**
+ * 핵심 한 줄 요약: 문제에 summary가 있으면 그것, 없으면 해설의 첫 문장(앞의 "p.N:"·"교수님 필기 기준(p.N):" 출처 표기는 뗀다).
+ * 너무 길면 120자에서 자른다. 출처(slideRef)는 아래 줄에 따로 보여 준다.
+ */
+export function keyLine(explanation: string): string {
+  const body = explanation.replace(/^(교수님 필기 기준)?\(?p\.[\d\-·, p.]+\)?[:：]\s*/, "");
+  const first = body.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? body;
+  return first.length > 120 ? first.slice(0, 119) + "…" : first;
+}
+
 /** 문제 하나를 그린다. 유형별 분기는 레지스트리 조회로만 한다(switch 없음). */
 export function QuestionRenderer({ question, answer, onAnswer, result }: Props) {
   const core = coreFor(question);
@@ -67,9 +77,10 @@ export function QuestionRenderer({ question, answer, onAnswer, result }: Props) 
           <ResultBanner correct={result.correct} score={result.score} />
           <Review question={question as never} answer={answer as never} result={result as never} />
           <div className="flex flex-col gap-1 rounded-lg bg-surface p-3 text-sm leading-relaxed">
-            {question.summary && (
+            {/* 핵심 한 줄: summary가 없으면 해설 첫 문장. 해설이 한 문장뿐이면 같은 말을 두 번 보이지 않는다 */}
+            {(question.summary ?? keyLine(question.explanation)) !== question.explanation.trim() && (
               <p className="font-semibold">
-                핵심: <RichText text={question.summary} />
+                핵심: <RichText text={question.summary ?? keyLine(question.explanation)} />
               </p>
             )}
             <p>

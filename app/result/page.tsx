@@ -1,15 +1,16 @@
-import Link from "next/link";
+import type { Metadata } from "next";
+import { Suspense } from "react";
+import { ResultView } from "@/components/quiz/ResultView";
+
+export const metadata: Metadata = { title: "결과" };
 
 export default function ResultPage() {
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-8 sm:px-6">
-      <Link href="/" className="text-sm text-muted hover:text-foreground">
-        ← 홈으로
-      </Link>
+    <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-6 sm:px-6">
       <h1 className="text-xl font-bold sm:text-2xl">결과</h1>
-      <p className="text-sm text-muted">
-        점수, 유형별/토픽별 정답률, 틀린 문제 목록은 다음 스프린트에서 추가됩니다.
-      </p>
+      <Suspense fallback={<p className="text-sm text-muted">결과를 불러오는 중…</p>}>
+        <ResultView />
+      </Suspense>
     </div>
   );
 }

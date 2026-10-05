@@ -27,7 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <StorageBootstrap />
         <SiteHeader />
-        {children}
+        <main className="flex flex-1 flex-col">{children}</main>
       </body>
     </html>
   );

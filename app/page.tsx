@@ -1,12 +1,18 @@
 import Link from "next/link";
+import { ProgressStats } from "@/components/progress/ProgressStats";
 import { SUBJECTS } from "@/data/subjects/registry";
-import { countQuestions, subjectStyle } from "@/lib/subjects";
+import { subjectMeta } from "@/lib/chapterMeta";
+import { subjectStyle } from "@/lib/subjects";
 
 export default async function HomePage() {
   const subjects = await Promise.all(
     SUBJECTS.map(async (subject) => {
-      const counts = await Promise.all(subject.chapters.map(countQuestions));
-      return { subject, questions: counts.reduce((a, b) => a + b, 0) };
+      const chapters = await subjectMeta(subject);
+      return {
+        subject,
+        ids: chapters.flatMap((c) => c.ids),
+        stars: chapters.reduce((n, c) => n + c.starIds.length, 0),
+      };
     }),
   );
 
@@ -22,7 +28,7 @@ export default async function HomePage() {
           href="/review?subject=all"
           className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium hover:border-primary"
         >
-          전체 오답노트
+          전체 오답노트 · 북마크
         </Link>
         <Link
           href="/stats?subject=all"
@@ -33,7 +39,9 @@ export default async function HomePage() {
       </div>
 
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {subjects.map(({ subject, questions }) => {
+        {subjects.map(({ subject, ids, stars }) => {
+          const ready = ids.length > 0;
+          const className = "flex flex-col gap-2 rounded-xl border border-border border-l-4 border-l-subject bg-surface p-5";
           const body = (
             <>
               <span className="flex items-center gap-2 text-xs font-medium text-muted">
@@ -43,14 +51,19 @@ export default async function HomePage() {
               <span className="text-lg font-semibold">{subject.name}</span>
               <span className="text-sm text-muted">
                 챕터 {subject.chapters.length}개 ·{" "}
-                {questions > 0 ? `문제 ${questions}개` : "문제 준비 중"}
+                {ready ? (
+                  <>
+                    문제 {ids.length}개 · <span aria-hidden>⭐</span> 시험 포인트 {stars}개
+                  </>
+                ) : (
+                  "문제 준비 중"
+                )}
               </span>
+              {ready && <ProgressStats subjectId={subject.id} ids={ids} />}
             </>
           );
-          const className =
-            "flex flex-col gap-2 rounded-xl border border-border border-l-4 border-l-subject bg-surface p-5";
-          // 챕터가 하나도 없는 과목만 비활성. 챕터가 있으면 문제가 0개여도 들어갈 수 있다.
-          return subject.chapters.length > 0 ? (
+          // 문제가 하나도 없는 과목은 "준비 중" 비활성 카드
+          return ready ? (
             <Link
               key={subject.id}
               href={`/s/${subject.id}`}
@@ -66,10 +79,10 @@ export default async function HomePage() {
               aria-disabled="true"
               data-subject={subject.id}
               style={subjectStyle(subject)}
-              className={`${className} opacity-60`}
+              className={`${className} opacity-70`}
             >
               {body}
-              <span className="text-xs text-muted">준비 중</span>
+              <span className="text-xs font-medium text-muted">준비 중 — 문제가 추가되면 열립니다</span>
             </div>
           );
         })}

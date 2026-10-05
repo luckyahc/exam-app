@@ -10,7 +10,7 @@
 | 4 | [OS 시뮬레이터/생성기](./sprints/sprint-04-simulators.md) | `lib/sim/os/*` 8종 + Vitest 기준값 테스트 | DONE |
 | 5 | [OS 콘텐츠: Ch02·Ch03](./sprints/sprint-05-content-os-ch02-ch03.md) | 정적 문제 ≥130문항 | DONE |
 | 6 | [OS 콘텐츠: Ch07·Ch08](./sprints/sprint-06-content-os-ch07-ch08.md) | 정적 문제 ≥200문항 + 생성기 연동 문제 | DONE |
-| 7 | [화면/UX 구현](./sprints/sprint-07-screens-ux.md) | 홈(과목)/과목 홈/챕터/퀴즈/결과/오답노트(과목 탭+전체) | TODO |
+| 7 | [화면/UX 구현](./sprints/sprint-07-screens-ux.md) | 홈(과목)/과목 홈/챕터/퀴즈/결과/오답노트(과목 탭+전체) | DONE |
 | 8 | [학습 기능 고도화](./sprints/sprint-08-learning-features.md) | 과목별·전체 대시보드, 비슷한 문제 생성, 버전 있는 JSON 내보내기/가져오기 | TODO |
 | 9 | [데이터 통신: 계산 생성기 + calc 보강](./sprints/sprint-09-dc-calc-generators.md) | `lib/sim/data-comm/*` 생성기 10개, `calc` 지수 표기·상대 오차, graph SVG 12종 | TODO |
 | 10 | [데이터 통신 콘텐츠: Ch01·Ch02](./sprints/sprint-10-dc-content.md) | 정적 문제 ≥163문항 (Ch01 ≥57, Ch02 ≥106, ⭐ 3개 printed-emphasis) | TODO |
@@ -57,3 +57,6 @@ Sprint 1 ──▶ Sprint 2 ──▶ Sprint 3 ──▶ Sprint 5 ─┐
 - 2026-10-05: **Sprint 6 착수 — Ch07 완료(Ch08 대기).** `data/subjects/os/ch07.ts` 89문항(정적 82 + 생성기 7, ⭐ 30), 유형 비율 기준(blank 18~22%·mcq ≤30%·ox ≤18%·trace ≥3) 충족. 슬라이드 기준값 테스트 `ch07.test.ts`, `lib/sim/os/baseBounds.ts` 신규, Ch07 생성기 slideRef 정정. 대조 기록 `docs/verification/os-ch07.md`(일치 80·수정 9·필기 근거 14). coverage-matrix Ch07 slideRef가 실제보다 1쪽 앞인 점 기록.
 - 2026-10-05: **Ch07 마무리.** "물리→논리 변환은 선형 탐색이라 느리다"를 p.32-36 이미지로 재확인 — 인쇄·필기 어디에도 없어 해설의 (보충) 유지, source-diff에 "요구사항 §6-1·§7에는 있으나 슬라이드에 없음"으로 기록. coverage-matrix Ch07 slideRef를 실제 PDF 페이지로 정정.
 - 2026-10-05: **Sprint 6 완료.** `data/subjects/os/ch08.ts` 138문항(정적 134 + 생성기 4, ⭐ 71) — blank 20.3%·mcq 23.2%·ox 16.7%, trace 7·graph 4. `lib/sim/os/workingSet.ts` 신규, Ch08 생성기 slideRef 정정, 슬라이드 기준값 테스트 `ch08.test.ts`. p.43-51 출제 표시는 p.48뿐 — Clock 정책 동작(Figure 8.16)을 별도 ⭐ 소주제로(지시), LFU/MFU는 ⭐ 아님. TLB 히트/미스/폴트 비교 문항(`tlb-009`). coverage-matrix Ch08 slideRef를 실제 페이지로 정정하고 실제 문항 수 기록(OS 전체 381문항). 대조 기록 `docs/verification/os-ch08.md`.
+- 2026-10-05: **Sprint 7 구현·확인 완료(커밋 대기).** 홈·과목 홈·챕터 시작·퀴즈(즉시 채점/시험 모드·타이머·단축키·북마크)·결과·오답노트/북마크 화면을 실제 데이터와 연결. 기록 스토어 `lib/storage/recordsStore.ts`, 세션 `lib/quiz/session.ts`, 375px trace 카드 레이아웃, 핵심 한 줄 요약 대체. 프로덕션 빌드에서 375/1280 × 라이트/다크 전 흐름 확인(넘침·콘솔 오류 0), 저장소 차단 동작 확인, OS 회귀 14/14, 테스트 651건. `/quiz` 쿼리·세션 형식을 multi-subject-design에 반영.
+- 2026-10-05: **dev 서버 오류 원인 기록.** `/s/os`의 "Jest worker … child process exceptions"는 고아가 된 `next dev`의 작업자가 메모리 부족 속에서 죽은 것(build와의 `.next` 직접 충돌 아님). 클린 `build && start`에서는 재현되지 않음. 이후 브라우저 확인은 dev 서버를 끈 상태에서 `build && start`로만 한다(sprint-07 운영 메모).
+- 2026-10-05: **Sprint 7 완료.** 이 문서와 다르게 한 부분(sprint-07 "이 문서와 다르게 한 부분"): ① summary가 없으면 해설 첫 문장을 핵심 요약으로 ② 640px 미만 trace는 열별 카드 ③ 시험 모드 미응답은 결과·다시 풀기에는 포함, 학습 기록·오답노트에는 미포함 ④ `/quiz` 쿼리 이름을 구현에 맞춰 설계 문서 수정(+ `/stats`는 Sprint 8). 미응답을 오답노트에 넣는 요청은 판정 규칙(오답노트 = 채점된 오답)과 충돌해 보류.

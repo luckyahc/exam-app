@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ProgressStats } from "@/components/progress/ProgressStats";
+import { ChapterStart } from "@/components/quiz/ChapterStart";
+import { chapterMeta } from "@/lib/chapterMeta";
 import { getChapter, getSubject } from "@/lib/subjects";
 
 export const dynamicParams = false;
@@ -14,17 +17,31 @@ export default async function ChapterPage({ params }: PageProps<"/s/[subject]/ch
   const subject = getSubject(subjectId);
   const chapter = getChapter(subjectId, id);
   if (!subject || !chapter) notFound();
+  const meta = await chapterMeta(subject, chapter);
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-8 sm:px-6">
       <Link href={`/s/${subject.id}`} className="text-sm text-muted hover:text-foreground">
         ← {subject.name}
       </Link>
-      <h1 className="text-xl font-bold sm:text-2xl">{chapter.title}</h1>
-      <p className="text-sm text-muted">
-        문제 유형 필터, ⭐ 시험 포인트 필터, 문항 수, 섞기, 토픽 필터는 이후 스프린트에서
-        추가됩니다.
-      </p>
+      <div className="flex flex-col gap-2">
+        <h1 className="text-xl font-bold sm:text-2xl">{chapter.title}</h1>
+        {meta.ids.length > 0 && (
+          <>
+            <p className="text-sm text-muted">
+              문제 {meta.ids.length}개 · <span aria-hidden>⭐</span> 시험 포인트 {meta.starIds.length}개
+            </p>
+            <ProgressStats subjectId={subject.id} ids={meta.ids} />
+          </>
+        )}
+      </div>
+      {meta.ids.length > 0 ? (
+        <ChapterStart meta={meta} />
+      ) : (
+        <p className="rounded-lg border border-border bg-surface p-4 text-sm text-muted">
+          문제 준비 중입니다. 이 챕터의 문제가 추가되면 여기서 풀 수 있어요.
+        </p>
+      )}
     </div>
   );
 }
