@@ -7,6 +7,8 @@ import { useQuizShortcuts } from "@/lib/hooks/useQuizShortcuts";
 import type { GradeResult } from "@/lib/qtypes/base";
 import { type AnyAnswer, coreFor, gradeQuestion, type Question } from "@/lib/qtypes/registry";
 import { type QuizSession, saveSession } from "@/lib/quiz/session";
+import { makeSimilar } from "@/lib/quiz/similar";
+import { getSubject } from "@/lib/subjects";
 import { recordResult } from "@/lib/storage/recordsStore";
 import { BookmarkButton } from "./BookmarkButton";
 
@@ -21,6 +23,10 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
   const [session, setSession] = useState(initial);
   const [confirming, setConfirming] = useState(false);
   const [now, setNow] = useState(() => Date.now());
+  /** "비슷한 문제 새로 생성"으로 이번 세션에 끼워 넣은 문제 */
+  const [extra, setExtra] = useState<ReadonlyMap<string, Question>>(() => new Map());
+  const [generating, setGenerating] = useState(false);
+  const getQ = (id: string) => questions.get(id) ?? extra.get(id);
 
   const update = (next: QuizSession) => {
     setSession(next);
@@ -28,13 +34,13 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
   };
 
   const item = session.items[session.index];
-  const q = item ? questions.get(item.id) : undefined;
+  const q = item ? getQ(item.id) : undefined;
   const answer: AnyAnswer | undefined = q ? (session.answers[q.id] ?? coreFor(q).emptyAnswer(q as never)) : undefined;
   const result: GradeResult | null = q && session.mode === "instant" ? (session.results[q.id] ?? null) : null;
   const total = session.items.length;
   const isExam = session.mode === "exam";
   const answeredCount = session.items.filter((it) => {
-    const qq = questions.get(it.id);
+    const qq = getQ(it.id);
     const a = session.answers[it.id];
     return qq && a !== undefined && coreFor(qq).isComplete(qq as never, a as never);
   }).length;
@@ -65,7 +71,7 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
   const gradeAll = () => {
     const results: Record<string, GradeResult> = {};
     for (const it of session.items) {
-      const qq = questions.get(it.id);
+      const qq = getQ(it.id);
       const a = session.answers[it.id];
       if (!qq || a === undefined || !coreFor(qq).isComplete(qq as never, a as never)) continue;
       const r = gradeQuestion(qq, a);
@@ -73,6 +79,24 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
       recordResult(it.subject, it.id, r, qq.generator);
     }
     finish({ ...session, results });
+  };
+
+  /**
+   * 즉시 채점에서 채점한 생성기 문제 → 같은 생성기·params, 새 seed로 문제를 만들어 바로 다음에 끼워 넣는다.
+   * 새 문제는 id가 달라(seed ≥ 1,000,000) 원래 문제와 기록이 섞이지 않는다. 세션 항목에 생성기 정보를 남겨 새로고침해도 다시 만든다.
+   */
+  const addSimilar = async () => {
+    if (!q?.generator || generating) return;
+    const loader = getSubject(item.subject)?.loadGenerators;
+    if (!loader) return;
+    setGenerating(true);
+    const nq = makeSimilar(q, await loader());
+    setGenerating(false);
+    if (!nq) return;
+    setExtra((m) => new Map(m).set(nq.id, nq));
+    const items = [...session.items];
+    items.splice(session.index + 1, 0, { id: nq.id, subject: item.subject, chapter: nq.chapter, gen: nq.generator });
+    update({ ...session, items, index: session.index + 1 });
   };
 
   // 타이머: 1초마다 남은 시간 갱신, 0이 되면 자동 채점
@@ -174,6 +198,15 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
         <p className="rounded-lg border border-border bg-surface p-4 text-sm text-muted">
           이 문제를 불러올 수 없습니다(데이터가 바뀌었을 수 있음). 다음 문제로 넘어가세요.
         </p>
+      )}
+
+      {!isExam && result && q?.generator && (
+        <div className="flex flex-wrap items-center gap-2 rounded-lg border border-dashed border-border p-3">
+          <button type="button" onClick={addSimilar} disabled={generating} className={btn + " font-medium hover:border-primary"}>
+            {generating ? "만드는 중…" : "↻ 비슷한 문제 새로 생성"}
+          </button>
+          <span className="text-xs text-muted">같은 유형을 숫자만 바꿔 새로 만들어 바로 다음에 넣습니다(정답은 시뮬레이터 계산, 기록은 따로).</span>
+        </div>
       )}
 
       {/* 하단: 이동·제출 */}

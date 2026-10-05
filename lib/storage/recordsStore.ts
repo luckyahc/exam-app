@@ -4,10 +4,10 @@ import { useSyncExternalStore } from "react";
 import { SUBJECTS } from "@/data/subjects/registry";
 import type { GeneratorRef, GradeResult } from "@/lib/qtypes/base";
 import { ensureStorageMigrated } from "./bootstrap";
-import { bookmarksKey, progressKey, wrongKey } from "./keys";
+import { bookmarksKey, progressKey, SESSION_KEY, SETTINGS_KEY, THEME_STORAGE_KEY, wrongKey } from "./keys";
 import { recordAttempt } from "./records";
-import { safeGetJSON, safeSetJSON } from "./safeStorage";
-import { emptySubjectRecords, type SubjectRecords } from "./schema";
+import { getBrowserStorage, safeGetJSON, safeRemove, safeSetJSON } from "./safeStorage";
+import { emptySubjectRecords, type StoreV2, type SubjectRecords } from "./schema";
 
 /**
  * 과목별 학습 기록(진행·오답·북마크) 스토어. React 밖에 살고 `useSyncExternalStore`로 구독한다.
@@ -109,6 +109,48 @@ export function toggleBookmark(subjectId: string, questionId: string) {
     ? cur.bookmarks.filter((id) => id !== questionId)
     : [...cur.bookmarks, questionId];
   save(subjectId, { ...cur, bookmarks });
+}
+
+/** 내보내기용: 전역 설정 + 전 과목 기록 */
+export function currentStore(): StoreV2 {
+  ensureLoaded();
+  return { settings: safeGetJSON<Record<string, unknown>>(SETTINGS_KEY) ?? {}, subjects: { ...state.subjects } };
+}
+
+/** 가져오기 반영: next에 들어 있는 과목 기록과 설정을 저장소에 쓴다(호출자가 applyBackup으로 만든 결과) */
+export function writeStore(next: StoreV2, subjectIds: readonly string[]) {
+  ensureLoaded();
+  safeSetJSON(SETTINGS_KEY, next.settings);
+  for (const id of subjectIds) if (next.subjects[id]) save(id, next.subjects[id]);
+}
+
+/**
+ * 데이터 초기화. scope = "all"이면 이 앱의 모든 `examapp:` 키(기록·세션·설정·스키마)를 지우고,
+ * 과목 id면 그 과목의 기록 키 3개만 지운다. theme = true면 테마 키도 지운다(전체 초기화에서만 의미 있음).
+ */
+export function resetData(scope: "all" | string, opts: { theme?: boolean } = {}) {
+  ensureLoaded();
+  if (scope === "all") {
+    const store = getBrowserStorage();
+    const keys: string[] = [];
+    try {
+      if (store) for (let i = 0; i < store.length; i++) {
+        const k = store.key(i);
+        if (k?.startsWith("examapp:")) keys.push(k);
+      }
+    } catch {
+      // 저장소가 막혀 있으면 지울 것도 없다 — 메모리 상태만 비운다
+    }
+    keys.push(SESSION_KEY, SETTINGS_KEY);
+    for (const k of new Set(keys)) safeRemove(k);
+    if (opts.theme) safeRemove(THEME_STORAGE_KEY);
+    state = { loaded: true, subjects: Object.fromEntries(SUBJECTS.map((s) => [s.id, emptySubjectRecords()])) };
+    emit();
+    return;
+  }
+  for (const k of [progressKey(scope), wrongKey(scope), bookmarksKey(scope)]) safeRemove(k);
+  state = { ...state, subjects: { ...state.subjects, [scope]: emptySubjectRecords() } };
+  emit();
 }
 
 /** 테스트용: 메모리 상태 초기화 */

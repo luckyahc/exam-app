@@ -8,6 +8,7 @@ import { RichText } from "@/components/qtypes/ui";
 import { SUBJECTS } from "@/data/subjects/registry";
 import { coreFor, type Question } from "@/lib/qtypes/registry";
 import { loadSubject } from "@/lib/quiz/loadQuestions";
+import type { GeneratorMap } from "@/lib/sim/_shared/types";
 import { newSession, saveSession } from "@/lib/quiz/session";
 import { useRecords } from "@/lib/storage/recordsStore";
 import { getSubject, subjectStyle } from "@/lib/subjects";
@@ -16,7 +17,7 @@ type Tab = "wrong" | "bookmarks";
 
 /**
  * 오답노트·북마크. 과목 탭(?subject=all|id) + 챕터 필터, 항목별/목록 전체 다시 풀기.
- * `전체` 탭은 과목별로 묶고 과목 뱃지를 붙인다.
+ * `전체` 탭은 과목별로 묶고 과목 뱃지를 붙인다. 항목마다 틀린 횟수 / 시도 횟수를 보여 준다.
  */
 export function ReviewView() {
   const selected = useSelectedSubject();
@@ -26,14 +27,21 @@ export function ReviewView() {
   const [chapter, setChapter] = useState<string>("all");
   const [showResolved, setShowResolved] = useState(false);
   const [pool, setPool] = useState<Map<string, Question> | null>(null);
+  const [generators, setGenerators] = useState<Record<string, GeneratorMap>>({});
 
   const subjects = selected === "all" ? SUBJECTS.map((s) => s.id) : [selected];
   const subjectsKey = subjects.join(",");
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all(subjectsKey.split(",").map(loadSubject)).then((lists) => {
-      if (!cancelled) setPool(new Map(lists.flat().map((q) => [q.id, q])));
+    const ids = subjectsKey.split(",");
+    Promise.all([
+      Promise.all(ids.map(loadSubject)),
+      Promise.all(ids.map(async (id) => [id, (await getSubject(id)?.loadGenerators?.()) ?? {}] as const)),
+    ]).then(([lists, gens]) => {
+      if (cancelled) return;
+      setPool(new Map(lists.flat().map((q) => [q.id, q])));
+      setGenerators(Object.fromEntries(gens));
     });
     return () => {
       cancelled = true;
@@ -52,8 +60,13 @@ export function ReviewView() {
             .sort((a, b) => (b[1].lastWrongAt ?? "").localeCompare(a[1].lastWrongAt ?? ""))
             .map(([id]) => id)
         : [...(rec?.bookmarks ?? [])].reverse();
+    // 문제 데이터에 없는 생성기 문제(비슷한 문제 새로 생성 등)는 오답 기록의 생성기 정보로 다시 만든다
+    const regen = (id: string) => {
+      const gen = rec?.wrong[id]?.gen;
+      return gen ? generators[sid]?.[gen.name]?.generate(gen.seed, gen.params) : undefined;
+    };
     const items = ids
-      .map((id) => pool.get(id))
+      .map((id) => pool.get(id) ?? regen(id))
       .filter((q): q is Question => !!q && (chapter === "all" || q.chapter === chapter));
     return { sid, items };
   });
@@ -146,7 +159,7 @@ export function ReviewView() {
                         <span>{q.topic}</span>
                         {w && (
                           <span>
-                            틀린 횟수 {w.wrongCount}
+                            틀린 횟수 {w.wrongCount} / 시도 {w.attempts}
                             {w.resolved && " · ✓ 해결"}
                           </span>
                         )}

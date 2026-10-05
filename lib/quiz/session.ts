@@ -1,4 +1,4 @@
-import type { GradeResult } from "@/lib/qtypes/base";
+import type { GeneratorRef, GradeResult } from "@/lib/qtypes/base";
 import type { AnyAnswer, QType, Question } from "@/lib/qtypes/registry";
 import { hashString, mulberry32 } from "@/lib/random";
 import { SESSION_KEY } from "@/lib/storage/keys";
@@ -16,6 +16,8 @@ export interface SessionItem {
   id: string;
   subject: string;
   chapter: string;
+  /** 생성기로 만든 문제(비슷한 문제 새로 생성 등): 다시 불러올 때 이 정보로 다시 만든다 */
+  gen?: GeneratorRef;
 }
 
 export interface QuizSession {
@@ -85,7 +87,7 @@ export function newSession(
     deadline: timerSec ? now + timerSec * 1000 : null,
     label: opts.label,
     backHref: opts.backHref,
-    items: questions.map((q) => ({ id: q.id, subject: q.subject, chapter: q.chapter })),
+    items: questions.map((q) => ({ id: q.id, subject: q.subject, chapter: q.chapter, ...(q.generator ? { gen: q.generator } : {}) })),
     answers: {},
     results: {},
     index: 0,

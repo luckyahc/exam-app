@@ -17,7 +17,7 @@ export async function loadSubject(subjectId: string): Promise<Question[]> {
 }
 
 /**
- * 세션 항목(id·과목·챕터)으로 문제를 불러온다. 챕터 데이터에 없으면 오답 기록의 생성기 정보로 다시 만든다.
+ * 세션 항목(id·과목·챕터)으로 문제를 불러온다. 챕터 데이터에 없으면 항목의 생성기 정보(`item.gen`), 없으면 오답 기록의 생성기 정보로 다시 만든다.
  * 끝내 찾지 못한 문제는 결과 Map에 없다(호출자가 "찾을 수 없음"으로 처리).
  */
 export async function loadQuestions(
@@ -29,7 +29,7 @@ export async function loadQuestions(
   const map = new Map<string, Question>();
   for (const qs of chapters) for (const q of qs) map.set(q.id, q);
   for (const it of items) {
-    const gen = gens[it.id];
+    const gen = it.gen ?? gens[it.id];
     if (map.has(it.id) || !gen) continue;
     const subject: SubjectDef | undefined = SUBJECTS.find((s) => s.id === it.subject);
     const loader = subject?.loadGenerators;

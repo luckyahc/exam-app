@@ -11,7 +11,7 @@
 | 5 | [OS 콘텐츠: Ch02·Ch03](./sprints/sprint-05-content-os-ch02-ch03.md) | 정적 문제 ≥130문항 | DONE |
 | 6 | [OS 콘텐츠: Ch07·Ch08](./sprints/sprint-06-content-os-ch07-ch08.md) | 정적 문제 ≥200문항 + 생성기 연동 문제 | DONE |
 | 7 | [화면/UX 구현](./sprints/sprint-07-screens-ux.md) | 홈(과목)/과목 홈/챕터/퀴즈/결과/오답노트(과목 탭+전체) | DONE |
-| 8 | [학습 기능 고도화](./sprints/sprint-08-learning-features.md) | 과목별·전체 대시보드, 비슷한 문제 생성, 버전 있는 JSON 내보내기/가져오기 | TODO |
+| 8 | [학습 기능 고도화](./sprints/sprint-08-learning-features.md) | 과목별·전체 대시보드, 비슷한 문제 생성, 버전 있는 JSON 내보내기/가져오기 | DONE |
 | 9 | [데이터 통신: 계산 생성기 + calc 보강](./sprints/sprint-09-dc-calc-generators.md) | `lib/sim/data-comm/*` 생성기 10개, `calc` 지수 표기·상대 오차, graph SVG 12종 | TODO |
 | 10 | [데이터 통신 콘텐츠: Ch01·Ch02](./sprints/sprint-10-dc-content.md) | 정적 문제 ≥163문항 (Ch01 ≥57, Ch02 ≥106, ⭐ 3개 printed-emphasis) | TODO |
 | 11 | [QA & 배포 준비](./sprints/sprint-11-qa-release.md) | 전 과목 접근성·반응형 점검, lint/test/build, README | TODO |
@@ -60,3 +60,4 @@ Sprint 1 ──▶ Sprint 2 ──▶ Sprint 3 ──▶ Sprint 5 ─┐
 - 2026-10-05: **Sprint 7 구현·확인 완료(커밋 대기).** 홈·과목 홈·챕터 시작·퀴즈(즉시 채점/시험 모드·타이머·단축키·북마크)·결과·오답노트/북마크 화면을 실제 데이터와 연결. 기록 스토어 `lib/storage/recordsStore.ts`, 세션 `lib/quiz/session.ts`, 375px trace 카드 레이아웃, 핵심 한 줄 요약 대체. 프로덕션 빌드에서 375/1280 × 라이트/다크 전 흐름 확인(넘침·콘솔 오류 0), 저장소 차단 동작 확인, OS 회귀 14/14, 테스트 651건. `/quiz` 쿼리·세션 형식을 multi-subject-design에 반영.
 - 2026-10-05: **dev 서버 오류 원인 기록.** `/s/os`의 "Jest worker … child process exceptions"는 고아가 된 `next dev`의 작업자가 메모리 부족 속에서 죽은 것(build와의 `.next` 직접 충돌 아님). 클린 `build && start`에서는 재현되지 않음. 이후 브라우저 확인은 dev 서버를 끈 상태에서 `build && start`로만 한다(sprint-07 운영 메모).
 - 2026-10-05: **Sprint 7 완료.** 이 문서와 다르게 한 부분(sprint-07 "이 문서와 다르게 한 부분"): ① summary가 없으면 해설 첫 문장을 핵심 요약으로 ② 640px 미만 trace는 열별 카드 ③ 시험 모드 미응답은 결과·다시 풀기에는 포함, 학습 기록·오답노트에는 미포함 ④ `/quiz` 쿼리 이름을 구현에 맞춰 설계 문서 수정(+ `/stats`는 Sprint 8). 미응답을 오답노트에 넣는 요청은 판정 규칙(오답노트 = 채점된 오답)과 충돌해 보류.
+- 2026-10-05: **Sprint 8 완료.** `/stats` 대시보드(과목 → 챕터 → 토픽 진행률·정답률·⭐ 달성도, `lib/stats.ts`), 기록 관리(v2 JSON 내보내기/가져오기 — 합치기·덮어쓰기 다이얼로그, v1 변환, 잘못된 파일·미래 버전·모르는 과목 처리 / 전체·과목별 초기화, `lib/storage/backup.ts`), "비슷한 문제 새로 생성"(`lib/quiz/similar.ts`, seed ≥ 1,000,000 — 기록 분리, `SessionItem.gen`), 오답노트 시도 횟수 표시와 생성기 오답 복원, 헤더 통계 링크(375px는 아이콘 + aria-label). 이 문서와 다르게 한 부분(sprint-08): ① ⭐ 달성도 = 마지막 풀이가 완전히 맞은 ⭐ 문제 비율 ② 가져오기 방식은 파일 단위로 하나 ③ 비슷한 문제 버튼은 즉시 채점에서만. 내보내기 → 초기화 → 가져오기 복원 테스트, 생성 문제 다시 풀기 재생성 테스트 포함. 375/1280 × 라이트/다크 확인(넘침·콘솔 오류 0).
