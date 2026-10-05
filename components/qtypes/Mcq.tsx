@@ -1,20 +1,22 @@
 "use client";
 
+import { choiceOrder } from "@/lib/qtypes/choiceOrder";
 import type { InputProps, QTypeUI, ReviewProps } from "./types";
 import { ChoiceButton, Mark, ReviewList, ReviewRow, RichText, Tag } from "./ui";
 
 function Input({ question, answer, onChange, disabled }: InputProps<"mcq">) {
   return (
     <div role="radiogroup" aria-label="보기" className="flex flex-col gap-2">
-      {question.choices.map((c, i) => (
+      {/* 표시 순서는 문제 id로 고정해 섞는다(choiceOrder) — 답은 원래 보기 번호로 저장 */}
+      {choiceOrder(question).map((orig, pos) => (
         <ChoiceButton
-          key={i}
-          index={i}
-          selected={answer === i}
+          key={orig}
+          index={pos}
+          selected={answer === orig}
           disabled={disabled}
-          onClick={() => onChange(i)}
+          onClick={() => onChange(orig)}
         >
-          <RichText text={c} />
+          <RichText text={question.choices[orig]} />
         </ChoiceButton>
       ))}
     </div>
@@ -24,7 +26,8 @@ function Input({ question, answer, onChange, disabled }: InputProps<"mcq">) {
 function Review({ question, answer }: ReviewProps<"mcq">) {
   return (
     <ReviewList>
-      {question.choices.map((c, i) => {
+      {choiceOrder(question).map((i, pos) => {
+        const c = question.choices[i];
         const isAnswer = i === question.answerIndex;
         const isMine = i === answer;
         if (!isAnswer && !isMine) return null;
@@ -39,7 +42,7 @@ function Review({ question, answer }: ReviewProps<"mcq">) {
               </>
             }
           >
-            {i + 1}. <RichText text={c} />
+            {pos + 1}. <RichText text={c} />
           </ReviewRow>
         );
       })}

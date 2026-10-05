@@ -270,6 +270,7 @@ export const buddyGen: Generator<BuddyParams> = {
               unit: "K",
               steps: steps.map((s) => `${opLabel(s.op)}: ${s.line}`),
               explanation: `${req.name}=${req.size}K는 ${block.size}K 블록에 들어가며 그 시작 주소는 ${block.start}K이다. 같은 크기 후보가 여럿이면 낮은 주소(왼쪽)부터 쓴다.`,
+              summary: "요청은 2^k로 올려 가장 작은 맞는 블록에, 같은 크기면 낮은 주소(왼쪽)부터",
             }
           : {
               ...base,
@@ -283,6 +284,7 @@ export const buddyGen: Generator<BuddyParams> = {
                 `내부 단편화 = ${block.size} − ${req.size} = ${block.size - req.size}K`,
               ],
               explanation: `버디 시스템은 요청을 2의 거듭제곱으로 올려 블록 전체를 할당하므로 ${req.size}K를 요청해도 ${block.size}K가 할당되고 그 차이가 내부 단편화다.`,
+              summary: "내부 단편화 = 할당된 2^k 블록 크기 − 요청 크기",
             };
       return q;
     }
@@ -335,6 +337,7 @@ export const placementGen: Generator<PlacementParams> = {
           `**${request}K** 요청을 **${FIT_LABEL[fit]}**으로 배치하면 선택되는 블록은?` +
           (fit === "next" ? ` (마지막 배치가 끝난 주소: ${lastEnd}K)` : ""),
         choices,
+        shuffle: false, // 블록 1~N은 주소 순서 — 섞으면 "블록 3"이 맨 위에 오는 등 지문의 나열 순서와 어긋난다
         answerIndex: mine.index,
         explanation:
           `${FIT_LABEL[fit]}: ${
@@ -541,6 +544,7 @@ export const replacementGen: Generator<ReplParams> = {
               ? "가장 오래전에 참조된"
               : "앞으로 가장 오래 참조되지 않을"
         } 페이지를 뺀다.`,
+        summary: "성능: OPT(구현 불가) > LRU > Clock(LRU 근사) > FIFO",
       };
       return q;
     }

@@ -406,6 +406,17 @@ const FRACTION_LOG = [0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875];
 /** ⭐ 13번(Shannon·두 한계) 근거 — s.36~40에는 강조 문구가 없어 s.33 인쇄 강조의 범위 확장으로 ⭐ */
 export const SHANNON_STAR_BASIS = "⭐ 근거: s.33 인쇄 강조의 범위 확장(s.36~40에는 강조 문구 없음).";
 
+/** ⭐ 문항 핵심 한 줄(슬라이드 공식 그대로) */
+const CAPACITY_SUMMARY: Record<(typeof CAPACITY_VARIANTS)[number], string> = {
+  nyquistRate: "Nyquist BitRate = 2 × B × log₂ L(s.34)",
+  nyquistLevels: "log₂ L = 비트율 / 2B, L = 2^(log₂ L)(s.34-35)",
+  nyquistPow2: "L이 2의 거듭제곱이 아니면 레벨을 늘리거나(비트율↑) 줄인다(비트율↓)(s.35)",
+  shannon: "Shannon C = B × log₂(1 + SNR) — SNR은 dB가 아닌 비율(s.36)",
+  bothCapacity: "두 한계 함께: Shannon 용량이 비트율의 상한(s.39)",
+  bothLevels: "Shannon으로 상한 → 그보다 낮은 비트율 → Nyquist로 레벨 수(s.39-40)",
+  bothTrace: "Shannon으로 상한 → 그보다 낮은 비트율 → Nyquist로 레벨 수(s.39-40)",
+};
+
 function capacityQuestion(seed: number, params: Partial<CapacityParams>): Question {
     const rng = createRng(seed);
     const variant = pickVariant(rng, CAPACITY_VARIANTS, params.variant);
@@ -543,7 +554,8 @@ export const capacityGen: Generator<CapacityParams> = {
   description: "Nyquist 2B log₂ L(비트율·L 역산·2의 거듭제곱), Shannon B log₂(1+SNR), 두 한계 함께(상한 → 고른 비트율 → L)",
   generate(seed, params = {}) {
     const q = capacityQuestion(seed, params);
-    return q.topic === T.shannon ? { ...q, explanation: `${q.explanation} ${SHANNON_STAR_BASIS}` } : q;
+    const summary = CAPACITY_SUMMARY[q.generator!.params.variant as (typeof CAPACITY_VARIANTS)[number]];
+    return q.topic === T.shannon ? { ...q, summary, explanation: `${q.explanation} ${SHANNON_STAR_BASIS}` } : { ...q, summary };
   },
 };
 
@@ -658,6 +670,14 @@ export const performanceGen: Generator<PerformanceParams> = {
       `대역폭-지연 곱은 링크(파이프)를 가득 채우는 비트 수다 — 단면적(대역폭) × 길이(지연). ms를 초로 바꾸지 않으면 1000배 커진다.`,
     );
   },
+};
+
+/** ⭐ 대역폭-지연 곱 문항 핵심 한 줄 */
+const BDP_SUMMARY = "대역폭-지연 곱 = 대역폭 × 지연 = 링크를 채우는 비트 수(s.48)";
+const performanceRaw = performanceGen.generate.bind(performanceGen);
+performanceGen.generate = (seed, params) => {
+  const q = performanceRaw(seed, params);
+  return q.topic === T.bdp ? { ...q, summary: BDP_SUMMARY } : q;
 };
 
 // ------------------------------------------------------------------ pcm (s.61)
@@ -905,6 +925,7 @@ export const linkFillGen: Generator<LinkFillParams> = {
         ],
       })),
       explanation: `1초마다 ${bps}비트씩 새로 들어가고 이미 들어간 비트는 한 구간씩 수신 쪽으로 이동한다. ${sec}초 뒤 링크는 대역폭 × 지연 = ${bps} × ${sec} = ${bps * sec}비트로 가득 찬다 — 이것이 대역폭-지연 곱이다(슬라이드: 1 bps·5 s → 5비트, 5 bps·5 s → 25비트). t초 뒤 1번째 비트(묶음)는 구간 t에 있고, 링크가 가득 찬 ${sec}초 뒤에 수신 쪽 끝(구간 ${sec})에 닿는다. (보충) 표는 슬라이드 그림처럼 링크가 가득 찰 때(t ≤ 지연)까지만 다룬다.`,
+      summary: "링크 안 비트 = 대역폭 × 경과 시간, 지연만큼 지나면 대역폭-지연 곱으로 가득 찬다(s.49-50)",
     };
     return q;
   },

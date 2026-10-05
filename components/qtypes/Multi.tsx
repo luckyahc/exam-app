@@ -1,6 +1,7 @@
 "use client";
 
-import { multiCore } from "@/lib/qtypes/multi";
+import { choiceOrder } from "@/lib/qtypes/choiceOrder";
+import { toggleChoice } from "@/lib/qtypes/multi";
 import type { InputProps, QTypeUI, ReviewProps } from "./types";
 import { ChoiceButton, Mark, ReviewList, ReviewRow, RichText, Tag } from "./ui";
 
@@ -10,16 +11,17 @@ function Input({ question, answer, onChange, disabled }: InputProps<"multi">) {
       <p className="text-xs text-muted">
         해당하는 것을 모두 고르세요. 틀린 보기를 고르면 감점됩니다.
       </p>
-      {question.choices.map((c, i) => (
+      {/* 표시 순서는 문제 id로 고정해 섞는다(choiceOrder) — 답은 원래 보기 번호로 저장 */}
+      {choiceOrder(question).map((orig, pos) => (
         <ChoiceButton
-          key={i}
-          index={i}
+          key={orig}
+          index={pos}
           role="checkbox"
-          selected={answer.includes(i)}
+          selected={answer.includes(orig)}
           disabled={disabled}
-          onClick={() => onChange(multiCore.applyChoice!(question, answer, i))}
+          onClick={() => onChange(toggleChoice(answer, orig))}
         >
-          <RichText text={c} />
+          <RichText text={question.choices[orig]} />
         </ChoiceButton>
       ))}
     </div>
@@ -29,7 +31,8 @@ function Input({ question, answer, onChange, disabled }: InputProps<"multi">) {
 function Review({ question, answer }: ReviewProps<"multi">) {
   return (
     <ReviewList>
-      {question.choices.map((c, i) => {
+      {choiceOrder(question).map((i, pos) => {
+        const c = question.choices[i];
         const isAnswer = question.answerIndexes.includes(i);
         const isMine = answer.includes(i);
         const ok = isAnswer === isMine;
@@ -47,7 +50,7 @@ function Review({ question, answer }: ReviewProps<"multi">) {
               </>
             }
           >
-            {i + 1}. <RichText text={c} />
+            {pos + 1}. <RichText text={c} />
           </ReviewRow>
         );
       })}

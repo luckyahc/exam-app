@@ -10,6 +10,7 @@ import { mcqCore, type McqQ } from "./mcq";
 import { multiCore, type MultiQ, multiScore } from "./multi";
 import { orderCore, type OrderQ } from "./order";
 import { oxCore, type OxQ } from "./ox";
+import { choiceOrder } from "./choiceOrder";
 import { mulberry32, shuffledIndexes } from "@/lib/random";
 import {
   type AnyAnswer,
@@ -103,9 +104,13 @@ describe("mcq", () => {
     expect(mcqCore.grade(q, 0).correct).toBe(false);
     expect(mcqCore.grade(q, null).score).toBe(0);
   });
-  it("숫자키는 보기 범위 안에서만 선택", () => {
-    expect(mcqCore.applyChoice!(q, null, 3)).toBe(3);
+  it("숫자키 i는 화면의 i번째 보기(choiceOrder) — 범위 밖은 무시", () => {
+    expect(mcqCore.applyChoice!(q, null, 3)).toBe(choiceOrder(q)[3]);
     expect(mcqCore.applyChoice!(q, 1, 4)).toBe(1);
+  });
+  it("choiceOrder: 원래 보기 번호의 순열, 같은 문제는 항상 같은 순서", () => {
+    expect([...choiceOrder(q)].sort()).toEqual([0, 1, 2, 3]);
+    expect(choiceOrder(q)).toEqual(choiceOrder({ ...q }));
   });
   it("validate: 보기 수·범위·중복", () => {
     expect(mcqCore.validate({ ...q, choices: ["a", "b", "c"] })).not.toEqual([]);
@@ -127,9 +132,11 @@ describe("multi", () => {
   it("multiScore는 0 아래로 내려가지 않는다", () => {
     expect(multiScore([0], [1, 2, 3])).toBe(0);
   });
-  it("숫자키는 토글", () => {
-    expect(multiCore.applyChoice!(q, [2], 0)).toEqual([0, 2]);
-    expect(multiCore.applyChoice!(q, [0, 2], 0)).toEqual([2]);
+  it("숫자키는 화면의 i번째 보기(choiceOrder)를 토글, 답은 원래 번호로 정렬", () => {
+    const o = choiceOrder(q)[0];
+    const other = o === 2 ? 3 : 2;
+    expect(multiCore.applyChoice!(q, [other], 0)).toEqual([o, other].sort((x, y) => x - y));
+    expect(multiCore.applyChoice!(q, [o, other].sort((x, y) => x - y), 0)).toEqual([other]);
   });
   it("validate: 정답 없음·범위 밖", () => {
     expect(multiCore.validate({ ...q, answerIndexes: [] })).not.toEqual([]);

@@ -1,9 +1,12 @@
+import { choiceOrder } from "./choiceOrder";
 import { type BaseQ, duplicates, type QTypeCore, result } from "./base";
 
 /** 복수 선택: "해당하는 것을 모두 고르시오" (부분 점수). */
 export interface MultiQ extends BaseQ<"multi"> {
   choices: string[];
   answerIndexes: number[];
+  /** false면 보기를 섞지 않고 데이터 순서대로 보인다(다른 보기의 위치·번호를 가리키거나 순서 자체가 의미인 보기) */
+  shuffle?: false;
 }
 export type MultiA = number[];
 
@@ -21,6 +24,11 @@ export function multiScore(answerIndexes: readonly number[], selected: readonly 
     else wrong++;
   }
   return Math.max(0, (hits - wrong) / correct.size);
+}
+
+/** 원래 보기 번호 orig를 고르거나 빼기(정렬 유지) */
+export function toggleChoice(a: number[], orig: number): number[] {
+  return a.includes(orig) ? a.filter((x) => x !== orig) : [...a, orig].sort((x, y) => x - y);
 }
 
 export const multiCore: QTypeCore<MultiQ, MultiA, null> = {
@@ -42,10 +50,6 @@ export const multiCore: QTypeCore<MultiQ, MultiA, null> = {
     return e;
   },
   choiceCount: (q) => q.choices.length,
-  applyChoice: (q, a, i) =>
-    i >= q.choices.length
-      ? a
-      : a.includes(i)
-        ? a.filter((x) => x !== i)
-        : [...a, i].sort((x, y) => x - y),
+  /** i = 화면에서 i번째 보기(표시 순서는 choiceOrder) */
+  applyChoice: (q, a, i) => (i >= q.choices.length ? a : toggleChoice(a, choiceOrder(q)[i])),
 };

@@ -29,7 +29,7 @@ export function ThemeToggle() {
             onClick={() => setTheme(mode)}
             className={
               "rounded-full px-2.5 py-1 transition-colors sm:px-3 " +
-              (active ? "bg-primary text-white" : "text-muted hover:text-foreground")
+              (active ? "bg-primary text-background" : "text-muted hover:text-foreground")
             }
           >
             {label}

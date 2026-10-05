@@ -168,16 +168,10 @@ describe("문제 데이터 (전 과목·전 챕터)", () => {
   });
 });
 
-describe("챕터 최소 문항 수 (Sprint 11 전까지는 경고만)", () => {
-  it("현재 문항 수를 보고한다", async () => {
-    const short: string[] = [];
-    for (const s of SUBJECTS) {
-      for (const c of s.chapters) {
-        const n = (await c.load()).length;
-        if (n < c.minQuestions) short.push(`${s.id}/${c.id} ${n}/${c.minQuestions}`);
-      }
-    }
-    if (short.length) console.warn(`[문항 수 미달 — 콘텐츠 스프린트 전 정상] ${short.join(", ")}`);
-    expect(true).toBe(true);
+describe("챕터 최소 문항 수 (Sprint 11부터 실패 조건)", () => {
+  // 데이터 통신은 고정 seed 생성기 문항을 포함해 센다(docs/coverage-matrix.md 데이터 통신 절, 2026-10-05 사용자 승인).
+  // OS도 같은 방식으로 세지만 정적 문항만으로도 최소를 넘는다.
+  it.each(SUBJECTS.flatMap((s) => s.chapters.map((c) => [`${s.id}/${c.id}`, c] as const)))("%s: 최소 문항 수 이상", async (_, c) => {
+    expect((await c.load()).length).toBeGreaterThanOrEqual(c.minQuestions);
   });
 });

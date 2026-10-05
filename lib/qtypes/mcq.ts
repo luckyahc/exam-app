@@ -1,9 +1,12 @@
 import { type BaseQ, duplicates, type QTypeCore, result } from "./base";
+import { choiceOrder } from "./choiceOrder";
 
 /** 객관식(단일). 보기 4~5개 — "옳은 것/옳지 않은 것/아닌 것" 모두 이 유형. */
 export interface McqQ extends BaseQ<"mcq"> {
   choices: string[];
   answerIndex: number;
+  /** false면 보기를 섞지 않고 데이터 순서대로 보인다(다른 보기의 위치·번호를 가리키거나 순서 자체가 의미인 보기) */
+  shuffle?: false;
 }
 export type McqA = number | null;
 
@@ -28,5 +31,6 @@ export const mcqCore: QTypeCore<McqQ, McqA, null> = {
     return e;
   },
   choiceCount: (q) => q.choices.length,
-  applyChoice: (q, _a, i) => (i < q.choices.length ? i : _a),
+  /** i = 화면에서 i번째 보기(표시 순서는 choiceOrder) */
+  applyChoice: (q, _a, i) => (i < q.choices.length ? choiceOrder(q)[i] : _a),
 };

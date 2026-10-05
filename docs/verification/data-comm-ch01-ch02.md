@@ -130,7 +130,7 @@
 | 9 | `data-comm-ch02-sine-004` | graph | s.9 (p.5) | — | 그림: s.9 그림 | 신규·일치 |  |
 | 10 | `data-comm-ch02-gen-signal-11` | calc | s.8 (p.4) | — | 생성기 signal/frequency#11 — 공식 근거 슬라이드, 정답은 lib/sim/data-comm 계산 | 신규·일치 |  |
 | 11 | `data-comm-ch02-phase-001` | calc | s.11 (p.6) | — | 그림: s.11 수식 그림 | 신규·일치 |  |
-| 12 | `data-comm-ch02-gen-signal-14` | calc | s.11 (p.6) | — | 생성기 signal/phaseDeg#14 — 공식 근거 슬라이드, 정답은 lib/sim/data-comm 계산 | 신규·일치 |  |
+| 12 | `data-comm-ch02-gen-signal-30` | calc | s.11 (p.6) | — | 생성기 signal/phaseDeg#30 — 공식 근거 슬라이드, 정답은 lib/sim/data-comm 계산 | 신규·일치 |  |
 | 13 | `data-comm-ch02-phase-002` | graph | s.12 (p.6) | — | 그림: s.12 그림 | 신규·일치 |  |
 | 14 | `data-comm-ch02-wavelength-001` | mcq | s.13 (p.7) | — | 인쇄 | 신규·일치 |  |
 | 15 | `data-comm-ch02-wavelength-002` | blank | s.13 (p.7) | — | 인쇄 | 신규·일치 |  |
@@ -144,7 +144,7 @@
 | 23 | `data-comm-ch02-digital-002` | graph | s.19 (p.10) | — | 그림: s.19 그림 | 신규·일치 |  |
 | 24 | `data-comm-ch02-digital-003` | calc | s.20 (p.10) | — | 인쇄 | 신규·일치 |  |
 | 25 | `data-comm-ch02-digital-004` | calc | s.21 (p.11) | — | 인쇄 | 신규·일치 |  |
-| 26 | `data-comm-ch02-gen-digital-14` | calc | s.21 (p.11) | — | 생성기 digital/bitLength#14 — 공식 근거 슬라이드, 정답은 lib/sim/data-comm 계산 | 신규·일치 |  |
+| 26 | `data-comm-ch02-gen-digital-2` | calc | s.21 (p.11) | — | 생성기 digital/bitLength#2 — 공식 근거 슬라이드, 정답은 lib/sim/data-comm 계산 | 신규·일치 |  |
 | 27 | `data-comm-ch02-baseband-001` | blank | s.23 (p.12) | — | 인쇄 | 신규·일치 |  |
 | 28 | `data-comm-ch02-baseband-002` | mcq | s.22~23 (p.11~12) | — | 인쇄 | 신규·일치 |  |
 | 29 | `data-comm-ch02-impairment-001` | multi | s.24 (p.12) | — | 인쇄 | 신규·일치 |  |
@@ -188,7 +188,7 @@
 | 67 | `data-comm-ch02-gen-link-fill-21` | trace | s.49~50 (p.25) | ⭐ P | 생성기 link-fill/table#21 — 공식 근거 슬라이드, 정답은 lib/sim/data-comm 계산 | 신규·일치 |  |
 | 68 | `data-comm-ch02-gen-link-fill-24` | trace | s.49~50 (p.25) | ⭐ P | 생성기 link-fill/table#24 — 공식 근거 슬라이드, 정답은 lib/sim/data-comm 계산 | 신규·일치 |  |
 | 69 | `data-comm-ch02-gen-performance-25` | calc | s.48~51 (p.24~26) | ⭐ P | 생성기 performance/bdp#25 — 공식 근거 슬라이드, 정답은 lib/sim/data-comm 계산 | 신규·일치 |  |
-| 70 | `data-comm-ch02-gen-performance-24` | calc | s.48~51 (p.24~26) | ⭐ P | 생성기 performance/bdpSmall#24 — 공식 근거 슬라이드, 정답은 lib/sim/data-comm 계산 | 신규·일치 |  |
+| 70 | `data-comm-ch02-gen-performance-2` | calc | s.48~51 (p.24~26) | ⭐ P | 생성기 performance/bdpSmall#2 — 공식 근거 슬라이드, 정답은 lib/sim/data-comm 계산 | 신규·일치 |  |
 | 71 | `data-comm-ch02-d2d-001` | mcq | s.54 (p.27) | — | 인쇄 | 신규·일치 |  |
 | 72 | `data-comm-ch02-d2d-002` | blank | s.56 (p.28) | — | 인쇄 | 신규·일치 |  |
 | 73 | `data-comm-ch02-d2d-003` | order | s.56~57 (p.28~29) | — | 인쇄 s.56 + s.57 그림 | 신규·일치 |  |
@@ -215,7 +215,7 @@
 | 94 | `data-comm-ch02-fdm-002` | classify | s.83 (p.42) | — | 그림: s.83 그림 | 신규·일치 |  |
 | 95 | `data-comm-ch02-fdm-003` | blank | s.87 (p.44) | — | 인쇄 | 신규·일치 |  |
 | 96 | `data-comm-ch02-fdm-004` | calc | s.87 (p.44) | — | 인쇄 | 신규·일치 |  |
-| 97 | `data-comm-ch02-gen-multiplexing-20` | calc | s.87 (p.44) | — | 생성기 multiplexing/fdm#20 — 공식 근거 슬라이드, 정답은 lib/sim/data-comm 계산 | 신규·일치 |  |
+| 97 | `data-comm-ch02-gen-multiplexing-1` | calc | s.87 (p.44) | — | 생성기 multiplexing/fdm#1 — 공식 근거 슬라이드, 정답은 lib/sim/data-comm 계산 | 신규·일치 |  |
 | 98 | `data-comm-ch02-tdm-001` | blank | s.88 (p.44) | — | 인쇄 | 신규·일치 |  |
 | 99 | `data-comm-ch02-gen-tdm-frame-25` | trace | s.89~90 (p.45) | — | 생성기 tdm-frame/table#25 — 공식 근거 슬라이드, 정답은 lib/sim/data-comm 계산 | 신규·일치 |  |
 | 100 | `data-comm-ch02-gen-multiplexing-22` | calc | s.90 (p.45) | — | 생성기 multiplexing/tdmSlot#22 — 공식 근거 슬라이드, 정답은 lib/sim/data-comm 계산 | 신규·일치 |  |

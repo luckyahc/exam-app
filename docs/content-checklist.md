@@ -83,11 +83,11 @@
 
 ## 공통 체크
 
-- [ ] 유형 비율이 대략 mcq25/multi10/ox15/blank20/order8/match7/classify5/calc5/trace3/graph2(%)에 근접하는지 챕터별로 확인
-- [ ] 같은 문장 복붙 수준의 저품질 중복 문제 없는지 검수
-- [ ] 모든 해설에 (1)정답 근거 (2)오답이 틀린 이유 (3)`slideRef` 포함 확인
-- [ ] 빈칸 정답 `accept` 배열에 한/영 표기 변형 포함 확인
-- [ ] 슬라이드에 없는 보충 설명은 해설에 "(보충)" 표시했는지 확인
+- [x] 유형 비율이 대략 mcq25/multi10/ox15/blank20/order8/match7/classify5/calc5/trace3/graph2(%)에 근접하는지 챕터별로 확인 — 자동 검사(`contentQa.test.ts`) + 문항별 PDF 대조 기록(`docs/verification/` 4개)으로 갈음, 사용 중 발견 시 수정(2026-10-05). 근거: Sprint 11 챕터별 집계(`docs/progress/sprint-11.md`) — OS Ch02 mcq 31·ox 20·blank 17·calc 12 / Ch03 mcq 34·ox 23·blank 17 / Ch07 mcq 26·blank 20·ox 16·calc 16 / Ch08 mcq 23·blank 20·ox 17, 데이터 통신 Ch01 mcq 28·blank 21·ox 17·match 12. **데이터 통신 Ch02의 calc 34%는 의도된 편차**(공식이 많은 장 — 슬라이드 예제 calc + 고정 seed 생성기, `coverage-matrix.md` 데이터 통신 "유형 비율" 규칙). OS Ch02·03의 mcq·ox 과다는 Ch07·08로 전체 보정(위 점검 결과)
+- [x] 같은 문장 복붙 수준의 저품질 중복 문제 없는지 검수 — 자동 검사(`contentQa.test.ts`) + 문항별 PDF 대조 기록(`docs/verification/` 4개)으로 갈음, 사용 중 발견 시 수정(2026-10-05). 근거: `integrity.test.ts`(id 전역 유일, 문제 안 보기·항목 중복 없음), Sprint 11 정적↔생성기 같은 형식 후보 4쌍은 생성기 seed 변경으로 숫자·정답이 겹치지 않게 함(signal 14→30, digital 14→2, performance 24→2, multiplexing 20→1 — 대조 기록 갱신)
+- [x] 모든 해설에 (1)정답 근거 (2)오답이 틀린 이유 (3)`slideRef` 포함 확인 — 자동 검사(`contentQa.test.ts`) + 문항별 PDF 대조 기록(`docs/verification/` 4개)으로 갈음, 사용 중 발견 시 수정(2026-10-05). 근거: `contentQa.test.ts`(해설 10자 이상·`slideRef` 형식·마크다운·보기 위치 참조 금지), 대조 기록의 문항별 근거 쪽 대조
+- [x] 빈칸 정답 `accept` 배열에 한/영 표기 변형 포함 확인 — 자동 검사(`contentQa.test.ts`) + 문항별 PDF 대조 기록(`docs/verification/` 4개)으로 갈음, 사용 중 발견 시 수정(2026-10-05). 근거: `integrity.test.ts`(유형별 validate·정답 키 채점 = 1점), `lib/qtypes/qtypes.test.ts`(공백·대소문자·한/영 변형 채점), 대조 기록의 blank 문항 대조
+- [x] 슬라이드에 없는 보충 설명은 해설에 "(보충)" 표시했는지 확인 — 자동 검사(`contentQa.test.ts`) + 문항별 PDF 대조 기록(`docs/verification/` 4개)으로 갈음, 사용 중 발견 시 수정(2026-10-05). 근거: `data-comm/ch02.test.ts`·`lib/sim/data-comm/generators.test.ts`(허용 오차·반올림 규칙이 있는 calc는 "(보충)" 필수), OS 대조 기록 `os-ch07.md`·`os-ch08.md`의 "(보충)" 항목
 
 > 공통 체크는 모든 챕터가 끝나는 Sprint 11에서 일괄 체크한다. 지금까지의 점검 결과:
 > - **Ch02(59)**: mcq 18 · ox 12 · blank 10 · calc 7 · multi 4 · match 3 · order 3 · classify 2. **Ch03(95)**: mcq 32 · ox 22 · blank 16 · match 7 · order 7 · multi 6 · classify 5. 합계 154: mcq 32.5% · ox 22.1% · blank 16.9%(2026-10-05 blank 11문항 추가로 10.6%에서 보정). mcq·ox는 여전히 가이드(25%·15%)보다 많다 — Ch07·08(Sprint 6)에서 계산·trace 비중으로 전체 비율을 맞춘다.

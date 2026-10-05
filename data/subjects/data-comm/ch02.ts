@@ -244,7 +244,7 @@ const questions: Question[] = [
     explanation:
       "s.11 (p.6): 360° = 2π rad이므로 1/6 × 360 = 60° = π/3 rad. 슬라이드는 1.046 rad로 적었지만 정확값은 1.0472라 반올림하면 1.047이다. 도(60)로 답하면 단위가 다르다. (보충) 허용 오차 ±0.002 rad는 슬라이드 값 1.046도 정답으로 받기 위한 앱 규칙이다.",
   }),
-  signalGen.generate(14, { variant: "phaseDeg" }),
+  signalGen.generate(30, { variant: "phaseDeg" }),
   {
     ...base,
     ...plain,
@@ -465,7 +465,7 @@ const questions: Question[] = [
     explanation:
       "s.21 (p.11) Example 2.4: 1 / 1,536,000 = 0.651 microseconds. 교재 정의는 거리(1비트가 매체에서 차지하는 길이)지만 슬라이드 예제는 시간으로 계산한다. (보충) 채점 규칙: 소수 셋째 자리까지 답하면 정답(허용 오차 ±0.0005) — 반올림 자릿수는 슬라이드에 없는 앱 규칙이다.",
   }),
-  digitalGen.generate(14, { variant: "bitLength" }),
+  digitalGen.generate(2, { variant: "bitLength" }),
 
   // ───────────────────────────── 8. 기저대역 vs 광대역 (s.22-23)
   {
@@ -652,6 +652,7 @@ const questions: Question[] = [
     ...base,
     ...star,
     id: "data-comm-ch02-nyquist-001",
+    summary: "데이터 전송률 3요소 = 대역폭·신호 레벨·채널 품질(잡음)(s.33)",
     topic: T.nyquist,
     type: "multi",
     difficulty: 1,
@@ -666,6 +667,7 @@ const questions: Question[] = [
     ...base,
     ...star,
     id: "data-comm-ch02-nyquist-002",
+    summary: "Nyquist = 잡음 없는 채널, Shannon = 잡음 있는 채널(s.33-34)",
     topic: T.nyquist,
     type: "mcq",
     difficulty: 1,
@@ -680,6 +682,7 @@ const questions: Question[] = [
     ...base,
     ...star,
     id: "data-comm-ch02-nyquist-003",
+    summary: "Nyquist BitRate = 2 × B × log₂ L(s.34)",
     topic: T.nyquist,
     type: "blank",
     difficulty: 1,
@@ -694,6 +697,7 @@ const questions: Question[] = [
     ...base,
     ...star,
     id: "data-comm-ch02-nyquist-004",
+    summary: "레벨 수를 늘리면 비트율은 오르지만 신뢰성이 떨어질 수 있다(s.34)",
     topic: T.nyquist,
     type: "ox",
     difficulty: 1,
@@ -705,6 +709,7 @@ const questions: Question[] = [
   calc({
     ...star,
     id: "data-comm-ch02-nyquist-005",
+    summary: "265 kbps·20 kHz → log₂ L = 6.625, L ≈ 98.7(s.35)",
     topic: T.nyquist,
     difficulty: 2,
     slideRef: "Ch02 s.35",
@@ -719,6 +724,7 @@ const questions: Question[] = [
   calc({
     ...star,
     id: "data-comm-ch02-nyquist-006",
+    summary: "L이 2의 거듭제곱이 아니면 128레벨 → 280 kbps, 64레벨 → 240 kbps(s.35)",
     topic: T.nyquist,
     difficulty: 2,
     slideRef: "Ch02 s.35",
@@ -739,6 +745,7 @@ const questions: Question[] = [
     ...base,
     ...star,
     id: "data-comm-ch02-shannon-001",
+    summary: "Shannon C = B × log₂(1 + SNR) — SNR은 dB가 아닌 비율(s.36)",
     topic: T.shannon,
     type: "blank",
     difficulty: 1,
@@ -751,6 +758,7 @@ const questions: Question[] = [
   calc({
     ...star,
     id: "data-comm-ch02-shannon-002",
+    summary: "SNR ≈ 0이면 C = B log₂ 1 = 0, 대역폭과 무관(s.37)",
     topic: T.shannon,
     difficulty: 1,
     slideRef: "Ch02 s.37",
@@ -764,6 +772,7 @@ const questions: Question[] = [
   calc({
     ...star,
     id: "data-comm-ch02-shannon-003",
+    summary: "전화선 3000 Hz·SNR 3162 → C = 34,881 bps(s.38)",
     topic: T.shannon,
     difficulty: 2,
     slideRef: "Ch02 s.38",
@@ -779,6 +788,7 @@ const questions: Question[] = [
     ...base,
     ...star,
     id: "data-comm-ch02-shannon-004",
+    summary: "SNR ≈ 0이면 대역폭을 늘려도 용량은 0(s.37)",
     topic: T.shannon,
     type: "ox",
     difficulty: 1,
@@ -792,6 +802,7 @@ const questions: Question[] = [
     ...base,
     ...star,
     id: "data-comm-ch02-shannon-005",
+    summary: "Shannon = 비트율 상한, Nyquist = 필요한 레벨 수(s.39)",
     topic: T.shannon,
     type: "mcq",
     difficulty: 2,
@@ -809,6 +820,7 @@ const questions: Question[] = [
   calc({
     ...star,
     id: "data-comm-ch02-shannon-006",
+    summary: "1 MHz·SNR 63 → 상한 6 Mbps, 4 Mbps를 고르면 L = 4(s.40)",
     topic: T.shannon,
     difficulty: 2,
     slideRef: "Ch02 s.40",
@@ -943,6 +955,7 @@ const questions: Question[] = [
     ...base,
     ...star,
     id: "data-comm-ch02-bdp-001",
+    summary: "대역폭-지연 곱 = 링크를 채울 수 있는 비트 수(s.48)",
     topic: T.bdp,
     type: "mcq",
     difficulty: 1,
@@ -957,6 +970,7 @@ const questions: Question[] = [
     ...base,
     ...star,
     id: "data-comm-ch02-bdp-002",
+    summary: "파이프 비유: 단면적 = 대역폭, 길이 = 지연, 부피 = 대역폭-지연 곱(s.51)",
     topic: T.bdp,
     type: "blank",
     difficulty: 1,
@@ -974,6 +988,7 @@ const questions: Question[] = [
   calc({
     ...star,
     id: "data-comm-ch02-bdp-003",
+    summary: "대역폭 × 지연: 5 bps × 5 s = 25비트(1 bps × 5 s = 5비트)(s.49-50)",
     topic: T.bdp,
     difficulty: 1,
     slideRef: "Ch02 s.50",
@@ -989,6 +1004,7 @@ const questions: Question[] = [
     ...base,
     ...star,
     id: "data-comm-ch02-bdp-004",
+    summary: "지터 = 패킷 도착 시간의 변동 — 20·45·40 ms면 실시간 응용이 지터를 겪는다(s.52)",
     topic: T.bdp,
     type: "ox",
     difficulty: 1,
@@ -1002,7 +1018,7 @@ const questions: Question[] = [
   linkFillGen.generate(21),
   linkFillGen.generate(24),
   performanceGen.generate(25, { variant: "bdp" }),
-  performanceGen.generate(24, { variant: "bdpSmall" }),
+  performanceGen.generate(2, { variant: "bdpSmall" }),
 
   // ───────────────────────────── 17. 디지털→디지털 변환·블록 코딩 (s.53-57)
   {
@@ -1356,7 +1372,7 @@ const questions: Question[] = [
     explanation:
       "s.87 (p.44): For five channels, we need at least four guard bands → 5 × 100 + 4 × 10 = 540 kHz. 보호 대역을 5개로 세면 550이 된다.",
   }),
-  multiplexingGen.generate(20, { variant: "fdm" }),
+  multiplexingGen.generate(1, { variant: "fdm" }),
 
   // ───────────────────────────── 24. WDM·TDM·동기식 TDM (s.88-90)
   {
