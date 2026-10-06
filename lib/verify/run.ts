@@ -128,9 +128,13 @@ function sqlShow(s: SqlSig): string {
 
 // ── 결정성(실행마다 같은 출력) ─────────────────────────────────────────
 
-async function determinism(env: VerifyEnv, code: string, cfg: PyCfg | undefined, first: PySig): Promise<string | null> {
+/**
+ * `withSeeds: false`: 같은 엔진 두 번 실행만(난수·시간) — 코드 빈칸은 출력 문제가 아니고 허용 답안 비교를 같은 엔진 안에서 하므로
+ * 해시 시드에 따른 세트 순서 차이는 비교에 영향이 없다([코드 2-21] 세트 메서드 빈칸 등)
+ */
+async function determinism(env: VerifyEnv, code: string, cfg: PyCfg | undefined, first: PySig, withSeeds = true): Promise<string | null> {
   // 엔진마다 Worker가 따로라 함께 돌린다(판다스처럼 무거운 불러오기도 병렬)
-  const others = await Promise.all([runPy(env, env.main, code, cfg), ...env.seeds.map((c) => runPy(env, c, code, cfg))]);
+  const others = await Promise.all([runPy(env, env.main, code, cfg), ...(withSeeds ? env.seeds : []).map((c) => runPy(env, c, code, cfg))]);
   const runs: [string, PySig][] = [["기본 엔진 1회", first], ["기본 엔진 2회", others[0]], ...others.slice(1).map((s, i): [string, PySig] => [`해시 시드 ${i + 1}`, s])];
   const diff = runs.find(([, s]) => !pySame(s, first));
   return diff ? `실행마다 출력이 달라짐(세트 순서·해시·시간·난수 등) — 출력 문제로 쓸 수 없음: ${runs[0][0]} ${pyShow(first)} / ${diff[0]} ${pyShow(diff[1])}` : null;
@@ -202,7 +206,7 @@ async function verifyCodeBlank(env: VerifyEnv, q: CodeBlankQ, v: RunRun, p: (m: 
     if (base.setupError) return p(`준비 코드(setup) 오류: ${base.setupError}`);
     if (base.error) return p(`첫 번째 정답으로 채운 코드가 실행되지 않음: ${base.error}${base.line ? ` (${base.line}번째 줄)` : ""}`);
     if (base.checks.some((c) => !c)) p("첫 번째 정답으로 채운 코드가 값 검사를 통과하지 못함");
-    const d = await determinism(env, fill(-1, ""), v.python, base);
+    const d = await determinism(env, fill(-1, ""), v.python, base, false);
     if (d) p(d);
     same = async (code) => {
       const s = await runPy(env, env.main, code, v.python);
@@ -243,8 +247,17 @@ async function verifyCodeBlank(env: VerifyEnv, q: CodeBlankQ, v: RunRun, p: (m: 
   }
 }
 
+/** Colab 코드 셀 표시 흉내: 마지막 줄(식)의 값을 repr로 출력한다 */
+export function colabCell(source: string): string {
+  const lines = source.replace(/\n+$/, "").split("\n");
+  const last = lines.length - 1;
+  lines[last] = `print(repr(${lines[last].trim()}))`;
+  return lines.join("\n");
+}
+
 async function verifyCodeChoice(env: VerifyEnv, q: Question, v: RunRun, p: (m: string) => void) {
-  const code = questionCode(q)!;
+  const shown = questionCode(q)!;
+  const code = v.check?.kind === "output" && v.check.cell ? { ...shown, source: colabCell(shown.source) } : shown;
   const s = await runPy(env, env.main, code.source, v.python);
   if (s.kind === "timeout") return p("코드가 시간 초과");
   const check = v.check!;

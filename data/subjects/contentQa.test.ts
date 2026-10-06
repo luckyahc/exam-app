@@ -25,7 +25,10 @@ function shownTexts(q: Question): [string, string][] {
   if (q.summary) t.push(["summary", q.summary]);
   if (a.text) t.push(["text", a.text]);
   if (a.falseReason) t.push(["falseReason", a.falseReason]);
-  for (const x of [...(a.choices ?? []), ...(a.distractors ?? []), ...(a.buckets ?? []), ...(a.columns ?? [])]) t.push(["보기", x]);
+  // 실행 결과를 고르는 보기(verify output — 데이터과학, Sprint 15)는 프로그램 출력 그대로라(print 구분 공백 두 칸 등) "출력" 칸으로 따로 둔다
+  const outputChoices = q.verify?.mode === "run" && q.verify.check?.kind === "output";
+  for (const x of a.choices ?? []) t.push([outputChoices ? "출력" : "보기", x]);
+  for (const x of [...(a.distractors ?? []), ...(a.buckets ?? []), ...(a.columns ?? [])]) t.push(["보기", x]);
   for (const x of a.items ?? []) t.push(["items", typeof x === "string" ? x : x.label]);
   for (const p of a.pairs ?? []) t.push(["pairs", p.left], ["pairs", p.right]);
   return t;
@@ -69,10 +72,12 @@ describe("콘텐츠 형식 점검 (전 과목)", async () => {
       for (const [k, raw] of shownTexts(q)) {
         // ```python / ```sql 펜스 코드 블록 안은 코드 그대로(들여쓰기·두 칸 공백 허용)라 형식 검사에서 뺀다(Sprint 12)
         const t = raw.replace(/```(python|sql)\n[\s\S]*?\n```/g, "```code```");
-        if ((t.match(/\*\*/g) ?? []).length % 2) bad.push(`${q.id} ${k}: ** 짝`);
+        // 인라인 코드(`**` 거듭제곱 연산자 등) 안의 **는 굵게 표시가 아니다(RichText도 코드로 그린다)
+        if ((t.replace(/`[^`]+`/g, "``").match(/\*\*/g) ?? []).length % 2) bad.push(`${q.id} ${k}: ** 짝`);
         if ((t.match(/`/g) ?? []).length % 2) bad.push(`${q.id} ${k}: \` 짝`);
         if (/^\s|\s$/.test(t)) bad.push(`${q.id} ${k}: 앞뒤 공백`);
-        if (/\S {2,}\S/.test(t)) bad.push(`${q.id} ${k}: 이중 공백`);
+        // 검증된 실행 결과 보기는 출력 그대로(두 칸 공백 허용)
+        if (k !== "출력" && /\S {2,}\S/.test(t)) bad.push(`${q.id} ${k}: 이중 공백`);
       }
     expect(bad).toEqual([]);
   });

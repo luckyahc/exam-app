@@ -66,7 +66,12 @@ export type VerifySpec =
 export type VerifyCheck =
   /** 코드 출력 고르기: mcq는 정답 보기 = 실제 출력·오답 보기 ≠ 출력, multi는 정답 보기만 출력 줄, blank는 첫 정답 = 출력 줄.
    *  `lineSep`: 보기 한 줄에 여러 출력 줄을 적을 때 쓴 구분자(예: " → ") */
-  | { kind: "output"; lineSep?: string }
+  | {
+      kind: "output";
+      lineSep?: string;
+      /** Colab 코드 셀처럼 마지막 줄 식의 값을 화면에 보여 주는 코드(예: Lec1 s.20 `seconds_in_a_day`) — 검증 때 마지막 줄을 print(repr(…))로 바꿔 실행 */
+      cell?: true;
+    }
   /** 오류 위치·종류 문제: 실제로 이 오류가 나야 한다(줄 번호를 적으면 줄까지) */
   | { kind: "error"; errorType: string; line?: number };
 

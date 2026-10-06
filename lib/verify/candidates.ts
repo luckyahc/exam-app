@@ -10,7 +10,7 @@ export interface CandidateRule {
   name: string;
   langs: CodeLang[];
   /** 바꿀 수 없으면 null */
-  apply(text: string): string | null;
+  apply(text: string, lang: CodeLang): string | null;
 }
 
 const AUG = String.raw`(\*\*|//|[+\-*/%])`;
@@ -74,8 +74,10 @@ export const CANDIDATE_RULES: readonly CandidateRule[] = [
     id: "mirror",
     name: "비교 양변 바꾸기 (i <= 9 → 9 >= i)",
     langs: ["python", "sql"],
-    apply(t) {
-      const m = t.match(re(String.raw`^(${SIMPLE})\s*(==|!=|<>|<=|>=|<|>|=)\s*(${SIMPLE})$`));
+    apply(t, lang) {
+      // `=` 하나는 SQL에서만 비교다(파이썬에서는 대입·키워드 인자 — reverse=True를 뒤집으면 안 된다)
+      const ops = lang === "sql" ? "==|!=|<>|<=|>=|<|>|=" : "==|!=|<=|>=|<|>";
+      const m = t.match(re(String.raw`^(${SIMPLE})\s*(${ops})\s*(${SIMPLE})$`));
       return m ? `${m[3]} ${MIRROR[m[2]]} ${m[1]}` : null;
     },
   },
@@ -97,7 +99,8 @@ export const CANDIDATE_RULES: readonly CandidateRule[] = [
     apply(t) {
       if (re(String.raw`^${IDENT}\s*(\*\*|//|[+\-*/%])?=(?!=)`).test(t)) return null; // 대입문은 감쌀 수 없다
       if (wrapped(t)) return null; // 이미 바깥 괄호가 있음
-      return /(==|!=|<>|<=|>=|<|>|\s[+\-*/%]\s)/.test(t) ? `(${t})` : null;
+      // 연산자 양쪽에 피연산자가 있는 식만(연산자 하나짜리 빈칸 `!=`를 `(!=)`로 감싸지 않는다)
+      return re(String.raw`[\p{L}\p{N}_)\]'"]\s*(==|!=|<>|<=|>=|<|>|[+\-*/%])\s*[\p{L}\p{N}_(\['"-]`).test(t) ? `(${t})` : null;
     },
   },
   {
@@ -143,7 +146,8 @@ export const CANDIDATE_RULES: readonly CandidateRule[] = [
     langs: ["python", "sql"],
     apply(t) {
       const tight = t.replace(/\s*(==|!=|<>|<=|>=|\+=|-=|\*=|\/=|[<>=+\-*/%,])\s*/g, "$1");
-      return tight !== t ? tight : t.replace(/(==|!=|<=|>=|\+=|-=|[<>=+*/%])/g, " $1 ").replace(/\s+/g, " ").trim();
+      // 두 글자 연산자(**, //, ==, …)를 먼저 잡아 한 덩어리로 띄운다(** → * * 가 되지 않게)
+      return tight !== t ? tight : t.replace(/(\*\*|\/\/|==|!=|<>|<=|>=|\+=|-=|\*=|\/=|[<>=+*/%])/g, " $1 ").replace(/\s+/g, " ").trim();
     },
   },
   {
@@ -171,7 +175,7 @@ export function blankCandidates(first: string, lang: CodeLang, authored: readonl
   const seen = new Set([first]);
   for (const r of CANDIDATE_RULES) {
     if (!r.langs.includes(lang)) continue;
-    const t = r.apply(first);
+    const t = r.apply(first, lang);
     if (t && !seen.has(t)) {
       seen.add(t);
       out.push({ text: t, source: r.id });

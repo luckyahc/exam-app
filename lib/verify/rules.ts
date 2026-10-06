@@ -110,7 +110,8 @@ export function staticVerifyErrors(q: Question): string[] {
   }
   // 슬라이드 오류 목록의 코드를 쓰면 해설에 "(보충)" + 다른 점
   const refs = codeRefs(`${q.prompt}\n${q.explanation}`);
-  for (const er of DS_ERRATA.filter((x) => refs.includes(x.code))) {
+  const material = [code?.source ?? "", ...("choices" in q ? q.choices : [])].join("\n");
+  for (const er of DS_ERRATA.filter((x) => refs.includes(x.code) && (!x.when || x.when.test(material)))) {
     if (!q.explanation.includes("(보충)")) e.push(`[코드 ${er.code}]는 슬라이드와 실제 실행이 다르다(${er.note}) — 해설에 "(보충)" 필요`);
     else if (!er.keywords.some((k) => q.explanation.includes(k))) e.push(`[코드 ${er.code}] 해설 "(보충)"에 슬라이드와 다른 점(${er.keywords.join("·")} 중 하나)이 없음`);
   }

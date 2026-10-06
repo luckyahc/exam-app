@@ -79,6 +79,10 @@ describe("허용 답안 후보 규칙", () => {
     expect(texts("range(0, 5)")).toEqual(["range-zero:range(5)", "spacing:range(0,5)"]);
     expect(texts("'cp949'")).toEqual(["quote-kind:\"cp949\""]);
     expect(texts("x", "python", ["y", "x"])).toEqual(["author:y"]);
+    // 연산자만 있는 빈칸·키워드 인자는 감싸거나 뒤집지 않는다(Sprint 15에서 찾은 버그)
+    expect(texts("!=")).toEqual([]);
+    expect(texts("**")).toEqual([]);
+    expect(texts("reverse=True")).toEqual(["spacing:reverse = True"]);
   });
   it("SQL 예: <> ↔ !=, 키워드 대소문자, 경계", () => {
     expect(texts("학점 <> 'A'", "sql")).toEqual(["mirror:'A' <> 학점", "paren:(학점 <> 'A')", "neq-sql:학점 != 'A'", "spacing:학점<>'A'"]);

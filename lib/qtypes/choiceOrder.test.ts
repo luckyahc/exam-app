@@ -32,14 +32,24 @@ const renderReview = (q: Question, answer: unknown) =>
 /** 화면에 나온 보기 순서(원래 번호) — 보기 글자가 처음 나오는 위치 순. 지문 뒤부터 찾는다 */
 function shownOrder(text: string, q: McqQ | MultiQ, only?: number[]) {
   const p = text.indexOf(md(q.prompt));
-  const from = p < 0 ? 0 : p + md(q.prompt).length;
+  let from = p < 0 ? 0 : p + md(q.prompt).length;
+  // 지문 아래 코드 블록(데이터과학)에 보기와 같은 글자(숫자·문자열)가 있으면 그 뒤부터 찾는다
+  // (코드 블록은 줄마다 span이라 태그를 뺀 글자에서는 줄이 이어 붙는다)
+  if (q.code) {
+    const joined = q.code.source.split("\n").join("");
+    const c = text.indexOf(joined, from);
+    if (c >= 0) from = c + joined.length;
+  }
   return (only ?? q.choices.map((_, i) => i))
     .map((i) => [i, text.indexOf(md(q.choices[i]), from)] as const)
     .sort((a, b) => a[1] - b[1])
     .map(([i]) => i);
 }
 /** 다른 보기의 글자를 포함하는 보기가 있으면 위치 비교가 모호하므로 렌더 비교에서 뺀다 */
-const distinct = (q: McqQ | MultiQ) => q.choices.every((c, i) => q.choices.every((d, j) => i === j || !md(d).includes(md(c))));
+const distinct = (q: McqQ | MultiQ) =>
+  q.choices.every((c, i) => q.choices.every((d, j) => i === j || !md(d).includes(md(c)))) &&
+  // 보기 앞의 단축키 번호(1~5)와 같은 한 글자 보기(예: 출력 "3")는 위치로 구분할 수 없다
+  !q.choices.some((c) => /^[1-5]$/.test(md(c)));
 
 describe("choiceOrder", () => {
   it(`전 과목 mcq·multi ${choiceQs.length}문항: 원래 보기 번호의 순열이고, 같은 문제(JSON 저장 후 복원 포함)는 항상 같은 순서`, () => {
