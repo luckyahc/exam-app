@@ -3,9 +3,10 @@ import { Worker } from "node:worker_threads";
 import { EngineClient } from "./client";
 import type { EngineMsg, WorkerLike } from "./protocol";
 
-export function createNodeEngineClient(): EngineClient {
+/** `hashSeed`: Python 문자열 해시 시드(PYTHONHASHSEED) — Sprint 14 실행마다 달라지는 출력 검출용. 없으면 무작위 */
+export function createNodeEngineClient(opts: { hashSeed?: string } = {}): EngineClient {
   return new EngineClient((): WorkerLike => {
-    const w = new Worker(new URL("./runtime/nodeEngineWorker.mjs", import.meta.url));
+    const w = new Worker(new URL("./runtime/nodeEngineWorker.mjs", import.meta.url), { workerData: { hashSeed: opts.hashSeed } });
     const like: WorkerLike = {
       postMessage: (msg) => w.postMessage(msg),
       terminate: () => void w.terminate(),

@@ -14,6 +14,7 @@
     "pretest": "node scripts/prepare-engine.mjs",
     "test": "vitest run",
     "test:os-regression": "node scripts/os-regression.mjs",
+    "verify:ds": "node scripts/prepare-engine.mjs && vitest run --config vitest.verify.config.mts",
     "prepare-engine": "node scripts/prepare-engine.mjs"
   },
   "dependencies": {

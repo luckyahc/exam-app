@@ -37,6 +37,11 @@ export interface CodeWriteQ extends BaseQ<"code-write"> {
     /** 별칭(AS)을 묻는 문제만 열 이름까지 비교 */
     compareColumns?: boolean;
   };
+  /**
+   * 기대 결과(Sprint 14 작성 시 검증): 슬라이드 실행결과를 실제 실행 표기로 적는다. 채점은 모범 답안 실행 결과와 비교하고,
+   * 검증 테스트가 "모범 답안 실행 결과 = expect"를 확인한다. Python은 stdout, SQL select는 rows(행 순서는 orderMatters일 때만 봄)
+   */
+  expect?: { stdout?: string; rows?: (string | number | null)[][] };
 }
 
 /** 화면에 보일 실행 결과 한쪽(사용자 또는 기대) */

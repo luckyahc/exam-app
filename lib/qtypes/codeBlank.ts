@@ -12,8 +12,12 @@ export interface CodeBlankQ extends BaseQ<"code-blank"> {
   language: CodeLang;
   /** 줄바꿈·들여쓰기를 그대로 담은 코드. 빈칸 자리는 `{{n}}` (지문 아래 보기용 `code` 필드와 구분해 `source`) */
   source: string;
-  /** 칸별 허용 답안 — 실행 결과가 같은 다른 표기만 넣는다(작성 시 실행 검증). 앞뒤 공백 금지(결정 12) */
-  blanks: { accept: string[] }[];
+  /**
+   * 칸별 허용 답안 — 실행 결과가 같은 다른 표기만 넣는다(작성 시 실행 검증). 앞뒤 공백 금지(결정 12). **첫 번째 = 슬라이드 표기**.
+   * `wrong`: 대표 오답(실행 결과가 달라야 한다), `candidates`: 작성자가 더한 허용 답안 후보 — 검증 테스트가 실행해
+   * 같은 결과면 accept에, 다르면 wrong에 들어 있는지 확인한다(lib/verify/)
+   */
+  blanks: { accept: string[]; wrong?: string[]; candidates?: string[] }[];
 }
 export type CodeBlankA = string[];
 export interface CodeBlankDetail {
@@ -74,6 +78,11 @@ export const codeBlankCore: QTypeCore<CodeBlankQ, CodeBlankA, CodeBlankDetail> =
       }
       const keys = b.accept.map((a) => JSON.stringify(tokenize(a, q.language)));
       if (new Set(keys).size !== keys.length) e.push(`${i}번 빈칸 accept에 토큰이 같은 중복 답`);
+      for (const w of b.wrong ?? []) {
+        if (!w.trim() || CURLY_QUOTE.test(w)) e.push(`${i}번 빈칸 wrong '${w}'가 비었거나 굽은 따옴표`);
+        if (codeBlankMatches(w, b.accept, q.language)) e.push(`${i}번 빈칸 wrong '${w}'가 accept와 같은 답으로 채점됨`);
+      }
+      for (const c of b.candidates ?? []) if (!c.trim() || c !== c.trim()) e.push(`${i}번 빈칸 candidates '${c}'가 비었거나 앞뒤 공백`);
     });
     // 첫 번째 정답으로 채운 코드 전체가 토큰으로 나뉘어야 한다(닫히지 않은 따옴표 등 데이터 오류 방지)
     if (q.blanks.every((b) => b.accept.length) && !tokenize(fillCodeBlanks(q.source, q.blanks.map((b) => b.accept[0])), q.language)) {

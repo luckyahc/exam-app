@@ -21,7 +21,8 @@ export const DS_CODE_BLANK_PYTHON: Question = {
     " print(str(a) + ' X ' + str(i) + ' = ' + str(i*a))",
     "print('while 조건문을 for 조건문으로 바꾸어 사용할 수 있다!')",
   ].join("\n"),
-  blanks: [{ accept: ["range"] }, { accept: [":"] }],
+  blanks: [{ accept: ["range"], wrong: ["list"] }, { accept: [":"], wrong: [";"] }],
+  verify: { mode: "run" },
   explanation:
     "s.21 [코드 2-13]: `range(1,10)`은 1부터 9까지를 차례로 꺼내고, for 줄 끝에는 콜론(`:`)이 있어야 한다. 콜론이 빠지면 SyntaxError로 실행되지 않는다(시험 채점 기준과 같음). 들여쓰기는 슬라이드처럼 1칸이어도 블록 안에서 일정하면 실행된다.",
   summary: "for 변수 in range(시작, 끝): — 끝 값은 포함하지 않고, 줄 끝 콜론 필수",
@@ -54,6 +55,7 @@ export const DS_CODE_WRITE_PYTHON: Question = {
     "print(sum_list_r(list_a))",
   ].join("\n"),
   python: { checks: ["sum_list_r([3, 4]) == 7", "sum_list_r([]) == 0"] },
+  expect: { stdout: "55" },
   explanation:
     "s.39~40 [코드 2-26]~[코드 2-28]: `sum_list()`는 결과를 출력만 하고 끝나지만, `sum_list_r()`처럼 `return j`로 돌려주면 호출한 곳에서 값을 쓸 수 있다. 출력(55)과 함께 다른 리스트에서의 반환값도 검사한다.",
   summary: "함수 결과를 호출한 곳에서 쓰려면 return",

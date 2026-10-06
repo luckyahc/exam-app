@@ -5,7 +5,8 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["**/*.test.ts"],
-    exclude: ["node_modules/**", ".next/**"],
+    // *.full.test.ts: 데이터과학 전체 실행 검증(해시 시드 엔진·판다스·틀린 데이터) — `npm run verify:ds`(vitest.verify.config.mts)
+    exclude: ["node_modules/**", ".next/**", "**/*.full.test.ts"],
   },
   resolve: {
     alias: {

@@ -44,7 +44,31 @@ export interface BaseQ<T extends string = string> {
   /** 지문 아래에 보여 줄 코드(여러 줄·들여쓰기 그대로). 데이터과학 "실행 결과 고르기" 등 — Sprint 12 */
   code?: QuestionCode;
   generator?: GeneratorRef;
+  /** 데이터과학 작성 시 검증 방식(Sprint 14 — lib/verify/). 다른 과목은 쓰지 않는다 */
+  verify?: VerifySpec;
 }
+
+/**
+ * 작성 시 검증(데이터과학, Sprint 14): 코드 정답은 사람이 쓰지 않고 실행 결과로 검증한다.
+ * - `run`: Node에서 Pyodide·sql.js로 실행해 검사. `check`는 코드가 딸린 mcq·multi·blank의 검사 종류
+ * - `skip`: 실행 검증 제외 — 셀레니움·Colab 명령·MySQL 서버 전용 문법처럼 실행할 수 없는 코드. 이유 필수
+ * 코드가 없는 문항은 `verify`를 두지 않는다(검증 방식 "개념"). `code-write`는 자기 python·sql 설정으로 항상 실행한다.
+ */
+export type VerifySpec =
+  | {
+      mode: "run";
+      python?: { packages?: ("numpy" | "pandas")[]; setup?: string; checks?: string[] };
+      sql?: { setup: "firstDB"; mode: "select" | "tables"; tables?: string[]; orderMatters?: boolean };
+      check?: VerifyCheck;
+    }
+  | { mode: "skip"; reason: string };
+
+export type VerifyCheck =
+  /** 코드 출력 고르기: mcq는 정답 보기 = 실제 출력·오답 보기 ≠ 출력, multi는 정답 보기만 출력 줄, blank는 첫 정답 = 출력 줄.
+   *  `lineSep`: 보기 한 줄에 여러 출력 줄을 적을 때 쓴 구분자(예: " → ") */
+  | { kind: "output"; lineSep?: string }
+  /** 오류 위치·종류 문제: 실제로 이 오류가 나야 한다(줄 번호를 적으면 줄까지) */
+  | { kind: "error"; errorType: string; line?: number };
 
 export interface GradeResult<D = unknown> {
   /** score === 1 */
