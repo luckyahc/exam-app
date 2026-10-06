@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // 빌드 때 npm 패키지에서 복사하는 실행 엔진 파일(scripts/prepare-engine.mjs)
+    "public/engine/**",
   ]),
 ]);
 

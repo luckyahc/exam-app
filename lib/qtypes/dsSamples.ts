@@ -1,5 +1,5 @@
 import type { CodeLang } from "./_shared/codeTokens";
-import { DS_CODE_BLANK_PYTHON } from "./fixtures";
+import { DS_CODE_BLANK_PYTHON, DS_CODE_WRITE_PYTHON } from "./fixtures";
 import type { Question } from "./registry";
 
 /**
@@ -106,6 +106,84 @@ const DS_CODE_BLANK_SQL: Question = {
   summary: "SELECT 열, COUNT(*) FROM 테이블 GROUP BY 열",
 };
 
+/** 넘파이 전체 작성형 — Lec6.pdf s.30 [코드 6-10] 깊은 복사 */
+const DS_CODE_WRITE_NUMPY: Question = {
+  id: "data-science-lec6-demo-code-write-001",
+  subject: "data-science",
+  chapter: "lec6",
+  topic: "얕은 복사 vs 깊은 복사",
+  type: "code-write",
+  exam: false,
+  difficulty: 2,
+  slideRef: "Lec6 s.30",
+  prompt:
+    "`a = np.arange(6)`을 **깊은 복사**한 배열 `c`의 첫 번째 요소를 20으로 바꾼 뒤, `print('A: ', a)`와 `print('C: ', c)`로 두 배열을 출력하시오. 원본 `a`는 바뀌지 않아야 한다.",
+  language: "python",
+  starter: "import numpy as np\n\na = np.arange(6)\n",
+  solution: ["import numpy as np", "", "a = np.arange(6)", "c = a.copy( )", "", "c[0] = 20", "print('A: ', a)", "print('C: ', c)"].join("\n"),
+  python: { packages: ["numpy"], checks: ["c is not a", "a[0] == 0"] },
+  explanation:
+    "s.28~31 [코드 6-9]·[코드 6-10]: 등호(`b = a`)는 같은 배열을 가리키는 **얕은 복사**라 b를 바꾸면 a도 바뀐다. `copy()`로 만든 **깊은 복사**는 별개의 배열이라 c[0]을 바꿔도 a[0]은 그대로 0이다.",
+  summary: "= 는 같은 배열(얕은 복사), copy()는 새 배열(깊은 복사)",
+};
+
+/** 판다스 전체 작성형 — Lec6.pdf s.49·s.51 [코드 6-27]·[코드 6-29] */
+const DS_CODE_WRITE_PANDAS: Question = {
+  id: "data-science-lec6-demo-code-write-002",
+  subject: "data-science",
+  chapter: "lec6",
+  topic: "조회([[ ]]·iloc·조건식·isin·&·|·str.contains)",
+  type: "code-write",
+  exam: false,
+  difficulty: 2,
+  slideRef: "Lec6 s.49·s.51",
+  prompt: "데이터프레임 `df`에서 **'여자'이면서 키가 160보다 큰** 사람만 조회해 출력하시오(`print` 사용).",
+  language: "python",
+  starter: [
+    "import pandas as pd",
+    "",
+    "list1 = list([['허준호', '남자', 30, 183],",
+    "              ['이가원', '여자', 24, 162],",
+    "              ['배규민', '남자', 23, 179],",
+    "              ['고고림', '남자', 21, 182],",
+    "              ['이새봄', '여자', 28, 160],",
+    "              ['이보람', '여자', 26, 163],",
+    "              ['이루리', '여자', 24, 157],",
+    "              ['오다현', '여자', 24, 172]])",
+    "",
+    "col_names = ['이름', '성별', '나이', '키']",
+    "df = pd.DataFrame(list1, columns=col_names)",
+    "",
+  ].join("\n"),
+  solution: "",
+  python: { packages: ["numpy", "pandas"] },
+  explanation:
+    "s.51 [코드 6-29]: 두 조건을 동시에 만족해야 하므로 `&`로 잇고 조건마다 괄호로 묶는다 — `df[(df['성별'] == '여자') & (df['키'] > 160)]`. 결과는 이가원·이보람·오다현.",
+  summary: "여러 조건: (조건1) & (조건2), 하나 이상: (조건1) | (조건2)",
+};
+(DS_CODE_WRITE_PANDAS as { solution: string }).solution =
+  (DS_CODE_WRITE_PANDAS as { starter: string }).starter + "print(df[(df['성별'] == '여자') & (df['키'] > 160)])";
+
+/** SQL 전체 작성형 — Lec5.pdf s.52 [코드 5-9] */
+const DS_CODE_WRITE_SQL: Question = {
+  id: "data-science-lec5-demo-code-write-001",
+  subject: "data-science",
+  chapter: "lec5",
+  topic: "WHERE·AND/OR/NOT",
+  type: "code-write",
+  exam: false,
+  difficulty: 1,
+  slideRef: "Lec5 s.52",
+  prompt: "수강 테이블에서 **과목번호가 'c1'이고 학점이 'A'인** 학생의 학번을 검색하는 SQL을 작성하시오.",
+  language: "sql",
+  starter: "",
+  solution: "SELECT 학번 FROM 수강 WHERE 과목번호 ='c1' AND 학점 ='A';",
+  sql: { setup: "firstDB", mode: "select" },
+  explanation:
+    "s.52 [코드 5-9]: 조건이 둘 다 맞아야 하므로 WHERE 절에서 AND로 잇는다. 결과는 s1 한 행. 행 순서는 ORDER BY를 요구하지 않으므로 채점에서 보지 않는다.",
+  summary: "SELECT 열 FROM 테이블 WHERE 조건1 AND 조건2;",
+};
+
 export function dsPlaygroundQuestions(): Question[] {
-  return [DS_MCQ_WITH_CODE, DS_CODE_BLANK_PYTHON, DS_CODE_BLANK_SQL];
+  return [DS_MCQ_WITH_CODE, DS_CODE_BLANK_PYTHON, DS_CODE_BLANK_SQL, DS_CODE_WRITE_PYTHON, DS_CODE_WRITE_NUMPY, DS_CODE_WRITE_PANDAS, DS_CODE_WRITE_SQL];
 }

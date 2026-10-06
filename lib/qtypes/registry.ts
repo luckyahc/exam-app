@@ -4,6 +4,7 @@ import { blankCore } from "./blank";
 import { calcCore } from "./calc";
 import { classifyCore } from "./classify";
 import { codeBlankCore } from "./codeBlank";
+import { codeWriteCore } from "./codeWrite";
 import { graphCore } from "./graph";
 import { matchCore } from "./match";
 import { mcqCore } from "./mcq";
@@ -29,6 +30,8 @@ export const QTYPE_CORE = {
   graph: graphCore,
   // 데이터과학 코드 문제(Sprint 12) — 0/1 채점
   "code-blank": codeBlankCore,
+  // 전체 작성형(Sprint 13) — 실행 결과로 0/1
+  "code-write": codeWriteCore,
 } as const;
 
 // 전체 문제 유니온·답안 타입은 레지스트리에서 유도한다(손으로 유니온을 관리하지 않음).

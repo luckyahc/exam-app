@@ -28,6 +28,38 @@ export const DS_CODE_BLANK_PYTHON: Question = {
 };
 
 /**
+ * 데이터과학 전체 작성형 예시(Sprint 13) — Lec2.pdf s.39~40 [코드 2-26]~[코드 2-28](합을 출력하는 함수 → 반환하는 함수).
+ * 기대 출력은 모범 답안을 같은 엔진에서 실행해 얻고, checks로 반환값까지 확인한다.
+ */
+export const DS_CODE_WRITE_PYTHON: Question = {
+  id: "data-science-lec2-demo-code-write-001",
+  subject: "data-science",
+  chapter: "lec2",
+  topic: "함수(def·print vs return·매개변수·len)",
+  type: "code-write",
+  exam: false,
+  difficulty: 2,
+  slideRef: "Lec2 s.39-40",
+  prompt: "리스트 `a`의 모든 수를 더한 값을 **반환**하는 함수 `sum_list_r(a)`를 정의하고, `list_a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`의 합을 출력하시오.",
+  language: "python",
+  starter: ["def sum_list_r(a):", "    "].join("\n"),
+  solution: [
+    "def sum_list_r(a):",
+    "    j = 0",
+    "    for i in a:",
+    "        j = j + i",
+    "    return j",
+    "",
+    "list_a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]",
+    "print(sum_list_r(list_a))",
+  ].join("\n"),
+  python: { checks: ["sum_list_r([3, 4]) == 7", "sum_list_r([]) == 0"] },
+  explanation:
+    "s.39~40 [코드 2-26]~[코드 2-28]: `sum_list()`는 결과를 출력만 하고 끝나지만, `sum_list_r()`처럼 `return j`로 돌려주면 호출한 곳에서 값을 쓸 수 있다. 출력(55)과 함께 다른 리스트에서의 반환값도 검사한다.",
+  summary: "함수 결과를 호출한 곳에서 쓰려면 return",
+};
+
+/**
  * 유형별 더미 문제 1개씩(대부분 subject: 'os', 코드 빈칸은 데이터과학). 실제 챕터 데이터가 아니라 문제 유형 엔진의 렌더링·채점
  * 확인용이며 /playground(유형 미리보기)와 테스트에서 쓴다. 내용은 원본 md §6·§7의 사실만 사용.
  */
@@ -292,4 +324,5 @@ export const QTYPE_FIXTURES: Question[] = [
       "프로세스 수가 늘면 처음엔 CPU 이용률이 오르지만, 너무 많아지면 스래싱으로 페이지 교체에 시간을 쓰느라 급락한다.",
   },
   DS_CODE_BLANK_PYTHON,
+  DS_CODE_WRITE_PYTHON,
 ];

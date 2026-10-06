@@ -29,5 +29,8 @@ export function answerKey(q: Question): AnyAnswer {
       return q.answerKey;
     case "code-blank":
       return q.blanks.map((b) => b.accept[0]);
+    case "code-write":
+      // 정답 키 = 모범 답안을 실행해 기대 결과와 같았다는 실행 기록(실제 실행 검증은 엔진 테스트·Sprint 14)
+      return { source: q.solution, run: { input: q.solution, status: "done", passed: true, quotesFixed: false } };
   }
 }
