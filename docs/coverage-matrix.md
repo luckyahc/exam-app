@@ -215,3 +215,161 @@
 
 - ⭐ 3개 모두 목표 8문항(6~10 범위 내), 각각 6가지 유형 혼합.
 - **Sprint 10 Ch01 반영(2026-10-05)**: 58문항 = mcq 16 · blank 12 · ox 10 · match 7 · multi 5 · classify 4 · graph 2 · order 2. 권장 유형(✓) 중 graph를 권장한 "연결 유형(s.7)"·"WAN(s.15-17)"은 Sprint 9 그림 12종에 해당 SVG가 없어 다른 유형으로 냈다(graph는 데이터 흐름·토폴로지 2문항).
+
+---
+
+## 과목 3 — 데이터과학 (data-science)
+
+> **최소 문항 수·⭐ 확정(2026-10-06 사용자 결정)** — 소주제별 목표·코드 문제 수는 콘텐츠 스프린트(15·16)에서 조정할 수 있는 계획값. 근거: [`ds-source-analysis.md`](./ds-source-analysis.md)(`source/data-science/` PDF 6개 전수 분석), 유형·채점 계획: [`ds-question-types.md`](./ds-question-types.md). 결정 사항은 `ds-question-types.md` §10.
+
+### 목표 문항 수 산정 규칙 (OS·데이터 통신과 같은 기준)
+
+- **⭐ 없음(결정)** — 필기 0건, 인쇄 강조 0건(`ds-source-analysis.md` §3). 사용자 수업 필기(주석 8개)는 출제 근거로 쓰되 ⭐ 근거는 아니다.
+- **일반 소주제**: 2~4문항. 코드 예제가 2개 이상이거나 실행결과가 있는 소주제는 4, 정의·화면 안내뿐인 소주제는 2.
+- **챕터 = 강의**(결정): `lec1`~`lec6`. 최소 문항 수(결정): **Lec1 20 · Lec2 56 · Lec3 27 · Lec4 32 · Lec5 66 · Lec6 78 = 279**.
+- **코드 문제** = `code-blank`(코드 빈칸) + `code-write`(전체 작성, 실행 채점) + 코드를 보여 주고 실행 결과를 고르는 `mcq`. 목표 비중 약 46%(129문항). 표의 "코드" 열이 그 소주제의 코드 문제 수(목표 안에 포함).
+- `slideRef`(결정): 인쇄된 슬라이드 번호 `Lec2 s.25`, 번호 없는 쪽은 PDF 쪽 `Lec2 p.46`.
+- 출제 제외(결정): 빠진 슬라이드 51장(PDF에 없음), 셀레니움의 긴 XPath 경로 문자열과 설치 명령(4-1 등), 실행마다 달라지는 출력(세트 순서·난수). MySQL 설치 과정은 최대 2문항.
+
+### Lec1. 인공지능과 빅데이터 · 파이썬 · Colab (목표 ≥ 20문항)
+
+| 소주제 | ⭐ | slideRef | 주요 유형 | 코드 | 목표 |
+|---|---|---|---|---|---|
+| 빅데이터 기술 3V, 활용 분야 |  | s.3 | mcq·blank·match | 0 | 2 |
+| 인공지능 발전 과정(튜링·맥컬록-피츠·이진법·베이즈·힌튼) |  | s.4-6 | order·match·mcq | 0 | 3 |
+| 인공지능과 빅데이터의 관계(좁은/일반/슈퍼, 학습 데이터, 나무 비유) |  | s.7-8 | match·ox·classify | 0 | 3 |
+| 프로그래밍 언어·코딩·파이썬 정의, 고급/저급 언어 |  | s.10 | mcq·ox·blank | 0 | 2 |
+| 파이썬 특징 4가지, AI·빅데이터 라이브러리 |  | s.11 | multi·mcq | 0 | 3 |
+| 파이썬 설치·대화형 인터프리터·print |  | s.12-17 | order·mcq·code-blank | 1 | 3 |
+| 구글 Colab(셀·실행·노트·연결·드라이브 저장) |  | s.19-25 | order·mcq·ox·코드 결과 고르기 | 1 | 4 |
+| **합계** | | | | **2** | **20** |
+
+### Lec2. 파이썬 기초 (목표 ≥ 56문항)
+
+| 소주제 | ⭐ | slideRef | 주요 유형 | 코드 | 목표 |
+|---|---|---|---|---|---|
+| 변수·대입 필수(NameError)·이름 규칙(SyntaxError) |  | s.3-6 | mcq·ox·code-blank | 2 | 4 |
+| 상수(대문자·밑줄 관례) |  | s.7 | ox·blank | 0 | 2 |
+| 산술 연산자 7종 |  | s.9 | match·code-write·코드 결과 고르기 | 2 | 4 |
+| 관계 연산자 |  | s.10 | mcq·코드 결과 고르기 | 1 | 3 |
+| 논리 연산자·진리표 |  | s.11-12 | classify·코드 결과 고르기 | 1 | 3 |
+| 멤버 연산자 in·not in |  | s.13 | mcq·code-blank | 1 | 2 |
+| 조건문 if / else / elif |  | s.15-18 | code-blank·code-write·오류 찾기(콜론) | 3 | 4 |
+| 반복문 while·for·range |  | s.19-21 | code-blank·code-write·mcq | 3 | 4 |
+| 숫자형·type() |  | s.23 | mcq·코드 결과 고르기 | 1 | 3 |
+| 문자열·확장 문자 |  | s.24 | code-blank·mcq | 1 | 2 |
+| 튜플(변경 불가·len) |  | s.25-27 | multi·ox·code-blank | 2 | 3 |
+| 세트(중복 불허·순서 없음·add/remove/copy/clear) |  | s.28-29 | multi·ox·code-blank | 1 | 3 |
+| 리스트(append·insert·remove·copy·reverse·sort, 인덱싱·슬라이싱) |  | s.30-32 | code-write·code-blank·코드 결과 고르기 | 3 | 4 |
+| 딕셔너리(키-값·update·del) |  | s.33-35 | code-blank·code-write·mcq | 3 | 4 |
+| 함수(def·print vs return·매개변수·len) |  | s.37-40 | code-write·code-blank·mcq | 3 | 4 |
+| 함수의 구성 요소·함수명 규칙 4가지 |  | p.41-43 | multi·ox·code-blank | 1 | 3 |
+| 지역변수·전역변수·global |  | p.44-49 | 코드 결과 고르기·code-blank·ox | 2 | 4 |
+| **합계** | | | | **30** | **56** |
+
+### Lec3. CSV 파일 · 엑셀 파일 (목표 ≥ 27문항)
+
+| 소주제 | ⭐ | slideRef | 주요 유형 | 코드 | 목표 |
+|---|---|---|---|---|---|
+| CSV 정의·공공데이터포털·메모장 작성 |  | s.3-5 | mcq·blank | 0 | 2 |
+| 한글 인코딩 문제·ANSI 저장 |  | s.6-8 | mcq·ox | 0 | 2 |
+| 쉼표가 포함된 데이터와 따옴표 |  | s.9-11 | mcq·ox·classify | 0 | 3 |
+| Colab 파일 업로드 |  | s.12-13 | code-blank·mcq | 1 | 2 |
+| CSV 읽기(open·cp949·csv.reader·line[1]·close) |  | s.14-18 | code-blank·code-write(가상 파일)·코드 결과 고르기 | 3 | 4 |
+| CSV 쓰기·추가('w'·newline=''·writer·writerow·'a') |  | s.19-23 | code-blank·code-write·mcq | 3 | 4 |
+| 셀·워크시트·워크북 |  | s.25-26 | match·ox | 0 | 2 |
+| openpyxl 읽기(load_workbook·sheetnames·셀 값) |  | s.27-29 | code-blank·코드 결과 고르기 | 3 | 4 |
+| openpyxl 쓰기(Workbook·create_sheet·title·copy_worksheet·del·save) |  | s.30-37 | code-blank·코드 결과 고르기·order | 3 | 4 |
+| **합계** | | | | **13** | **27** |
+
+### Lec4. 셀레니움 · 웹 크롤링 (목표 ≥ 32문항, 실행 채점 없음)
+
+| 소주제 | ⭐ | slideRef | 주요 유형 | 코드 | 목표 |
+|---|---|---|---|---|---|
+| 자동화 툴·셀레니움 정의 |  | s.3 | mcq·blank | 0 | 2 |
+| 정적 vs 동적 웹페이지 |  | s.4-5 | classify·ox | 0 | 2 |
+| 셀레니움 명령 4가지(get·text·click·send_keys) |  | s.6-9 | match·code-blank | 2 | 4 |
+| 크롤링·크롤러 정의, 설치 |  | s.11-13 | mcq·blank | 0 | 2 |
+| 라이브러리 가져오기·ChromeOptions(headless) |  | s.14 | code-blank·mcq | 1 | 3 |
+| driver.get(url) 접속 |  | s.15-16 | code-blank·mcq | 1 | 2 |
+| XPath(검사·복사·find_element(By.XPATH)·.text) |  | s.17-21 | order·code-blank·mcq | 2 | 4 |
+| find_elements + 리스트 컴프리헨션 |  | s.22-23 | code-blank·mcq | 2 | 3 |
+| 버튼 클릭(get_attribute·click) |  | s.24-26 | code-blank·mcq | 1 | 3 |
+| 텍스트 입력(send_keys·Keys.ENTER·네 단계·변수로 정리) |  | s.27-29 | order·code-blank | 2 | 4 |
+| page_source·셀레니움 함수 표 |  | s.30-31 | match·code-blank | 1 | 3 |
+| **합계** | | | | **12** | **32** |
+
+### Lec5. 데이터베이스 · MySQL (목표 ≥ 66문항)
+
+| 소주제 | ⭐ | slideRef | 주요 유형 | 코드 | 목표 |
+|---|---|---|---|---|---|
+| 데이터 vs 정보 |  | s.3 | mcq·classify | 0 | 2 |
+| 데이터베이스·DBMS·관계형·MySQL |  | s.4 | mcq·blank | 0 | 2 |
+| 테이블·튜플(행)·속성(열)·기본키 |  | s.5 | match·blank | 0 | 3 |
+| SQL 정의 |  | s.6 | mcq·ox | 0 | 2 |
+| MySQL 설치·워크벤치(포트 3306 등) |  | s.8-38 | mcq·blank | 0 | 2 |
+| SQL 작성 유의점·MySQL 자료형 |  | s.40 | multi·classify·ox | 0 | 3 |
+| CREATE DATABASE·USE |  | s.41 | code-blank(MySQL 전용) | 1 | 2 |
+| 스키마·기본키·외래키 |  | s.42 | mcq·match·ox | 0 | 3 |
+| CREATE TABLE(제약조건·복합 기본키·FOREIGN KEY) |  | s.43-45 | code-blank·mcq | 3 | 4 |
+| INSERT·DROP TABLE |  | s.46-47 | code-blank·code-write | 3 | 4 |
+| SELECT·DISTINCT |  | s.48-51 | code-write·코드 결과 고르기 | 3 | 4 |
+| WHERE·AND/OR/NOT |  | s.52 | code-write·code-blank | 2 | 3 |
+| LIKE·_·% |  | s.53 | code-blank·코드 결과 고르기 | 2 | 3 |
+| BETWEEN |  | s.54 | code-write·code-blank | 2 | 2 |
+| AS·COUNT·GROUP BY |  | s.55 | code-write·code-blank | 3 | 4 |
+| INNER JOIN·WHERE 조인·3테이블 조인 |  | s.56-58 | code-write·code-blank·mcq | 3 | 4 |
+| LEFT OUTER JOIN·CREATE TABLE AS SELECT |  | s.59-61 | code-write·코드 결과 고르기 | 3 | 4 |
+| 부속질의·IN |  | s.62-64 | code-write·code-blank·order | 3 | 4 |
+| IS NULL |  | s.65 | code-blank·ox | 1 | 2 |
+| UNION |  | s.66 | code-blank·mcq | 1 | 2 |
+| UPDATE |  | s.67 | code-write·code-blank | 2 | 3 |
+| DELETE·외래키 제약 오류 |  | s.68-69 | order·code-write·mcq | 2 | 4 |
+| **합계** | | | | **34** | **66** |
+
+### Lec6. 넘파이 · 판다스 (목표 ≥ 78문항)
+
+| 소주제 | ⭐ | slideRef | 주요 유형 | 코드 | 목표 |
+|---|---|---|---|---|---|
+| 넘파이 정의·배열 |  | s.3 | mcq·ox | 0 | 2 |
+| 차원(스칼라·벡터·행렬·텐서)·랭크·shape·ndarray |  | s.4-5 | match·mcq·blank | 0 | 3 |
+| 인덱싱과 축 |  | s.6 | mcq·코드 결과 고르기 | 1 | 3 |
+| 슬라이싱 |  | s.7-8 | 코드 결과 고르기·mcq | 1 | 3 |
+| 판다스 정의·시리즈·데이터프레임 구성 |  | s.9-10 | mcq·match | 0 | 3 |
+| 넘파이·판다스 특징 비교 |  | s.11-12 | classify·multi | 0 | 2 |
+| array()·shape·인덱싱 |  | s.14 | code-blank·코드 결과 고르기 | 2 | 3 |
+| 배열 생성 함수(zeros·ones·full·eye 등) |  | s.15-16 | match·code-blank | 2 | 3 |
+| dtype·astype |  | s.17 | code-blank·mcq | 1 | 2 |
+| 배열 속성(ndim·dtype·itemsize·size·nbytes·T·shape) |  | s.18-20 | match·code-blank | 2 | 4 |
+| 모양 변경(shape·flatten·resize·transpose/T) |  | s.21-23 | 코드 결과 고르기·code-blank·code-write | 3 | 4 |
+| 마스킹·조건식 마스킹·randn |  | s.24-25 | code-blank·코드 결과 고르기 | 2 | 3 |
+| 유니버설 함수·브로드캐스팅 |  | s.26-27 | match·mcq·코드 결과 고르기 | 1 | 3 |
+| 얕은 복사 vs 깊은 복사 |  | s.28-31 | 코드 결과 고르기·ox | 2 | 4 |
+| np.sort·sort()·argsort |  | s.32 | 코드 결과 고르기·code-blank | 2 | 3 |
+| Series 생성 |  | s.34 | code-blank·mcq | 1 | 2 |
+| DataFrame 생성(리스트·딕셔너리·배열) |  | s.35-37 | code-blank·mcq | 2 | 3 |
+| CSV 저장·읽기(to_csv·read_csv) |  | s.38-39 | code-blank·mcq | 1 | 3 |
+| columns·describe(문자열)·head·tail |  | s.40-43 | code-blank·mcq | 2 | 3 |
+| sort_index·sort_values |  | s.44-45 | code-blank·코드 결과 고르기 | 2 | 3 |
+| 조회([[ ]]·iloc·조건식·isin·&·\|·str.contains) |  | s.46-53 | code-blank·코드 결과 고르기·multi | 3 | 4 |
+| describe(숫자 열) |  | s.54 | mcq·blank | 1 | 2 |
+| loc로 갱신 |  | s.55 | code-blank | 1 | 2 |
+| set_index·열 생성·drop·reset_index·inplace |  | s.56-59 | code-blank·order·mcq | 2 | 4 |
+| groupby·mean·std·rename·merge |  | s.60-61 | code-blank·코드 결과 고르기 | 2 | 3 |
+| 실습: 강의 시간표 분석 |  | p.62-63 | code-blank·코드 결과 고르기 | 2 | 4 |
+| **합계** | | | | **38** | **78** |
+
+### 전체 합계
+
+| 강의 | 소주제 | ⭐ | 목표(= 최소 요구, 결정) | 코드 문제(계획) | 실제 |
+|---|---|---|---|---|---|
+| Lec1 | 7 | 0 | 20 | 2 | — |
+| Lec2 | 17 | 0 | 56 | 30 | — |
+| Lec3 | 9 | 0 | 27 | 13 | — |
+| Lec4 | 11 | 0 | 32 | 12 | — |
+| Lec5 | 22 | 0 | 66 | 34 | — |
+| Lec6 | 26 | 0 | 78 | 38 | — |
+| **전체** | **92** | **0** | **279** | **129 (46%)** | — |
+
+- `code-write`(실행 채점)는 코드 문제 안에서 Lec2 약 10 · Lec3 약 4(가상 파일) · Lec5 약 14(sql.js) · Lec6 넘파이 약 6(넘파이 실행을 넣을 경우)으로 잡았다. 판다스는 실행 채점 없이 `code-blank`·결과 고르기로 낸다(제안).
+- 유형 비율: OS·데이터 통신의 원본 §8 비율(mcq 25 · multi 10 · ox 15 · blank 20 …)은 코드 유형이 없던 기준이라 그대로 쓰지 않는다. 데이터과학은 "코드 문제 약 46% + 개념 문제 약 54%(mcq·ox·multi·blank·match·order·classify 혼합)"를 기준으로 제안한다.

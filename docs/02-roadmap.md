@@ -15,6 +15,12 @@
 | 9 | [데이터 통신: 계산 생성기 + calc 보강](./sprints/sprint-09-dc-calc-generators.md) | `lib/sim/data-comm/*` 생성기 10개, `calc` 지수 표기·상대 오차, graph SVG 12종 | DONE |
 | 10 | [데이터 통신 콘텐츠: Ch01·Ch02](./sprints/sprint-10-dc-content.md) | 문제 ≥163문항 (Ch01 ≥57, Ch02 ≥106 — 고정 seed 생성기 문항 포함, ⭐ 3개 printed-emphasis) | DONE |
 | 11 | [QA & 배포 준비](./sprints/sprint-11-qa-release.md) | 전 과목 접근성·반응형 점검, lint/test/build, README | DONE |
+| 12 | 데이터과학 과목 등록 + 코드 표시·빈칸 유형 | `data-science` 레지스트리(강의 6 = 챕터 6), `slideRef` 형식 확장, 공통 `CodeBlock`, `code-blank`(토큰 비교·0/1), `multi` 정답 2개 이상 검사(전 과목), ⭐ 없는 과목 처리 | TODO |
+| 13 | 코드 실행 엔진 · `code-write` | sql.js(SELECT 순서 무시·DML 상태·오류 기대 비교, `#`→`--`), Pyodide 기본+openpyxl(Web Worker·시간 제한), 넘파이는 필요한 문제만, 판다스는 "실행 엔진 불러오기" 버튼, 엔진 파일 빌드 시 npm→`public/` 복사 검토, 실제 휴대폰 로딩 측정 | TODO |
+| 14 | 작성 시 검증 파이프라인 | Vitest + Pyodide(Node)·sql.js로 모범 답안·허용 답·대표 오답 실행 검사, 대조 기록 `docs/verification/data-science-lecN.md` | TODO |
+| 15 | 데이터과학 콘텐츠: Lec1~Lec3 | 103문항(최소 20·56·27) | TODO |
+| 16 | 데이터과학 콘텐츠: Lec4~Lec6 | 176문항(최소 32·66·78) | TODO |
+| 17 | 데이터과학 QA | 세 과목 접근성·반응형(코드 블록·입력칸), lint/test/build, README | TODO |
 
 ## 의존 관계 요약
 
@@ -32,6 +38,7 @@ Sprint 1 ──▶ Sprint 2 ──▶ Sprint 3 ──▶ Sprint 5 ─┐
 - **OS 핵심 스프린트(2~8)가 모두 끝난 뒤** 데이터 통신 고유 스프린트(9·10)를 진행한다. 화면·학습 기능은 과목 공용으로 만들어 두었으므로 데이터 통신은 생성기·SVG·콘텐츠만 추가한다(새 문제 유형 없음).
 - 데이터 통신 PDF 분석(`dc-source-analysis.md`)은 완료됐고 "확인 필요" 전 항목이 결정됐다.
 - Sprint 11(QA)은 두 과목 전체를 대상으로 마지막에 한 번 한다.
+- **Sprint 12~17(데이터과학)** — 근거 [`ds-source-analysis.md`](./ds-source-analysis.md), 계획·결정 [`ds-question-types.md`](./ds-question-types.md)(§10 결정 14개, 2026-10-06). 스프린트를 시작할 때 `docs/sprints/`에 정식 문서를 만든다. 순서 규칙은 같다: 공통 엔진(12·13·14) → 과목 콘텐츠(15·16) → QA(17). 매 스프린트 OS 회귀·데이터 통신 데이터 테스트를 유지한다.
 
 ## 변경 이력
 
@@ -65,3 +72,5 @@ Sprint 1 ──▶ Sprint 2 ──▶ Sprint 3 ──▶ Sprint 5 ─┐
 - 2026-10-05: **Sprint 10 Ch01 완료(Ch02 작성 전).** `data/subjects/data-comm/ch01.ts` 58문항(소주제 18개 모두 목표 이상, ⭐ 0 — 인쇄 강조 없음, blank 20.7% · mcq 27.6% · ox 17.2%, graph 2: 데이터 흐름·토폴로지). 문항별 대조 기록 `docs/verification/data-comm-ch01-ch02.md`(일치 38 · 수정 20). 문제 문장이 화면에 없는 슬라이드 그림을 가리키던 18문항을 그림 없이 풀리게 고치고 `noFigureRefs.test.ts`로 금지. 결과 화면 오류 수정 — 순서 배치를 처음 배치 그대로 제출하면 답이 세션에 저장되지 않아 결과 화면이 깨지던 Sprint 7부터의 버그(`gradeInSession`·`answerForReview`, 회귀 테스트 `orderSubmit.test.ts`: OS·데이터 통신 order 21문항). 핵심 한 줄(`keyLine`)이 데이터 통신 출처 표기 "s.N (p.P):"를 떼도록 확장. 이 문서와 다르게 한 부분: id 접두사는 문서대로 `data-comm-`(요청의 `dc-` 아님), `slideRef` 필드는 `Ch01 s.N`(해설·대조 기록은 "s.N (p.P)"), graph 권장 소주제 중 SVG가 없는 연결 유형·WAN은 다른 유형으로.
 - 2026-10-05: **Sprint 10 완료.** 데이터 통신 Ch02 112문항(정적 90 + 고정 seed 생성기 22, 소주제 27개 모두 목표 이상, ⭐ 3개 × 8 printed-emphasis — 13번 해설에 "s.33 인쇄 강조의 범위 확장"), 슬라이드 예제 calc 20문항을 lib/sim 계산값·슬라이드 값과 대조하는 `ch02.test.ts`, 대조 기록 Ch02 절(일치 112). 생성기 해설에 "(보충)"(허용 오차·반올림·비트율 선택·t ≤ 지연)과 ⭐ 13번 근거를 자동 표시, tdm-frame 문장의 "슬라이드 그림" 참조 제거. **문항 수 판정 기준**: 데이터 통신은 고정 seed 생성기 문항을 최소 문항 수에 포함(사용자 승인 — 정적만으로는 Ch02 90 < 106). OS는 '실제'에 생성기 문항을 포함해 적지만 정적만으로도 최소를 넘는다. 이 기준 차이는 처음 보고에서 빠졌고 sprint-10 문서 "이 문서와 다르게 한 부분"에 기록했다.
 - 2026-10-05: **Sprint 11 완료 — 전체 프로젝트 완료(최종 완료일 2026-10-05).** 두 과목 551문항 자동 점검(`contentQa.test.ts`: 해설·slideRef·⭐ summary·마크다운·공백·보기 위치 참조, 고친 오타 0, 정적↔생성기 같은 형식 4쌍은 생성기 seed 변경 — signal 14→30·digital 14→2·performance 24→2·multiplexing 20→1, content-checklist 공통 검수 5개는 자동 검사 + 문항별 대조 기록으로 갈음), ⭐ 210문항 summary, 대조 기록 4개 숫자 = 데이터(`os/verification.test.ts`, `ch01/ch02.test.ts`), 챕터 최소 문항 수 검사 경고 → 실패. 접근성: 테마 대비 테스트(`themeContrast.test.ts`), 다크에서 대비 부족하던 `text-white` → `text-background`, `:focus-visible` 테두리, 정답/오답 아이콘+텍스트 재확인. 브라우저(프로덕션) 15화면 × 320/375/768/1280 × 라이트/다크 120조합 가로 넘침·테마 0건, 375px에서 order ↑↓·trace 드롭다운 조작·제출, 단축키 1~9·Enter·←/→ 확인. README(로컬 실행·문제/과목/유형 추가·Vercel 배포), 설정 없이 Vercel Import 가능(환경변수·외부 요청 없음, 전 경로 정적). 이 문서와 다르게 한 부분(sprint-11): mcq·multi 보기를 문제 id 고정 순서로 섞어 보임(문서에 없던 추가, `shuffle: false`로 제외 가능).
+- 2026-10-06: **세 번째 과목 "데이터과학"(`data-science`) 분석·계획 초안.** `source/data-science/` Lec1~Lec6 PDF(274쪽, 빠진 슬라이드 51장은 모두 각 PDF 끝) 전수 분석 → [`ds-source-analysis.md`](./ds-source-analysis.md)(소주제 92개, 코드 136개 = 번호 119 + 무번호 17, Python 520줄·SQL 74줄, 슬라이드 실행결과 대조 49묶음 중 43 일치, SQLite에서 SQL 실행 비교, ⭐ 근거 0건, 사용자 메모 주석 8개는 근거 제외), [`ds-question-types.md`](./ds-question-types.md)(`code-blank`·`code-write`, Pyodide·sql.js 실측 용량·로딩 시간, 확인 필요 14개), `coverage-matrix.md` 데이터과학 절(초안 목표 279문항, 코드 문제 46%), 스프린트 12~17 초안. 2026-10-04에 폐기한 옛 `ds-*` 문서(데이터 통신 오인)는 재사용하지 않았다. 코드 변경 없음.
+- 2026-10-06: **데이터과학 결정 14개 반영**(`ds-question-types.md` §10). 강의 = 챕터(`lec1`~`lec6`), `slideRef` `Lec2 s.25`/`Lec2 p.46`, ⭐ 없음(데이터과학 화면에서 "⭐만 풀기"·⭐ 달성도 숨김/"해당 없음", 빈 퀴즈 금지), 출제 범위는 지금 PDF의 슬라이드만(빠진 51장 제외), 최소 문항 수 20·56·27·32·66·78 = 279, `code-blank`·`code-write`·데이터과학 `multi`는 0/1(부분 점수 표시 없음), 복수 선택 정답 2개 이상을 전 과목 데이터 검증으로 강제, 실행 엔진(Python+openpyxl은 코드 문제를 열 때 Worker, 넘파이는 필요할 때만, 판다스는 "실행 엔진 불러오기" 버튼, 외부 CDN 금지, 엔진 파일은 빌드 때 npm→`public/` 복사 우선 검토), SQL(`#`→`--` 문자열 밖만, 행 순서 무시, 대소문자 서술은 "강의 자료에 따르면" + "(보충)"), 셀레니움 긴 XPath·설치 명령 제외, MySQL 설치 최대 2문항, 슬라이드 오류는 실제 실행 결과 + "(보충)"(실행마다 다른 출력은 출력 문제 금지), 들여쓰기는 일관되면 몇 칸이든 정답, 굽은 따옴표는 자동으로 곧은 따옴표로 바꾸고 결과 화면에 알림, 파란 글자 메모 8개는 사용자 수업 필기 → "수업 필기 기준" 출제 근거(⭐ 아님).
