@@ -1,7 +1,9 @@
+import { SUBJECTS } from "@/data/subjects/registry";
 import type { GradeResult, QTypeCore } from "./base";
 import { blankCore } from "./blank";
 import { calcCore } from "./calc";
 import { classifyCore } from "./classify";
+import { codeBlankCore } from "./codeBlank";
 import { graphCore } from "./graph";
 import { matchCore } from "./match";
 import { mcqCore } from "./mcq";
@@ -25,6 +27,8 @@ export const QTYPE_CORE = {
   calc: calcCore,
   trace: traceCore,
   graph: graphCore,
+  // 데이터과학 코드 문제(Sprint 12) — 0/1 채점
+  "code-blank": codeBlankCore,
 } as const;
 
 // 전체 문제 유니온·답안 타입은 레지스트리에서 유도한다(손으로 유니온을 관리하지 않음).
@@ -53,6 +57,19 @@ export function coreFor<K extends QType>(
   return QTYPE_CORE[q.type as K] as unknown as QTypeCore<QuestionOf<K>, AnswerOf<K>, DetailOf<K>>;
 }
 
+/**
+ * 과목별 0/1 채점 유형(과목 정의의 `allOrNothing`, 예: 데이터과학 `multi` — 시험처럼 완전히 맞아야 1점).
+ * 점수만 0/1로 바꾸고 칸·보기별 정오(detail)는 그대로 둔다. 부분 점수 표시(ResultBanner·결과 화면)는 score로만 그리므로 함께 사라진다.
+ */
+const ALL_OR_NOTHING = new Map<string, ReadonlySet<string>>(
+  SUBJECTS.map((s) => [s.id, new Set<string>("allOrNothing" in s ? s.allOrNothing : [])]),
+);
+
+export function isAllOrNothing(q: Pick<Question, "subject" | "type">): boolean {
+  return ALL_OR_NOTHING.get(q.subject)?.has(q.type) ?? false;
+}
+
 export function gradeQuestion(q: Question, answer: AnyAnswer): GradeResult {
-  return coreFor(q).grade(q, answer as never);
+  const r = coreFor(q).grade(q, answer as never);
+  return isAllOrNothing(q) ? { ...r, score: r.correct ? 1 : 0 } : r;
 }

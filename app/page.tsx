@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ProgressStats } from "@/components/progress/ProgressStats";
 import { SUBJECTS } from "@/data/subjects/registry";
 import { subjectMeta } from "@/lib/chapterMeta";
-import { subjectStyle } from "@/lib/subjects";
+import { starLabel, subjectStyle } from "@/lib/subjects";
 
 export default async function HomePage() {
   const subjects = await Promise.all(
@@ -53,7 +53,7 @@ export default async function HomePage() {
                 챕터 {subject.chapters.length}개 ·{" "}
                 {ready ? (
                   <>
-                    문제 {ids.length}개 · <span aria-hidden>⭐</span> 시험 포인트 {stars}개
+                    문제 {ids.length}개 · <span aria-hidden>⭐</span> {starLabel(subject, stars, true)}
                   </>
                 ) : (
                   "문제 준비 중"

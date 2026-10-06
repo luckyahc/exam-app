@@ -14,7 +14,7 @@ const pretendard = localFont({
 
 export const metadata: Metadata = {
   title: "시험 대비",
-  description: "운영체제·데이터 통신 시험 대비 문제 풀이 웹앱",
+  description: "운영체제·데이터 통신·데이터과학 시험 대비 문제 풀이 웹앱",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

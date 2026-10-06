@@ -42,7 +42,8 @@ export const multiCore: QTypeCore<MultiQ, MultiA, null> = {
     if (q.choices.length < 4 || q.choices.length > 6) e.push("보기는 4~6개");
     if (q.choices.some((c) => !c.trim())) e.push("빈 보기가 있음");
     if (duplicates(q.choices).length) e.push(`중복 보기: ${duplicates(q.choices).join(", ")}`);
-    if (q.answerIndexes.length < 1) e.push("정답이 1개 이상 필요");
+    // 복수 선택은 정답 2개 이상(2026-10-06 결정 — 전 과목). 정답이 하나면 mcq로 낸다
+    if (q.answerIndexes.length < 2) e.push("정답이 2개 이상 필요(정답이 하나면 mcq)");
     if (new Set(q.answerIndexes).size !== q.answerIndexes.length) e.push("answerIndexes 중복");
     if (q.answerIndexes.some((i) => !Number.isInteger(i) || i < 0 || i >= q.choices.length)) {
       e.push("answerIndexes가 보기 범위 밖");

@@ -31,12 +31,30 @@ function shownTexts(q: Question): [string, string][] {
   return t;
 }
 
+/**
+ * 과목별 slideRef 형식. OS·데이터 통신: 'Ch08 p.48', 'Ch02 s.38'(범위·나열 'p.43-50', 's.28·s.29').
+ * 데이터과학(결정 2, 2026-10-06): 인쇄된 슬라이드 번호 'Lec2 s.25', 번호 없는 쪽은 PDF 쪽 'Lec2 p.46'.
+ */
+export function slideRefOk(subject: string, ref: string): boolean {
+  if (subject === "data-science") return /^Lec[1-6] (s|p)\.\d+([-,·~]\s?((s|p)\.)?\d+)*$/.test(ref);
+  return /^Ch0\d (p|s)\.\d+([-,·]\s?(p\.)?\d+)*$/.test(ref);
+}
+
+describe("slideRef 형식 규칙", () => {
+  it("데이터과학은 'Lec2 s.25' / 'Lec2 p.46', 기존 과목은 'Ch08 p.48' / 'Ch02 s.38'", () => {
+    for (const ok of ["Lec2 s.25", "Lec2 p.46", "Lec5 s.43-45", "Lec2 p.41-43", "Lec6 s.24·s.25"]) expect(slideRefOk("data-science", ok), ok).toBe(true);
+    for (const bad of ["Ch02 s.25", "Lec7 s.1", "lec2 s.25", "Lec2 25", "Lec2 s.25 "]) expect(slideRefOk("data-science", bad), bad).toBe(false);
+    for (const ok of ["Ch08 p.48", "Ch02 s.38", "Ch08 p.43-50"]) expect(slideRefOk("os", ok), ok).toBe(true);
+    expect(slideRefOk("os", "Lec2 s.25")).toBe(false);
+  });
+});
+
 describe("콘텐츠 형식 점검 (전 과목)", async () => {
   const all: Question[] = [];
   for (const s of SUBJECTS) for (const c of s.chapters) all.push(...(await c.load()));
 
-  it("모든 문항에 해설(10자 이상)과 slideRef('Ch0N p.N' 또는 'Ch0N s.N' 형식)가 있다", () => {
-    const bad = all.filter((q) => !(q.explanation?.trim().length >= 10) || !/^Ch0\d (p|s)\.\d+([-,·]\s?(p\.)?\d+)*$/.test(q.slideRef ?? ""));
+  it("모든 문항에 해설(10자 이상)과 과목별 형식의 slideRef가 있다", () => {
+    const bad = all.filter((q) => !(q.explanation?.trim().length >= 10) || !slideRefOk(q.subject, q.slideRef ?? ""));
     expect(bad.map((q) => `${q.id}: ${q.slideRef}`)).toEqual([]);
   });
 
@@ -48,7 +66,9 @@ describe("콘텐츠 형식 점검 (전 과목)", async () => {
   it("마크다운 짝(** · `)이 맞고, 앞뒤 공백·이중 공백이 없다", () => {
     const bad: string[] = [];
     for (const q of all)
-      for (const [k, t] of shownTexts(q)) {
+      for (const [k, raw] of shownTexts(q)) {
+        // ```python / ```sql 펜스 코드 블록 안은 코드 그대로(들여쓰기·두 칸 공백 허용)라 형식 검사에서 뺀다(Sprint 12)
+        const t = raw.replace(/```(python|sql)\n[\s\S]*?\n```/g, "```code```");
         if ((t.match(/\*\*/g) ?? []).length % 2) bad.push(`${q.id} ${k}: ** 짝`);
         if ((t.match(/`/g) ?? []).length % 2) bad.push(`${q.id} ${k}: \` 짝`);
         if (/^\s|\s$/.test(t)) bad.push(`${q.id} ${k}: 앞뒤 공백`);

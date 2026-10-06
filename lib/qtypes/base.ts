@@ -10,6 +10,14 @@ export interface GeneratorRef {
   seed: number;
 }
 
+/** 지문에 딸린 코드 블록 */
+export interface QuestionCode {
+  language: "python" | "sql";
+  source: string;
+  /** 줄 번호 표시(슬라이드처럼 "3행의 a" 같은 설명이 있을 때) */
+  lineNumbers?: boolean;
+}
+
 /** 모든 문제 유형이 공유하는 필드. 유형별 payload는 lib/qtypes/{type}.ts가 이 위에 더한다. */
 export interface BaseQ<T extends string = string> {
   /** `{subject}-{chapter}-{topicSlug}-{nnn}` (생성기 문제는 `{subject}-{chapter}-gen-{name}-{seed}`) */
@@ -33,6 +41,8 @@ export interface BaseQ<T extends string = string> {
   explanation: string;
   /** 핵심 개념 한 줄 요약 */
   summary?: string;
+  /** 지문 아래에 보여 줄 코드(여러 줄·들여쓰기 그대로). 데이터과학 "실행 결과 고르기" 등 — Sprint 12 */
+  code?: QuestionCode;
   generator?: GeneratorRef;
 }
 
@@ -87,6 +97,11 @@ export function validateBase(q: BaseQ): string[] {
   if (![1, 2, 3].includes(q.difficulty)) errors.push("difficulty는 1|2|3");
   for (const key of ["topic", "slideRef", "prompt", "explanation"] as const) {
     if (!q[key]?.trim()) errors.push(`${key}가 비어 있음`);
+  }
+  if (q.code) {
+    if (q.code.language !== "python" && q.code.language !== "sql") errors.push("code.language는 python|sql");
+    if (!q.code.source.trim()) errors.push("code.source가 비어 있음");
+    if (/[‘’“”]/.test(q.code.source)) errors.push("code.source에 굽은 따옴표가 있음");
   }
   return errors;
 }

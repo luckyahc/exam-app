@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProgressStats } from "@/components/progress/ProgressStats";
 import { subjectMeta } from "@/lib/chapterMeta";
-import { getSubject } from "@/lib/subjects";
+import { getSubject, starLabel } from "@/lib/subjects";
 
 export default async function SubjectHomePage({ params }: PageProps<"/s/[subject]">) {
   const { subject: id } = await params;
@@ -49,7 +49,7 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
               <span className="text-sm text-muted">
                 {ready ? (
                   <>
-                    문제 {c.ids.length}개 · <span aria-hidden>⭐</span> {c.starIds.length}개
+                    문제 {c.ids.length}개 · <span aria-hidden>⭐</span> {starLabel(subject, c.starIds.length)}
                   </>
                 ) : (
                   "문제 준비 중"

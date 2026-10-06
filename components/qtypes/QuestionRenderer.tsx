@@ -3,6 +3,7 @@
 import type { ExamBasis, GradeResult } from "@/lib/qtypes/base";
 import { coreFor, type AnyAnswer, type Question } from "@/lib/qtypes/registry";
 import { uiFor } from "./registry";
+import { CodeBlock } from "./CodeBlock";
 import { ResultBanner, RichText } from "./ui";
 
 const EXAM_LABEL: Record<ExamBasis, string> = {
@@ -68,9 +69,20 @@ export function QuestionRenderer({ question, answer, onAnswer, result }: Props) 
         </span>
       </header>
 
-      <p id={`${question.id}-prompt`} className="text-base leading-relaxed sm:text-lg">
-        <RichText text={question.prompt} />
-      </p>
+      {/* 지문 아래 코드(code 필드)는 지문과 같은 자리(형제 순서)에 둔다 — 코드가 없는 기존 문항의 트리 위치가
+          바뀌면 useId로 만든 SVG id(그래프 화살표 등)가 달라지므로 그대로 유지한다 */}
+      {question.code ? (
+        <div className="flex flex-col gap-2">
+          <p id={`${question.id}-prompt`} className="text-base leading-relaxed sm:text-lg">
+            <RichText text={question.prompt} />
+          </p>
+          <CodeBlock code={question.code.source} language={question.code.language} lineNumbers={question.code.lineNumbers} />
+        </div>
+      ) : (
+        <p id={`${question.id}-prompt`} className="text-base leading-relaxed sm:text-lg">
+          <RichText text={question.prompt} />
+        </p>
+      )}
 
       <Input
         question={question as never}

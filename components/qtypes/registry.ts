@@ -2,6 +2,7 @@ import type { QType } from "@/lib/qtypes/registry";
 import { BlankUI } from "./Blank";
 import { CalcUI } from "./Calc";
 import { ClassifyUI } from "./Classify";
+import { CodeBlankUI } from "./CodeBlank";
 import { GraphUI } from "./Graph";
 import { MatchUI } from "./Match";
 import { McqUI } from "./Mcq";
@@ -26,6 +27,7 @@ export const QTYPE_UI = {
   calc: CalcUI,
   trace: TraceUI,
   graph: GraphUI,
+  "code-blank": CodeBlankUI,
 } satisfies { [K in QType]: QTypeUI<K> };
 
 /** 유니온 문제에 맞는 UI를 꺼낸다(유형 ↔ UI 대응 단언은 이 한 곳에서만). */

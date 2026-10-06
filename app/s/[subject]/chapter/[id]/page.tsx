@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { ProgressStats } from "@/components/progress/ProgressStats";
 import { ChapterStart } from "@/components/quiz/ChapterStart";
 import { chapterMeta } from "@/lib/chapterMeta";
-import { getChapter, getSubject } from "@/lib/subjects";
+import { getChapter, getSubject, starLabel } from "@/lib/subjects";
 
 export const dynamicParams = false;
 
@@ -29,7 +29,7 @@ export default async function ChapterPage({ params }: PageProps<"/s/[subject]/ch
         {meta.ids.length > 0 && (
           <>
             <p className="text-sm text-muted">
-              문제 {meta.ids.length}개 · <span aria-hidden>⭐</span> 시험 포인트 {meta.starIds.length}개
+              문제 {meta.ids.length}개 · <span aria-hidden>⭐</span> {starLabel(subject, meta.starIds.length, true)}
             </p>
             <ProgressStats subjectId={subject.id} ids={meta.ids} />
           </>

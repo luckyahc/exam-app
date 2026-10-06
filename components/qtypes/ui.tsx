@@ -1,7 +1,27 @@
 import type { ReactNode } from "react";
+import { CodeBlock } from "./CodeBlock";
 
-/** prompt·해설의 제한된 마크다운: **굵게**, `인라인 코드`만 해석한다(HTML 주입 없음). */
+/**
+ * 글 안의 펜스 코드 블록: 줄 맨 앞 ```python 또는 ```sql 다음 줄부터 닫는 ``` 줄까지(Sprint 12).
+ * 펜스가 없는 글(기존 문항 전부)은 아래 InlineText와 똑같이 그린다 — 렌더링 결과 변화 없음.
+ */
+const FENCE = /```(python|sql)\n([\s\S]*?)\n```/g;
+
+/** prompt·보기·해설의 제한된 마크다운: **굵게**, `인라인 코드`, ```python/```sql 펜스 코드 블록만 해석한다(HTML 주입 없음). */
 export function RichText({ text }: { text: string }) {
+  if (!text.includes("```")) return <InlineText text={text} />;
+  const out: ReactNode[] = [];
+  let last = 0;
+  for (const m of text.matchAll(FENCE)) {
+    if (m.index > last) out.push(<InlineText key={`t${last}`} text={text.slice(last, m.index).replace(/\n$/, "")} />);
+    out.push(<CodeBlock key={`c${m.index}`} code={m[2]} language={m[1] as "python" | "sql"} />);
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) out.push(<InlineText key={`t${last}`} text={text.slice(last).replace(/^\n/, "")} />);
+  return <>{out}</>;
+}
+
+function InlineText({ text }: { text: string }) {
   const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g).filter(Boolean);
   return (
     <>

@@ -1,7 +1,34 @@
 import type { Question } from "./registry";
 
 /**
- * 유형별 더미 문제 1개씩(subject: 'os'). 실제 챕터 데이터가 아니라 문제 유형 엔진의 렌더링·채점
+ * 데이터과학 코드 빈칸 예시(Sprint 12) — 코드는 source/data-science/Lec2.pdf s.21 [코드 2-13] 그대로(1칸 들여쓰기 포함).
+ * 유형 예시 목록과 /playground 데이터과학 미리보기가 함께 쓴다.
+ */
+export const DS_CODE_BLANK_PYTHON: Question = {
+  id: "data-science-lec2-demo-code-blank-001",
+  subject: "data-science",
+  chapter: "lec2",
+  topic: "반복문 while·for·range",
+  type: "code-blank",
+  exam: false,
+  difficulty: 1,
+  slideRef: "Lec2 s.21",
+  prompt: "**for 반복문으로 구구단 5단을 출력**하는 코드다. 빈칸을 채우시오.",
+  language: "python",
+  source: [
+    "a = 5",
+    "for i in {{0}}(1,10){{1}}",
+    " print(str(a) + ' X ' + str(i) + ' = ' + str(i*a))",
+    "print('while 조건문을 for 조건문으로 바꾸어 사용할 수 있다!')",
+  ].join("\n"),
+  blanks: [{ accept: ["range"] }, { accept: [":"] }],
+  explanation:
+    "s.21 [코드 2-13]: `range(1,10)`은 1부터 9까지를 차례로 꺼내고, for 줄 끝에는 콜론(`:`)이 있어야 한다. 콜론이 빠지면 SyntaxError로 실행되지 않는다(시험 채점 기준과 같음). 들여쓰기는 슬라이드처럼 1칸이어도 블록 안에서 일정하면 실행된다.",
+  summary: "for 변수 in range(시작, 끝): — 끝 값은 포함하지 않고, 줄 끝 콜론 필수",
+};
+
+/**
+ * 유형별 더미 문제 1개씩(대부분 subject: 'os', 코드 빈칸은 데이터과학). 실제 챕터 데이터가 아니라 문제 유형 엔진의 렌더링·채점
  * 확인용이며 /playground(유형 미리보기)와 테스트에서 쓴다. 내용은 원본 md §6·§7의 사실만 사용.
  */
 export const QTYPE_FIXTURES: Question[] = [
@@ -264,4 +291,5 @@ export const QTYPE_FIXTURES: Question[] = [
     explanation:
       "프로세스 수가 늘면 처음엔 CPU 이용률이 오르지만, 너무 많아지면 스래싱으로 페이지 교체에 시간을 쓰느라 급락한다.",
   },
+  DS_CODE_BLANK_PYTHON,
 ];

@@ -27,5 +27,7 @@ export function answerKey(q: Question): AnyAnswer {
       return Object.fromEntries(blankCells(q).map((b) => [b.key, b.cell.value]));
     case "graph":
       return q.answerKey;
+    case "code-blank":
+      return q.blanks.map((b) => b.accept[0]);
   }
 }

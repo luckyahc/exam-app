@@ -35,6 +35,17 @@ export function subjectStyle(subject: Pick<SubjectDef, "color">): CSSProperties 
   } as CSSProperties;
 }
 
+/** 이 과목이 ⭐(시험 포인트)를 쓰는가. false면 화면에 "⭐ 해당 없음"(데이터과학 — 근거 0건) */
+export function usesExamPoints(subject: SubjectDef): boolean {
+  return subject.examPoints !== false;
+}
+
+/** 개수 옆 ⭐ 표시 문구: ⭐을 쓰지 않는 과목은 "해당 없음" */
+export function starLabel(subject: SubjectDef, count: number, long = false): string {
+  if (!usesExamPoints(subject)) return "해당 없음";
+  return long ? `시험 포인트 ${count}개` : `${count}개`;
+}
+
 export async function countQuestions(chapter: ChapterDef): Promise<number> {
   return (await chapter.load()).length;
 }

@@ -1,5 +1,5 @@
 import type { GeneratorMap } from "@/lib/sim/_shared/types";
-import type { Question } from "@/types/question";
+import type { QType, Question } from "@/types/question";
 
 export interface ChapterDef {
   /** 과목 안에서만 유일. 예: 'ch08' */
@@ -29,4 +29,13 @@ export interface SubjectDef {
   chapters: readonly ChapterDef[];
   /** 문제 생성기(lib/sim/{과목}/generators.ts)를 동적 import로 불러온다 — 시뮬레이터 코드가 모든 화면 번들에 실리지 않게 */
   loadGenerators?: () => Promise<GeneratorMap>;
+  /**
+   * 콘텐츠 작성 전 과목. 문제가 0개인 챕터만 최소 문항 수 검사를 건너뛴다(문제가 들어간 챕터는 바로 검사).
+   * 화면의 "준비 중"은 이 값이 아니라 실제 문제 수로 정한다.
+   */
+  status?: "preparing";
+  /** false = 이 과목은 ⭐(시험 포인트)를 쓰지 않는다 — 화면에 "⭐ 해당 없음", ⭐만 풀기·달성도 숨김 */
+  examPoints?: false;
+  /** 부분 점수 없이 0/1로 채점하는 유형(부분 점수를 화면에도 보이지 않는다). 예: 데이터과학 ["multi"] */
+  allOrNothing?: readonly QType[];
 }

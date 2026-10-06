@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { CodeBlock } from "@/components/qtypes/CodeBlock";
 import { QTypePlayground } from "@/components/qtypes/QTypePlayground";
 import { dcPlaygroundQuestions } from "@/lib/qtypes/dcSamples";
+import { DS_CODE_BLOCK_SAMPLES, dsPlaygroundQuestions } from "@/lib/qtypes/dsSamples";
 import { QTYPE_FIXTURES } from "@/lib/qtypes/fixtures";
 
 export const metadata: Metadata = {
@@ -14,7 +16,7 @@ export default function PlaygroundPage() {
       <div className="flex flex-col gap-1">
         <h1 className="text-xl font-bold sm:text-2xl">문제 유형 미리보기</h1>
         <p className="text-sm text-muted">
-          10가지 문제 유형의 입력·채점·비교 화면을 확인하는 페이지입니다. 실제 챕터 문제가 아니라
+          11가지 문제 유형의 입력·채점·비교 화면을 확인하는 페이지입니다. 실제 챕터 문제가 아니라
           유형별 예시 1개씩입니다.
         </p>
       </div>
@@ -29,6 +31,26 @@ export default function PlaygroundPage() {
           </p>
         </div>
         <QTypePlayground questions={dcPlaygroundQuestions()} shortcuts={false} />
+      </section>
+      <section aria-labelledby="ds-preview" className="flex flex-col gap-4 border-t border-border pt-6">
+        <div className="flex flex-col gap-1">
+          <h2 id="ds-preview" className="text-lg font-bold">
+            데이터과학 미리보기
+          </h2>
+          <p className="text-sm text-muted">
+            코드 블록과 코드 빈칸(Python·SQL)입니다. 코드는 강의 PDF 코드를 그대로 옮겼습니다. 코드 빈칸은 모든 칸이 맞아야
+            정답이고, 굽은 따옴표는 곧은 따옴표로 바꿔 채점합니다.
+          </p>
+        </div>
+        {DS_CODE_BLOCK_SAMPLES.map((s) => (
+          <figure key={s.title} className="flex flex-col gap-1">
+            <figcaption className="text-sm font-semibold">
+              {s.title} <span className="font-normal text-muted">— 출처: {s.ref}</span>
+            </figcaption>
+            <CodeBlock code={s.source} language={s.language} lineNumbers={s.lineNumbers} />
+          </figure>
+        ))}
+        <QTypePlayground questions={dsPlaygroundQuestions()} shortcuts={false} />
       </section>
     </div>
   );

@@ -123,7 +123,10 @@ function Summary({ line }: { line: StatLine }) {
   const cards = [
     { label: "진행률", value: pct(ratio(line.solved, line.total)), sub: `${line.solved}/${line.total}문제` },
     { label: "정답률", value: pct(line.rate), sub: `완전히 맞음 ${line.correct}/${line.attempts}회` },
-    { label: "⭐ 달성도", value: pct(ratio(line.starDone, line.star)), sub: `${line.starDone}/${line.star}문제` },
+    // ⭐ 문제가 없는 범위(⭐을 쓰지 않는 과목 등)는 "해당 없음"
+    line.star > 0
+      ? { label: "⭐ 달성도", value: pct(ratio(line.starDone, line.star)), sub: `${line.starDone}/${line.star}문제` }
+      : { label: "⭐ 달성도", value: "해당 없음", sub: "⭐ 문제 없음" },
     { label: "남은 오답", value: String(line.openWrong), sub: "아직 못 맞힌 문제" },
   ];
   return (

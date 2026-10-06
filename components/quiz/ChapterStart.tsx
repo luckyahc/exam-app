@@ -99,14 +99,17 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
         </div>
       </div>
 
-      <div className={section}>
-        <h2 className={h}>시험 포인트</h2>
-        <div className="flex flex-wrap gap-2">
-          <Chip on={starOnly} onClick={() => setStarOnly(!starOnly)}>
-            <span aria-hidden>⭐</span> 시험 포인트만 ({meta.starIds.length})
-          </Chip>
+      {/* ⭐ 문제가 없는 챕터(⭐을 쓰지 않는 과목 포함)는 "시험 포인트만"을 고를 수 없게 한다 — 빈 퀴즈 방지 */}
+      {meta.starIds.length > 0 && (
+        <div className={section}>
+          <h2 className={h}>시험 포인트</h2>
+          <div className="flex flex-wrap gap-2">
+            <Chip on={starOnly} onClick={() => setStarOnly(!starOnly)}>
+              <span aria-hidden>⭐</span> 시험 포인트만 ({meta.starIds.length})
+            </Chip>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className={section}>
         <h2 className={h}>난이도 (여러 개 선택, 선택 안 하면 전체)</h2>

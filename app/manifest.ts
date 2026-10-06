@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "시험 대비",
     short_name: "시험 대비",
-    description: "운영체제·데이터 통신 시험 대비 문제 풀이 웹앱",
+    description: "운영체제·데이터 통신·데이터과학 시험 대비 문제 풀이 웹앱",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",
