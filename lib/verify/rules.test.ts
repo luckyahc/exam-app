@@ -27,7 +27,7 @@ describe("모든 문항: 검증 방식 규칙", () => {
     const qs = await allQuestions();
     const bad = qs.map((q) => [q.id, staticVerifyErrors(q)] as const).filter(([, e]) => e.length);
     expect(bad).toEqual([]);
-  });
+  }, 30_000); // 전 과목 문항을 불러온다 — 전체 실행 부하에서 기본 5초를 넘을 수 있다
   it("검증 방식: 코드 작성·실행 표시 = 실행, skip = 실행 제외, 코드 없음 = 개념", () => {
     expect(verifyMethod(WRITE)).toBe("실행");
     expect(verifyMethod(MCQ)).toBe("실행");
@@ -120,5 +120,19 @@ describe("기준 실행 환경(Colab)과 화면 줄 번호", () => {
     expect(errs(base)).toMatch("code.lineNumbers: true");
     expect(errs({ ...base, code: { ...code, lineNumbers: true } })).toBe("");
     expect(errs({ ...base, code: { ...code, lineNumbers: true }, verify: { ...base.verify, check: { kind: "error", errorType: "SyntaxError", line: 2 } } })).toMatch("빈 줄이거나 범위 밖");
+  });
+});
+
+describe("SQL(Sprint 16): 결과 표 고르기·MySQL 전용 감지", () => {
+  const errs = (q: unknown) => staticVerifyErrors(q as Question).join("\n");
+  const sqlMcq = { ...MCQ, code: { language: "sql", source: "SELECT DISTINCT 학번 FROM 수강;" }, verify: { mode: "run", sql: { setup: "firstDB", mode: "select" }, check: { kind: "output" } } };
+  it("SQL mcq 결과 표 고르기는 허용, SQL 오류 검사는 금지", () => {
+    expect(errs(sqlMcq)).toBe("");
+    expect(errs({ ...sqlMcq, verify: { ...sqlMcq.verify, check: { kind: "error", errorType: "SyntaxError" } } })).toMatch("SQL은 mcq 결과 표 고르기");
+  });
+  it("VALUES 안의 DEFAULT·VERSION()은 MySQL 전용 → 실행 제외 요구", () => {
+    const blank = { ...pg("data-science-lec5-demo-code-blank-001"), source: "INSERT INTO 학생 VALUES('s5', '김유신', '강원도 원주', {{0}}, NULL);", blanks: [{ accept: ["DEFAULT"] }], verify: { mode: "run", sql: { setup: "firstDB", mode: "tables", tables: ["학생"] } } };
+    expect(errs(blank)).toMatch("VALUES 안의 DEFAULT");
+    expect(errs({ ...blank, verify: { mode: "skip", reason: "MySQL 전용 — VALUES 안의 DEFAULT" } })).toBe("");
   });
 });

@@ -7,7 +7,7 @@
 - **수정 내용**: 검증으로 고친 것(허용 답안 추가, 슬라이드 오류 "(보충)" 등). 없으면 `—`
 - 코드 빈칸의 첫 번째 정답은 슬라이드 표기다. 슬라이드 실행결과와 실제 실행이 다른 코드는 `lib/verify/errata.ts` 목록을 따른다
 
-요약: 문항 73 · 실행 45 · 실행 제외 0 · 개념 28 · 수정 9
+요약: 문항 93 · 실행 63 · 실행 제외 0 · 개념 30 · 수정 9
 
 | 문항 id | slideRef | 검증 방식 | 결과 | 수정 내용 |
 |---|---|---|---|---|
@@ -84,3 +84,23 @@
 | `data-science-lec2-list-006` | Lec2 s.31-32 | 개념 | — | — |
 | `data-science-lec2-relational-004` | Lec2 s.10 | 개념 | — | — |
 | `data-science-lec2-dict-006` | Lec2 s.33-35 | 개념 | — | — |
+| `data-science-lec2-variable-007` | Lec2 s.3 | 실행 | 통과 | — |
+| `data-science-lec2-arith-005` | Lec2 s.9 | 실행 | 통과 | — |
+| `data-science-lec2-relational-005` | Lec2 s.10 | 실행 | 통과 | — |
+| `data-science-lec2-logical-004` | Lec2 s.11-12 | 실행 | 통과 | — |
+| `data-science-lec2-number-004` | Lec2 s.23 | 실행 | 통과 | — |
+| `data-science-lec2-tuple-005` | Lec2 s.25·s.32 | 실행 | 통과 | — |
+| `data-science-lec2-list-007` | Lec2 s.31 | 실행 | 통과 | — |
+| `data-science-lec2-list-008` | Lec2 s.31 | 실행 | 통과 | — |
+| `data-science-lec2-dict-007` | Lec2 s.34 | 실행 | 통과 | — |
+| `data-science-lec2-dict-008` | Lec2 s.35 | 실행 | 통과 | — |
+| `data-science-lec2-loop-006` | Lec2 s.21 | 실행 | 통과 | — |
+| `data-science-lec2-loop-007` | Lec2 s.19 | 실행 | 통과 | — |
+| `data-science-lec2-cond-008` | Lec2 s.17 | 실행 | 통과 | — |
+| `data-science-lec2-func-007` | Lec2 s.39 | 실행 | 통과 | — |
+| `data-science-lec2-func-008` | Lec2 s.40 | 실행 | 통과 | — |
+| `data-science-lec2-scope-006` | Lec2 p.46 | 실행 | 통과 | — |
+| `data-science-lec2-funcparts-005` | Lec2 p.41 | 실행 | 통과 | — |
+| `data-science-lec2-member-004` | Lec2 s.13 | 실행 | 통과 | — |
+| `data-science-lec2-set-006` | Lec2 s.28-29 | 개념 | — | — |
+| `data-science-lec2-scope-007` | Lec2 p.44-49 | 개념 | — | — |

@@ -58,14 +58,16 @@ export type VerifySpec =
   | {
       mode: "run";
       python?: { packages?: ("numpy" | "pandas")[]; setup?: string; checks?: string[] };
-      sql?: { setup: "firstDB"; mode: "select" | "tables"; tables?: string[]; orderMatters?: boolean };
+      /** setup: lib/qtypes/dsSchemas.ts SQL_SETUPS 이름. compareColumns: 별칭(AS)을 묻는 빈칸처럼 열 이름까지 비교 */
+      sql?: { setup: "firstDB" | "studentCourse" | "empty"; mode: "select" | "tables"; tables?: string[]; orderMatters?: boolean; compareColumns?: boolean };
       check?: VerifyCheck;
     }
   | { mode: "skip"; reason: string };
 
 export type VerifyCheck =
   /** 코드 출력 고르기: mcq는 정답 보기 = 실제 출력·오답 보기 ≠ 출력, multi는 정답 보기만 출력 줄, blank는 첫 정답 = 출력 줄.
-   *  `lineSep`: 보기 한 줄에 여러 출력 줄을 적을 때 쓴 구분자(예: " → ") */
+   *  `lineSep`: 보기 한 줄에 여러 출력 줄을 적을 때 쓴 구분자(예: " → ").
+   *  SQL(mcq만, Sprint 16): 보기 = 결과 표의 행을 lineSep(기본 " / ")으로, 한 행의 값을 ", "로 이은 글자 — 행 순서는 orderMatters일 때만 본다 */
   | {
       kind: "output";
       lineSep?: string;

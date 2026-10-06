@@ -96,6 +96,17 @@ describe.skipIf(!engineReady())("일부러 틀린 데이터는 실패한다", ()
     expect(await problems(q)).toMatch("출력에 Pyodide·Colab이 다른 표기 'int32'");
   }, 60_000);
 
+  it("SQL 결과 표 고르기: 정답 보기가 실제 결과와 다르면 실패(행 순서는 무시)", async () => {
+    const q = pg<McqQ>("data-science-lec2-demo-mcq-001");
+    q.code = { language: "sql", source: "SELECT DISTINCT 학번 FROM 수강;" };
+    q.verify = { mode: "run", sql: { setup: "firstDB", mode: "select" }, check: { kind: "output" } };
+    q.choices = ["s5 / s4 / s2 / s1", "s1 / s2 / s3 / s4 / s5", "s1 / s1 / s2", "s1"];
+    q.answerIndex = 0;
+    expect(await problems(q)).toBe(""); // 순서가 달라도 같은 결과
+    q.answerIndex = 1;
+    expect(await problems(q)).toMatch("정답 보기 2 's1 / s2 / s3 / s4 / s5'가 실제 결과 표와 다름");
+  });
+
   it("실행 제외(skip)인데 실제로 실행되는 코드", async () => {
     const q = pg<McqQ>("data-science-lec2-demo-mcq-001");
     q.verify = { mode: "skip", reason: "셀레니움이라 실행 불가(라고 잘못 표시)" };

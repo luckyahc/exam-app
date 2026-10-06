@@ -19,7 +19,7 @@
 | 13 | [코드 실행 엔진 · `code-write`](./sprints/sprint-13-ds-engine.md) | sql.js(SELECT 순서 무시·DML 상태·오류 기대 비교, `#`→`--`), Pyodide 기본+openpyxl(Web Worker·시간 제한), 넘파이는 필요한 문제만, 판다스는 "실행 엔진 불러오기" 버튼, 엔진 파일 빌드 시 npm→`public/` 복사 검토, 실제 휴대폰 로딩 측정 | DONE |
 | 14 | [작성 시 검증 파이프라인](./sprints/sprint-14-ds-verification.md) | Vitest + Pyodide(Node)·sql.js로 모범 답안·허용 답·대표 오답 실행 검사, 대조 기록 `docs/verification/data-science-lecN.md` | DONE |
 | 15 | [데이터과학 콘텐츠: Lec1~Lec3](./sprints/sprint-15-ds-content-lec1-3.md) | 103문항(최소 20·56·27), 완료 조건: `npm test`와 `npm run verify:ds` 모두 통과 | DONE |
-| 16 | 데이터과학 콘텐츠: Lec4~Lec6 | 176문항(최소 32·66·78), 완료 조건: `npm test`와 `npm run verify:ds` 모두 통과 | TODO |
+| 16 | [데이터과학 콘텐츠: Lec4~Lec6](./sprints/sprint-16-ds-content-lec4-6.md) | 176문항(최소 32·66·78), 완료 조건: `npm test`와 `npm run verify:ds` 모두 통과 | IN PROGRESS |
 | 17 | 데이터과학 QA | 세 과목 접근성·반응형(코드 블록·입력칸), lint/test/build, README | TODO |
 
 ## 의존 관계 요약

@@ -53,6 +53,8 @@ const UNRUNNABLE: { lang: CodeLang; re: RegExp; what: string }[] = [
   { lang: "python", re: /\bgoogle\.colab\b/, what: "Colab 전용 모듈(google.colab)" },
   { lang: "python", re: /\b(requests|urllib\.request|urlopen)\b/, what: "인터넷 접속" },
   { lang: "sql", re: /\b(CREATE\s+DATABASE|USE\s+\w+\s*;|SHOW\s+(DATABASES|TABLES)|DESC(RIBE)?\s+\w+\s*;|AUTO_INCREMENT|ENGINE\s*=)/i, what: "MySQL 서버 전용 문법" },
+  { lang: "sql", re: /\bVALUES\s*\([^)]*\bDEFAULT\b/i, what: "MySQL 서버 전용 문법(VALUES 안의 DEFAULT)" },
+  { lang: "sql", re: /\bVERSION\s*\(\s*\)/i, what: "MySQL 서버 전용 함수(VERSION)" },
 ];
 
 export function unrunnableReason(code: { language: CodeLang; source: string }): string | null {
@@ -84,7 +86,8 @@ export function staticVerifyErrors(q: Question): string[] {
     if (code.language === "python" && v.sql) e.push("Python 코드에 verify.sql");
     if (q.type === "code-blank" && v.check) e.push("code-blank는 check를 두지 않는다(허용 답안이 모두 같은 결과인지 본다)");
     if ((q.type === "mcq" || q.type === "multi" || q.type === "blank") && !v.check) e.push(`${q.type}에 코드가 있으면 verify.check(output|error) 필요`);
-    if (v.check && code.language !== "python") e.push("출력 고르기·오류 검사(check)는 Python 코드만 지원");
+    // SQL은 결과 표 고르기(mcq, output)만 — 오류 검사는 sql.js와 MySQL의 오류 문구·종류가 달라 출제하지 않는다
+    if (v.check && code.language === "sql" && !(v.check.kind === "output" && q.type === "mcq")) e.push("SQL은 mcq 결과 표 고르기(check output)만 지원");
     // 오류 줄 번호는 앱 화면의 줄 번호(빈 줄 포함) 기준 — 화면에 줄 번호가 보여야 하고, 그 줄이 실제로 있어야 한다
     if (v.check?.kind === "error" && v.check.line !== undefined) {
       if (!q.code?.lineNumbers) e.push("오류 줄을 묻는 문항은 code.lineNumbers: true(화면에 줄 번호 표시)");

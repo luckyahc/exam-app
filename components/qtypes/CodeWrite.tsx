@@ -231,6 +231,12 @@ function Review({ question: q, result }: ReviewProps<"code-write">) {
           )}
         </>
       )}
+      {/* SQL은 sql.js(SQLite)로 실행해 채점한다 — MySQL에서는 오류인 문법이 정답이 될 수 있다(ds-question-types.md §11 알려진 한계) */}
+      {q.language === "sql" && (
+        <p className="text-xs text-muted">
+          <span aria-hidden>ⓘ </span>채점은 sql.js(SQLite)로 실행합니다 — MySQL과 문법 차이가 있을 수 있음
+        </p>
+      )}
       <div className="flex flex-col gap-1">
         <span className="text-xs font-semibold text-muted">모범 답안</span>
         <CodeBlock code={q.solution} language={q.language} />

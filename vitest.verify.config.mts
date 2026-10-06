@@ -6,6 +6,8 @@ import path from "node:path";
 export default defineConfig({
   test: {
     environment: "node",
+    // Pyodide 엔진 Worker가 여러 개 함께 돌면 CPU 부하로 테스트 하나가 기본 5초를 넘을 수 있다(Sprint 16에서 간헐 실패 확인)
+    testTimeout: 30_000,
     include: ["lib/verify/**/*.test.ts"],
     exclude: ["node_modules/**", ".next/**"],
   },

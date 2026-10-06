@@ -53,6 +53,12 @@ export interface VerifyEnv {
   close(): void;
 }
 
+/**
+ * 작성 시 검증의 실행 제한(30초). 앱의 5초 제한은 사용자 코드용이고, 검증은 테스트 전체를 함께 돌릴 때
+ * CPU 부하로 openpyxl·판다스 첫 import가 5초를 넘을 수 있어 넉넉히 둔다(Sprint 16에서 발견)
+ */
+export const VERIFY_TIMEOUT_MS = 30_000;
+
 const MANIFEST = path.resolve(import.meta.dirname, "../../public/engine/manifest.json");
 export const engineReady = () => existsSync(MANIFEST);
 
@@ -78,7 +84,7 @@ export function createVerifyEnv(opts: { hashSeeds?: string[] } = {}): VerifyEnv 
 type PySig = { kind: "timeout" } | { kind: "done"; stdout: string; error: string | null; errorType: string | null; line: number | null; checks: boolean[]; truncated: boolean; setupError?: string };
 
 async function runPy(env: VerifyEnv, client: EngineClient, code: string, cfg: PyCfg = {}): Promise<PySig> {
-  const out = await client.runPython({ ...env.py, packages: cfg.packages ?? [], code, setup: cfg.setup, checks: cfg.checks });
+  const out = await client.runPython({ ...env.py, packages: cfg.packages ?? [], code, setup: cfg.setup, checks: cfg.checks }, VERIFY_TIMEOUT_MS);
   if (out.status === "timeout") return { kind: "timeout" };
   if (out.status === "unavailable") throw new Error(`엔진을 쓸 수 없음: ${out.message}`);
   const r: PythonRunResult = out.result;
@@ -107,7 +113,7 @@ const clip = (s: string, n = 120) => (s.length > n ? `${s.slice(0, n)}…` : s);
 type SqlSig = { kind: "timeout" } | { kind: "done"; error: string | null; result: SqlTable | null; tables: Record<string, SqlTable | null> };
 
 async function runSqlSig(env: VerifyEnv, code: string, cfg: { setup: string; tables?: string[] }): Promise<SqlSig> {
-  const out = await env.main.runSql({ base: env.sqlBase, setup: cfg.setup, code, tables: cfg.tables });
+  const out = await env.main.runSql({ base: env.sqlBase, setup: cfg.setup, code, tables: cfg.tables }, VERIFY_TIMEOUT_MS);
   if (out.status === "timeout") return { kind: "timeout" };
   if (out.status === "unavailable") throw new Error(`엔진을 쓸 수 없음: ${out.message}`);
   const r: SqlRunResult = out.result;
@@ -117,7 +123,7 @@ async function runSqlSig(env: VerifyEnv, code: string, cfg: { setup: string; tab
 function sqlSame(a: SqlSig, b: SqlSig, cfg: SqlCfg): boolean {
   if (a.kind !== "done" || b.kind !== "done") return a.kind === b.kind;
   if (a.error || b.error) return a.error === b.error;
-  if (cfg.mode === "select") return sameTable(a.result, b.result, { orderMatters: cfg.orderMatters });
+  if (cfg.mode === "select") return sameTable(a.result, b.result, { orderMatters: cfg.orderMatters, compareColumns: cfg.compareColumns });
   return (cfg.tables ?? []).every((t) => sameTable(a.tables[t] ?? null, b.tables[t] ?? null));
 }
 function sqlShow(s: SqlSig): string {
@@ -255,8 +261,31 @@ export function colabCell(source: string): string {
   return lines.join("\n");
 }
 
+/** SQL 결과 표 한 행을 보기 글자로: 값을 ", "로(NULL은 NULL) */
+const sqlRowText = (row: unknown[]) => row.map((x) => (x === null ? "NULL" : String(x))).join(", ");
+
+/** SQL 실행 결과 고르기(mcq): 정답 보기 = 결과 표, 오답 보기 ≠ 결과 표 */
+async function verifySqlChoice(env: VerifyEnv, q: Question, v: RunRun, p: (m: string) => void) {
+  const code = questionCode(q)!;
+  if (q.type !== "mcq") return p("SQL 결과 고르기는 mcq만 지원");
+  const s = await runSqlSig(env, code.source, { setup: SQL_SETUPS[v.sql!.setup], tables: v.sql!.tables });
+  if (s.kind === "timeout") return p("SQL이 시간 초과");
+  if (s.error) return p(`SQL 실행 오류: ${s.error}`);
+  if (!s.result) return p("SQL이 결과 표를 내지 않음(SELECT가 아님)");
+  const sep = (v.check?.kind === "output" && v.check.lineSep) || " / ";
+  const actual = s.result.rows.map(sqlRowText);
+  const norm = (rows: string[]) => (v.sql!.orderMatters ? rows : [...rows].sort()).join("\n");
+  const want = norm(actual);
+  q.choices.forEach((c, i) => {
+    const eq = norm(c.split(sep).map((x) => x.trim())) === want;
+    if (i === q.answerIndex && !eq) p(`정답 보기 ${i + 1} '${c}'가 실제 결과 표와 다름 — 실제 ${JSON.stringify(actual.join(sep))}`);
+    if (i !== q.answerIndex && eq) p(`오답 보기 ${i + 1} '${c}'가 실제 결과 표와 같음`);
+  });
+}
+
 async function verifyCodeChoice(env: VerifyEnv, q: Question, v: RunRun, p: (m: string) => void) {
   const shown = questionCode(q)!;
+  if (shown.language === "sql") return verifySqlChoice(env, q, v, p);
   const code = v.check?.kind === "output" && v.check.cell ? { ...shown, source: colabCell(shown.source) } : shown;
   const s = await runPy(env, env.main, code.source, v.python);
   if (s.kind === "timeout") return p("코드가 시간 초과");

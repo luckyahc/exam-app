@@ -6,6 +6,7 @@ import type { Question } from "@/types/question";
 
 const base = { subject: "data-science", chapter: "lec1" } as const;
 const plain = { exam: false } as const;
+const py = (...lines: string[]) => lines.join("\n");
 
 const T = {
   bigdata: "빅데이터 기술 3V, 활용 분야",
@@ -442,6 +443,70 @@ const questions: Question[] = [
     expect: { stdout: "86400" },
     explanation:
       "s.20: 24 * 60 * 60의 계산 결과는 86400이다. Colab 코드 셀은 마지막 줄에 변수 이름만 써도 값을 보여 주지만, (보충) 이 앱의 실행 채점은 파이썬 파일처럼 실행하므로 `print(seconds_in_a_day)`로 출력해야 결과가 나온다(s.17의 print).",
+  },
+  // ───────────────────────────── Sprint 16 비중 보강: 코드 빈칸형
+  {
+    ...base,
+    ...plain,
+    id: "data-science-lec1-install-004",
+    topic: T.install,
+    type: "code-blank",
+    difficulty: 1,
+    slideRef: "Lec1 s.17",
+    prompt: "대화형 인터프리터에서 `Hello Python!`을 출력하도록 print의 **인자**를 채우시오.",
+    language: "python",
+    source: "print({{0}})",
+    blanks: [{ accept: ['"Hello Python!"'], wrong: ["Hello Python!"] }],
+    verify: { mode: "run" },
+    explanation: "s.17: `print(\"Hello Python!\")`처럼 출력할 글자는 따옴표로 감싼 문자열로 넣는다(작은따옴표도 같은 답). 따옴표가 없으면 SyntaxError다.",
+  },
+  {
+    ...base,
+    ...plain,
+    id: "data-science-lec1-install-005",
+    topic: T.install,
+    type: "code-blank",
+    difficulty: 1,
+    slideRef: "Lec1 s.17",
+    prompt: "s.17의 print 문에서 빠진 **닫는 기호**를 채우시오.",
+    language: "python",
+    source: 'print("Hello Python!"{{0}}',
+    blanks: [{ accept: [")"], wrong: ["]"] }],
+    verify: { mode: "run" },
+    explanation: "s.17: `print(\"Hello Python!\")` — 함수 이름 뒤 소괄호 안에 인자를 넣으므로 여는 괄호 `(`와 짝이 되는 `)`로 닫는다. `]`로 닫으면 SyntaxError다.",
+  },
+  {
+    ...base,
+    ...plain,
+    id: "data-science-lec1-colab-008",
+    topic: T.colab,
+    type: "code-blank",
+    difficulty: 1,
+    slideRef: "Lec1 s.20",
+    prompt: "하루의 초 수(24시간 × 60분 × 60초 = 86400)를 계산하도록 **연산자**를 채우시오.",
+    language: "python",
+    source: py("seconds_in_a_day = 24 {{0}} 60 {{1}} 60", "print(seconds_in_a_day)"),
+    blanks: [
+      { accept: ["*"], wrong: ["+"] },
+      { accept: ["*"], wrong: ["+"] },
+    ],
+    verify: { mode: "run" },
+    explanation: "s.20: 코드 셀 아래에 `24 * 60 * 60`의 계산 결과인 86400이 표시된다. 곱셈은 `*`다(s.20 코드).",
+  },
+  {
+    ...base,
+    ...plain,
+    id: "data-science-lec1-colab-009",
+    topic: T.colab,
+    type: "code-blank",
+    difficulty: 1,
+    slideRef: "Lec1 s.20",
+    prompt: "변수에 담은 계산 결과(86400)를 출력하도록 print의 **인자**를 채우시오.",
+    language: "python",
+    source: py("seconds_in_a_day = 24 * 60 * 60", "print({{0}})"),
+    blanks: [{ accept: ["seconds_in_a_day"], wrong: ["'seconds_in_a_day'"] }],
+    verify: { mode: "run" },
+    explanation: "s.20: 계산 결과를 담은 변수 seconds_in_a_day를 그대로 넣으면 86400이 출력된다. 따옴표로 감싸면 변수가 아니라 글자 seconds_in_a_day가 출력된다(s.17 print).",
   },
 ];
 

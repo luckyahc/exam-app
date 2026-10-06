@@ -49,6 +49,9 @@ INSERT INTO 수강 VALUES('s4', 'c3', 'A');
 INSERT INTO 수강 VALUES('s5', 'c1', 'B');
 `;
 
-/** 준비 스크립트 이름 → 내용(문제 데이터에는 이름만 적는다) */
-export const SQL_SETUPS = { firstDB: FIRST_DB_SETUP } as const;
+/** 학생·과목 테이블과 데이터만 — 수강 테이블을 만드는 [코드 5-4] 문제용(Sprint 16) */
+export const STUDENT_COURSE_SETUP = FIRST_DB_SETUP.replace(/CREATE TABLE 수강[\s\S]*?\);\n/, "").replace(/-- 수강 테이블 데이터 입력하기[\s\S]*$/, "");
+
+/** 준비 스크립트 이름 → 내용(문제 데이터에는 이름만 적는다). empty: 테이블을 처음 만드는 [코드 5-2]·[코드 5-3] 문제용 */
+export const SQL_SETUPS = { firstDB: FIRST_DB_SETUP, studentCourse: STUDENT_COURSE_SETUP, empty: "" } as const;
 export type SqlSetupName = keyof typeof SQL_SETUPS;

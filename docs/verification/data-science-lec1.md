@@ -7,7 +7,7 @@
 - **수정 내용**: 검증으로 고친 것(허용 답안 추가, 슬라이드 오류 "(보충)" 등). 없으면 `—`
 - 코드 빈칸의 첫 번째 정답은 슬라이드 표기다. 슬라이드 실행결과와 실제 실행이 다른 코드는 `lib/verify/errata.ts` 목록을 따른다
 
-요약: 문항 26 · 실행 3 · 실행 제외 0 · 개념 23 · 수정 2
+요약: 문항 30 · 실행 7 · 실행 제외 0 · 개념 23 · 수정 2
 
 | 문항 id | slideRef | 검증 방식 | 결과 | 수정 내용 |
 |---|---|---|---|---|
@@ -37,3 +37,7 @@
 | `data-science-lec1-colab-005` | Lec1 s.24 | 개념 | — | — |
 | `data-science-lec1-colab-006` | Lec1 s.24-25 | 개념 | — | — |
 | `data-science-lec1-colab-007` | Lec1 s.20 | 실행 | 통과 | — |
+| `data-science-lec1-install-004` | Lec1 s.17 | 실행 | 통과 | — |
+| `data-science-lec1-install-005` | Lec1 s.17 | 실행 | 통과 | — |
+| `data-science-lec1-colab-008` | Lec1 s.20 | 실행 | 통과 | — |
+| `data-science-lec1-colab-009` | Lec1 s.20 | 실행 | 통과 | — |
