@@ -60,8 +60,25 @@
 - Lec1~3 비중 보강(같은 스프린트에서 함께): 코드 빈칸 Lec1 +4·Lec2 +18·Lec3 +5 → ratio.test.ts가 전 강의에 강제(복수 선택 8%는 Lec4~)
 - 브라우저(build && start): Lec5 코드 빈칸 25개를 375 다크·1280 라이트에서, Lec4 코드 빈칸 11개를 375 라이트·1280 다크에서 전부 채점(일부러 틀린 답 → 오답, 소문자 SQL 키워드·큰따옴표 '서울' → 정답), Lec4·Lec5 전 문항 375px 가로 넘침 0
 
+## 결과 — 후반 Lec6 (2026-10-07, 커밋 전)
+
+| 강의 | 문항 | 코드 문제(빈칸·작성·결과 고르기) | 실행 / 실행 제외 / 개념 | 복수 선택 | mcq |
+|---|---|---|---|---|---|
+| Lec6 | 82 | 47 (31·2·14) | 47 / 0 / 35 | 7 (8.5%) | 15 (18.3%) |
+
+- 비중: 빈칸 66.0%·작성 4.3%·결과 고르기 29.8%(오류 원인 고르기 1개 포함). 소주제 25개 모두 목표·코드 목표 이상
+- 빈칸 위치: import·as(np·pd), 함수·메서드 이름(array·arange·zeros·full·eye·astype·flatten·transpose·copy·sort·Series·DataFrame·to_csv·read_csv·head·tail·columns·sort_values·iloc·isin·str.contains·describe·loc·set_index·groupby·mean·rename·merge), 인자 이름(dtype·index·columns·ascending·axis), 인덱싱·슬라이싱(b[1, 2]·a[:, 1:]·a[:2, :2]·b[c]), 조건(&·|·~mask·이름), 축(axis=1)
+- 판다스 df는 python.setup으로 만든다([코드 6-27] 숫자형, [코드 6-16] 문자형). 실행 검증 47 = 넘파이 22(dsVerify.full.test.ts)·판다스 25(dsVerify.pandas.full.test.ts)
+- 전체 작성형 2개: 넘파이 resize(shape-003), 판다스 보너스 열(struct-005 — "실행 엔진 불러오기" 흐름)
+- 슬라이드 오류 활용: 6-1(표기 (2,3)·[1, 2, 3] → 실제 (2, 3)·[1 2 3]), 6-4(64비트 int64 vs Pyodide int32 — 개념만), 6-40(실행결과 162.8·5.630275는 6-33 이전 값 → 순서대로 실행하면 163.8·5.449771, group-003)
+- DataFrame·Series 통째 출력은 결과 고르기로 내지 않았다 — shape·len·셀 값·tolist()·평균만. 판다스 작성형 1개는 Series 출력을 같은 엔진의 모범 답안 출력과 비교(정답 기준이 엔진 출력이라 환경 차이 없음)
+- 브라우저(build && start): 넘파이 코드 빈칸(copy-002)·판다스 코드 빈칸(loc-001)·판다스 작성형(struct-005)을 375·1280 × 라이트·다크 4조합에서 채점(일부러 틀린 답 iloc·head(2) → 오답), 판다스 엔진 불러오기 16.4~17.0초(세 번째부터도 거의 같음), Lec6 전 문항 375px 가로 넘침 0
+
 ## 문서와 다르게 한 부분
 
 - Lec5 PDF에 ORDER BY가 없어 ORDER BY 빈칸·행 순서 비교 문제는 내지 않았다(PDF 범위만)
 - SQL 결과 고르기는 mcq만 지원(보기 = 결과 표 행을 " / ", 값을 ", "로 이은 글자, 행 순서 무시). SQL 오류 검사는 sql.js와 MySQL의 오류가 달라 출제하지 않는다
 - 복수 선택 8% 이상은 Lec4~에만 강제 — Lec1~3 보강 지시는 코드 빈칸·작성·결과·mcq 비율만이라 Lec2(6.6%)는 그대로 두었다
+- Lec6 실습·과제 안내(p.62~63)는 출제하지 않았다(사용자 지시) — 커버리지 표의 실습 소주제 목표 4(코드 2)는 다른 소주제에서 채웠다(78 이상 → 82)
+- 판다스 전체 작성형은 coverage-matrix의 제안(판다스는 실행 채점 없이)과 달리 1개를 넣었다 — 사용자 지시("실행 엔진 불러오기" 흐름, 최소 수)
+- 데이터과학 과목의 status: "preparing"을 뗐다 — 모든 챕터에 문제가 들어가 integrity.test가 요구

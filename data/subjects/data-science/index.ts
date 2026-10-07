@@ -1,14 +1,13 @@
 import type { SubjectDef } from "../types";
 
 // 챕터 = 강의(Lec1~Lec6). 구성·최소 문항 수 근거: docs/ds-source-analysis.md, docs/coverage-matrix.md 데이터과학 절,
-// 결정 사항: docs/ds-question-types.md §10(2026-10-06). 문제는 Sprint 15·16에서 채운다.
+// 결정 사항: docs/ds-question-types.md §10(2026-10-06). 문제는 Sprint 15·16에서 채웠다(Lec6까지 들어가 준비 중 표시를 뗐다).
 const dataScience = {
   id: "data-science",
   name: "데이터과학",
   shortName: "DS",
   color: { light: "#b45309", dark: "#fbbf24" },
   sourceDir: "source/data-science",
-  status: "preparing",
   // ⭐ 근거 0건(필기·인쇄 강조 없음) — 결정 3
   examPoints: false,
   // 시험처럼 복수 선택도 완전히 맞아야 1점(결정 6). 코드 유형은 유형 자체가 0/1
