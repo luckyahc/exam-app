@@ -1,5 +1,6 @@
 import type { GeneratorMap } from "@/lib/sim/_shared/types";
 import type { QType, Question } from "@/types/question";
+import type { GlossaryEntry } from "./glossary";
 
 export interface ChapterDef {
   /** 과목 안에서만 유일. 예: 'ch08' */
@@ -29,6 +30,8 @@ export interface SubjectDef {
   chapters: readonly ChapterDef[];
   /** 문제 생성기(lib/sim/{과목}/generators.ts)를 동적 import로 불러온다 — 시뮬레이터 코드가 모든 화면 번들에 실리지 않게 */
   loadGenerators?: () => Promise<GeneratorMap>;
+  /** 용어 사전(data/subjects/glossary.ts). 있으면 과목 화면에 "용어 정리"·"용어 퀴즈"가 생긴다(지금은 OS만) */
+  loadGlossary?: () => Promise<readonly GlossaryEntry[]>;
   /**
    * 콘텐츠 작성 전 과목. 문제가 0개인 챕터만 최소 문항 수 검사를 건너뛴다(문제가 들어간 챕터는 바로 검사).
    * 화면의 "준비 중"은 이 값이 아니라 실제 문제 수로 정한다.

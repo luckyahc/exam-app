@@ -24,7 +24,7 @@ const idsOf = async (...chapters: string[]) =>
   (await Promise.all(os.chapters.filter((c) => chapters.includes(c.id)).map((c) => c.load()))).flat().map((q) => q.id);
 
 describe("OS 대조 기록 ↔ 문제 데이터", () => {
-  it("os-ch02-ch03.md: 154줄, id·순서 일치, 요약 숫자 = 표", async () => {
+  it("os-ch02-ch03.md: id·순서 일치, 요약 숫자 = 표", async () => {
     const f = "os-ch02-ch03.md";
     const rows = rowsOf(f);
     expect(rows.map((r) => r[1].replaceAll("`", ""))).toEqual(await idsOf("ch02", "ch03"));

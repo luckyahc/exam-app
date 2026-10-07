@@ -11,12 +11,14 @@ const meta: ChapterMeta = {
   shortTitle: "가상 메모리",
   ids: ["a", "b", "c", "d"],
   starIds: ["a", "c"],
+  starHwIds: ["a"],
+  starHintIds: ["c"],
   types: [],
   rows: [
-    { type: "mcq", topic: "TLB", exam: true, difficulty: 1 },
-    { type: "mcq", topic: "TLB", exam: false, difficulty: 2 },
-    { type: "ox", topic: "Clock", exam: true, difficulty: 2 },
-    { type: "ox", topic: "Clock", exam: false, difficulty: 3 },
+    { type: "mcq", topic: "TLB", exam: true, hw: true, hint: false, difficulty: 1 },
+    { type: "mcq", topic: "TLB", exam: false, hw: false, hint: false, difficulty: 2 },
+    { type: "ox", topic: "Clock", exam: true, hw: false, hint: true, difficulty: 2 },
+    { type: "ox", topic: "Clock", exam: false, hw: false, hint: false, difficulty: 3 },
   ],
   difficulties: [
     { difficulty: 1, count: 1 },

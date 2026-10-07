@@ -288,7 +288,7 @@ const questions: readonly Question[] = [
     text: "메모리에 없는(디스크에 있는) 주소를 참조하면 {{0}} interrupt가 발생한다.",
     blanks: [
       {
-        accept: ["Page Fault", "page fault", "페이지 폴트", "페이지폴트", "memory fault", "메모리 폴트", "Page Fault(memory fault)", "페이지 부재"],
+        accept: ["Page Fault", "page fault", "페이지 폴트", "페이지폴트", "memory fault", "메모리 폴트", "Page Fault(memory fault)", "페이지 부재", "Memory fault interrupt", "Page Fault interrupt"],
       },
     ],
     explanation: "p.5: 2. 메모리에 없는 주소(디스크에 있음)를 참조했을 때 Page Fault(memory fault) interrupt 발생 → Interrupt handler 실행.",
@@ -395,7 +395,7 @@ const questions: readonly Question[] = [
     slideRef: "Ch08 p.8",
     prompt: "다음 설명을 한 단어로 쓰시오.",
     text: "프로세스는 특정 순간에 프로그램 전체가 아닌 일부 영역(코드와 변수들)만 집중적으로 참조하며, 시간이 갈수록 그 영역이 이동하지만 참조하는 영역의 개수는 비슷하다. 이를 {{0}}의 원리라 한다.",
-    blanks: [{ accept: ["지역성", "locality", "Locality", "국부성", "지역성(Locality)", "참조 지역성"] }],
+    blanks: [{ accept: ["지역성", "locality", "Locality", "국부성", "지역성(Locality)", "참조 지역성", "지역성의 원리", "Principle of Locality"] }],
     explanation: "p.8(필기 \"설명을 쭉 해주고 한 단어로 기술해봐라\"): 지역성의 원리(Principle of Locality) — 프로세스 내의 프로그램 및 데이터 참조는 한곳에 몰리는 경향이 있다.",
     summary: "지역성 = 특정 순간 일부 페이지만 집중 참조 → 가상 메모리가 잘 동작하는 근거",
   },
@@ -579,7 +579,7 @@ const questions: readonly Question[] = [
     slideRef: "Ch08 p.12",
     prompt: "빈칸에 알맞은 비트 이름을 쓰시오.",
     text: "페이지가 주 메모리에 마지막으로 로드된 이후 변경되었는지를 나타내는 비트를 {{0}} 비트라 한다.",
-    blanks: [{ accept: ["수정", "Modify", "modify", "M", "수정(Modify)", "Modify(M)", "dirty", "더티", "변경"] }],
+    blanks: [{ accept: ["수정", "Modify", "modify", "M", "수정(Modify)", "Modify(M)", "dirty", "더티", "변경", "Modify Bit"] }],
     explanation: "p.12: 수정 비트(Modify Bit)는 페이지가 주 메모리에 마지막으로 로드된 이후 변경되었는지를 나타내기 위해 필요하다.",
   },
   {

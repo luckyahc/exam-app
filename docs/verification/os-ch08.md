@@ -40,11 +40,11 @@
 
 | 구분 | 문항 수 |
 |---|---|
-| 전체 | 138 (정적 134 + 생성기 4) |
-| 일치 | 121 |
-| 수정 | 16 |
+| 전체 | 178 (정적 134 + 생성기 4 + 시험 힌트 보강 8 + 용어 단답형 32) |
+| 일치 | 158 |
+| 수정 | 19 |
 | 추가(2차) | 1 |
-| 필기 근거(문항별 확인) | 24 |
+| 필기 근거(문항별 확인) | 27 |
 | (보충) 포함 | 3 |
 | 정답을 lib/sim/os로 계산 | 정적 14 + 생성기 4 |
 
@@ -78,20 +78,20 @@ p.43-51을 이미지로 확인한 결과 교수님의 출제 표시는 **p.48 �
 
 | # | id | type | slideRef | ⭐ | 근거 | 정답 계산 | 대조 결과 | 수정 내용 |
 |---|---|---|---|---|---|---|---|---|
-| 1 | `os-ch08-virtual-001` | mcq | Ch08 p.3-4 |  | 인쇄 |  | 일치 |  |
-| 2 | `os-ch08-virtual-002` | blank | Ch08 p.2 |  | 인쇄 |  | 일치 |  |
-| 3 | `os-ch08-virtual-003` | multi | Ch08 p.4 |  | 인쇄 |  | 일치 |  |
-| 4 | `os-ch08-virtual-004` | mcq | Ch08 p.3 |  | 인쇄 |  | 수정 | ox → mcq(유형 비율: ox ≤18%), 같은 지식 포인트 |
+| 1 | `os-ch08-virtual-001` | mcq | Ch08 p.3-4 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 2 | `os-ch08-virtual-002` | blank | Ch08 p.2 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 3 | `os-ch08-virtual-003` | multi | Ch08 p.4 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 4 | `os-ch08-virtual-004` | mcq | Ch08 p.3 | ⭐ 힌트 | 인쇄 |  | 수정 | ox → mcq(유형 비율: ox ≤18%), 같은 지식 포인트 |
 | 5 | `os-ch08-page-fault-001` | order | Ch08 p.5 | ⭐ | 인쇄 |  | 일치 |  |
 | 6 | `os-ch08-page-fault-002` | order | Ch08 p.6 | ⭐ | 인쇄 |  | 일치 |  |
 | 7 | `os-ch08-page-fault-003` | blank | Ch08 p.5 | ⭐ | 인쇄 |  | 일치 |  |
-| 8 | `os-ch08-page-fault-004` | blank | Ch08 p.5 | ⭐ | 인쇄 |  | 일치 |  |
+| 8 | `os-ch08-page-fault-004` | blank | Ch08 p.5 | ⭐ | 인쇄 |  | 수정 | [용어 연결] accept에 Memory fault interrupt·Page Fault interrupt 추가 |
 | 9 | `os-ch08-page-fault-005` | mcq | Ch08 p.6 | ⭐ | p.6 필기(MMU가 memory fault를 건다) |  | 일치 |  |
 | 10 | `os-ch08-page-fault-006` | mcq | Ch08 p.5 | ⭐ | 인쇄 |  | 일치 |  |
 | 11 | `os-ch08-page-fault-007` | ox | Ch08 p.6 | ⭐ | 인쇄 |  | 일치 |  |
 | 12 | `os-ch08-page-fault-008` | classify | Ch08 p.5-6 | ⭐ | 인쇄 |  | 일치 |  |
 | 13 | `os-ch08-page-fault-009` | match | Ch08 p.5-6 | ⭐ | 인쇄 |  | 일치 |  |
-| 14 | `os-ch08-locality-001` | blank | Ch08 p.8 | ⭐ | 인쇄 |  | 일치 |  |
+| 14 | `os-ch08-locality-001` | blank | Ch08 p.8 | ⭐ | 인쇄 |  | 수정 | [용어 연결] accept에 지역성의 원리·Principle of Locality 추가 |
 | 15 | `os-ch08-locality-002` | blank | Ch08 p.8 | ⭐ | 인쇄 |  | 일치 |  |
 | 16 | `os-ch08-locality-003` | mcq | Ch08 p.8 | ⭐ | 인쇄 |  | 일치 |  |
 | 17 | `os-ch08-locality-004` | ox | Ch08 p.8 | ⭐ | 인쇄 |  | 일치 |  |
@@ -100,9 +100,9 @@ p.43-51을 이미지로 확인한 결과 교수님의 출제 표시는 **p.48 �
 | 20 | `os-ch08-locality-007` | multi | Ch08 p.8 | ⭐ | 인쇄 |  | 일치 |  |
 | 21 | `os-ch08-support-001` | classify | Ch08 p.9 |  | 인쇄 |  | 일치 |  |
 | 22 | `os-ch08-support-002` | mcq | Ch08 p.9 |  | 인쇄 |  | 일치 |  |
-| 23 | `os-ch08-pte-001` | match | Ch08 p.10, p.12, p.42, p.47 |  | 인쇄 |  | 일치 |  |
+| 23 | `os-ch08-pte-001` | match | Ch08 p.10, p.12, p.42, p.47 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
 | 24 | `os-ch08-pte-002` | mcq | Ch08 p.12 |  | 인쇄 |  | 일치 |  |
-| 25 | `os-ch08-pte-003` | blank | Ch08 p.12 |  | 인쇄 |  | 일치 |  |
+| 25 | `os-ch08-pte-003` | blank | Ch08 p.12 |  | 인쇄 |  | 수정 | [용어 연결] accept에 Modify Bit 추가 |
 | 26 | `os-ch08-pte-004` | blank | Ch08 p.10 |  | 인쇄 |  | 일치 |  |
 | 27 | `os-ch08-pte-005` | ox | Ch08 p.10 |  | 인쇄 |  | 일치 |  |
 | 28 | `os-ch08-pte-006` | multi | Ch08 p.11, p.42, p.47 |  | p.42·p.47 필기(엔트리 = 프레임 번호 + 제어 비트) |  | 일치 |  |
@@ -128,7 +128,7 @@ p.43-51을 이미지로 확인한 결과 교수님의 출제 표시는 **p.48 �
 | 48 | `os-ch08-tlb-009` | match | Ch08 p.19-23 | ⭐ | p.20·p.23 필기(메모리 두 번 읽음, 캐시에서 바로 꺼냄, blocked) |  | 수정 | [2차] multi → match: TLB 히트 / TLB 미스·페이지 테이블 히트 / 페이지 폴트별 메모리·디스크 접근 비교로 교체(TLB ⭐가 이미 10문항이라 추가 대신 교체, 이전 multi의 내용은 해설에 남김) |
 | 49 | `os-ch08-tlb-010` | mcq | Ch08 p.23-24 | ⭐ | 인쇄 |  | 일치 |  |
 | 50 | `os-ch08-tlb-cache-001` | ox | Ch08 p.25 |  | p.25 필기(TLB ≠ 데이터 캐시) |  | 일치 |  |
-| 51 | `os-ch08-tlb-cache-002` | mcq | Ch08 p.25 |  | 인쇄 |  | 일치 |  |
+| 51 | `os-ch08-tlb-cache-002` | mcq | Ch08 p.25 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
 | 52 | `os-ch08-page-size-001` | graph | Ch08 p.28 | ⭐ | 인쇄 |  | 일치 |  |
 | 53 | `os-ch08-page-size-002` | graph | Ch08 p.28 | ⭐ | 인쇄 |  | 일치 |  |
 | 54 | `os-ch08-page-size-003` | blank | Ch08 p.26 | ⭐ | 인쇄 |  | 일치 |  |
@@ -160,7 +160,7 @@ p.43-51을 이미지로 확인한 결과 교수님의 출제 표시는 **p.48 �
 | 80 | `os-ch08-segmentation-003` | classify | Ch08 p.31, p.35 |  | 인쇄 |  | 일치 |  |
 | 81 | `os-ch08-segmentation-004` | mcq | Ch08 p.32 |  | 인쇄 |  | 일치 |  |
 | 82 | `os-ch08-segmentation-005` | order | Ch08 p.37 |  | 인쇄 |  | 수정 | ox → order(유형 비율), Figure 8.13 변환 단계 |
-| 83 | `os-ch08-policy-001` | match | Ch08 p.39-41, p.55, p.61 |  | 인쇄 |  | 일치 |  |
+| 83 | `os-ch08-policy-001` | match | Ch08 p.39-41, p.55, p.61 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
 | 84 | `os-ch08-fetch-001` | blank | Ch08 p.39 | ⭐ | 인쇄 |  | 일치 |  |
 | 85 | `os-ch08-fetch-002` | blank | Ch08 p.39 | ⭐ | 인쇄 |  | 일치 |  |
 | 86 | `os-ch08-fetch-003` | match | Ch08 p.39 | ⭐ | p.39 필기(Fetch 정의) |  | 수정 | 해설의 필기 인용에 '교수님 필기 기준' 표시 |
@@ -170,16 +170,16 @@ p.43-51을 이미지로 확인한 결과 교수님의 출제 표시는 **p.48 �
 | 90 | `os-ch08-fetch-007` | ox | Ch08 p.39 | ⭐ | 인쇄 |  | 일치 |  |
 | 91 | `os-ch08-fetch-008` | classify | Ch08 p.39 | ⭐ | p.39 필기(주로 요구 페이징) |  | 수정 | 해설의 필기 인용에 '교수님 필기 기준' 표시 |
 | 92 | `os-ch08-fetch-009` | multi | Ch08 p.39 | ⭐ | p.39 필기(선반입 구현 거의 불가능) |  | 일치 |  |
-| 93 | `os-ch08-placement-policy-001` | mcq | Ch08 p.40 |  | 인쇄 |  | 일치 |  |
-| 94 | `os-ch08-placement-policy-002` | ox | Ch08 p.40 |  | 인쇄 |  | 일치 |  |
-| 95 | `os-ch08-placement-policy-003` | blank | Ch08 p.40 |  | p.40 필기(그래서 페이징을 많이 씀) |  | 일치 |  |
-| 96 | `os-ch08-replacement-policy-001` | mcq | Ch08 p.41 |  | 인쇄 |  | 일치 |  |
-| 97 | `os-ch08-replacement-policy-002` | blank | Ch08 p.41 |  | 인쇄 |  | 일치 |  |
-| 98 | `os-ch08-replacement-policy-003` | ox | Ch08 p.41 |  | p.41 필기(성능을 좌지우지) |  | 일치 |  |
-| 99 | `os-ch08-lock-001` | multi | Ch08 p.42 |  | 인쇄 |  | 일치 |  |
-| 100 | `os-ch08-lock-002` | blank | Ch08 p.42 |  | 인쇄 |  | 일치 |  |
-| 101 | `os-ch08-lock-003` | ox | Ch08 p.42 |  | 인쇄 |  | 일치 |  |
-| 102 | `os-ch08-lock-004` | mcq | Ch08 p.42 |  | p.42 필기(락 정보 = 엔트리 비트) |  | 일치 |  |
+| 93 | `os-ch08-placement-policy-001` | mcq | Ch08 p.40 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 94 | `os-ch08-placement-policy-002` | ox | Ch08 p.40 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 95 | `os-ch08-placement-policy-003` | blank | Ch08 p.40 | ⭐ 힌트 | p.40 필기(그래서 페이징을 많이 씀) |  | 일치 |  |
+| 96 | `os-ch08-replacement-policy-001` | mcq | Ch08 p.41 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 97 | `os-ch08-replacement-policy-002` | blank | Ch08 p.41 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 98 | `os-ch08-replacement-policy-003` | ox | Ch08 p.41 | ⭐ 힌트 | p.41 필기(성능을 좌지우지) |  | 일치 |  |
+| 99 | `os-ch08-lock-001` | multi | Ch08 p.42 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 100 | `os-ch08-lock-002` | blank | Ch08 p.42 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 101 | `os-ch08-lock-003` | ox | Ch08 p.42 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 102 | `os-ch08-lock-004` | mcq | Ch08 p.42 | ⭐ 힌트 | p.42 필기(락 정보 = 엔트리 비트) |  | 일치 |  |
 | 103 | `os-ch08-replacement-001` | trace | Ch08 p.48 | ⭐ | p.48 필기(OPT 동점이면 맨 앞) | simulateReplacement(OPT, Figure 8.15) | 일치 |  |
 | 104 | `os-ch08-replacement-002` | trace | Ch08 p.48 | ⭐ | 인쇄 | simulateReplacement(LRU, Figure 8.15) | 일치 |  |
 | 105 | `os-ch08-replacement-003` | trace | Ch08 p.45, p.48 | ⭐ | 인쇄 | simulateReplacement(FIFO, Figure 8.15) | 일치 |  |
@@ -196,23 +196,63 @@ p.43-51을 이미지로 확인한 결과 교수님의 출제 표시는 **p.48 �
 | 116 | `os-ch08-clock-004` | blank | Ch08 p.47 | ⭐ | 인쇄 |  | 수정 | [2차] ⭐로 전환(exam: true, examBasis: handwritten) — 근거: p.48 "시험"(Figure 8.15 CLOCK 행), p.50 필기 |
 | 117 | `os-ch08-clock-005` | calc | Ch08 p.47 | ⭐ | 인쇄 | clockReplace(모든 use=1) | 수정 | [2차] ⭐로 전환(exam: true, examBasis: handwritten) — 근거: p.48 "시험"(Figure 8.15 CLOCK 행), p.50 필기 |
 | 118 | `os-ch08-clock-006` | classify | Ch08 p.47-48 | ⭐ | p.48 필기(히트 시 pointer 고정) |  | 추가 | [2차] Clock ⭐ 최소 6문항을 맞추려고 추가(히트 vs 교체 때 동작 분류) |
-| 119 | `os-ch08-lfu-001` | mcq | Ch08 p.46 |  | 인쇄 |  | 일치 |  |
-| 120 | `os-ch08-lfu-002` | ox | Ch08 p.46 |  | 인쇄 |  | 일치 |  |
-| 121 | `os-ch08-lfu-003` | graph | Ch08 p.51 |  | 인쇄 |  | 일치 |  |
-| 122 | `os-ch08-lfu-004` | blank | Ch08 p.51 |  | 인쇄 |  | 일치 |  |
-| 123 | `os-ch08-enhanced-clock-001` | order | Ch08 p.52 |  | 인쇄 |  | 일치 |  |
-| 124 | `os-ch08-enhanced-clock-002` | trace | Ch08 p.52-53 |  | 인쇄 | simulateEnhancedClock | 일치 |  |
-| 125 | `os-ch08-enhanced-clock-003` | mcq | Ch08 p.53 |  | 인쇄 | enhancedClockVictim | 일치 |  |
-| 126 | `os-ch08-enhanced-clock-004` | blank | Ch08 p.52 |  | 인쇄 |  | 일치 |  |
-| 127 | `os-ch08-enhanced-clock-005` | ox | Ch08 p.53 |  | p.53 필기(read만 하는 페이지 먼저 교체) |  | 일치 |  |
-| 128 | `os-ch08-cleaning-001` | match | Ch08 p.55 |  | 인쇄 |  | 일치 |  |
-| 129 | `os-ch08-cleaning-002` | mcq | Ch08 p.55 |  | 인쇄 |  | 일치 |  |
-| 130 | `os-ch08-cleaning-003` | ox | Ch08 p.55 |  | 인쇄 |  | 일치 |  |
-| 131 | `os-ch08-cleaning-004` | blank | Ch08 p.55 |  | 인쇄 |  | 일치 |  |
-| 132 | `os-ch08-page-buffering-001` | mcq | Ch08 p.57 |  | 인쇄 |  | 일치 |  |
-| 133 | `os-ch08-page-buffering-002` | blank | Ch08 p.57 |  | 인쇄 |  | 일치 |  |
-| 134 | `os-ch08-resident-set-001` | classify | Ch08 p.59 |  | 인쇄 + (보충) 고정+전역이 불가능한 이유 |  | 일치 |  |
-| 135 | `os-ch08-resident-set-002` | match | Ch08 p.58-59 |  | 인쇄 |  | 일치 |  |
-| 136 | `os-ch08-resident-set-003` | mcq | Ch08 p.59 |  | 인쇄 |  | 일치 |  |
-| 137 | `os-ch08-resident-set-004` | blank | Ch08 p.59 |  | 인쇄 |  | 일치 |  |
-| 138 | `os-ch08-resident-set-005` | ox | Ch08 p.58 |  | 인쇄 |  | 일치 |  |
+| 119 | `os-ch08-lfu-001` | mcq | Ch08 p.46 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 120 | `os-ch08-lfu-002` | ox | Ch08 p.46 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 121 | `os-ch08-lfu-003` | graph | Ch08 p.51 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 122 | `os-ch08-lfu-004` | blank | Ch08 p.51 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 123 | `os-ch08-enhanced-clock-001` | order | Ch08 p.52 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 124 | `os-ch08-enhanced-clock-002` | trace | Ch08 p.52-53 | ⭐ 힌트 | 인쇄 | simulateEnhancedClock | 일치 |  |
+| 125 | `os-ch08-enhanced-clock-003` | mcq | Ch08 p.53 | ⭐ 힌트 | 인쇄 | enhancedClockVictim | 일치 |  |
+| 126 | `os-ch08-enhanced-clock-004` | blank | Ch08 p.52 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 127 | `os-ch08-enhanced-clock-005` | ox | Ch08 p.53 | ⭐ 힌트 | p.53 필기(read만 하는 페이지 먼저 교체) |  | 일치 |  |
+| 128 | `os-ch08-cleaning-001` | match | Ch08 p.55 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 129 | `os-ch08-cleaning-002` | mcq | Ch08 p.55 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 130 | `os-ch08-cleaning-003` | ox | Ch08 p.55 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 131 | `os-ch08-cleaning-004` | blank | Ch08 p.55 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 132 | `os-ch08-page-buffering-001` | mcq | Ch08 p.57 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 133 | `os-ch08-page-buffering-002` | blank | Ch08 p.57 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 134 | `os-ch08-resident-set-001` | classify | Ch08 p.59 | ⭐ 힌트 | 인쇄 + (보충) 고정+전역이 불가능한 이유 |  | 일치 |  |
+| 135 | `os-ch08-resident-set-002` | match | Ch08 p.58-59 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 136 | `os-ch08-resident-set-003` | mcq | Ch08 p.59 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 137 | `os-ch08-resident-set-004` | blank | Ch08 p.59 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 138 | `os-ch08-resident-set-005` | ox | Ch08 p.58 | ⭐ 힌트 | 인쇄 |  | 일치 |  |
+| 139 | `os-ch08-hint-virtual-001` | match | Ch08 p.3-4 | ⭐ 힌트 | p.3-4 필기 |  | 일치 | [시험 힌트 8-1, 8-2] 신규 match |
+| 140 | `os-ch08-hint-virtual-002` | match | Ch08 p.3-4 | ⭐ 힌트 | 인쇄 |  | 일치 | [시험 힌트 8-1] 신규 match |
+| 141 | `os-ch08-hint-virtual-003` | match | Ch08 p.4 | ⭐ 힌트 | p.4 필기 |  | 일치 | [시험 힌트 8-2] 신규 match |
+| 142 | `os-ch08-hint-virtual-004` | blank | Ch08 p.3-4 | ⭐ 힌트 | 인쇄 |  | 일치 | [시험 힌트 8-1] 신규 blank |
+| 143 | `os-ch08-hint-virtual-005` | mcq | Ch08 p.3-4 | ⭐ 힌트 | 인쇄 |  | 일치 | [시험 힌트 8-1] 신규 mcq |
+| 144 | `os-ch08-hint-virtual-006` | blank | Ch08 p.4 | ⭐ 힌트 | 인쇄 |  | 일치 | [시험 힌트 8-2] 신규 blank |
+| 145 | `os-ch08-hint-thrashing-001` | order | Ch08 p.29, p.61 | ⭐ 힌트 | 인쇄 |  | 일치 | [시험 힌트 8-6] 신규 order |
+| 146 | `os-ch08-hint-lock-001` | mcq | Ch08 p.42 | ⭐ 힌트 | 인쇄 |  | 일치 | [시험 힌트 8-8] 신규 mcq |
+| 147 | `os-ch08-term-001` | blank | Ch08 p.2 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 실제 메모리 (시험 힌트 8-1, 8-2) |
+| 148 | `os-ch08-term-002` | blank | Ch08 p.2 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 가상 메모리 (시험 힌트 8-1, 8-2) |
+| 149 | `os-ch08-term-003` | blank | Ch08 p.6 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 디스크 인터럽트 (시험 힌트 8-3) |
+| 150 | `os-ch08-term-004` | blank | Ch08 p.10 |  | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — P 비트 |
+| 151 | `os-ch08-term-005` | blank | Ch08 p.14 |  | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 2단계 페이지 테이블 |
+| 152 | `os-ch08-term-006` | blank | Ch08 p.16 |  | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 역 페이지 테이블 |
+| 153 | `os-ch08-term-007` | blank | Ch08 p.21 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — TLB 히트 (시험 힌트 8-5) |
+| 154 | `os-ch08-term-008` | blank | Ch08 p.21 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — TLB 미스 (시험 힌트 8-5) |
+| 155 | `os-ch08-term-009` | blank | Ch08 p.61 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 부하 제어 (시험 힌트 8-6, 8-7) |
+| 156 | `os-ch08-term-010` | blank | Ch08 p.61 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 멀티프로그래밍 수준 (시험 힌트 8-6) |
+| 157 | `os-ch08-term-011` | blank | Ch08 p.39 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 반입 정책 (시험 힌트 8-7) |
+| 158 | `os-ch08-term-012` | blank | Ch08 p.40 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 배치 정책 (시험 힌트 8-7) |
+| 159 | `os-ch08-term-013` | blank | Ch08 p.41 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 교체 정책 (시험 힌트 8-7) |
+| 160 | `os-ch08-term-014` | blank | Ch08 p.42 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 프레임 잠금 (시험 힌트 8-8) |
+| 161 | `os-ch08-term-015` | blank | Ch08 p.43 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 최적 정책 (시험 힌트 8-9) |
+| 162 | `os-ch08-term-016` | blank | Ch08 p.44 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — LRU (시험 힌트 8-9) |
+| 163 | `os-ch08-term-017` | blank | Ch08 p.46 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — LFU (시험 힌트 8-9) |
+| 164 | `os-ch08-term-018` | blank | Ch08 p.46 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — MFU (시험 힌트 8-9) |
+| 165 | `os-ch08-term-019` | blank | Ch08 p.45 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — FIFO (시험 힌트 8-9) |
+| 166 | `os-ch08-term-020` | blank | Ch08 p.47 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 클럭 정책 (시험 힌트 8-9) |
+| 167 | `os-ch08-term-021` | blank | Ch08 p.48 | ⭐ 힌트 | p.48 필기 |  | 일치 | [용어] 신규 용어 단답형 — 다음 프레임 포인터 (시험 힌트 8-9) |
+| 168 | `os-ch08-term-022` | blank | Ch08 p.52 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 개선된 클럭 정책 (시험 힌트 8-9) |
+| 169 | `os-ch08-term-023` | blank | Ch08 p.55 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 청소 정책 (시험 힌트 8-7) |
+| 170 | `os-ch08-term-024` | blank | Ch08 p.55 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 요구 청소 (시험 힌트 8-7) |
+| 171 | `os-ch08-term-025` | blank | Ch08 p.55 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 선청소 (시험 힌트 8-7) |
+| 172 | `os-ch08-term-026` | blank | Ch08 p.57 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 페이지 버퍼링 (시험 힌트 8-7) |
+| 173 | `os-ch08-term-027` | blank | Ch08 p.57 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 프리 리스트 (시험 힌트 8-7) |
+| 174 | `os-ch08-term-028` | blank | Ch08 p.58 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 고정 할당 (시험 힌트 8-7) |
+| 175 | `os-ch08-term-029` | blank | Ch08 p.58 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 가변 할당 (시험 힌트 8-7) |
+| 176 | `os-ch08-term-030` | blank | Ch08 p.59 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 교체 범위 (시험 힌트 8-7) |
+| 177 | `os-ch08-term-031` | blank | Ch08 p.59 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 지역 교체 (시험 힌트 8-7) |
+| 178 | `os-ch08-term-032` | blank | Ch08 p.59 | ⭐ 힌트 | 인쇄 |  | 일치 | [용어] 신규 용어 단답형 — 전역 교체 (시험 힌트 8-7) |

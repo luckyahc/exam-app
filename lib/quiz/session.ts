@@ -3,6 +3,8 @@ import { type AnyAnswer, coreFor, gradeQuestion, type QType, type Question } fro
 import { hashString, mulberry32 } from "@/lib/random";
 import { SESSION_KEY } from "@/lib/storage/keys";
 import { safeGetJSON, safeSetJSON } from "@/lib/storage/safeStorage";
+import { matchesStar, type StarBasis } from "./starBasis";
+import type { QStatus } from "./status";
 
 /**
  * 퀴즈 세션: 어떤 문제를 어떤 순서·모드로 풀고 있는지와 답·채점 결과.
@@ -46,21 +48,31 @@ export interface QuizSession {
 export interface QuizFilter {
   types?: readonly QType[];
   starOnly?: boolean;
+  /** starOnly일 때 ⭐ 근거(lib/quiz/starBasis.ts). 없으면 전체 ⭐ */
+  starBasis?: StarBasis;
   topics?: readonly string[];
   /** 난이도(1~3, 여러 개). 비우면 전체 */
   difficulties?: readonly number[];
   /** 문제 수. null/undefined = 전체 */
   count?: number | null;
   shuffle?: boolean;
+  /** 풀이 상태(lib/quiz/status.ts). 비우면 전체. statusOf가 있어야 적용된다 */
+  statuses?: readonly QStatus[];
+  statusOf?: (id: string) => QStatus;
+  /** 이 id들만(문제 목록 "이 목록으로 풀기"·용어 "관련 문제 풀기") — 순서는 questions 순서 */
+  ids?: readonly string[];
   /** 섞기 seed(같은 seed면 같은 순서 — 테스트용). 없으면 호출자가 넣는다 */
   seed: string;
 }
 
 export function filterQuestions(questions: readonly Question[], f: QuizFilter): Question[] {
+  const ids = f.ids ? new Set(f.ids) : null;
   let out = questions.filter(
     (q) =>
+      (!ids || ids.has(q.id)) &&
+      (!f.statuses?.length || !f.statusOf || f.statuses.includes(f.statusOf(q.id))) &&
       (!f.types?.length || f.types.includes(q.type)) &&
-      (!f.starOnly || q.exam) &&
+      (!f.starOnly || matchesStar(q, f.starBasis ?? "all")) &&
       (!f.topics?.length || f.topics.includes(q.topic)) &&
       (!f.difficulties?.length || f.difficulties.includes(q.difficulty)),
   );

@@ -61,8 +61,11 @@ describe("콘텐츠 형식 점검 (전 과목)", async () => {
     expect(bad.map((q) => `${q.id}: ${q.slideRef}`)).toEqual([]);
   });
 
-  it("⭐ 문항은 모두 핵심 한 줄 요약(summary)이 있다(120자 이하)", () => {
-    const bad = all.filter((q) => q.exam && !(q.summary && q.summary.trim().length > 0 && q.summary.length <= 120));
+  // 시험 힌트 범위로 ⭐가 된 문항(examBasis exam-hint)은 요약을 강제하지 않는다 — 힌트 항목 이름이 그 역할을 한다(docs/os-exam-hint.md)
+  it("⭐ 문항(필기·인쇄 강조 근거)은 모두 핵심 한 줄 요약(summary)이 있다(120자 이하)", () => {
+    const bad = all.filter((q) => q.exam && q.examBasis !== "exam-hint" && !(q.summary && q.summary.trim().length > 0 && q.summary.length <= 120));
+    const long = all.filter((q) => q.summary && q.summary.length > 120);
+    expect(long.map((q) => q.id)).toEqual([]);
     expect(bad.map((q) => q.id)).toEqual([]);
   });
 

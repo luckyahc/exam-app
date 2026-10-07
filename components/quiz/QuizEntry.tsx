@@ -7,6 +7,8 @@ import { getChapter, getSubject } from "@/lib/subjects";
 import { isQType, type Question } from "@/lib/qtypes/registry";
 import { loadChapter, loadQuestions, loadSubject } from "@/lib/quiz/loadQuestions";
 import { filterQuestions, loadSession, newSession, type QuizSession, saveSession } from "@/lib/quiz/session";
+import { isStatus, questionStatus, STATUS_LABEL } from "@/lib/quiz/status";
+import { parseStar, STAR_LABEL } from "@/lib/quiz/starBasis";
 import { subjectRecords } from "@/lib/storage/recordsStore";
 import { QuizRunner } from "./QuizRunner";
 
@@ -49,13 +51,19 @@ export function QuizEntry() {
 
       const pool = chapter ? await loadChapter(subjectId, chapter.id) : await loadSubject(subjectId);
       const types = (params.get("types") ?? "").split(",").filter(isQType);
+      const statuses = (params.get("status") ?? "").split(",").filter(isStatus);
+      const starBasis = parseStar(params.get("star"));
+      const records = subjectRecords(subjectId);
       const count = Number(params.get("count")) || null;
       const picked = filterQuestions(pool, {
         types,
-        starOnly: params.get("star") === "1",
+        starOnly: !!starBasis,
+        starBasis: starBasis ?? undefined,
         topics: (params.get("topics") ?? "").split("|").filter(Boolean),
         difficulties: (params.get("diff") ?? "").split(",").map(Number).filter((d) => d === 1 || d === 2 || d === 3),
         count,
+        statuses,
+        statusOf: (id) => questionStatus(records, id),
         shuffle: params.get("shuffle") === "1",
         seed: `${key}-${Date.now()}`,
       });
@@ -63,7 +71,10 @@ export function QuizEntry() {
         return { kind: "empty", message: pool.length ? "조건에 맞는 문제가 없습니다." : "문제 준비 중입니다.", backHref } as State;
 
       const mode = params.get("mode") === "exam" ? "exam" : "instant";
-      const star = params.get("star") === "1" ? " · ⭐ 시험 포인트" : "";
+      const star =
+        (starBasis ? ` · ⭐ ${starBasis === "all" ? "시험 포인트" : STAR_LABEL[starBasis]}` : "") +
+        (statuses.length ? ` · ${statuses.map((s) => STATUS_LABEL[s]).join("·")}` : "") +
+        (params.get("topics") === "용어" ? " · 용어" : "");
       const session = newSession(picked, {
         mode,
         timerSec: Number(params.get("timer")) || null,

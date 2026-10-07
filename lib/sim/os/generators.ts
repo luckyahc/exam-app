@@ -384,7 +384,7 @@ export const cpuTimeGen: Generator<CpuParams> = {
     const setup = `프로그램 ${n}개(각각 I/O 없이 ${t}초 실행), 내 프로그램은 마지막 순서, 실행 후 0.1초 만에 첫 출력, 스위칭 시간 ${s}초`;
     const table = {
       batchResp: {
-        ask: "**다중프로그램 일괄처리**에서 내 프로그램의 첫 응답시간",
+        ask: "**다중프로그램 일괄처리**에서 내 프로그램의 첫 응답시간(response time)",
         value: batchFirstResponse(p),
         unit: "초",
         steps: [
@@ -394,7 +394,7 @@ export const cpuTimeGen: Generator<CpuParams> = {
         ],
       },
       tsResp: {
-        ask: `**시분할(타임슬라이스 ${q}초)**에서 내 프로그램의 첫 응답시간`,
+        ask: `**시분할(타임슬라이스 ${q}초)**에서 내 프로그램의 첫 응답시간(response time)`,
         value: timeSharingFirstResponse(p),
         unit: "초",
         steps: [
@@ -404,7 +404,7 @@ export const cpuTimeGen: Generator<CpuParams> = {
         ],
       },
       batchUtil: {
-        ask: "**다중프로그램 일괄처리**의 유효 CPU 이용률",
+        ask: "**다중프로그램 일괄처리**의 유효 CPU 이용률(processor utilization)",
         value: batchUtilization(p),
         unit: "",
         steps: [
@@ -414,7 +414,7 @@ export const cpuTimeGen: Generator<CpuParams> = {
         ],
       },
       tsUtil: {
-        ask: `**시분할(타임슬라이스 ${q}초)**의 유효 CPU 이용률`,
+        ask: `**시분할(타임슬라이스 ${q}초)**의 유효 CPU 이용률(processor utilization)`,
         value: timeSharingUtilization(p),
         unit: "",
         steps: [

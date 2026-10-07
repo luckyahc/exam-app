@@ -715,7 +715,7 @@ const questions: readonly Question[] = [
     difficulty: 2,
     slideRef: "Ch02 p.22-23",
     prompt:
-      "프로그램 10개(각 1초, I/O 없이 계산만), 내 프로그램은 10번째, 실행 후 0.1초마다 출력, CPU 스위칭 0.01초일 때 **다중프로그램 일괄처리**에서 내 프로그램의 첫 응답시간은? (소수 둘째 자리까지)",
+      "프로그램 10개(각 1초, I/O 없이 계산만), 내 프로그램은 10번째, 실행 후 0.1초마다 출력, CPU 스위칭 0.01초일 때 **다중프로그램 일괄처리**에서 내 프로그램의 첫 응답시간(response time)은? (소수 둘째 자리까지)",
     answer: r2(batchFirstResponse(SLIDE)),
     tolerance: 0.005,
     unit: "초",
@@ -734,7 +734,7 @@ const questions: readonly Question[] = [
     difficulty: 2,
     slideRef: "Ch02 p.22-23",
     prompt:
-      "같은 조건(프로그램 10개, 각 1초, 내 프로그램 10번째, 0.1초마다 출력, 스위칭 0.01초)에서 **시분할(타임슬라이스 0.1초)**일 때 내 프로그램의 첫 응답시간은? (소수 둘째 자리까지)",
+      "같은 조건(프로그램 10개, 각 1초, 내 프로그램 10번째, 0.1초마다 출력, 스위칭 0.01초)에서 **시분할(타임슬라이스 0.1초)**일 때 내 프로그램의 첫 응답시간(response time)은? (소수 둘째 자리까지)",
     answer: r2(timeSharingFirstResponse(SLIDE)),
     tolerance: 0.005,
     unit: "초",
@@ -752,7 +752,7 @@ const questions: readonly Question[] = [
     difficulty: 2,
     slideRef: "Ch02 p.24",
     prompt:
-      "프로그램 10개(각 1초), 스위칭 0.01초, 타임슬라이스 0.1초인 **시분할**의 유효 CPU 이용률은? (소수 둘째 자리까지)",
+      "프로그램 10개(각 1초), 스위칭 0.01초, 타임슬라이스 0.1초인 **시분할**의 유효 CPU 이용률(processor utilization)은? (소수 둘째 자리까지)",
     answer: r2(timeSharingUtilization(SLIDE)),
     tolerance: 0.005,
     steps: ["스위칭 횟수 = 10초 / 0.1초 = 100번", "100 × 0.01 = 1초", `10 / (10 + 1) = 10/11 ≈ ${r2(timeSharingUtilization(SLIDE))}`],
@@ -769,7 +769,7 @@ const questions: readonly Question[] = [
     difficulty: 2,
     slideRef: "Ch02 p.24",
     prompt:
-      "프로그램 10개(각 1초), 스위칭 0.01초인 **다중프로그램 일괄처리**의 유효 CPU 이용률은? (프로그램이 종료할 때만 스위칭, 소수 둘째 자리까지)",
+      "프로그램 10개(각 1초), 스위칭 0.01초인 **다중프로그램 일괄처리**의 유효 CPU 이용률(processor utilization)은? (프로그램이 종료할 때만 스위칭, 소수 둘째 자리까지)",
     answer: r2(batchUtilization(SLIDE)),
     tolerance: 0.005,
     steps: ["스위칭 10번 × 0.01초 = 0.1초", `10 / (10 + 0.1) = 10/10.1 ≈ ${r2(batchUtilization(SLIDE))}`],
@@ -786,7 +786,7 @@ const questions: readonly Question[] = [
     difficulty: 3,
     slideRef: "Ch02 p.22-23",
     prompt:
-      "프로그램 5개(각 2초, I/O 없이 계산만), 내 프로그램은 마지막, 실행 후 0.1초마다 출력, 스위칭 0.02초일 때 **다중프로그램 일괄처리**의 첫 응답시간은? (소수 둘째 자리까지)",
+      "프로그램 5개(각 2초, I/O 없이 계산만), 내 프로그램은 마지막, 실행 후 0.1초마다 출력, 스위칭 0.02초일 때 **다중프로그램 일괄처리**의 첫 응답시간(response time)은? (소수 둘째 자리까지)",
     answer: r2(batchFirstResponse({ n: 5, t: 2, s: 0.02, output: 0.1 })),
     tolerance: 0.005,
     unit: "초",
@@ -807,7 +807,7 @@ const questions: readonly Question[] = [
     difficulty: 3,
     slideRef: "Ch02 p.22-23",
     prompt:
-      "프로그램 8개(각 1초), 내 프로그램은 마지막, 실행 후 0.1초마다 출력, 스위칭 0.05초, **시분할(타임슬라이스 0.25초)**일 때 첫 응답시간은? (소수 둘째 자리까지)",
+      "프로그램 8개(각 1초), 내 프로그램은 마지막, 실행 후 0.1초마다 출력, 스위칭 0.05초, **시분할(타임슬라이스 0.25초)**일 때 첫 응답시간(response time)은? (소수 둘째 자리까지)",
     answer: r2(timeSharingFirstResponse({ n: 8, q: 0.25, s: 0.05, output: 0.1 })),
     tolerance: 0.005,
     unit: "초",
@@ -828,7 +828,7 @@ const questions: readonly Question[] = [
     difficulty: 2,
     slideRef: "Ch02 p.21",
     prompt:
-      "사용자 프로그램 실행 6초, CPU 스위칭 0.5초, I/O 스위칭 0.5초, CPU 휴식 상태 3초일 때 **유효 CPU 이용률**은? (소수 둘째 자리까지)",
+      "사용자 프로그램 실행 6초, CPU 스위칭 0.5초, I/O 스위칭 0.5초, CPU 휴식 상태 3초일 때 **유효 CPU 이용률(processor utilization)**은? (소수 둘째 자리까지)",
     answer: r2(utilization(6, 0.5 + 0.5 + 3)),
     tolerance: 0.005,
     steps: ["유효 CPU 이용률 = 유효 프로그램 실행시간 / 총 경과시간", `= 6 / (6 + 0.5 + 0.5 + 3) = ${r2(utilization(6, 4))}`],

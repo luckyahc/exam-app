@@ -1,7 +1,8 @@
 import type { SubjectId } from "@/data/subjects/registry";
 
-/** ⭐ 근거: handwritten = 교수님 필기(OS), printed-emphasis = 슬라이드에 인쇄된 강조(데이터 통신). */
-export type ExamBasis = "handwritten" | "printed-emphasis";
+/** ⭐ 근거: handwritten = 교수님 필기(OS), printed-emphasis = 슬라이드에 인쇄된 강조(데이터 통신),
+ *  exam-hint = 교수님 공식 시험 힌트의 범위(OS, docs/os-exam-hint.md). 필기 근거가 있는 문항은 handwritten을 유지하고 hintIds만 붙는다. */
+export type ExamBasis = "handwritten" | "printed-emphasis" | "exam-hint";
 
 /** 생성기 기반 문제: 같은 name·params·seed면 같은 문제가 다시 만들어진다. */
 export interface GeneratorRef {
@@ -41,6 +42,8 @@ export interface BaseQ<T extends string = string> {
   explanation: string;
   /** 핵심 개념 한 줄 요약 */
   summary?: string;
+  /** 시험 힌트 세부 항목(예: ["3-4"], data/subjects/os/hints.ts). 있으면 exam: true */
+  hintIds?: string[];
   /** 지문 아래에 보여 줄 코드(여러 줄·들여쓰기 그대로). 데이터과학 "실행 결과 고르기" 등 — Sprint 12 */
   code?: QuestionCode;
   generator?: GeneratorRef;
@@ -125,6 +128,8 @@ export function validateBase(q: BaseQ): string[] {
   }
   if (q.exam && !q.examBasis) errors.push("exam이 true면 examBasis 필수");
   if (!q.exam && q.examBasis) errors.push("exam이 false인데 examBasis가 있음");
+  if (q.hintIds && (!q.hintIds.length || !q.exam)) errors.push("hintIds가 있으면 비어 있지 않고 exam: true여야 함");
+  if (q.examBasis === "exam-hint" && !q.hintIds?.length) errors.push("examBasis exam-hint는 hintIds 필수");
   if (![1, 2, 3].includes(q.difficulty)) errors.push("difficulty는 1|2|3");
   for (const key of ["topic", "slideRef", "prompt", "explanation"] as const) {
     if (!q[key]?.trim()) errors.push(`${key}가 비어 있음`);

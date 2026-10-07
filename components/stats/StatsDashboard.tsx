@@ -125,7 +125,7 @@ function Summary({ line }: { line: StatLine }) {
     { label: "정답률", value: pct(line.rate), sub: `완전히 맞음 ${line.correct}/${line.attempts}회` },
     // ⭐ 문제가 없는 범위(⭐을 쓰지 않는 과목 등)는 "해당 없음"
     line.star > 0
-      ? { label: "⭐ 달성도", value: pct(ratio(line.starDone, line.star)), sub: `${line.starDone}/${line.star}문제` }
+      ? { label: "⭐ 달성도", value: pct(ratio(line.starDone, line.star)), sub: `${line.starDone}/${line.star}문제${starByText(line)}` }
       : { label: "⭐ 달성도", value: "해당 없음", sub: "⭐ 문제 없음" },
     { label: "남은 오답", value: String(line.openWrong), sub: "아직 못 맞힌 문제" },
   ];
@@ -147,6 +147,12 @@ function Summary({ line }: { line: StatLine }) {
   );
 }
 
+/** ⭐ 근거별 달성(OS: 교수님 필기 / 시험 힌트 — 두 근거가 다 있을 때만). 필기 ⭐에 힌트가 함께 붙은 문항은 양쪽에 든다 */
+function starByText(line: StatLine): string {
+  const b = line.starBy;
+  return b && b.hw > 0 && b.hint > 0 ? ` · 필기 ${b.hwDone}/${b.hw} · 힌트 ${b.hintDone}/${b.hint}` : "";
+}
+
 function LineText({ line }: { line: StatLine }) {
   return (
     <span className="flex flex-wrap gap-x-3 gap-y-0.5 text-sm">
@@ -159,6 +165,7 @@ function LineText({ line }: { line: StatLine }) {
       {line.star > 0 && (
         <span>
           ⭐ <b>{line.starDone}/{line.star}</b>
+          {starByText(line) && <span className="text-muted">{starByText(line)}</span>}
         </span>
       )}
     </span>

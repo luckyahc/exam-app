@@ -19,9 +19,16 @@ export interface StatLine {
   star: number;
   starDone: number;
   openWrong: number;
+  /** ⭐ 근거별(OS: 교수님 필기 / 시험 힌트) — 근거 목록을 넘긴 경우만 */
+  starBy?: { hw: number; hwDone: number; hint: number; hintDone: number };
 }
 
-export function statLine(rec: SubjectRecords | undefined, ids: readonly string[], starIds: readonly string[]): StatLine {
+export function statLine(
+  rec: SubjectRecords | undefined,
+  ids: readonly string[],
+  starIds: readonly string[],
+  by?: { hw: readonly string[]; hint: readonly string[] },
+): StatLine {
   const r = rec ?? { progress: {}, wrong: {}, bookmarks: [] };
   const s = summarize(r, ids);
   return {
@@ -33,6 +40,16 @@ export function statLine(rec: SubjectRecords | undefined, ids: readonly string[]
     star: starIds.length,
     starDone: starIds.filter((id) => r.progress[id]?.lastScore === 1).length,
     openWrong: s.openWrong,
+    ...(by
+      ? {
+          starBy: {
+            hw: by.hw.length,
+            hwDone: by.hw.filter((id) => r.progress[id]?.lastScore === 1).length,
+            hint: by.hint.length,
+            hintDone: by.hint.filter((id) => r.progress[id]?.lastScore === 1).length,
+          },
+        }
+      : {}),
   };
 }
 
@@ -45,13 +62,16 @@ export function chapterStats(rec: SubjectRecords | undefined, meta: ChapterMeta)
     byTopic.set(row.topic, t);
   });
   return {
-    line: statLine(rec, meta.ids, meta.starIds),
+    line: statLine(rec, meta.ids, meta.starIds, { hw: meta.starHwIds, hint: meta.starHintIds }),
     topics: meta.topics.map((t) => ({ topic: t.topic, ...statLine(rec, byTopic.get(t.topic)!.ids, byTopic.get(t.topic)!.star) })),
   };
 }
 
 export function subjectStats(rec: SubjectRecords | undefined, chapters: readonly ChapterMeta[]): StatLine {
-  return statLine(rec, chapters.flatMap((c) => c.ids), chapters.flatMap((c) => c.starIds));
+  return statLine(rec, chapters.flatMap((c) => c.ids), chapters.flatMap((c) => c.starIds), {
+    hw: chapters.flatMap((c) => c.starHwIds),
+    hint: chapters.flatMap((c) => c.starHintIds),
+  });
 }
 
 /** 여러 줄을 더한다(전체 과목 요약). rate는 합친 횟수로 다시 계산 */
@@ -66,6 +86,12 @@ export function sumLines(lines: readonly StatLine[]): StatLine {
       star: a.star + l.star,
       starDone: a.starDone + l.starDone,
       openWrong: a.openWrong + l.openWrong,
+      starBy: {
+        hw: (a.starBy?.hw ?? 0) + (l.starBy?.hw ?? 0),
+        hwDone: (a.starBy?.hwDone ?? 0) + (l.starBy?.hwDone ?? 0),
+        hint: (a.starBy?.hint ?? 0) + (l.starBy?.hint ?? 0),
+        hintDone: (a.starBy?.hintDone ?? 0) + (l.starBy?.hintDone ?? 0),
+      },
     }),
     { total: 0, solved: 0, attempts: 0, correct: 0, rate: null, star: 0, starDone: 0, openWrong: 0 } as StatLine,
   );

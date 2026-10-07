@@ -3,6 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { ChapterMeta } from "@/lib/chapterMeta";
+import { STAR_LABEL, type StarBasis } from "@/lib/quiz/starBasis";
+import { questionStatus, type QStatus } from "@/lib/quiz/status";
+import { useRecords } from "@/lib/storage/recordsStore";
 
 const COUNTS = [10, 20, 30, 0] as const; // 0 = 전체
 const TIMERS = [0, 10, 20, 30, 60] as const; // 분, 0 = 없음
@@ -52,12 +55,20 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
   const router = useRouter();
   const [types, setTypes] = useState<string[]>([]);
   const [topics, setTopics] = useState<string[]>([]);
-  const [starOnly, setStarOnly] = useState(false);
+  // ⭐ 조건: null = 전체 문제, 그 밖은 근거(lib/quiz/starBasis.ts). 근거가 둘인 챕터(OS)만 필기·힌트를 따로 고른다
+  const [star, setStar] = useState<StarBasis | null>(null);
+  const starChoice = meta.starHwIds.length > 0 && meta.starHintIds.length > 0;
+  const starRow = (r: ChapterMeta["rows"][number]) => !star || (star === "handwritten" ? r.hw : star === "hint" ? r.hint : r.exam);
   const [diffs, setDiffs] = useState<number[]>([]);
   const [count, setCount] = useState<number>(20);
   const [shuffle, setShuffle] = useState(true);
   const [mode, setMode] = useState<"instant" | "exam">("instant");
   const [timer, setTimer] = useState<number>(0);
+  const [status, setStatus] = useState<QStatus | "all">("all");
+  const records = useRecords().subjects[meta.subjectId];
+  // 풀이 상태는 기기에 저장된 기록으로 정한다(lib/quiz/status.ts) — rows와 ids는 같은 순서
+  const statuses = meta.ids.map((id) => questionStatus(records, id));
+  const statusCount = (s: QStatus) => statuses.filter((x) => x === s).length;
 
   // 함수형 갱신: 빠르게 연달아 눌러도 앞의 선택을 잃지 않는다
   const toggle = <T,>(set: React.Dispatch<React.SetStateAction<T[]>>, v: NoInfer<T>) =>
@@ -65,7 +76,7 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
 
   // 조건에 맞는 문제 수(시작 전 미리 보기) — 메타의 토픽·유형 집계로는 교집합을 알 수 없어 서버에서 받은 행으로 센다
   const available = meta.rows.filter(
-    (r) => (!types.length || types.includes(r.type)) && (!starOnly || r.exam) &&
+    (r, i) => (status === "all" || statuses[i] === status) && (!types.length || types.includes(r.type)) && starRow(r) &&
       (!topics.length || topics.includes(r.topic)) &&
       (!diffs.length || diffs.includes(r.difficulty)),
   ).length;
@@ -75,7 +86,8 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
     const p = new URLSearchParams({ subject: meta.subjectId, chapter: meta.chapterId, mode });
     if (types.length) p.set("types", types.join(","));
     if (topics.length) p.set("topics", topics.join("|"));
-    if (starOnly) p.set("star", "1");
+    if (star) p.set("star", star === "all" ? "1" : star);
+    if (status !== "all") p.set("status", status);
     if (diffs.length) p.set("diff", [...diffs].sort().join(","));
     if (count) p.set("count", String(count));
     if (shuffle) p.set("shuffle", "1");
@@ -103,13 +115,43 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
       {meta.starIds.length > 0 && (
         <div className={section}>
           <h2 className={h}>시험 포인트</h2>
-          <div className="flex flex-wrap gap-2">
-            <Chip on={starOnly} onClick={() => setStarOnly(!starOnly)}>
-              <span aria-hidden>⭐</span> 시험 포인트만 ({meta.starIds.length})
-            </Chip>
-          </div>
+          {starChoice ? (
+            <Radio<StarBasis | "none">
+              name="시험 포인트"
+              value={star ?? "none"}
+              onChange={(v) => setStar(v === "none" ? null : v)}
+              options={[
+                { value: "none", label: "전체 문제" },
+                { value: "all", label: `⭐ ${STAR_LABEL.all} ${meta.starIds.length}` },
+                { value: "handwritten", label: `⭐ ${STAR_LABEL.handwritten} ${meta.starHwIds.length}` },
+                { value: "hint", label: `⭐ ${STAR_LABEL.hint} ${meta.starHintIds.length}` },
+              ]}
+            />
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              <Chip on={!!star} onClick={() => setStar(star ? null : "all")}>
+                <span aria-hidden>⭐</span> 시험 포인트만 ({meta.starIds.length})
+              </Chip>
+            </div>
+          )}
+          {starChoice && <p className="text-xs text-muted">교수님 필기 ⭐에 시험 힌트가 함께 붙은 문항은 양쪽 모두에 들어갑니다.</p>}
         </div>
       )}
+
+      <div className={section}>
+        <h2 className={h}>풀이 상태</h2>
+        <Radio<QStatus | "all">
+          name="풀이 상태"
+          value={status}
+          onChange={setStatus}
+          options={[
+            { value: "all", label: "전체" },
+            { value: "unsolved", label: `안 푼 문제만 ${statusCount("unsolved")}` },
+            { value: "wrong", label: `틀린 문제만 ${statusCount("wrong")}` },
+            { value: "correct", label: `맞힌 문제만 ${statusCount("correct")}` },
+          ]}
+        />
+      </div>
 
       <div className={section}>
         <h2 className={h}>난이도 (여러 개 선택, 선택 안 하면 전체)</h2>

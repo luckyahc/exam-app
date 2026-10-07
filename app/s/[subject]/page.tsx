@@ -37,7 +37,38 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
         <Link href={`/review?subject=${subject.id}`} className={link}>
           {subject.name} 오답노트 · 북마크
         </Link>
+        <Link href={`/s/${subject.id}/questions`} className={link}>
+          문제 목록(풀이 상태별)
+        </Link>
+        {subject.loadGlossary && (
+          <Link href={`/s/${subject.id}/glossary`} className={link}>
+            용어 정리
+          </Link>
+        )}
       </div>
+
+      {/* 용어 퀴즈: 용어 단답형(topic "용어")만 모아 풀기 — 용어 사전이 있는 과목만 */}
+      {subject.loadGlossary && allIds.length > 0 && (
+        <section aria-labelledby="term-quiz" className="flex flex-col gap-2">
+          <h2 id="term-quiz" className="text-sm font-semibold">
+            용어 퀴즈 <span className="font-normal text-muted">— 설명을 보고 용어(한국어 또는 영어)를 쓰는 단답형</span>
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            <Link href={`/quiz?subject=${subject.id}&topics=용어&shuffle=1&count=20&mode=instant`} className={link}>
+              전체 챕터
+            </Link>
+            {chapters.map((c) => (
+              <Link
+                key={c.chapterId}
+                href={`/quiz?subject=${subject.id}&chapter=${c.chapterId}&topics=용어&shuffle=1&count=20&mode=instant`}
+                className={link}
+              >
+                {c.chapterId.toUpperCase()} {c.shortTitle}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {chapters.map((c) => {
