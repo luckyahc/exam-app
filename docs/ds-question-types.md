@@ -216,6 +216,8 @@ Pyodide 314.0.7(파이썬 3.14.2, wasm32) 기준. 크기는 npm 패키지와 Pyo
 
 ## 11. 알려진 한계 (2026-10-07)
 
+전 과목 알려진 한계 목록은 [`known-limitations.md`](./known-limitations.md)에 모았다(Sprint 17). 이 절은 SQL 채점 한계의 자세한 예시다.
+
 - **SQL 전체 작성형은 사용자 답을 sql.js(SQLite)로 실행해 채점한다.** 그래서 MySQL에서는 오류가 나는 문법도 결과가 같으면 정답이 될 수 있다. 채점 결과 화면에 "채점은 sql.js(SQLite)로 실행합니다 — MySQL과 문법 차이가 있을 수 있음"을 한 줄 보여 준다(`components/qtypes/CodeWrite.tsx`). 대표 사례:
   - `SELECT * FROM 학생, 수강 ON 학생.학번 = 수강.학번;` — 쉼표 조인 뒤 ON: SQLite는 실행(WHERE와 같은 결과), MySQL은 문법 오류(Sprint 16 Lec5 join-002 검증에서 발견)
   - 길이를 넘는 값 입력(`CHAR(2)`에 'c10'): SQLite는 그대로 저장, MySQL(엄격 모드)은 오류(`ds-source-analysis.md` §5-3)

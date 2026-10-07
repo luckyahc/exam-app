@@ -62,6 +62,33 @@ describe("recordsStore — 내보내기 → 초기화 → 가져오기", () => {
     expect(reloaded.currentStore().subjects).toEqual(before.subjects);
   });
 
+  it("세 과목(데이터과학 포함) 기록: 전체 내보내기 → 데이터과학만 초기화 → 가져오기(합치기)로 원래대로(Sprint 17)", async () => {
+    const data = installWindow();
+    const store = await freshStore();
+    const { SUBJECTS } = await import("@/data/subjects/registry");
+    store.recordResult("os", "os-ch08-tlb-001", { correct: true, score: 1 });
+    store.recordResult("data-comm", "data-comm-ch01-x-001", { correct: false, score: 0 });
+    store.recordResult("data-science", "data-science-lec6-copy-002", { correct: true, score: 1 });
+    store.recordResult("data-science", "data-science-lec5-join-002", { correct: false, score: 0 });
+    store.toggleBookmark("data-science", "data-science-lec6-struct-005");
+    const before = store.currentStore();
+    expect(Object.keys(before.subjects).sort()).toEqual(["data-comm", "data-science", "os"]);
+
+    const { exportBackup, parseBackup, applyBackup } = await import("./backup");
+    const text = JSON.stringify(exportBackup(before, new Date()));
+    expect(JSON.parse(text).subjects["data-science"].wrong["data-science-lec5-join-002"]).toMatchObject({ wrongCount: 1 });
+
+    store.resetData("data-science");
+    expect([...data.keys()].filter((k) => k.startsWith("examapp:data-science:"))).toEqual([]);
+    expect(data.has("examapp:os:progress")).toBe(true);
+
+    const parsed = parseBackup(text, SUBJECTS.map((s) => s.id));
+    if (!parsed.ok) throw new Error(parsed.error);
+    store.writeStore(applyBackup(store.currentStore(), parsed.store, "merge"), Object.keys(parsed.store.subjects));
+    const reloaded = await freshStore();
+    expect(reloaded.currentStore().subjects).toEqual(before.subjects);
+  });
+
   it("과목별 초기화는 그 과목 키만 지운다", async () => {
     const data = installWindow();
     const store = await freshStore();

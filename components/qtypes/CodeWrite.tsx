@@ -164,6 +164,12 @@ function Input({ question: q, answer, onChange, disabled }: InputProps<"code-wri
         <div role="alert" className="flex flex-col gap-2 rounded-lg border border-incorrect p-3 text-sm">
           <p className="font-semibold text-incorrect">채점할 수 없음 — 실행 엔진을 불러오지 못했습니다</p>
           <p className="text-xs text-muted">{st.message} · 이 문제는 기록에 남지 않습니다.</p>
+          {/* 내려받기 실패·느린 네트워크 뒤 다시 불러오기(Sprint 17). 불러오기 시간 초과였다면 Worker를 이미 버렸으므로 새로 띄운다 */}
+          <div>
+            <button type="button" onClick={() => void prepare()} className="rounded-lg border border-primary px-4 py-2 text-sm font-semibold text-primary">
+              다시 시도
+            </button>
+          </div>
           <details>
             <summary className="cursor-pointer text-sm font-medium">모범 답안 보기</summary>
             <CodeBlock code={q.solution} language={q.language} />

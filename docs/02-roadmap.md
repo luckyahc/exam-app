@@ -20,7 +20,7 @@
 | 14 | [작성 시 검증 파이프라인](./sprints/sprint-14-ds-verification.md) | Vitest + Pyodide(Node)·sql.js로 모범 답안·허용 답·대표 오답 실행 검사, 대조 기록 `docs/verification/data-science-lecN.md` | DONE |
 | 15 | [데이터과학 콘텐츠: Lec1~Lec3](./sprints/sprint-15-ds-content-lec1-3.md) | 103문항(최소 20·56·27), 완료 조건: `npm test`와 `npm run verify:ds` 모두 통과 | DONE |
 | 16 | [데이터과학 콘텐츠: Lec4~Lec6](./sprints/sprint-16-ds-content-lec4-6.md) | 176문항(최소 32·66·78), 완료 조건: `npm test`와 `npm run verify:ds` 모두 통과 | DONE |
-| 17 | 데이터과학 QA | 세 과목 접근성·반응형(코드 블록·입력칸), lint/test/build, README | TODO |
+| 17 | [QA · 배포 확인](./sprints/sprint-17-qa-deploy.md) | 실행 엔진 사용성(재사용·로딩·실패 화면), Vercel 배포 점검·deploy-checklist, 세 과목 자동 검사·화면·키보드·기록 왕복, README·알려진 한계 | IN PROGRESS |
 
 ## 의존 관계 요약
 

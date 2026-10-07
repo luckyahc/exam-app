@@ -102,7 +102,10 @@ export class EngineClient {
       for (const p of m.packages) this.loaded.packages.add(p);
       return { ok: true, ms: m.ms };
     }
-    return { ok: false, message: m.kind === "fail" ? m.message : "엔진을 불러오지 못했습니다" };
+    const message = m.kind === "fail" ? m.message : "엔진을 불러오지 못했습니다";
+    // 불러오다 실패한 Worker는 버린다 — Pyodide가 반쯤 불러온 상태로 남을 수 있어 "다시 시도"는 새 Worker로 처음부터(Sprint 17)
+    this.reset(message);
+    return { ok: false, message };
   }
 
   async runPython(req: Omit<PythonRunReq, "kind">, timeoutMs = DEFAULT_TIMEOUT_MS): Promise<RunOutcome<PythonRunResult>> {
@@ -113,7 +116,9 @@ export class EngineClient {
       return { status: "done", result: m.result as PythonRunResult, ms: m.ms };
     }
     if (m.kind === "timeout") return { status: "timeout", limitMs: timeoutMs };
-    return { status: "unavailable", message: m.kind === "fail" ? m.message : "엔진을 불러오지 못했습니다" };
+    const message = m.kind === "fail" ? m.message : "엔진을 불러오지 못했습니다";
+    this.reset(message); // 실행 전 불러오기에서 실패 — 다음 실행은 새 Worker로
+    return { status: "unavailable", message };
   }
 
   async runSql(req: Omit<SqlRunReq, "kind">, timeoutMs = DEFAULT_TIMEOUT_MS): Promise<RunOutcome<SqlRunResult>> {
