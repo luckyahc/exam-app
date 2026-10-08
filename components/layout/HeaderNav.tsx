@@ -19,7 +19,7 @@ export function HeaderNav({ trailing }: { trailing?: ReactNode }) {
       <ol className="flex min-w-0 flex-wrap items-center gap-x-1.5 text-sm">
         <li>
           <Link href="/" className="text-base font-bold sm:text-lg">
-            시험 대비
+            시험
           </Link>
         </li>
         {subject && (

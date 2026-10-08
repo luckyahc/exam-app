@@ -4,8 +4,8 @@ import { ICON_BG } from "@/lib/appIcon";
 // 홈 화면 설치(PWA) 정보. 아이콘 이미지는 app/icon.tsx가 만든다.
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "시험 대비",
-    short_name: "시험 대비",
+    name: "시험",
+    short_name: "시험",
     description: "운영체제·데이터 통신·데이터과학 시험 대비 문제 풀이 웹앱",
     start_url: "/",
     display: "standalone",
