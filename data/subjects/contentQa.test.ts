@@ -40,6 +40,8 @@ function shownTexts(q: Question): [string, string][] {
  */
 export function slideRefOk(subject: string, ref: string): boolean {
   if (subject === "data-science") return /^Lec[1-6] (s|p)\.\d+([-,·~]\s?((s|p)\.)?\d+)*$/.test(ref);
+  // 알고리즘(Sprint 21): 강의 자료 번호와 PDF 쪽 'Lec2 p.6', 'Lec5 p.133-138'
+  if (subject === "algorithm") return /^Lec[1-5] p\.\d+([-,·~]\s?(p\.)?\d+)*$/.test(ref);
   return /^Ch0\d (p|s)\.\d+([-,·]\s?(p\.)?\d+)*$/.test(ref);
 }
 

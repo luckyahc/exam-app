@@ -43,7 +43,8 @@ export const multiCore: QTypeCore<MultiQ, MultiA, null> = {
     if (q.choices.some((c) => !c.trim())) e.push("빈 보기가 있음");
     if (duplicates(q.choices).length) e.push(`중복 보기: ${duplicates(q.choices).join(", ")}`);
     // 복수 선택은 정답 2개 이상(2026-10-06 결정 — 전 과목). 정답이 하나면 mcq로 낸다
-    if (q.answerIndexes.length < 2) e.push("정답이 2개 이상 필요(정답이 하나면 mcq)");
+    // 족보 문항은 원문이 "모두 선택"이면 정답이 하나여도 복수 선택으로 낸다(원문 그대로 — docs/jokbo-plan.md §4)
+    if (q.answerIndexes.length < (q.origin === "jokbo" ? 1 : 2)) e.push("정답이 2개 이상 필요(정답이 하나면 mcq)");
     if (new Set(q.answerIndexes).size !== q.answerIndexes.length) e.push("answerIndexes 중복");
     if (q.answerIndexes.some((i) => !Number.isInteger(i) || i < 0 || i >= q.choices.length)) {
       e.push("answerIndexes가 보기 범위 밖");

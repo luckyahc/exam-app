@@ -1,6 +1,201 @@
 import type { Question } from "@/types/question";
+import { block, jokboOf } from "./jokboSource";
 
-// 족보 문항만 넣는다(id `algorithm-{챕터}-jokbo-NNN`) — Sprint 21, 목록: docs/jokbo/algorithm/inventory.md
-const questions: Question[] = [];
+// 정렬 · 힙 · 선형 시간 정렬 — 족보 문항만(원문 그대로). 대조: docs/verification/algorithm-sorting.md
+const base = { subject: "algorithm", chapter: "sorting", shuffle: false } as const;
+
+const counting = (intro: string, a: string, b: string) =>
+  `${intro} A[]의 배열을 통해 C1[]을 계산하고, C1[]을 통해, C2[]를 계산하고, C2[]의 결과를 이용하여, 최종적으로 B[]의 결과를 도출한다. 이 때, C2[]에 들어갈 숫자들은 어떤 것인가?\n${block(
+    `A[]  = ${a}`,
+    "C1[] = [ ,  ,  ,  ]   (인덱스 1 2 3 4)",
+    "C2[] = [ ,  ,  ,  ]   (인덱스 1 2 3 4)",
+    `B[]  = ${b}   (인덱스 1 … 10)`,
+  )}`;
+const PARTITION = "원소들이 다음 순서로 배열에 저장되어 있다. 퀵정렬을 수행하기 위해, 우리 교재의 partition(A, 1, 8)을 수행한 뒤, 리턴되는 피봇의 위치는? (이 배열의 인덱스는 1부터 시작한다.)";
+const HEAP_ARRAYS = ["[12, 20, 25, 40, 55, 30, 70, 50]", "[12, 25, 30, 20, 55, 70, 40, 50]", "[12, 20, 25, 70, 55, 30, 40, 50]", "[12, 70, 30, 20, 55, 25, 40, 50]", "[12, 20, 25, 50, 55, 30, 40, 70]"];
+
+const questions: Question[] = [
+  {
+    ...base,
+    ...jokboOf(["M23-21", "M21-3", "M22-9"], "jokbo", "counting-c2"),
+    id: "algorithm-sorting-jokbo-001",
+    topic: "계수 정렬",
+    type: "mcq",
+    difficulty: 1,
+    slideRef: "Lec3 p.73-74",
+    prompt: counting("우리 수업에서 배웠던 계수 정렬을 수행하려 한다. A[]는 계수 정렬의 입력 배열이며, B[]는 정렬된 결과이다.", "[3, 2, 3, 1, 1, 4, 2, 3, 1, 2]", "[1, 1, 1, 2, 2, 2, 3, 3, 3, 4]"),
+    choices: ["4, 6, 9, 10", "3, 6, 8, 10", "3, 6, 9, 10", "4, 7, 9, 10"],
+    answerIndex: 2,
+    explanation: "교수 해설(2022 중간): C[] = 3 3 3 1(값 1~4의 빈도) → 누적 C[] = 3 6 9 10. C2[v]는 v 이하인 원소의 개수이자 B에서 v가 들어갈 마지막 위치다(Lec3 p.73-74, lib/sim/algorithm/sorting.ts).",
+  },
+  {
+    ...base,
+    ...jokboOf(["T23-3", "T22-3", "S22-3"], "jokbo", "counting-c2"),
+    id: "algorithm-sorting-jokbo-002",
+    topic: "계수 정렬",
+    type: "mcq",
+    difficulty: 1,
+    slideRef: "Lec3 p.73-74",
+    prompt: counting("우리 교재의 계수 정렬을 수행하려 한다. A[]는 계수 정렬의 입력 배열이며, B[]는 정렬된 결과이다.", "[3, 4, 2, 1, 1, 4, 2, 3, 1, 2]", "[1, 1, 1, 2, 2, 2, 3, 3, 4, 4]"),
+    choices: ["3, 6, 8, 10", "4, 5, 7, 10", "3, 5, 8, 10", "3, 6, 9, 10"],
+    answerIndex: 0,
+    explanation: "LMS 해설(2022 중간 대비 테스트): C1[] = 3 3 2 2 → C2[] = 3 6 8 10. 앞 문항과 배열이 한 칸(4가 하나 더) 달라 C2의 세 번째 값이 9가 아니라 8이다.",
+  },
+  {
+    ...base,
+    ...jokboOf(["M23-1", "M21-5", "T22-6", "T23-9"], "jokbo"),
+    id: "algorithm-sorting-jokbo-003",
+    topic: "선형 시간 정렬",
+    type: "multi",
+    difficulty: 2,
+    slideRef: "Lec3 p.69-75",
+    prompt: "x부터 y까지의 서로 다른 (y-x+1)개의 자연수 임의 배열이 입력으로 주어진다. 정렬을 이용하여, i번째 수를 찾는다고 가정할 때, 다음 중 어떤 정렬 방법을 사용할 것인가?",
+    choices: ["병합정렬", "기수정렬", "힙정렬", "퀵정렬", "계수정렬"],
+    answerIndexes: [1, 4],
+    explanation:
+      "LMS 해설(2021 중간·2022 대비 테스트, 정답 4·5 — 1개 이상 맞출 경우 정답 인정): 문제의 조건 \"x부터 y까지의 서로 다른 (y−x+1)개의 자연수 임의 배열\"이 기수 정렬 사용에 적합. 기수 정렬을 변형하여 Θ(n)으로 i번째 수를 찾을 수 있음(C[A[k] − x + 1] = A[k]로 바로 배치). 계수 정렬을 사용하면 기수 정렬보다는 느리지만 Θ(n)의 수행 시간, 둘 다 정답으로 인정. 병합·힙·퀵 정렬은 비교 정렬이라 n log n이 든다.",
+  },
+  {
+    ...base,
+    ...jokboOf(["T22-16", "M21-9"], "jokbo"),
+    id: "algorithm-sorting-jokbo-004",
+    topic: "힙 구성",
+    type: "mcq",
+    difficulty: 2,
+    slideRef: "Lec3 p.63-68",
+    prompt: "배열이 이미 정렬이 되어 있을 때(오름차순), 우리 교재의 buildHeap(A, n)의 수행 시간은 무엇에 비례하는가?",
+    choices: ["Θ(√n)", "Θ(√n logn)", "Θ(n)", "Θ(nlogn)", "Θ(n²)"],
+    answerIndex: 2,
+    explanation:
+      "LMS 해설: 이미 정렬이 되어 있으므로, heapify()를 호출하지 않음. 그러므로, Θ(n). 정확히는 buildHeap이 n/2번 heapify를 호출하지만, 오름차순 배열은 이미 최소 힙이라 각 heapify가 자식과 한 번 비교하고 바로 끝난다(원소 교환 0회 — lib/sim/algorithm/sorting.ts).",
+  },
+  {
+    ...base,
+    ...jokboOf(["M23-2", "M21-14", "T22-18", "T23-11"], "jokbo"),
+    id: "algorithm-sorting-jokbo-005",
+    topic: "힙 성질",
+    type: "multi",
+    difficulty: 2,
+    slideRef: "Lec3 p.60-62",
+    prompt: "다음의 배열 중 힙으로 구성된 배열을 모두 선택하시오. (이 배열의 인덱스는 1부터 시작한다.)",
+    choices: HEAP_ARRAYS,
+    answerIndexes: [0, 4],
+    explanation:
+      "LMS 해설(2021 중간·2022 대비 테스트): 각 노드의 값이 자신의 자식보다 크지 않은 배열은 [12, 20, 25, 40, 55, 30, 70, 50], [12, 20, 25, 50, 55, 30, 40, 70] 이다. 부모 i의 자식은 2i·2i+1 — [12, 25, 30, 20, …]은 25 > 20, [12, 20, 25, 70, …]은 20 < 70이지만 70 > 50(4번의 자식 8번), [12, 70, 30, …]은 70 > 20이라 힙이 아니다.",
+  },
+  {
+    ...base,
+    ...jokboOf(["M21-20"], "jokbo", "partition"),
+    id: "algorithm-sorting-jokbo-006",
+    topic: "partition",
+    type: "mcq",
+    difficulty: 1,
+    slideRef: "Lec3 p.36-39",
+    prompt: `${PARTITION}\n- [12, 70, 50, 20, 30, 25, 40, 55]`,
+    choices: ["4", "5", "6", "7", "8"],
+    answerIndex: 3,
+    explanation: "LMS 해설: 55는 7번째로 큰 수이다(작은 쪽부터 7번째). 교재 partition은 마지막 원소 55를 피벗으로, 55 이하인 12·50·20·30·25·40 여섯 개를 앞으로 모은 뒤 피벗을 7번째 자리에 둔다(Lec3 p.36-39).",
+  },
+  {
+    ...base,
+    ...jokboOf(["M22-10"], "jokbo", "partition"),
+    id: "algorithm-sorting-jokbo-007",
+    topic: "partition",
+    type: "mcq",
+    difficulty: 1,
+    slideRef: "Lec3 p.36-39",
+    prompt: `${PARTITION}\n- [50, 70, 30, 20, 55, 25, 40, 12]`,
+    choices: ["1", "2", "3", "4", "5"],
+    answerIndex: 0,
+    explanation: "교수 해설(2022 중간): 피봇은 12이며, 첫번째 수이다. 마지막 원소 12보다 작거나 같은 원소가 없으므로 피벗은 1번 자리로 간다.",
+  },
+  {
+    ...base,
+    ...jokboOf(["T23-6", "T22-11"], "jokbo", "partition"),
+    id: "algorithm-sorting-jokbo-008",
+    topic: "partition",
+    type: "mcq",
+    difficulty: 1,
+    slideRef: "Lec3 p.36-39",
+    prompt: `${PARTITION}\n- [12, 70, 50, 20, 55, 25, 40, 30]`,
+    choices: ["2", "3", "4", "5", "6"],
+    answerIndex: 2,
+    explanation: "LMS 해설(2022 중간 대비 테스트): 배열의 마지막 원소인 30이 피봇으로 선택되고, 30은 4번째 큰 수 이다(작은 쪽부터 4번째 — 30 이하는 12·20·25).",
+  },
+  {
+    ...base,
+    ...jokboOf(["M23-22", "M22-11"], "jokbo"),
+    id: "algorithm-sorting-jokbo-009",
+    topic: "기수 정렬",
+    type: "blank",
+    difficulty: 2,
+    slideRef: "Lec3 p.70-72",
+    prompt: `아래의 그림은 기수 정렬의 단계를 표현한 그림이다. 기수 정렬을 수행할 때, 각 단계에서 숫자 0283의 위치를 순서대로 바르게 기술하라. (각 단계의 위치를 나타내는 숫자만 입력하고 숫자와 숫자 사이에는 공백을 입력하지 않음)\n${block(
+      "입력    →  1단계  →  2단계  →  3단계  →  4단계",
+      "0123        (1)       (1)       (1)       (1)",
+      "2154        (2)       (2)       (2)       (2)",
+      "0222        (3)       (3)       (3)       (3)",
+      "0004        (4)       (4)       (4)       (4)",
+      "0283        (5)       (5)       (5)       (5)",
+      "1560        (6)       (6)       (6)       (6)",
+      "1061        (7)       (7)       (7)       (7)",
+      "2150        (8)       (8)       (8)       (8)",
+    )}`,
+    text: "답: {{0}}",
+    blanks: [{ accept: ["6874"] }],
+    explanation:
+      "교수 해설(2022 중간, 정답 6874): 4장 수업자료 기수정렬의 예 참조(Lec3 p.71) — 일의 자리부터 안정 정렬: 1단계(일의 자리) 1560 2150 1061 0222 0123 0283 2154 0004 → 6번째, 2단계(십의 자리) 0004 0222 0123 2150 2154 1560 1061 0283 → 8번째, 3단계(백의 자리) 0004 1061 0123 2150 2154 0222 0283 1560 → 7번째, 4단계(천의 자리) 0004 0123 0222 0283 … → 4번째.",
+  },
+  {
+    ...base,
+    ...jokboOf(["M23-6", "M22-번호 미표기"], "jokbo"),
+    id: "algorithm-sorting-jokbo-010",
+    topic: "힙 구성",
+    type: "blank",
+    difficulty: 3,
+    slideRef: "Lec3 p.63-66",
+    prompt: `다음의 배열을 힙으로 구성하려고 한다. [50, 70, 30, 20, 55, 25, 40, 12] 이 배열을 힙으로 구성되는 과정(단계)을 아래의 그림을 참조하여 순서대로 나열하라. (알파벳 문자만 입력하고 공백은 입력하지 않음)\n${block(
+      "(B) → [50, 12, 25, 70, 55, 30, 40, 20]",
+      "(C) → [12, 20, 25, 50, 55, 30, 40, 70]",
+      "(D) → [50, 70, 25, 12, 55, 30, 40, 20]",
+      "(E) → [50, 12, 25, 20, 55, 30, 40, 70]",
+      "(F) → [50, 70, 30, 12, 55, 25, 40, 20]",
+      "(G) → [50, 12, 25, 20, 55, 30, 40, 70]",
+      "(H) → [12, 50, 25, 20, 55, 30, 40, 70]",
+    )}`,
+    text: "답: {{0}}",
+    blanks: [{ accept: ["FDBGEHC", "FDBEGHC"] }],
+    explanation:
+      "교수 해설(2022 중간, 정답 FDBGEHC): 교재 buildHeap은 i = ⌊n/2⌋부터 1까지 heapify(최소 힙)를 부른다 — i=4: 20↔12 (F) → i=3: 30↔25 (D) → i=2: 70↔12 (B), 이어서 70↔20 (G) → i=1: 50↔12 (H), 이어서 50↔20 (C). 원문의 (E)와 (G)는 같은 배열이라 정답 FDBGEHC에 둘 다 들어 있다 — FDBEGHC도 같은 과정이라 정답으로 인정한다(lib/sim/algorithm/sorting.ts buildHeapSteps).",
+  },
+  {
+    ...base,
+    ...jokboOf(["M23-11", "M22-12"], "jokbo"),
+    id: "algorithm-sorting-jokbo-011",
+    topic: "입력 특성과 정렬",
+    type: "multi",
+    difficulty: 3,
+    slideRef: "Lec3 p.22-26·p.63-68·p.73-75",
+    prompt: "1부터 10억까지의 자연수 원소(같은 값이 존재)를 정렬하려 하는데, 그 중 10개 정도만 제외하면 정렬된 상태이다. 이 사실을 안다면, 다음의 정렬 알고리즘 중 더 나은 알고리즘을 모두 선택하라.",
+    choices: ["선택 정렬", "병합 정렬", "힙 정렬", "삽입 정렬", "계수 정렬"],
+    answerIndexes: [3, 4],
+    explanation:
+      "족보 답(삽입·힙·계수 정렬)과 다름: 힙 정렬은 입력이 정렬되어 있어도 원소를 하나씩 꺼낼 때마다 heapify가 O(log n)이 들어 Θ(n log n)이다(Lec3 p.63 \"최악의 경우에도 O(n log n)\", 정렬된 입력에서 비교 횟수를 세어 확인 — lib/sim/algorithm/sorting.ts). 교수 해설(2022 중간)은 \"삽입 정렬은 입력 배열이 정렬되어 있을 경우 O(n), 힙 정렬은 입력 배열이 정렬되어 있을 경우 O(n), 계수 정렬은 1에서 10억까지 자연수라는 조건이 주어지면 O(n)\"으로 1·4·5번을 정답으로 채점했다 — 실제 시험에서는 교수님 기준(힙 정렬 포함)으로 채점될 수 있다. 삽입 정렬은 거의 정렬된 입력에서 n에 가까운 시간이 든다.",
+  },
+  {
+    ...base,
+    ...jokboOf(["M23-20"], "generated"),
+    id: "algorithm-sorting-jokbo-012",
+    topic: "퀵 정렬",
+    type: "mcq",
+    difficulty: 1,
+    slideRef: "Lec3 p.40-42",
+    prompt: "우리 수업에서 소개된 quick-sort 알고리즘은 평균 n log n의 수행 속도로 원소들을 정렬할 수 있다. 만약, 이 알고리즘의 입력으로 정렬이 되어 있는 배열이 주어지고 원소를 정렬할 경우, 수행 속도는 어떻게 되는가?",
+    choices: ["Θ(n²)", "Θ(n)", "Θ(√n logn)", "Θ(√n)", "Θ(nlogn)"],
+    answerIndex: 0,
+    explanation:
+      "Lec3 p.40-42: 퀵 정렬의 평균은 Θ(n log n), 최악의 경우는 Θ(n²) — 한쪽으로 몰리는 최악의 경우(왼쪽 n−1개, 오른쪽 0개). 이미 정렬된 배열에서 마지막 원소를 피벗으로 쓰면 매번 이렇게 나뉘어 비교가 n(n−1)/2번 든다(lib/sim/algorithm/sorting.ts).",
+  },
+];
 
 export default questions;

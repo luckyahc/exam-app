@@ -43,9 +43,14 @@ function shownOrder(text: string, q: McqQ | MultiQ, only?: number[]) {
   // 지문 안 원문 블록(```text — 족보의 메모리 상태 그림·표, Sprint 20)에 보기와 같은 글자("[0]" 등)가 있으면 마지막 블록 뒤부터 찾는다
   const fences = [...q.prompt.matchAll(/```\w+\n([\s\S]*?)\n```/g)];
   if (fences.length) {
-    const joined = fences[fences.length - 1][1].split("\n").join("");
+    const last = fences[fences.length - 1];
+    const joined = last[1].split("\n").join("");
     const c = text.indexOf(joined, from);
     if (c >= 0) from = c + joined.length;
+    // 블록 뒤에 이어지는 지문(예: "… 예(1) 또는 아니오(2)로 답하라")도 건너뛴다
+    const tail = md(q.prompt.slice(last.index + last[0].length)).replace(/^\n/, "");
+    const t = tail ? text.indexOf(tail, from) : -1;
+    if (t >= 0) from = t + tail.length;
   }
   return (only ?? q.choices.map((_, i) => i))
     .map((i) => [i, text.indexOf(md(q.choices[i]), from)] as const)
@@ -56,7 +61,9 @@ function shownOrder(text: string, q: McqQ | MultiQ, only?: number[]) {
 const distinct = (q: McqQ | MultiQ) =>
   q.choices.every((c, i) => q.choices.every((d, j) => i === j || !md(d).includes(md(c)))) &&
   // 보기 앞의 단축키 번호(1~5)와 같은 한 글자 보기(예: 출력 "3")는 위치로 구분할 수 없다
-  !q.choices.some((c) => /^[1-5]$/.test(md(c)));
+  !q.choices.some((c) => /^[1-5]$/.test(md(c))) &&
+  // 숫자만인 보기(예: 56·58·…·62)는 앞 보기·단축키 번호와 붙으면("56" + "2" → "…62") 위치로 구분할 수 없다
+  !(q.origin === "jokbo" && q.choices.every((c) => /^-?\d+$/.test(md(c))));
 
 describe("choiceOrder", () => {
   it(`전 과목 mcq·multi ${choiceQs.length}문항: 원래 보기 번호의 순열이고, 같은 문제(JSON 저장 후 복원 포함)는 항상 같은 순서`, () => {

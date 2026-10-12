@@ -53,7 +53,8 @@
 - 로직: `lib/quiz/jokbo.ts`(분류 필터·뱃지·해설 출처), `QuizFilter.source`, `ListFilter.source`, `ChapterMeta.jokboIds`·`rows[].jokbo`.
 - 화면: 과목 홈 "족보만 풀기 (N)"(`/quiz?subject=…&source=jokbo`), 챕터 시작·문제 목록 "분류: 전체 / 족보 / 일반", 문항 뱃지 "족보"/"족보 N회"(툴팁에 출현 목록), 해설 머리 "족보 해설"/"생성 해설". 족보 문항이 0개인 과목·챕터에서는 버튼·필터를 숨긴다(⭐와 같은 규칙 — 빈 퀴즈 방지).
 - 원문 블록(Sprint 20): 지문·보기의 ```text 펜스 → 고정폭 CodeBlock("원문") — 메모리 상태 그림·표·순서 항목을 원문 줄 그대로 보인다.
-- 그림 이미지(Sprint 21에서 처음 필요 — F22 그래프 등): `public/jokbo/<과목>/<문항id>.png` 규칙(§4)에 맞춰 문항에 이미지 필드를 더한다.
+- 그림(Sprint 21): 문항 `figure { src, alt, width, height }` — `src = /jokbo/<과목>/<문항id>.png`(validateBase), 크기·용량은 과목 족보 테스트가 검사, 화면은 지문 아래 흰 카드(QuestionFigureView).
+- 족보 예외(Sprint 21): mcq 보기 수(2개 이상만), multi 정답 수(1개 이상) — `origin: "jokbo"`일 때만.
 - 과목: `algorithm`(준비 중, 챕터 5개 0문항), OS `ch09`(챕터 단위 `status: "preparing"`, 0문항, minQuestions 자리값 1).
 
 ## 6. 문항 수 목표

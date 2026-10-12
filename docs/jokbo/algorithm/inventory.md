@@ -12,13 +12,13 @@
 | ├ `MD/시험범위_1~5_원본대조표.md` | md | — | 대응표·제외 목록 | — | — | `extracted/zip-MD-원본대조표.md` |
 | ├ `PDF/*.pdf` 3개 | pdf | — | 위 md와 같은 내용 | — | — | 읽지 않음(md와 중복) |
 | ├ `원본참조/E19/알고리즘 예상문제(2019).docx` | docx | — | 5 | [답] 있음(4번 빈칸) | 2019-10-24 중간(02분반) | **제외(옛 서술형 파일, 사용자 결정 2026-10-12)** — 판독 텍스트 삭제, 문항 수에 넣지 않음 |
-| ├ `원본참조/M21/*.jpg` 9장 | 이미지 | — | 18(파일명 기준 1~10, 12~17, 19, 20) | 첨부 채점 답 일부(16) | 2021 중간 | 전사본 md로 갈음 |
+| ├ `원본참조/M21/*.jpg` 9장 | 이미지 | — | 18(파일명 기준 1~10, 12~17, 19, 20) | LMS 정답·해설(13번은 캡처 잘림) | 2021 중간 | 전사본 md로 갈음, Sprint 21에 원본 대조 |
 | ├ `원본참조/M22/…해설(교수 직접) 1.pdf` | pdf(스캔) | 37 | 20(1~15, 번호 미표기 1, 16~19) | 교수 해설 있음 | 2022 중간 | 전사본 md로 갈음 |
 | ├ `원본참조/M23/*` 25장 | 이미지 | — | 25 | 없음 | 2023 중간 | 전사본 md로 갈음 |
-| ├ `원본참조/T22/*.png` 10장 | 이미지 | — | 16(1~6, 8, 11~18, 20) | 첨부 채점 기준(6) | 2022 중간 대비 테스트 | 전사본 md로 갈음 |
-| ├ `원본참조/S22/*.png` 6장 | 이미지 | — | 6(3, 7, 9, 10, 13, 14) | 없음 | 2022 중간 대비 특별 시험 | 전사본 md로 갈음 |
+| ├ `원본참조/T22/*.png` 10장 | 이미지 | — | 16(1~6, 8, 11~18, 20) | LMS 정답·해설 | 2022 중간 대비 테스트 | 전사본 md로 갈음, Sprint 21에 원본 대조 |
+| ├ `원본참조/S22/*.png` 6장 | 이미지 | — | 6(3, 7, 9, 10, 13, 14) | LMS 정답·해설(3·13번만) | 2022 중간 대비 특별 시험 | 전사본 md로 갈음, Sprint 21에 원본 대조 |
 | ├ `원본참조/T23/*.jpg` 14장 | 이미지 | — | 14 | 채점 기준(9) | 2023 중간 대비 테스트 | 전사본 md로 갈음 |
-| ├ `원본참조/F22/*.png` 8장 | 이미지 | — | 12(2~7, 10~15) | 없음 | 2022 기말 대비 테스트 | 전사본 md로 갈음 |
+| ├ `원본참조/F22/*.png` 8장 | 이미지 | — | 12(2~7, 10~15) | LMS 정답·해설 | 2022 기말 대비 테스트 | 전사본 md로 갈음, Sprint 21에 원본 대조 |
 | ├ `원본참조/2023 알고리즘 기말기출.pdf` | pdf(스캔) | 31 | 20 | 없음 | 2023 기말 | 전사본 md로 갈음(범위 안 5문항만 전사) |
 | └ `원본그림/*.png` 2장 | 이미지 | — | (F22 2~5·7번 그래프) | — | — | 간선 목록이 전사본에 있음 |
 | `source/algorithm/jokbo/2022 알고리즘 중간고사 해설(교수 직접) 1 1.pdf` | pdf(스캔) | 37 | 20 | 교수 해설 | 2022 중간 | zip의 M22와 같은 시험(쪽 수·크기 같음, 해시만 다름) → 중복 파일 |
@@ -42,7 +42,7 @@
 | 같은 문제로 합친 원문 | 54 |
 | variantGroup | 13 |
 | 애매 | 0 |
-| 원본 해설 있는 원문(범위 안) | 16 (M22 교수 해설) — 채점 기준만 3(M21 5·T22 6·T23 9) |
+| 원본 해설 있는 원문(범위 안) | 58 (Sprint 21 원본 대조로 정정 — M21·T22·F22 캡처에 LMS 정답·해설이 있음, M22 교수 해설, S22 3·13) |
 
 **E19 제외 — 옛 서술형 파일(사용자 결정 2026-10-12)**: 2019 예상문제(docx) 5문항은 모두 서술형이라 파일째 제외했다. E19 문항은 모두 대표였고 다른 시험과 같은 문제가 없어(같은 문제로 합친 원문 0) 남은 대표의 occurrences·출현 횟수·variantGroup은 바뀌지 않는다 — 범위 안 4문항(§4 #1~4)과 범위 밖 1문항(E19-2). 대표 번호는 빈 번호 없이 앞으로 당겼다(analysis·dc는 1, dp는 2씩).
 
@@ -69,22 +69,22 @@
 | 2 | E19-3 | 배낭 표 K[3,10]=70 이유(서술) | **제외(옛 서술형 파일)** | — | — | — |
 | 3 | E19-4 | n비트 정수 분할 정복 곱셈 O(n²) 증명(서술) | **제외(옛 서술형 파일)** | — | — | — |
 | 4 | E19-5 | 1로 만들기 최소 연산(설계) | **제외(옛 서술형 파일)** | — | — | — |
-| 5 | M21-1 | n! 입력(n log n·log n·n) — Ω(log n)? | 대표 `algorithm-analysis-jokbo-001`, vg `nfact-bounds` | 없음 | ox | analysis · 상한·하한 |
-| 6 | M21-2 | 10개 입력 n, 나머지 n log n — Θ(n log n)? | 대표 `algorithm-analysis-jokbo-004`, vg `ten-inputs` | 없음 | ox | analysis · 상한·하한 |
-| 7 | M21-3 | 계수 정렬 C2, A=[3,2,3,1,1,4,2,3,1,2] | 대표 `algorithm-sorting-jokbo-001`, vg `counting-c2` | 없음 | mcq | sorting · 계수 정렬 |
-| 8 | M21-4 | 정렬된 입력의 select 수행 시간 | 대표 `algorithm-dc-jokbo-001` | 없음 | mcq | dc · 평균 선형 선택 |
-| 9 | M21-5 | 연속 자연수 i번째 — 어떤 정렬 | 대표 `algorithm-sorting-jokbo-003` | 채점 기준(④·⑤ 중 하나 이상) | multi | sorting · 선형 시간 정렬 |
-| 10 | M21-7 | 마스터 정리 쓸 수 없는 점화식 모두 | 대표 `algorithm-recurrence-jokbo-001` | 없음 | multi | recurrence · 마스터 정리 적용 범위 |
-| 11 | M21-8 | sample: 반복문 + 재귀 2회(n/2) | 대표 `algorithm-recurrence-jokbo-002` | 없음 | mcq | recurrence · 코드 수행 시간 |
-| 12 | M21-9 | 정렬된 배열 buildHeap 시간 | 대표 `algorithm-sorting-jokbo-004` | 없음 | mcq | sorting · 힙 구성 |
-| 13 | M21-10 | 행렬 곱 3중 반복문 | 대표 `algorithm-recurrence-jokbo-003` | 없음 | mcq | recurrence · 반복문 수행 시간 |
+| 5 | M21-1 | n! 입력(n log n·log n·n) — Ω(log n)? | 대표 `algorithm-analysis-jokbo-001`, vg `nfact-bounds` | 있음(LMS 정답·해설) | ox | analysis · 상한·하한 |
+| 6 | M21-2 | 10개 입력 n, 나머지 n log n — Θ(n log n)? | 대표 `algorithm-analysis-jokbo-004`, vg `ten-inputs` | 있음(LMS 정답·해설) | ox | analysis · 상한·하한 |
+| 7 | M21-3 | 계수 정렬 C2, A=[3,2,3,1,1,4,2,3,1,2] | 대표 `algorithm-sorting-jokbo-001`, vg `counting-c2` | 있음(LMS 정답·해설) | mcq | sorting · 계수 정렬 |
+| 8 | M21-4 | 정렬된 입력의 select 수행 시간 | 대표 `algorithm-dc-jokbo-001` | 있음(LMS 정답·해설) | mcq | dc · 평균 선형 선택 |
+| 9 | M21-5 | 연속 자연수 i번째 — 어떤 정렬 | 대표 `algorithm-sorting-jokbo-003` | 있음(LMS 정답·해설) | multi | sorting · 선형 시간 정렬 |
+| 10 | M21-7 | 마스터 정리 쓸 수 없는 점화식 모두 | 대표 `algorithm-recurrence-jokbo-001` | 있음(LMS 정답·해설) | multi | recurrence · 마스터 정리 적용 범위 |
+| 11 | M21-8 | sample: 반복문 + 재귀 2회(n/2) | 대표 `algorithm-recurrence-jokbo-002` | 있음(LMS 정답·해설) | mcq | recurrence · 코드 수행 시간 |
+| 12 | M21-9 | 정렬된 배열 buildHeap 시간 | 대표 `algorithm-sorting-jokbo-004` | 있음(LMS 정답·해설) | mcq | sorting · 힙 구성 |
+| 13 | M21-10 | 행렬 곱 3중 반복문 | 대표 `algorithm-recurrence-jokbo-003` | 있음(LMS 정답·해설) | mcq | recurrence · 반복문 수행 시간 |
 | 14 | M21-13 | T(n)=3T(n/3)+Θ(n) | 대표 `algorithm-recurrence-jokbo-004`, vg `master-apply` | 없음 | mcq | recurrence · 마스터 정리 |
-| 15 | M21-14 | 힙인 배열 모두 | 대표 `algorithm-sorting-jokbo-005` | 없음 | multi | sorting · 힙 성질 |
-| 16 | M21-15 | linearSelect 7개 그룹 분할 비율 | 대표 `algorithm-dc-jokbo-002`, vg `linear-select-group` | 없음 | mcq | dc · 최악 선형 선택 |
-| 17 | M21-16 | select 상대 순위 (목표 8 ↔ 호출 i=3 충돌) | 대표 `algorithm-dc-jokbo-004`, vg `select-rank` | 첨부 채점 답 | mcq(원문 그대로, 조건 충돌은 해설에) | dc · 평균 선형 선택 |
-| 18 | M21-17 | n + 2·sample(n/2) 수행 시간 | 대표 `algorithm-recurrence-jokbo-005` | 없음 | mcq | recurrence · 코드 수행 시간 |
-| 19 | M21-19 | n³log²n+2n log³n 관계 모두 | 대표 `algorithm-analysis-jokbo-007`, vg `asym-relation` | 없음 | multi | analysis · O·Ω·Θ 관계 |
-| 20 | M21-20 | partition [12,70,50,20,30,25,40,55] 반환 위치 | 대표 `algorithm-sorting-jokbo-006`, vg `partition` | 없음 | mcq | sorting · partition |
+| 15 | M21-14 | 힙인 배열 모두 | 대표 `algorithm-sorting-jokbo-005` | 있음(LMS 정답·해설) | multi | sorting · 힙 성질 |
+| 16 | M21-15 | linearSelect 7개 그룹 분할 비율 | 대표 `algorithm-dc-jokbo-002`, vg `linear-select-group` | 있음(LMS 정답·해설) | mcq | dc · 최악 선형 선택 |
+| 17 | M21-16 | select 상대 순위 (목표 8 ↔ 호출 i=3 충돌) | 대표 `algorithm-dc-jokbo-004`, vg `select-rank` | 있음(LMS 정답·해설) | mcq(원문 그대로, 조건 충돌은 해설에) | dc · 평균 선형 선택 |
+| 18 | M21-17 | n + 2·sample(n/2) 수행 시간 | 대표 `algorithm-recurrence-jokbo-005` | 있음(LMS 정답·해설) | mcq | recurrence · 코드 수행 시간 |
+| 19 | M21-19 | n³log²n+2n log³n 관계 모두 | 대표 `algorithm-analysis-jokbo-007`, vg `asym-relation` | 있음(LMS 정답·해설) | multi | analysis · O·Ω·Θ 관계 |
+| 20 | M21-20 | partition [12,70,50,20,30,25,40,55] 반환 위치 | 대표 `algorithm-sorting-jokbo-006`, vg `partition` | 있음(LMS 정답·해설) | mcq | sorting · partition |
 | 21 | M22-1 | 유클리드 알고리즘 복잡도 | 대표 `algorithm-recurrence-jokbo-006` | 있음(교수) | mcq(원문 그대로, 복수 참은 충돌 목록) | recurrence · 재귀 수행 시간 |
 | 22 | M22-2 | 하노이 탑 move 복잡도 | 대표 `algorithm-recurrence-jokbo-007` | 있음(교수) | mcq | recurrence · 재귀 수행 시간 |
 | 23 | M22-3 | n! 입력 — Ω(n)? | 대표 `algorithm-analysis-jokbo-002`, vg `nfact-bounds` | 있음(교수) | ox | analysis · 상한·하한 |
@@ -98,7 +98,7 @@
 | 31 | M22-11 | 기수 정렬 단계별 0283 위치 | 대표 `algorithm-sorting-jokbo-009` | 있음(교수) | blank(숫자 입력, 원문 그대로) | sorting · 기수 정렬 |
 | 32 | M22-미표기 | buildHeap 단계 그림 순서 | 대표 `algorithm-sorting-jokbo-010` | 있음(교수) | order(알파벳 입력, 보기 E=G 중복 그대로 — 예외) | sorting · 힙 구성 |
 | 33 | M22-12 | 거의 정렬된 입력 — 더 나은 정렬 모두 | 대표 `algorithm-sorting-jokbo-011` | 있음(교수) | multi | sorting · 입력 특성과 정렬 |
-| 34 | M22-13 | select 과정 빈칸(8번째) | 대표 `algorithm-dc-jokbo-006` | 있음(교수, 오류 인정) | blank | dc · 평균 선형 선택 |
+| 34 | M22-13 | select 과정 빈칸(8번째) | 대표 `algorithm-dc-jokbo-006` | 있음(교수) | blank | dc · 평균 선형 선택 |
 | 35 | M22-14 | linearSelect 9개 그룹 분할 비율 | 대표 `algorithm-dc-jokbo-003`, vg `linear-select-group` | 있음(교수) | mcq | dc · 최악 선형 선택 |
 | 36 | M22-15 | 정렬된 입력의 select (8과 같음) | 같은 문제 → `algorithm-dc-jokbo-001` | 있음(교수) | — | — |
 | 37 | M23-1 | 연속 자연수 정렬(복수 선택·보기 순서 다름) | 같은 문제 → `algorithm-sorting-jokbo-003` | 없음 | — | — |
@@ -126,27 +126,27 @@
 | 59 | M23-23 | 하노이 탑(보기 순서 다름) | 같은 문제 → `algorithm-recurrence-jokbo-007` | 없음 | — | — |
 | 60 | M23-24 | 두 입력만 n² — 틀린 것 | 같은 문제 → `algorithm-analysis-jokbo-006` | 없음 | — | — |
 | 61 | M23-25 | T(n/4)+T(n/2)+n²(보기 순서 다름) | 같은 문제 → `algorithm-recurrence-jokbo-008` | 없음 | — | — |
-| 62 | T22-1 | n! 입력 — O(n²)? | 대표 `algorithm-analysis-jokbo-003`, vg `nfact-bounds` | 없음 | ox | analysis · 상한·하한 |
-| 63 | T22-2 | 10개 입력 n — Ω(n)? | 대표 `algorithm-analysis-jokbo-005`, vg `ten-inputs` | 없음 | ox | analysis · 상한·하한 |
-| 64 | T22-3 | 계수 정렬 C2, A=[3,4,2,1,1,4,2,3,1,2] | 대표 `algorithm-sorting-jokbo-002`, vg `counting-c2` | 없음 | mcq | sorting · 계수 정렬 |
-| 65 | T22-4 | n + 2·sample(n/2) | 같은 문제 → `algorithm-recurrence-jokbo-005` | 없음 | — | — |
-| 66 | T22-5 | 3T(n/9)+√n | 같은 문제 → `algorithm-recurrence-jokbo-010` | 없음 | — | — |
-| 67 | T22-6 | 연속 자연수 정렬 | 같은 문제 → `algorithm-sorting-jokbo-003` | 채점 기준(4,5) | — | — |
-| 68 | T22-8 | 7개 그룹 | 같은 문제 → `algorithm-dc-jokbo-002` | 없음 | — | — |
-| 69 | T22-11 | partition [12,70,50,20,55,25,40,30] | 대표 `algorithm-sorting-jokbo-008`, vg `partition` | 없음 | mcq | sorting · partition |
-| 70 | T22-12 | 마스터 정리 쓸 수 없는 것 | 같은 문제 → `algorithm-recurrence-jokbo-001` | 없음 | — | — |
-| 71 | T22-13 | 피보나치 중복 재귀 | 대표 `algorithm-recurrence-jokbo-011` | 없음 | mcq | recurrence · 재귀 수행 시간 |
-| 72 | T22-14 | (log n)² 관계 모두 | 대표 `algorithm-analysis-jokbo-008`, vg `asym-relation` | 없음 | multi(원문 "모두 선택", 정답 1개 — 예외) | analysis · O·Ω·Θ 관계 |
-| 73 | T22-15 | 반복문 + 재귀 2회 | 같은 문제 → `algorithm-recurrence-jokbo-002` | 없음 | — | — |
-| 74 | T22-16 | 정렬된 배열 buildHeap | 같은 문제 → `algorithm-sorting-jokbo-004` | 없음 | — | — |
-| 75 | T22-17 | 정렬된 입력 select | 같은 문제 → `algorithm-dc-jokbo-001` | 없음 | — | — |
-| 76 | T22-18 | 최소 힙 배열 모두 | 같은 문제 → `algorithm-sorting-jokbo-005` | 없음 | — | — |
-| 77 | T22-20 | select 상대 순위 A=[…,29,65], 3번째 | 대표 `algorithm-dc-jokbo-005`, vg `select-rank` | 없음 | mcq | dc · 평균 선형 선택 |
-| 78 | S22-3 | 계수 정렬 C2 (64와 같음) | 같은 문제 → `algorithm-sorting-jokbo-002` | 없음 | — | — |
+| 62 | T22-1 | n! 입력 — O(n²)? | 대표 `algorithm-analysis-jokbo-003`, vg `nfact-bounds` | 있음(LMS 정답·해설) | ox | analysis · 상한·하한 |
+| 63 | T22-2 | 10개 입력 n — Ω(n)? | 대표 `algorithm-analysis-jokbo-005`, vg `ten-inputs` | 있음(LMS 정답·해설) | ox | analysis · 상한·하한 |
+| 64 | T22-3 | 계수 정렬 C2, A=[3,4,2,1,1,4,2,3,1,2] | 대표 `algorithm-sorting-jokbo-002`, vg `counting-c2` | 있음(LMS 정답·해설) | mcq | sorting · 계수 정렬 |
+| 65 | T22-4 | n + 2·sample(n/2) | 같은 문제 → `algorithm-recurrence-jokbo-005` | 있음(LMS 정답·해설) | — | — |
+| 66 | T22-5 | 3T(n/9)+√n | 같은 문제 → `algorithm-recurrence-jokbo-010` | 있음(LMS 정답·해설) | — | — |
+| 67 | T22-6 | 연속 자연수 정렬 | 같은 문제 → `algorithm-sorting-jokbo-003` | 있음(LMS 정답·해설) | — | — |
+| 68 | T22-8 | 7개 그룹 | 같은 문제 → `algorithm-dc-jokbo-002` | 있음(LMS 정답·해설) | — | — |
+| 69 | T22-11 | partition [12,70,50,20,55,25,40,30] | 대표 `algorithm-sorting-jokbo-008`, vg `partition` | 있음(LMS 정답·해설) | mcq | sorting · partition |
+| 70 | T22-12 | 마스터 정리 쓸 수 없는 것 | 같은 문제 → `algorithm-recurrence-jokbo-001` | 있음(LMS 정답·해설) | — | — |
+| 71 | T22-13 | 피보나치 중복 재귀 | 대표 `algorithm-recurrence-jokbo-011` | 있음(LMS 정답·해설) | mcq | recurrence · 재귀 수행 시간 |
+| 72 | T22-14 | (log n)² 관계 모두 | 대표 `algorithm-analysis-jokbo-008`, vg `asym-relation` | 있음(LMS 정답·해설) | multi(원문 "모두 선택", 정답 1개 — 예외) | analysis · O·Ω·Θ 관계 |
+| 73 | T22-15 | 반복문 + 재귀 2회 | 같은 문제 → `algorithm-recurrence-jokbo-002` | 있음(LMS 정답·해설) | — | — |
+| 74 | T22-16 | 정렬된 배열 buildHeap | 같은 문제 → `algorithm-sorting-jokbo-004` | 있음(LMS 정답·해설) | — | — |
+| 75 | T22-17 | 정렬된 입력 select | 같은 문제 → `algorithm-dc-jokbo-001` | 있음(LMS 정답·해설) | — | — |
+| 76 | T22-18 | 최소 힙 배열 모두 | 같은 문제 → `algorithm-sorting-jokbo-005` | 있음(LMS 정답·해설) | — | — |
+| 77 | T22-20 | select 상대 순위 A=[…,29,65], 3번째 | 대표 `algorithm-dc-jokbo-005`, vg `select-rank` | 있음(LMS 정답·해설) | mcq | dc · 평균 선형 선택 |
+| 78 | S22-3 | 계수 정렬 C2 (64와 같음) | 같은 문제 → `algorithm-sorting-jokbo-002` | 있음(LMS 정답·해설) | — | — |
 | 79 | S22-7 | 3T(n/9)+√n(보기 순서 다름) | 같은 문제 → `algorithm-recurrence-jokbo-010` | 없음 | — | — |
 | 80 | S22-9 | select 상대 순위(보기 순서 다름) | 같은 문제 → `algorithm-dc-jokbo-005` | 없음 | — | — |
 | 81 | S22-10 | (log n)² 관계(보기 순서 다름) | 같은 문제 → `algorithm-analysis-jokbo-008` | 없음 | — | — |
-| 82 | S22-13 | 피보나치 중복 재귀 | 같은 문제 → `algorithm-recurrence-jokbo-011` | 없음 | — | — |
+| 82 | S22-13 | 피보나치 중복 재귀 | 같은 문제 → `algorithm-recurrence-jokbo-011` | 있음(LMS 정답·해설) | — | — |
 | 83 | S22-14 | n! 입력 — O(n²)? | 같은 문제 → `algorithm-analysis-jokbo-003` | 없음 | — | — |
 | 84 | T23-1 | 10개 입력 n — Ω(n)? | 같은 문제 → `algorithm-analysis-jokbo-005` | 없음 | — | — |
 | 85 | T23-2 | n! 입력 — O(n²)? | 같은 문제 → `algorithm-analysis-jokbo-003` | 없음 | — | — |
@@ -162,15 +162,15 @@
 | 95 | T23-12 | 3T(n/9)+√n | 같은 문제 → `algorithm-recurrence-jokbo-010` | 없음 | — | — |
 | 96 | T23-13 | 조약돌 놓기 표1(4,7,12,−5 / …) | 대표 `algorithm-dp-jokbo-009`, vg `pebble` | 없음 | mcq | dp · 조약돌 놓기 |
 | 97 | T23-14 | 행렬 최대 합 경로 시작 4 | 대표 `algorithm-dp-jokbo-005`, vg `matrix-path` | 없음 | mcq | dp · 행렬 경로 |
-| 98 | F22-2 | Floyd-Warshall D(c)의 (B) | 대표 `algorithm-dp-jokbo-010`, vg `floyd` | 없음 | mcq | dp · 모든 쌍 최단 경로 |
-| 99 | F22-3 | Floyd-Warshall D(c)의 (C) | 대표 `algorithm-dp-jokbo-011`, vg `floyd` | 없음 | mcq | dp · 모든 쌍 최단 경로 |
-| 100 | F22-4 | 간선 수 제한 L⁽²⁾의 (A) | 대표 `algorithm-dp-jokbo-013`, vg `edge-dp` | 없음 | mcq | dp · 간선 수 제한 거리 DP |
-| 101 | F22-5 | 간선 수 제한 L⁽²⁾의 (B) | 대표 `algorithm-dp-jokbo-014`, vg `edge-dp` | 없음 | mcq | dp · 간선 수 제한 거리 DP |
-| 102 | F22-7 | 벨만 포드 정점 e 거리 | 대표 `algorithm-dp-jokbo-015` | 없음 | mcq | dp · 단일 시작점 최단 경로(optional) |
-| 103 | F22-11 | 조약돌 놓기 표1 | 같은 문제 → `algorithm-dp-jokbo-009` | 없음 | — | — |
-| 104 | F22-12 | 조약돌 놓기 표2(6,7,9,−5 / …) | 대표 `algorithm-dp-jokbo-008`, vg `pebble` | 없음 | mcq | dp · 조약돌 놓기 |
-| 105 | F22-13 | 행렬 최대 합 경로 시작 6 | 대표 `algorithm-dp-jokbo-004`, vg `matrix-path` | 없음 | mcq | dp · 행렬 경로 |
-| 106 | F22-14 | 행렬 최대 합 경로 시작 4 | 같은 문제 → `algorithm-dp-jokbo-005` | 없음 | — | — |
+| 98 | F22-2 | Floyd-Warshall D(c)의 (B) | 대표 `algorithm-dp-jokbo-010`, vg `floyd` | 있음(LMS 정답·해설) | mcq | dp · 모든 쌍 최단 경로 |
+| 99 | F22-3 | Floyd-Warshall D(c)의 (C) | 대표 `algorithm-dp-jokbo-011`, vg `floyd` | 있음(LMS 정답·해설) | mcq | dp · 모든 쌍 최단 경로 |
+| 100 | F22-4 | 간선 수 제한 L⁽²⁾의 (A) | 대표 `algorithm-dp-jokbo-013`, vg `edge-dp` | 있음(LMS 정답·해설) | mcq | dp · 간선 수 제한 거리 DP |
+| 101 | F22-5 | 간선 수 제한 L⁽²⁾의 (B) | 대표 `algorithm-dp-jokbo-014`, vg `edge-dp` | 있음(LMS 정답·해설) | mcq | dp · 간선 수 제한 거리 DP |
+| 102 | F22-7 | 벨만 포드 정점 e 거리 | 대표 `algorithm-dp-jokbo-015` | 있음(LMS 정답·해설) | mcq | dp · 단일 시작점 최단 경로(optional) |
+| 103 | F22-11 | 조약돌 놓기 표1 | 같은 문제 → `algorithm-dp-jokbo-009` | 있음(LMS 정답·해설) | — | — |
+| 104 | F22-12 | 조약돌 놓기 표2(6,7,9,−5 / …) | 대표 `algorithm-dp-jokbo-008`, vg `pebble` | 있음(LMS 정답·해설) | mcq | dp · 조약돌 놓기 |
+| 105 | F22-13 | 행렬 최대 합 경로 시작 6 | 대표 `algorithm-dp-jokbo-004`, vg `matrix-path` | 있음(LMS 정답·해설) | mcq | dp · 행렬 경로 |
+| 106 | F22-14 | 행렬 최대 합 경로 시작 4 | 같은 문제 → `algorithm-dp-jokbo-005` | 있음(LMS 정답·해설) | — | — |
 | 107 | F23-4 | 간선 수 제한 L⁽²⁾의 B (101과 같음, 보기 없음) | 같은 문제 → `algorithm-dp-jokbo-014` | 없음 | — | — |
 | 108 | F23-6 | 연쇄 행렬 곱 m 표 (B) | 대표 `algorithm-dp-jokbo-003`, vg `matrix-chain` | 없음 | blank | dp · 연쇄 행렬 곱 |
 | 109 | F23-7 | 계단 경로 친구 최대 | 같은 문제 → `algorithm-dp-jokbo-006` | 없음 | — | — |
@@ -189,7 +189,11 @@ variantGroup 13개(접두사 `algorithm-vg-`): `nfact-bounds`(analysis 001·002�
 | F23-1, 3, 5, 10~17, 19, 20 (13) | B-트리 · 분리 집합 · 레드블랙 트리 · 위상 정렬 · 해시 · NP · BFS · SCC · 프림 · DFS span |
 | F23-2, F23-18 | 활동 선택 · 도시락 스케줄링(그리디) |
 
-## 6. Sprint 21에 넘기는 충돌·주의 후보 (정답 확정은 Sprint 21에서 코드·강의 자료로)
+## 6. 충돌·주의 (Sprint 21에 확정 — 상세: `docs/verification/algorithm-*.md`)
+
+- 충돌 1: sorting-011(족보 답 삽입·힙·계수 → 검증 답 삽입·계수). 원본 스캔 대조 수정 1: recurrence-003(전사본 반복 범위 오류).
+
+이전 후보 목록(Sprint 18):
 
 | 대표 id | 내용 |
 |---|---|

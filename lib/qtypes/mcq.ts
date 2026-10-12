@@ -18,7 +18,8 @@ export const mcqCore: QTypeCore<McqQ, McqA, null> = {
   grade: (q, a) => result(a === q.answerIndex ? 1 : 0, null),
   validate(q) {
     const e: string[] = [];
-    if (q.choices.length < 4 || q.choices.length > 5) e.push("보기는 4~5개");
+    // 족보 문항(원문 그대로, docs/jokbo-plan.md §4)은 원문의 보기 수를 따른다(예/아니오 2개 등) — 2개 이상만 확인
+    if (q.origin === "jokbo" ? q.choices.length < 2 : q.choices.length < 4 || q.choices.length > 5) e.push(q.origin === "jokbo" ? "보기는 2개 이상" : "보기는 4~5개");
     if (q.choices.some((c) => !c.trim())) e.push("빈 보기가 있음");
     if (duplicates(q.choices).length) e.push(`중복 보기: ${duplicates(q.choices).join(", ")}`);
     if (

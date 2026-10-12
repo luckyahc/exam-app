@@ -55,6 +55,16 @@ export interface BaseQ<T extends string = string> {
    */
   origin?: "jokbo";
   jokbo?: JokboInfo;
+  /** 지문 아래 그림(족보 원본 스캔에서 자른 그래프 등, Sprint 21). 표·배열·코드는 그림 대신 글자로 옮긴다 */
+  figure?: QuestionFigure;
+}
+
+/** `public/jokbo/<과목>/<문항id>.png` — 가로 1200px 이하·300KB 이하(data/subjects/figures.test.ts), 다크 모드에서도 흰 카드 위에 보인다 */
+export interface QuestionFigure {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
 }
 
 /** 족보에 한 번 나온 기록. term: 연도/학기(있으면, 예 "2023 중간") */
@@ -193,6 +203,11 @@ export function validateBase(q: BaseQ): string[] {
     if (/[‘’“”]/.test(q.code.source)) errors.push("code.source에 굽은 따옴표가 있음");
   }
   errors.push(...validateJokbo(q));
+  if (q.figure) {
+    if (q.figure.src !== `/jokbo/${q.subject}/${q.id}.png`) errors.push(`figure.src는 '/jokbo/${q.subject}/${q.id}.png'`);
+    if (!q.figure.alt?.trim()) errors.push("figure.alt(그림 설명) 필수");
+    if (!(q.figure.width > 0 && q.figure.width <= 1200 && q.figure.height > 0)) errors.push("figure 크기: 가로 1~1200px");
+  }
   return errors;
 }
 

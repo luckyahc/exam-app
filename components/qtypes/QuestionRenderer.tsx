@@ -75,6 +75,19 @@ export function ExplanationSource({ question }: { question: Question }) {
   return label ? <p className="text-xs font-semibold text-muted">{label}</p> : null;
 }
 
+/** 지문 그림(족보 원본에서 자른 그래프) — 다크 모드에서도 원본 그대로 보이도록 흰 카드 위에 둔다 */
+export function QuestionFigureView({ question }: { question: Question }) {
+  const f = question.figure;
+  if (!f) return null;
+  return (
+    <figure className="self-start rounded-lg border border-border bg-white p-2">
+      {/* 정적 원본 그림(작은 PNG) — 크기를 고정해 레이아웃이 밀리지 않게 한다 */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={f.src} alt={f.alt} width={f.width} height={f.height} className="h-auto max-w-full" loading="lazy" />
+    </figure>
+  );
+}
+
 /** 문제 하나를 그린다. 유형별 분기는 레지스트리 조회로만 한다(switch 없음). */
 export function QuestionRenderer({ question, answer, onAnswer, result }: Props) {
   const core = coreFor(question);
@@ -106,6 +119,8 @@ export function QuestionRenderer({ question, answer, onAnswer, result }: Props) 
           <RichText text={question.prompt} />
         </p>
       )}
+
+      <QuestionFigureView question={question} />
 
       <Input
         question={question as never}

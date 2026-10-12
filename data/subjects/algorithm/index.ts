@@ -1,14 +1,13 @@
 import type { SubjectDef } from "../types";
 
 // 알고리즘: 문제는 족보에서만 만든다(docs/jokbo-plan.md). 챕터 = 족보에 나온 주제(docs/jokbo/algorithm/inventory.md §3),
-// minQuestions = 챕터별 대표 문항 수(예정, 2019 예상문제 E19 제외 후). 문제는 Sprint 21에서 채우고, 그때 "준비 중"(status)을 뗀다.
+// minQuestions = 챕터별 족보 대표 문항 수(2019 예상문제 E19 제외 후). Sprint 21에 53문항을 채우고 "준비 중"을 뗐다.
 const algorithm = {
   id: "algorithm",
   name: "알고리즘",
   shortName: "ALG",
   color: { light: "#be123c", dark: "#fb7185" },
   sourceDir: "source/algorithm",
-  status: "preparing",
   // ⭐ 근거(필기·인쇄 강조) 없음 — 족보 출현 횟수는 "족보 N회" 뱃지로 보인다
   examPoints: false,
   chapters: [
