@@ -5,7 +5,8 @@ import { CodeBlock } from "./CodeBlock";
  * 글 안의 펜스 코드 블록: 줄 맨 앞 ```python 또는 ```sql 다음 줄부터 닫는 ``` 줄까지(Sprint 12).
  * 펜스가 없는 글(기존 문항 전부)은 아래 InlineText와 똑같이 그린다 — 렌더링 결과 변화 없음.
  */
-const FENCE = /```(python|sql)\n([\s\S]*?)\n```/g;
+// ```text = 고정폭 원문 블록(족보의 메모리 상태 그림·표, Sprint 20)
+const FENCE = /```(python|sql|text)\n([\s\S]*?)\n```/g;
 
 /** prompt·보기·해설의 제한된 마크다운: **굵게**, `인라인 코드`, ```python/```sql 펜스 코드 블록만 해석한다(HTML 주입 없음). */
 export function RichText({ text }: { text: string }) {
@@ -14,7 +15,7 @@ export function RichText({ text }: { text: string }) {
   let last = 0;
   for (const m of text.matchAll(FENCE)) {
     if (m.index > last) out.push(<InlineText key={`t${last}`} text={text.slice(last, m.index).replace(/\n$/, "")} />);
-    out.push(<CodeBlock key={`c${m.index}`} code={m[2]} language={m[1] as "python" | "sql"} />);
+    out.push(<CodeBlock key={`c${m.index}`} code={m[2]} language={m[1] as "python" | "sql" | "text"} />);
     last = m.index + m[0].length;
   }
   if (last < text.length) out.push(<InlineText key={`t${last}`} text={text.slice(last).replace(/^\n/, "")} />);

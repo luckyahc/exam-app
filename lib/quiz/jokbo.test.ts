@@ -107,18 +107,20 @@ describe("뱃지·해설 출처 표시 조건", () => {
 });
 
 describe("기존 과목 회귀 · 새 과목 등록", () => {
-  it("기존 과목(OS·데이터 통신·데이터과학)에는 족보 문항이 없어 분류 '일반' = 전체", async () => {
+  it("족보 문항이 없는 과목(데이터 통신·데이터과학)은 분류 '일반' = 전체, OS는 족보 56(Sprint 20)", async () => {
     for (const s of SUBJECTS.filter((x) => x.id !== "algorithm")) {
       const all = (await Promise.all(s.chapters.map((c) => c.load()))).flat();
-      expect(all.filter(isJokbo), s.id).toEqual([]);
-      expect(filterQuestions(all, { source: "general", seed: "s" })).toHaveLength(all.length);
+      const jokboN = all.filter(isJokbo).length;
+      expect(jokboN, s.id).toBe(s.id === "os" ? 56 : 0);
+      expect(filterQuestions(all, { source: "general", seed: "s" })).toHaveLength(all.length - jokboN);
+      expect(filterQuestions(all, { source: "jokbo", seed: "s" })).toHaveLength(jokboN);
     }
   });
 
-  it("챕터 메타: 족보 id 목록과 행의 jokbo 표시(기존 챕터는 비어 있음)", async () => {
+  it("챕터 메타: 족보 id 목록과 행의 jokbo 표시(OS Ch02 족보 10)", async () => {
     const meta = await chapterMeta(os, os.chapters[0]);
-    expect(meta.jokboIds).toEqual([]);
-    expect(meta.rows.every((r) => r.jokbo === false)).toBe(true);
+    expect(meta.jokboIds).toHaveLength(10);
+    expect(meta.rows.filter((r) => r.jokbo)).toHaveLength(10);
   });
 
   it("알고리즘: 준비 중, 족보 주제 챕터 5개, 문제 0개", async () => {

@@ -24,7 +24,8 @@ const TARGET: Record<string, number> = {
 
 describe("OS Ch09 소주제 목표", async () => {
   const ch09 = os.chapters.find((c) => c.id === "ch09")!;
-  const qs = (await ch09.load()).filter((q) => q.topic !== "용어");
+  // 족보 문항(origin: "jokbo")은 소주제 목표·⭐ 규칙 밖(원문 그대로 — docs/jokbo-plan.md §4)
+  const qs = (await ch09.load()).filter((q) => q.topic !== "용어" && q.origin !== "jokbo");
 
   it("소주제별 문항 수 = 목표, 합계 = minQuestions", () => {
     const count: Record<string, number> = {};

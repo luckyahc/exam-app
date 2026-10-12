@@ -40,6 +40,13 @@ function shownOrder(text: string, q: McqQ | MultiQ, only?: number[]) {
     const c = text.indexOf(joined, from);
     if (c >= 0) from = c + joined.length;
   }
+  // 지문 안 원문 블록(```text — 족보의 메모리 상태 그림·표, Sprint 20)에 보기와 같은 글자("[0]" 등)가 있으면 마지막 블록 뒤부터 찾는다
+  const fences = [...q.prompt.matchAll(/```\w+\n([\s\S]*?)\n```/g)];
+  if (fences.length) {
+    const joined = fences[fences.length - 1][1].split("\n").join("");
+    const c = text.indexOf(joined, from);
+    if (c >= 0) from = c + joined.length;
+  }
   return (only ?? q.choices.map((_, i) => i))
     .map((i) => [i, text.indexOf(md(q.choices[i]), from)] as const)
     .sort((a, b) => a[1] - b[1])

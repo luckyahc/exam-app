@@ -74,7 +74,7 @@ describe("콘텐츠 형식 점검 (전 과목)", async () => {
     for (const q of all)
       for (const [k, raw] of shownTexts(q)) {
         // ```python / ```sql 펜스 코드 블록 안은 코드 그대로(들여쓰기·두 칸 공백 허용)라 형식 검사에서 뺀다(Sprint 12)
-        const t = raw.replace(/```(python|sql)\n[\s\S]*?\n```/g, "```code```");
+        const t = raw.replace(/```(python|sql|text)\n[\s\S]*?\n```/g, "```code```");
         // 인라인 코드(`**` 거듭제곱 연산자 등) 안의 **는 굵게 표시가 아니다(RichText도 코드로 그린다)
         if ((t.replace(/`[^`]+`/g, "``").match(/\*\*/g) ?? []).length % 2) bad.push(`${q.id} ${k}: ** 짝`);
         if ((t.match(/`/g) ?? []).length % 2) bad.push(`${q.id} ${k}: \` 짝`);

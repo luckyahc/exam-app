@@ -20,8 +20,9 @@ const summary = (file: string, label: string) => {
     .find((l) => l.startsWith(`| ${label} | `));
   return Number(line?.split("|")[2]?.trim().split(" ")[0]);
 };
-const idsOf = async (...chapters: string[]) =>
-  (await Promise.all(os.chapters.filter((c) => chapters.includes(c.id)).map((c) => c.load()))).flat().map((q) => q.id);
+/** 챕터 대조 기록은 일반 문항만 — 족보 문항(origin: "jokbo")은 docs/verification/os-jokbo.md에 따로 적는다(Sprint 20) */
+const loadOf = async (...chapters: string[]) => (await Promise.all(os.chapters.filter((c) => chapters.includes(c.id)).map((c) => c.load()))).flat();
+const idsOf = async (...chapters: string[]) => (await loadOf(...chapters)).filter((q) => q.origin !== "jokbo").map((q) => q.id);
 
 describe("OS 대조 기록 ↔ 문제 데이터", () => {
   it("os-ch02-ch03.md: id·순서 일치, 요약 숫자 = 표", async () => {
@@ -45,5 +46,16 @@ describe("OS 대조 기록 ↔ 문제 데이터", () => {
     expect(summary(f, "일치")).toBe(rows.filter((r) => r[7] === "일치").length);
     expect(summary(f, "수정")).toBe(rows.filter((r) => r[7] === "수정").length);
     expect(summary(f, "필기 근거(문항별 확인)")).toBe(rows.filter((r) => r[5].includes("필기")).length);
+  });
+
+  it("os-jokbo.md: 족보 문항 전부·챕터 순서, 요약 숫자 = 표", async () => {
+    const f = "os-jokbo.md";
+    const rows = rowsOf(f);
+    const jokbo = (await loadOf("ch02", "ch03", "ch07", "ch08", "ch09")).filter((q) => q.origin === "jokbo");
+    expect(rows.map((r) => r[1].replaceAll("`", ""))).toEqual(jokbo.map((q) => q.id));
+    expect(summary(f, "전체")).toBe(rows.length);
+    expect(summary(f, "족보 답 일치")).toBe(rows.filter((r) => r[5] === "일치").length);
+    expect(summary(f, "족보 답과 다름(충돌)")).toBe(rows.filter((r) => r[5] === "충돌").length);
+    expect(summary(f, "족보 답 없음(슬라이드·시뮬레이터로 정함)")).toBe(rows.filter((r) => r[5] === "답 없음").length);
   });
 });

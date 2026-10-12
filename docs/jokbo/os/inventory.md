@@ -32,7 +32,7 @@
 
 원문: `23-N` = 2023 N번, `22-N` = 2022 N번. 판정: **대표 → id**, **같은 문제 → 대표 id**, vg = variantGroup(`os-vg-…`). 해설: 정답 = 2022 LMS 정답 있음.
 
-| # | 원문 | 요약 | 판정 | 해설 | 유형 | 챕터 · 토픽 |
+| # | 원문 | 요약 | 판정 | 해설 | 원문 형식 | 챕터 · 토픽 |
 |---|---|---|---|---|---|---|
 | 1 | 23-1 | 가상기억장치 정책(demand·prepaging·locking·optimal·placement) 잘못 2 | 대표 `os-ch08-jokbo-001` | 없음 | multi | ch08 · 가상 메모리 정책 분류 |
 | 2 | 23-2 | SRT 0~4 스케줄 잘못 2 (A0/5 B1/3 C2/1) | 대표 `os-ch09-jokbo-001`, vg `sched-trace` | 없음 | multi | ch09 · SRT |
@@ -50,7 +50,7 @@
 | 14 | 23-14 | 메모리 공유 예가 아닌 것 | 대표 `os-ch07-jokbo-008` | 없음 | mcq | ch07 · 공유 |
 | 15 | 23-15 | running→blocked가 아닌 함수 | 대표 `os-ch03-jokbo-003` | 없음 | mcq | ch03 · 5-상태 모델 / 상태 전이 |
 | 16 | 23-16 | 15KB 할당 결과로 알고리즘(next-fit) | 대표 `os-ch07-jokbo-005`, vg `fit` | 없음 | mcq | ch07 · 배치 알고리즘 |
-| 17 | 23-17 | 가상기억장치 실행 과정 순서(보기 잘림) | 대표 `os-ch08-jokbo-008` | 없음 | order | ch08 · 페이지 폴트 처리 과정 |
+| 17 | 23-17 | 가상기억장치 실행 과정 순서(보기 잘림) | 대표 `os-ch08-jokbo-008` | 없음 | mcq(순서 보기) | ch08 · 페이지 폴트 처리 과정 |
 | 18 | 23-18 | Process switch가 아닌 경우 | 대표 `os-ch03-jokbo-004` | 없음 | mcq | ch03 · Process switch 5가지 경우 |
 | 19 | 23-19 | basic paging 옳은 것 | 대표 `os-ch07-jokbo-009` | 없음 | mcq | ch07 · 기본 페이징 |
 | 20 | 23-20 | 지역성 잘못 2 | 대표 `os-ch08-jokbo-009` | 없음 | multi | ch08 · 지역성의 원리 |
@@ -76,14 +76,14 @@
 | 40 | 23-40 | 실주소 2 → 논리주소 | 대표 `os-ch07-jokbo-012`, vg `addr-translate` | 없음 | mcq | ch07 · 주소 변환 |
 | 41 | 23-41 | Stack에 없는 것 2 | 대표 `os-ch03-jokbo-011` | 없음 | multi | ch03 · 스택에 저장되는 것 |
 | 42 | 23-42 | 프로세스 틀린 2 | 대표 `os-ch03-jokbo-012` | 없음 | multi | ch03 · 프로세스 정의 |
-| 43 | 23-43 | I/O 인터럽트 처리 순서 | 대표 `os-ch03-jokbo-013` | 없음 | order | ch03 · 인터럽트 처리 과정 |
+| 43 | 23-43 | I/O 인터럽트 처리 순서 | 대표 `os-ch03-jokbo-013` | 없음 | mcq(순서 보기) | ch03 · 인터럽트 처리 과정 |
 | 44 | 23-44 | OS 서비스 아닌 2 | 대표 `os-ch02-jokbo-003` | 없음 | multi | ch02 · OS 서비스(편리성) |
 | 45 | 23-45 | 재배치 틀린 것 | 대표 `os-ch07-jokbo-014` | 없음 | mcq | ch07 · 재배치 |
 | 46 | 23-46 | Dynamic partitioning 알고리즘 틀린 것 | 대표 `os-ch07-jokbo-004`, vg `partitioning` | 없음 | mcq | ch07 · 배치 알고리즘 |
 | 47 | 23-47 | Buddy 129K 할당 후 상태(보기 잘림) | 대표 `os-ch07-jokbo-002`, vg `buddy` | 없음 | mcq | ch07 · 버디 시스템 |
 | 48 | 23-48 | LRU 교체 프레임 | 대표 `os-ch08-jokbo-005`, vg `replace-frame` | 없음 | mcq | ch08 · 교체 알고리즘 |
 | 49 | 23-49 | 용어(throughput·response·deadline·turnaround) 올바른 2 | 대표 `os-ch09-jokbo-006` | 없음 | multi | ch09 · 스케줄링 기준(Sprint 19에서 확인, 슬라이드에 없으면 ch02) |
-| 50 | 23-50 | TLB 주소 변환 순서 | 대표 `os-ch08-jokbo-013` | 없음 | order | ch08 · TLB 주소 변환 |
+| 50 | 23-50 | TLB 주소 변환 순서 | 대표 `os-ch08-jokbo-013` | 없음 | mcq(순서 보기) | ch08 · TLB 주소 변환 |
 | 51 | 22-1 | 운영체제 설명 잘못된 것 | 대표 `os-ch02-jokbo-008` | 정답 | mcq | ch02 · OS 정의 / 3대 목표 |
 | 52 | 22-2 | OS 목적 잘못 2 | 같은 문제 → `os-ch02-jokbo-002` | 정답 | — | — |
 | 53 | 22-3 | OS 서비스 아닌 2 | 같은 문제 → `os-ch02-jokbo-003` | 정답 | — | — |
@@ -91,7 +91,7 @@
 | 55 | 22-5 | time slice로 번갈아 실행하는 기능 이름 | 대표 `os-ch02-jokbo-009` | 정답 | mcq | ch02 · 단일 vs 다중프로그래밍 |
 | 56 | 22-6 | Multiprogramming 틀린 것 | 같은 문제 → `os-ch02-jokbo-004` | 정답 | — | — |
 | 57 | 22-7 | Time sharing 틀린 2 | 같은 문제 → `os-ch02-jokbo-005` | 정답 | — | — |
-| 58 | 22-8 | CPU 이용률(6/0.3/0.7/3초) | 대표 `os-ch02-jokbo-010` | 정답 | calc | ch02 · 시간 계산(응답시간/유효 CPU 이용률) |
+| 58 | 22-8 | CPU 이용률(6/0.3/0.7/3초) | 대표 `os-ch02-jokbo-010` | 정답 | mcq | ch02 · 시간 계산(응답시간/유효 CPU 이용률) |
 | 59 | 22-9 | Multiprogramming B response time | 같은 문제 → `os-ch02-jokbo-007` | 정답 | — | — |
 | 60 | 22-10 | Time Sharing B response time | 같은 문제 → `os-ch02-jokbo-006` | 정답 | — | — |
 | 61 | 22-11 | 프로세스 틀린 2 | 같은 문제 → `os-ch03-jokbo-012` | 정답 | — | — |

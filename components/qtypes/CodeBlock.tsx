@@ -15,18 +15,19 @@ export function CodeBlock({
   renderLine,
 }: {
   code: string;
-  language: CodeLang;
+  /** "text" = 코드가 아닌 고정폭 원문 블록(족보의 메모리 상태 그림·표 — Sprint 20). 머리 줄에 "원문"이라고 쓴다 */
+  language: CodeLang | "text";
   lineNumbers?: boolean;
   /** 줄 내용을 바꿔 그릴 때(코드 빈칸 입력칸 등). 기본은 글자 그대로 */
   renderLine?: (line: string, index: number) => ReactNode;
 }) {
   const lines = code.replace(/\r\n/g, "\n").replace(/\n$/, "").split("\n");
-  const label = CODE_LANG_LABEL[language];
+  const label = language === "text" ? "원문" : CODE_LANG_LABEL[language];
   const width = String(lines.length).length;
   return (
     <span
       role="group"
-      aria-label={`${label} 코드`}
+      aria-label={language === "text" ? "원문 그림·표" : `${label} 코드`}
       data-code-block={language}
       className="my-1 block w-full min-w-0 max-w-full overflow-hidden rounded-lg border border-border bg-surface text-left text-foreground"
     >
