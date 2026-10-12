@@ -72,7 +72,8 @@ describe("recordsStore — 내보내기 → 초기화 → 가져오기", () => {
     store.recordResult("data-science", "data-science-lec5-join-002", { correct: false, score: 0 });
     store.toggleBookmark("data-science", "data-science-lec6-struct-005");
     const before = store.currentStore();
-    expect(Object.keys(before.subjects).sort()).toEqual(["data-comm", "data-science", "os"]);
+    // 저장소는 등록된 모든 과목의 기록 칸을 만든다(Sprint 18에 알고리즘 추가)
+    expect(Object.keys(before.subjects).sort()).toEqual(SUBJECTS.map((s) => s.id).sort());
 
     const { exportBackup, parseBackup, applyBackup } = await import("./backup");
     const text = JSON.stringify(exportBackup(before, new Date()));

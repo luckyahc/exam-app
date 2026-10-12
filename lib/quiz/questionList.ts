@@ -2,6 +2,7 @@ import { answerKey } from "@/lib/qtypes/answerKey";
 import { gradeQuestion, type Question } from "@/lib/qtypes/registry";
 import type { SubjectRecords } from "@/lib/storage/schema";
 import { filterQuestions, newSession, type QuizSession } from "./session";
+import { matchesSource, type SourceFilter } from "./jokbo";
 import { matchesStar, type StarBasis } from "./starBasis";
 import { questionStatus, type QStatus } from "./status";
 
@@ -19,6 +20,8 @@ export interface ListFilter {
   /** ⭐ 근거(lib/quiz/starBasis.ts). 없으면 ⭐ 조건 없음 */
   star?: StarBasis | null;
   topic?: string | null;
+  /** 분류(족보 / 일반). 없으면 전체 */
+  source?: SourceFilter | null;
 }
 
 export interface ListRow {
@@ -40,7 +43,7 @@ export function listRows(questions: readonly Question[], records: SubjectRecords
 
 const inTab = (r: ListRow, tab: ListTab) => tab === "all" || (tab === "bookmark" ? r.bookmarked : r.status === tab);
 const passes = (r: ListRow, f: ListFilter) =>
-  (!f.chapter || r.q.chapter === f.chapter) && (!f.type || r.q.type === f.type) && (!f.star || matchesStar(r.q, f.star)) && (!f.topic || r.q.topic === f.topic);
+  (!f.chapter || r.q.chapter === f.chapter) && (!f.type || r.q.type === f.type) && (!f.star || matchesStar(r.q, f.star)) && (!f.topic || r.q.topic === f.topic) && matchesSource(r.q, f.source);
 
 /** 필터를 적용한 뒤 탭마다 개수(탭 개수는 필터 결과 기준) */
 export function tabCounts(rows: readonly ListRow[], f: ListFilter): Record<ListTab, number> {

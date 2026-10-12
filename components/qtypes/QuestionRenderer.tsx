@@ -2,6 +2,7 @@
 
 import type { ExamBasis, GradeResult } from "@/lib/qtypes/base";
 import { coreFor, type AnyAnswer, type Question } from "@/lib/qtypes/registry";
+import { explanationSourceLabel, jokboBadge } from "@/lib/quiz/jokbo";
 import { uiFor } from "./registry";
 import { CodeBlock } from "./CodeBlock";
 import { ResultBanner, RichText } from "./ui";
@@ -56,6 +57,24 @@ export function keyLine(explanation: string): string {
   return first.length > 120 ? first.slice(0, 119) + "…" : first;
 }
 
+/** 족보 문항 뱃지("족보" / 출현 2회 이상이면 "족보 N회") — 일반 문항은 그리지 않는다 */
+export function JokboBadge({ question }: { question: Question }) {
+  const text = jokboBadge(question);
+  if (!text) return null;
+  const terms = question.jokbo?.occurrences.map((o) => [o.term, o.file, `${o.number}번`].filter(Boolean).join(" ")).join(" / ");
+  return (
+    <span className="inline-flex items-center rounded-full border border-foreground/40 px-2 py-0.5 text-xs font-medium" title={terms ? `족보 출현: ${terms}` : undefined}>
+      {text}
+    </span>
+  );
+}
+
+/** 해설 머리의 출처("족보 해설" / "생성 해설") — 족보 문항만 */
+export function ExplanationSource({ question }: { question: Question }) {
+  const label = explanationSourceLabel(question);
+  return label ? <p className="text-xs font-semibold text-muted">{label}</p> : null;
+}
+
 /** 문제 하나를 그린다. 유형별 분기는 레지스트리 조회로만 한다(switch 없음). */
 export function QuestionRenderer({ question, answer, onAnswer, result }: Props) {
   const core = coreFor(question);
@@ -66,6 +85,7 @@ export function QuestionRenderer({ question, answer, onAnswer, result }: Props) 
       <header className="flex flex-wrap items-center gap-1.5 text-xs">
         <span className="rounded-full bg-surface px-2 py-0.5 font-medium">{core.label}</span>
         {question.exam && question.examBasis && <ExamBadge basis={question.examBasis} hintIds={question.hintIds} />}
+        <JokboBadge question={question} />
         <span className="text-muted">
           {question.topic} · 난이도 {"●".repeat(question.difficulty)}
           {"○".repeat(3 - question.difficulty)}
@@ -99,6 +119,7 @@ export function QuestionRenderer({ question, answer, onAnswer, result }: Props) 
           <ResultBanner correct={result.correct} score={result.score} />
           <Review question={question as never} answer={answer as never} result={result as never} />
           <div className="flex flex-col gap-1 rounded-lg bg-surface p-3 text-sm leading-relaxed">
+            <ExplanationSource question={question} />
             {/* 핵심 한 줄: summary가 없으면 해설 첫 문장. 해설이 한 문장뿐이면 같은 말을 두 번 보이지 않는다 */}
             {(question.summary ?? keyLine(question.explanation)) !== question.explanation.trim() && (
               <p className="font-semibold">

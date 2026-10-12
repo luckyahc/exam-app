@@ -3,6 +3,7 @@ import { type AnyAnswer, coreFor, gradeQuestion, type QType, type Question } fro
 import { hashString, mulberry32 } from "@/lib/random";
 import { SESSION_KEY } from "@/lib/storage/keys";
 import { safeGetJSON, safeSetJSON } from "@/lib/storage/safeStorage";
+import { matchesSource, type SourceFilter } from "./jokbo";
 import { matchesStar, type StarBasis } from "./starBasis";
 import type { QStatus } from "./status";
 
@@ -51,6 +52,8 @@ export interface QuizFilter {
   /** starOnly일 때 ⭐ 근거(lib/quiz/starBasis.ts). 없으면 전체 ⭐ */
   starBasis?: StarBasis;
   topics?: readonly string[];
+  /** 분류(족보 / 일반, lib/quiz/jokbo.ts). 없으면 전체 */
+  source?: SourceFilter | null;
   /** 난이도(1~3, 여러 개). 비우면 전체 */
   difficulties?: readonly number[];
   /** 문제 수. null/undefined = 전체 */
@@ -73,6 +76,7 @@ export function filterQuestions(questions: readonly Question[], f: QuizFilter): 
       (!f.statuses?.length || !f.statusOf || f.statuses.includes(f.statusOf(q.id))) &&
       (!f.types?.length || f.types.includes(q.type)) &&
       (!f.starOnly || matchesStar(q, f.starBasis ?? "all")) &&
+      matchesSource(q, f.source) &&
       (!f.topics?.length || f.topics.includes(q.topic)) &&
       (!f.difficulties?.length || f.difficulties.includes(q.difficulty)),
   );

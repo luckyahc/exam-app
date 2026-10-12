@@ -8,9 +8,9 @@ type Mod = Promise<{ default: readonly Question[] }>;
  * 반환 타입을 적어 레지스트리 타입 추론이 순환하지 않게
  */
 const withHints =
-  (chapter: string, main: () => Mod, extra: () => Mod) =>
+  (chapter: string, main: () => Mod, extra?: () => Mod) =>
   (): Promise<readonly Question[]> =>
-    Promise.all([main(), extra(), import("./terms")]).then(([m, h, t]) => applyHints([...m.default, ...h.default, ...t.termQuestions(chapter)]));
+    Promise.all([main(), extra?.() ?? { default: [] }, import("./terms")]).then(([m, h, t]) => applyHints([...m.default, ...h.default, ...t.termQuestions(chapter)]));
 
 const os = {
   id: "os",
@@ -48,6 +48,16 @@ const os = {
       shortTitle: "가상 메모리",
       minQuestions: 120,
       load: withHints("ch08", () => import("./ch08"), () => import("./ch08-hint")),
+    },
+    {
+      // 2026-10-12 시험 범위에 추가(docs/jokbo-plan.md). 문제는 Sprint 19(일반)·20(족보)에서 채운다.
+      // minQuestions는 Sprint 19에서 PDF 분석 후 기존 규칙(⭐ 8 + 일반 소주제 2~4의 합)으로 정한다 — 지금은 자리값 1
+      id: "ch09",
+      title: "Ch09. 단일 프로세서 스케줄링",
+      shortTitle: "스케줄링",
+      minQuestions: 1,
+      status: "preparing",
+      load: withHints("ch09", () => import("./ch09")),
     },
   ],
 } as const satisfies SubjectDef;

@@ -171,11 +171,18 @@ describe("문제 데이터 (전 과목·전 챕터)", () => {
 describe("챕터 최소 문항 수 (Sprint 11부터 실패 조건)", () => {
   // 데이터 통신은 고정 seed 생성기 문항을 포함해 센다(docs/coverage-matrix.md 데이터 통신 절, 2026-10-05 사용자 승인).
   // OS도 같은 방식으로 세지만 정적 문항만으로도 최소를 넘는다.
-  // 콘텐츠 작성 전 과목(status: "preparing")은 문제가 0개인 챕터만 건너뛴다 — 문제가 하나라도 들어가면 바로 검사한다.
+  // 콘텐츠 작성 전 과목·챕터(status: "preparing")는 문제가 0개인 챕터만 건너뛴다 — 문제가 하나라도 들어가면 바로 검사한다.
+  const preparing = (x: object) => "status" in x && x.status === "preparing";
   it.each(SUBJECTS.flatMap((s) => s.chapters.map((c) => [`${s.id}/${c.id}`, s, c] as const)))("%s: 최소 문항 수 이상", async (_, s, c) => {
     const n = (await c.load()).length;
-    if ("status" in s && s.status === "preparing" && n === 0) return;
+    if ((preparing(s) || preparing(c)) && n === 0) return;
     expect(n).toBeGreaterThanOrEqual(c.minQuestions);
+  });
+
+  it("챕터의 준비 중 표시(status: preparing)는 문제가 아직 없는 챕터에만 남아 있다", async () => {
+    for (const s of SUBJECTS)
+      for (const c of s.chapters)
+        if (preparing(c)) expect((await c.load()).length, `${s.id}/${c.id}: 문제가 들어가면 status를 지운다`).toBe(0);
   });
 
   it("준비 중 표시(status: preparing)는 문제가 아직 없는 챕터가 있는 과목에만 남아 있다", async () => {

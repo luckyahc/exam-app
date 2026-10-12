@@ -8,6 +8,7 @@ import { isQType, type Question } from "@/lib/qtypes/registry";
 import { loadChapter, loadQuestions, loadSubject } from "@/lib/quiz/loadQuestions";
 import { filterQuestions, loadSession, newSession, type QuizSession, saveSession } from "@/lib/quiz/session";
 import { isStatus, questionStatus, STATUS_LABEL } from "@/lib/quiz/status";
+import { parseSource, SOURCE_LABEL } from "@/lib/quiz/jokbo";
 import { parseStar, STAR_LABEL } from "@/lib/quiz/starBasis";
 import { subjectRecords } from "@/lib/storage/recordsStore";
 import { QuizRunner } from "./QuizRunner";
@@ -53,12 +54,14 @@ export function QuizEntry() {
       const types = (params.get("types") ?? "").split(",").filter(isQType);
       const statuses = (params.get("status") ?? "").split(",").filter(isStatus);
       const starBasis = parseStar(params.get("star"));
+      const source = parseSource(params.get("source"));
       const records = subjectRecords(subjectId);
       const count = Number(params.get("count")) || null;
       const picked = filterQuestions(pool, {
         types,
         starOnly: !!starBasis,
         starBasis: starBasis ?? undefined,
+        source,
         topics: (params.get("topics") ?? "").split("|").filter(Boolean),
         difficulties: (params.get("diff") ?? "").split(",").map(Number).filter((d) => d === 1 || d === 2 || d === 3),
         count,
@@ -73,6 +76,7 @@ export function QuizEntry() {
       const mode = params.get("mode") === "exam" ? "exam" : "instant";
       const star =
         (starBasis ? ` · ⭐ ${starBasis === "all" ? "시험 포인트" : STAR_LABEL[starBasis]}` : "") +
+        (source ? ` · ${SOURCE_LABEL[source]}` : "") +
         (statuses.length ? ` · ${statuses.map((s) => STATUS_LABEL[s]).join("·")}` : "") +
         (params.get("topics") === "용어" ? " · 용어" : "");
       const session = newSession(picked, {

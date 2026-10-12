@@ -49,6 +49,59 @@ export interface BaseQ<T extends string = string> {
   generator?: GeneratorRef;
   /** 데이터과학 작성 시 검증 방식(Sprint 14 — lib/verify/). 다른 과목은 쓰지 않는다 */
   verify?: VerifySpec;
+  /**
+   * 문제 분류(Sprint 18, docs/jokbo-plan.md). 없으면 일반 문항, "jokbo"면 족보에서 만든 문항 — jokbo 필수.
+   * 계획 문서의 `source: "jokbo"`에 해당한다 — `source`는 코드 빈칸(code-blank)의 코드 본문 필드라 이름을 `origin`으로 했다
+   */
+  origin?: "jokbo";
+  jokbo?: JokboInfo;
+}
+
+/** 족보에 한 번 나온 기록. term: 연도/학기(있으면, 예 "2023 중간") */
+export interface JokboOccurrence {
+  file: string;
+  /** 원문 문항 번호. 번호가 없으면 "번호 미표기" */
+  number: string;
+  term?: string;
+}
+
+/** 족보 문항 정보 — 같은 문제는 occurrences에 모으고, 비슷하지만 다른 문제는 variantGroup으로 묶는다 */
+export interface JokboInfo {
+  occurrences: JokboOccurrence[];
+  /** 서술형 원문을 허용 유형으로 바꿨을 때 원문 보존 */
+  original?: string;
+  /** `{subject}-vg-{slug}` */
+  variantGroup?: string;
+  /** jokbo = 족보 해설을 바탕으로 씀, generated = 직접 생성(OS는 슬라이드 근거) */
+  explanationSource: "jokbo" | "generated";
+}
+
+const KEBAB = "[a-z0-9]+(?:-[a-z0-9]+)*";
+
+/** 족보 필드 검사: 족보 문항 id `{subject}-{chapter}-jokbo-NNN`, occurrences 1개 이상, explanationSource 필수, variantGroup 형식 */
+export function validateJokbo(q: BaseQ): string[] {
+  const errors: string[] = [];
+  const jokboId = new RegExp(`^${q.subject}-${q.chapter}-jokbo-\\d{3}$`).test(q.id);
+  if (q.origin !== undefined && q.origin !== "jokbo") errors.push(`origin은 "jokbo"만 허용: ${String(q.origin)}`);
+  if (q.origin === "jokbo") {
+    if (!jokboId) errors.push(`족보 문항 id는 '${q.subject}-${q.chapter}-jokbo-NNN'이어야 함: ${q.id}`);
+    if (!q.jokbo) errors.push("origin이 jokbo면 jokbo 필드 필수");
+  } else {
+    if (q.jokbo) errors.push("jokbo 필드가 있으면 origin: \"jokbo\" 필수");
+    if (q.id.startsWith(`${q.subject}-${q.chapter}-jokbo-`)) errors.push("'-jokbo-' id는 족보 문항만 쓴다");
+  }
+  const j = q.jokbo;
+  if (!j) return errors;
+  if (!Array.isArray(j.occurrences) || j.occurrences.length === 0) errors.push("jokbo.occurrences는 1개 이상");
+  for (const o of j.occurrences ?? []) {
+    if (!o.file?.trim() || !o.number?.trim()) errors.push("jokbo.occurrences의 file·number가 비어 있음");
+    if (o.term !== undefined && !o.term.trim()) errors.push("jokbo.occurrences의 term이 빈 문자열");
+  }
+  if (j.explanationSource !== "jokbo" && j.explanationSource !== "generated") errors.push("jokbo.explanationSource는 jokbo|generated 필수");
+  if (j.variantGroup !== undefined && !new RegExp(`^${q.subject}-vg-${KEBAB}$`).test(j.variantGroup))
+    errors.push(`jokbo.variantGroup 형식은 '${q.subject}-vg-{slug}': ${j.variantGroup}`);
+  if (j.original !== undefined && !j.original.trim()) errors.push("jokbo.original이 빈 문자열");
+  return errors;
 }
 
 /**
@@ -139,6 +192,7 @@ export function validateBase(q: BaseQ): string[] {
     if (!q.code.source.trim()) errors.push("code.source가 비어 있음");
     if (/[‘’“”]/.test(q.code.source)) errors.push("code.source에 굽은 따옴표가 있음");
   }
+  errors.push(...validateJokbo(q));
   return errors;
 }
 

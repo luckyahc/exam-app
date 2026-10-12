@@ -13,12 +13,13 @@ const meta: ChapterMeta = {
   starIds: ["a", "c"],
   starHwIds: ["a"],
   starHintIds: ["c"],
+  jokboIds: [],
   types: [],
   rows: [
-    { type: "mcq", topic: "TLB", exam: true, hw: true, hint: false, difficulty: 1 },
-    { type: "mcq", topic: "TLB", exam: false, hw: false, hint: false, difficulty: 2 },
-    { type: "ox", topic: "Clock", exam: true, hw: false, hint: true, difficulty: 2 },
-    { type: "ox", topic: "Clock", exam: false, hw: false, hint: false, difficulty: 3 },
+    { type: "mcq", topic: "TLB", exam: true, hw: true, hint: false, jokbo: false, difficulty: 1 },
+    { type: "mcq", topic: "TLB", exam: false, hw: false, hint: false, jokbo: false, difficulty: 2 },
+    { type: "ox", topic: "Clock", exam: true, hw: false, hint: true, jokbo: false, difficulty: 2 },
+    { type: "ox", topic: "Clock", exam: false, hw: false, hint: false, jokbo: false, difficulty: 3 },
   ],
   difficulties: [
     { difficulty: 1, count: 1 },

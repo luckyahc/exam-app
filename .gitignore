@@ -38,6 +38,7 @@ yarn-error.log*
 
 # copyrighted lecture source material — never commit
 /source/**/*.pdf
+/source/**/*.zip
 
 # typescript
 *.tsbuildinfo

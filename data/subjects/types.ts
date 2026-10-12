@@ -13,6 +13,8 @@ export interface ChapterDef {
   minQuestions: number;
   /** 챕터 문제 배열을 동적 import로 불러온다(퀴즈 화면에서 필요한 챕터만 로드). */
   load: () => Promise<readonly Question[]>;
+  /** 콘텐츠 작성 전 챕터(이미 문제가 있는 과목에 새로 넣은 챕터, 예: OS Ch09). 문제가 0개일 때만 최소 문항 수 검사를 건너뛴다 */
+  status?: "preparing";
 }
 
 export interface SubjectDef {

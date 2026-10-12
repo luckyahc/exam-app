@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { ChapterMeta } from "@/lib/chapterMeta";
+import { SOURCE_LABEL, type SourceFilter } from "@/lib/quiz/jokbo";
 import { STAR_LABEL, type StarBasis } from "@/lib/quiz/starBasis";
 import { questionStatus, type QStatus } from "@/lib/quiz/status";
 import { useRecords } from "@/lib/storage/recordsStore";
@@ -59,6 +60,9 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
   const [star, setStar] = useState<StarBasis | null>(null);
   const starChoice = meta.starHwIds.length > 0 && meta.starHintIds.length > 0;
   const starRow = (r: ChapterMeta["rows"][number]) => !star || (star === "handwritten" ? r.hw : star === "hint" ? r.hint : r.exam);
+  // 분류: 족보 문항이 있는 챕터만 고를 수 있다
+  const [source, setSource] = useState<SourceFilter>("all");
+  const jokboCount = meta.jokboIds.length;
   const [diffs, setDiffs] = useState<number[]>([]);
   const [count, setCount] = useState<number>(20);
   const [shuffle, setShuffle] = useState(true);
@@ -77,6 +81,7 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
   // 조건에 맞는 문제 수(시작 전 미리 보기) — 메타의 토픽·유형 집계로는 교집합을 알 수 없어 서버에서 받은 행으로 센다
   const available = meta.rows.filter(
     (r, i) => (status === "all" || statuses[i] === status) && (!types.length || types.includes(r.type)) && starRow(r) &&
+      (source === "all" || r.jokbo === (source === "jokbo")) &&
       (!topics.length || topics.includes(r.topic)) &&
       (!diffs.length || diffs.includes(r.difficulty)),
   ).length;
@@ -88,6 +93,7 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
     if (topics.length) p.set("topics", topics.join("|"));
     if (star) p.set("star", star === "all" ? "1" : star);
     if (status !== "all") p.set("status", status);
+    if (source !== "all") p.set("source", source);
     if (diffs.length) p.set("diff", [...diffs].sort().join(","));
     if (count) p.set("count", String(count));
     if (shuffle) p.set("shuffle", "1");
@@ -135,6 +141,22 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
             </div>
           )}
           {starChoice && <p className="text-xs text-muted">교수님 필기 ⭐에 시험 힌트가 함께 붙은 문항은 양쪽 모두에 들어갑니다.</p>}
+        </div>
+      )}
+
+      {jokboCount > 0 && (
+        <div className={section}>
+          <h2 className={h}>분류</h2>
+          <Radio<SourceFilter>
+            name="분류"
+            value={source}
+            onChange={setSource}
+            options={[
+              { value: "all", label: SOURCE_LABEL.all },
+              { value: "jokbo", label: `${SOURCE_LABEL.jokbo} ${jokboCount}` },
+              { value: "general", label: `${SOURCE_LABEL.general} ${meta.ids.length - jokboCount}` },
+            ]}
+          />
         </div>
       )}
 

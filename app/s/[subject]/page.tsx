@@ -12,6 +12,7 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
   const chapters = await subjectMeta(subject);
   const allIds = chapters.flatMap((c) => c.ids);
   const stars = chapters.reduce((n, c) => n + c.starIds.length, 0);
+  const jokbo = chapters.reduce((n, c) => n + c.jokboIds.length, 0);
   const link = "rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium hover:border-primary";
 
   return (
@@ -32,6 +33,12 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
         {stars > 0 && (
           <Link href={`/quiz?subject=${subject.id}&star=1&shuffle=1&mode=instant`} className={link}>
             <span aria-hidden>⭐</span> 이 과목 시험 포인트만 풀기 ({stars})
+          </Link>
+        )}
+        {/* 족보 문항(docs/jokbo-plan.md)이 있는 과목만 — 빈 퀴즈 방지 */}
+        {jokbo > 0 && (
+          <Link href={`/quiz?subject=${subject.id}&source=jokbo&shuffle=1&mode=instant`} className={link}>
+            족보만 풀기 ({jokbo})
           </Link>
         )}
         <Link href={`/review?subject=${subject.id}`} className={link}>

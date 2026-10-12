@@ -8,6 +8,8 @@ const BEFORE = [
   { id: "ch03", title: "Ch03. 프로세스 기술과 제어", shortTitle: "프로세스", minQuestions: 80 },
   { id: "ch07", title: "Ch07. 메모리 관리", shortTitle: "메모리 관리", minQuestions: 80 },
   { id: "ch08", title: "Ch08. 가상 메모리", shortTitle: "가상 메모리", minQuestions: 120 },
+  // 2026-10-12 시험 범위 추가(Sprint 18). minQuestions는 Sprint 19에서 확정 — 기존 4개 챕터는 그대로
+  { id: "ch09", title: "Ch09. 단일 프로세서 스케줄링", shortTitle: "스케줄링", minQuestions: 1 },
 ];
 
 describe("OS 과목 레지스트리 (회귀)", () => {

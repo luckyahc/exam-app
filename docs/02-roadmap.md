@@ -21,6 +21,11 @@
 | 15 | [데이터과학 콘텐츠: Lec1~Lec3](./sprints/sprint-15-ds-content-lec1-3.md) | 103문항(최소 20·56·27), 완료 조건: `npm test`와 `npm run verify:ds` 모두 통과 | DONE |
 | 16 | [데이터과학 콘텐츠: Lec4~Lec6](./sprints/sprint-16-ds-content-lec4-6.md) | 176문항(최소 32·66·78), 완료 조건: `npm test`와 `npm run verify:ds` 모두 통과 | DONE |
 | 17 | [QA · 배포 확인](./sprints/sprint-17-qa-deploy.md) | 실행 엔진 사용성(재사용·로딩·실패 화면), Vercel 배포 점검·deploy-checklist, 세 과목 자동 검사·화면·키보드·기록 왕복, README·알려진 한계 | DONE |
+| 18 | [족보 자료 목록화 · 족보 분류 기능](./jokbo-plan.md) | 족보 판독 텍스트(`docs/jokbo/*/extracted/`)·문항 목록과 중복 판정(`inventory.md`), 알고리즘 챕터 체계, 족보 데이터 모델(`origin`·`jokbo`)·분류 필터·뱃지·해설 출처, 알고리즘 과목 등록·OS Ch09 등록(0문항) | DONE |
+| 19 | [OS 9장](./jokbo-plan.md#sprint-19--os-9장) | Ch09 분석, 스케줄링 시뮬레이터, 일반 문항·용어, `verification/os-ch09.md` | TODO |
+| 20 | [OS 족보 문항](./jokbo-plan.md#sprint-20--os-족보-문항) | 대표 56문항(Ch02~Ch09), 대조 기록 | TODO |
+| 21 | [알고리즘 족보 문항](./jokbo-plan.md#sprint-21--알고리즘-족보-문항) | 대표 57문항, 알고리즘 시뮬레이터·기준값 테스트, `verification/algorithm-*.md` | TODO |
+| 22 | [족보 마무리](./jokbo-plan.md#sprint-22--마무리) | 전체 검사, 족보 필터 점검, README·알려진 한계, 배포 후 확인 항목 | TODO |
 
 ## 의존 관계 요약
 
@@ -81,3 +86,4 @@ Sprint 1 ──▶ Sprint 2 ──▶ Sprint 3 ──▶ Sprint 5 ─┐
 - 2026-10-07: **Sprint 16 완료.** 데이터과학 Lec4 36 · Lec5 68 · Lec6 82 = 186문항(최소 32·66·78, 소주제 목표 모두 이상). Lec4 셀레니움 코드는 모두 실행 제외(빈칸·코드 보기 개념), Lec5는 sql.js 실행(준비 스크립트 studentCourse·empty, SQL mcq 결과 표 고르기, MySQL 전용 문법 감지), Lec6 판다스는 python.setup으로 [코드 6-27]·[코드 6-16] 데이터프레임을 만들어 실행 검증(넘파이 22·판다스 25). Lec1~3 비중 보강(코드 빈칸 +27·복수 선택 +2) 후 비중 규칙(빈칸 60% 이상·작성 15% 이하·결과 고르기 30% 이하·복수 선택 8% 이상·mcq 30% 이하)을 전 강의 테스트로 강제. 슬라이드 오류 활용 6-1·6-4·6-40(슬라이드 결과는 6-33 수정 전 원래 데이터 기준). SQL 작성형 결과 화면에 MySQL 문법 차이 안내. Lec6 p.62~63 실습·과제 안내는 출제하지 않음. 데이터과학 "준비 중" 표시 제거.
 - 2026-10-07: **Sprint 17 완료 — 전체 완료.** 실행 엔진 사용성: Worker 재사용 확인(같은 탭에서 판다스 한 번만 불러옴, 단위 테스트 추가), 불러오기 실패 화면에 "다시 시도", 엔진 파일 내려받기 실패를 바로 감지(180초 → 수 초)하고 실패한 Worker는 버림. 배포: 엔진 파일 Content-Type·1년 immutable 캐시·CSP를 로컬에서 확인, Vercel 제한(빌드 45분·출력 파일 수 무제한) 안, 배포 후 확인은 docs/deploy-checklist.md. 세 과목 자동 검사(대조 기록 누락 0·형식 문제 0), 세 과목 기록 내보내기→초기화→가져오기 왕복 테스트. README에 데이터과학·실행 엔진·verify:ds·문항 추가 방법, 알려진 한계 docs/known-limitations.md. 남은 브라우저 점검(데이터과학·공통 화면 각 4조합, 키보드 풀이, 실제 파일 왕복)은 PC 메모리 부족으로 하지 않기로 결정 — 이전 스프린트 점검과 단위 테스트로 갈음, 배포 후 사용자가 확인.
 - 2026-10-07: **OS 시험 힌트 반영 · 용어 사전 · 풀이 상태별 문제 보기(스프린트 밖 추가 작업).** 교수님 공식 시험 힌트(`docs/os-exam-hint.md`)를 40개 세부 항목으로 나눠 OS 문항을 연결(`data/subjects/os/hints.ts`, ⭐ 근거 `exam-hint`·`hintIds` — 필기 ⭐는 유지)하고 보강 63문항(chNN-hint.ts) — 항목마다 6문항·3유형·order/match 규칙을 테스트로 강제(미달 24/40 → 0/40), 계산 문항에 response time·processor utilization 병기. OS 용어 사전 170개(`docs/os-glossary.md`, 공용 구조 `data/subjects/glossary.ts`)와 용어 단답형 123개(기존 blank 40개에 47개 연결), 용어 정리 화면(`/s/os/glossary`)·용어 퀴즈. 전 과목 문제 목록(`/s/{과목}/questions` — 안 푼·맞힌·틀린·북마크 탭, 정답·해설 보기는 기록 안 함, 이 목록으로 풀기)과 챕터 시작의 풀이 상태 옵션, ⭐ 근거별 선택(전체 ⭐ / 교수님 필기만 / 시험 힌트만)·통계의 근거별 ⭐ 달성도. OS ⭐ 186 → 496. 브라우저 확인은 PC 메모리 부족으로 하지 못함 — 배포 후 확인 항목은 `docs/progress/os-exam-hint.md`.
+- 2026-10-12: **Sprint 18 족보 자료 목록화 · 족보 분류 기능.** 계획 `docs/jokbo-plan.md`(규칙·Sprint 19~22). 판독: 알고리즘 zip 전사본·docx, OS 족보 2개(100쪽 이미지 판독). 중복 판정: 알고리즘 범위 안 111 → 대표 57(범위 밖 25), OS 100 → 대표 56(범위 밖 9). 족보 필드는 `source` 대신 `origin`(code-blank `source`와 충돌). 알고리즘 과목·OS Ch09 등록(0문항, 준비 중). 진행 기록 `docs/progress/sprint-18.md`.

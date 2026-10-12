@@ -8,6 +8,7 @@ import { coreFor, type Question } from "@/lib/qtypes/registry";
 import { loadSubject } from "@/lib/quiz/loadQuestions";
 import { LIST_TABS, type ListFilter, type ListTab, listRows, promptPreview, revealAnswer, sessionFromList, TAB_LABEL, tabCounts, visibleRows } from "@/lib/quiz/questionList";
 import { newSession, saveSession } from "@/lib/quiz/session";
+import { isJokbo, jokboBadge, SOURCE_LABEL, type SourceFilter } from "@/lib/quiz/jokbo";
 import { hasStarChoice, STAR_LABEL, type StarBasis } from "@/lib/quiz/starBasis";
 import { useRecords } from "@/lib/storage/recordsStore";
 
@@ -60,6 +61,7 @@ export function QuestionList({ subject }: { subject: ListSubject }) {
   );
   const stars = subject.examPoints !== false && (questions ?? []).some((q) => q.exam);
   const starChoice = useMemo(() => hasStarChoice(questions ?? []), [questions]);
+  const hasJokbo = useMemo(() => (questions ?? []).some(isJokbo), [questions]);
 
   const start = (picked: { shuffle: boolean; count: number | null; label: string; list: typeof visible }) => {
     const s = sessionFromList(picked.list, {
@@ -155,6 +157,18 @@ export function QuestionList({ subject }: { subject: ListSubject }) {
             ))}
           </select>
         </label>
+        {hasJokbo && (
+          <label className="flex min-w-0 flex-col gap-1 text-xs text-muted">
+            분류
+            <select className={sel} value={filter.source ?? "all"} onChange={(e) => setFilter({ ...filter, source: e.target.value as SourceFilter })}>
+              {(["all", "jokbo", "general"] as const).map((v) => (
+                <option key={v} value={v}>
+                  {SOURCE_LABEL[v]}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         {stars && !starChoice && (
           <label className="flex items-center gap-2 self-end py-1.5 text-sm">
             <input type="checkbox" checked={!!filter.star} onChange={(e) => setFilter({ ...filter, star: e.target.checked ? "all" : null })} />
@@ -219,6 +233,7 @@ export function QuestionList({ subject }: { subject: ListSubject }) {
                   <span>{r.q.chapter.toUpperCase()}</span>
                   <span>{coreFor(r.q).label}</span>
                   {r.q.exam && <span aria-label="시험 포인트">⭐</span>}
+                  {jokboBadge(r.q) && <span className="font-medium text-foreground">{jokboBadge(r.q)}</span>}
                   <span className={m.cls}>
                     <span aria-hidden>{m.icon}</span> {m.text}
                   </span>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { QuestionRenderer } from "@/components/qtypes/QuestionRenderer";
+import { ExplanationSource, QuestionRenderer } from "@/components/qtypes/QuestionRenderer";
 import { RichText } from "@/components/qtypes/ui";
 import { coreFor, type Question } from "@/lib/qtypes/registry";
 import { loadQuestions } from "@/lib/quiz/loadQuestions";
@@ -152,6 +152,7 @@ export function ResultView() {
                       ) : (
                         <div className="flex flex-col gap-2 text-sm">
                           <p className="text-muted">답하지 않은 문제입니다. 해설:</p>
+                          <ExplanationSource question={q} />
                           <p>
                             <RichText text={q.explanation} />
                           </p>
