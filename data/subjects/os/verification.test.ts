@@ -37,7 +37,7 @@ describe("OS 대조 기록 ↔ 문제 데이터", () => {
     expect(summary(f, "필기 근거(문항별 확인)")).toBe(rows.filter((r) => r[4].includes("필기")).length);
   });
 
-  it.each(["ch07", "ch08"])("os-%s.md: id·순서 일치, 요약 숫자 = 표", async (ch) => {
+  it.each(["ch07", "ch08", "ch09"])("os-%s.md: id·순서 일치, 요약 숫자 = 표", async (ch) => {
     const f = `os-${ch}.md`;
     const rows = rowsOf(f);
     expect(rows.map((r) => r[1].replaceAll("`", ""))).toEqual(await idsOf(ch));

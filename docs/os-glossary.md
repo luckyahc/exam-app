@@ -27,7 +27,8 @@
 | Ch03 프로세스 기술과 제어 | 58 | 58 | 0 | 38 | 20 | 58 |
 | Ch07 메모리 관리 | 37 | 37 | 0 | 28 | 9 | 32 |
 | Ch08 가상 메모리 | 43 | 43 | 0 | 32 | 11 | 39 |
-| 합계 | 170 | 170 | 0 | 123 | 47 | 155 |
+| Ch09 단일 프로세서 스케줄링 | 22 | 22 | 0 | 19 | 3 | 0 |
+| 합계 | 192 | 192 | 0 | 142 | 50 | 155 |
 
 ## 용어 목록
 
@@ -221,3 +222,32 @@
 | 교체 범위 | Replacement Scope | Ch08 p.59 인쇄 | 있음 | `os-ch08-term-030` | 8-7 |
 | 지역 교체 | local | Ch08 p.59 인쇄 | 있음 | `os-ch08-term-031` | 8-7 |
 | 전역 교체 | global | Ch08 p.59 인쇄 | 있음 | `os-ch08-term-032` | 8-7 |
+
+### Ch09 단일 프로세서 스케줄링 (22)
+
+2026-10-12 Sprint 19에 추가. 시험 힌트(docs/os-exam-hint.md)는 Ch02~Ch08만 다뤄 힌트 범위 용어는 없다. 응답시간·CPU 이용률·타임 슬라이스·비선점·디스패처·클럭 인터럽트는 Ch02·Ch03 용어로 이미 있다.
+
+| 용어 | 영어 / 약자 | 근거 | 정의 | 단답형 | 힌트 |
+|---|---|---|---|---|---|
+| 장기 스케줄링 | Long-term scheduling | Ch09 p.3 인쇄 | 있음 | `os-ch09-term-001` | — |
+| 중기 스케줄링 | Medium-term scheduling | Ch09 p.3 인쇄 | 있음 | `os-ch09-term-002` | — |
+| 단기 스케줄링 | Short-term scheduling | Ch09 p.3 인쇄 | 있음 | `os-ch09-term-003` | — |
+| 반환시간 | Turnaround time | Ch09 p.5 인쇄 | 있음 | 연결: `os-ch09-criteria-001` | — |
+| 마감시간 | Deadlines | Ch09 p.5 인쇄 | 있음 | `os-ch09-term-004` | — |
+| 처리량 | Throughput | Ch09 p.5 인쇄 | 있음 | 연결: `os-ch09-criteria-008` | — |
+| 기아 | starvation | Ch09 p.6 인쇄 | 있음 | `os-ch09-term-005` | — |
+| 선점형 | Preemptive | Ch09 p.9 인쇄 | 있음 | `os-ch09-term-006` | — |
+| 서비스 시간 | service time | Ch09 p.10 인쇄 | 있음 | `os-ch09-term-007` | — |
+| 호위 효과 | convoy effect | Ch09 p.12 인쇄 | 있음 | 연결: `os-ch09-fcfs-002` | — |
+| CPU 중심 프로세스 | CPU-bound | Ch09 p.12 인쇄 | 있음 | `os-ch09-term-008` | — |
+| I/O 중심 프로세스 | I/O-bound | Ch09 p.12 인쇄 | 있음 | `os-ch09-term-009` | — |
+| 선착순 | First-Come-First-Served / FCFS | Ch09 p.11 인쇄 | 있음 | `os-ch09-term-010` | — |
+| 라운드 로빈 | Round-Robin / RR | Ch09 p.13 인쇄 | 있음 | `os-ch09-term-011` | — |
+| 가상 라운드 로빈 | Virtual Round-Robin / VRR | Ch09 p.15 인쇄 | 있음 | `os-ch09-term-012` | — |
+| 지수 평균 | Exponential Averaging | Ch09 p.18 인쇄 | 있음 | `os-ch09-term-013` | — |
+| 최단 작업 우선 | Shortest Process Next / SPN | Ch09 p.19 인쇄 | 있음 | `os-ch09-term-014` | — |
+| 최단 잔여 시간 우선 | Shortest Remaining Time / SRT | Ch09 p.21 인쇄 | 있음 | `os-ch09-term-015` | — |
+| 최고 응답 비율 우선 | Highest Response Ratio Next / HRRN | Ch09 p.22 인쇄 | 있음 | `os-ch09-term-016` | — |
+| 피드백 | Feedback | Ch09 p.23 인쇄 | 있음 | `os-ch09-term-017` | — |
+| 대기시간 | waiting time | Ch09 p.26 인쇄 | 있음 | `os-ch09-term-018` | — |
+| 정규화 반환시간 | normalized turnaround time | Ch09 p.26 인쇄 | 있음 | `os-ch09-term-019` | — |

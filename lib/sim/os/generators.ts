@@ -17,6 +17,7 @@ import { logicalToPhysical, physicalToLogical, solveFrame } from "./paging";
 import { chooseHole, FIT_LABEL, FITS, type Fit, type Hole } from "./placement";
 import { SCENARIOS, SWITCH_CAUSES, scenariosByCause, TRANSITIONS } from "./processScenario";
 import { ALGO_LABEL, type Algo, simulateReplacement } from "./replacement";
+import { SCHED_LABEL, type SchedAlgo, simulate, timeline, type Proc } from "./scheduling";
 import { segLogicalToPhysical } from "./segmentation";
 
 /**
@@ -708,6 +709,56 @@ export const memoryCapacityGen: Generator<CapParams> = {
   },
 };
 
+// ------------------------------------------------------------------ 단일 프로세서 스케줄링 (Ch09, Sprint 19)
+type SchedParams = { algo: Exclude<SchedAlgo, "feedback"> };
+const SCHED: Meta = {
+  chapter: "ch09",
+  topic: "시각별 스케줄링 추적",
+  slideRef: "Ch09 p.11",
+  exam: true,
+  examBasis: "handwritten",
+};
+const SCHED_RULE: Record<SchedParams["algo"], string> = {
+  fcfs: "FCFS(비선점, 먼저 도착한 순서)",
+  rr: "RR(q = 1, 선점 — 새로 도착한 프로세스를 먼저 RQ에 넣고 quantum을 소진한 프로세스를 그 뒤에 넣음)",
+  spn: "SPN(비선점, 서비스 시간이 가장 짧은 것)",
+  srt: "SRT(선점 — 새 프로세스가 도착할 때마다 남은 시간 s−e가 가장 짧은 것, 같으면 먼저 온 것)",
+  hrrn: "HRRN(비선점, 응답 비율 (w+s)/s가 가장 큰 것)",
+};
+
+export const schedulingGen: Generator<SchedParams> = {
+  name: "scheduling",
+  chapter: SCHED.chapter,
+  topic: SCHED.topic,
+  description: "프로세스 4개의 도착·서비스 시간 표를 주고, 한 스케줄링 알고리즘에서 시각 t에 실행 중인 프로세스를 묻는다(lib/sim/os/scheduling.ts)",
+  generate(seed, params = {}) {
+    const rng = createRng(seed);
+    const algo = params.algo ?? rng.pick(["fcfs", "rr", "spn", "srt", "hrrn"] as const);
+    const names = ["A", "B", "C", "D"];
+    let arrival = 0;
+    const procs: Proc[] = names.map((name, i) => {
+      if (i > 0) arrival += rng.int(1, 2);
+      return { name, arrival, service: rng.int(2, 5) };
+    });
+    const r = simulate(algo, procs, { quantum: 1 });
+    const line = timeline(r);
+    // 실행 중인 프로세스가 있는 시각만(첫 프로세스 서비스 ≥ 2, 도착 간격 ≤ 2라 쉬는 시각이 없다)
+    const t = rng.int(1, line.length - 2);
+    const answer = line[t];
+    const table = procs.map((p) => `${p.name}(도착 ${p.arrival}, 서비스 ${p.service})`).join(", ");
+    const q: McqQ = {
+      ...baseOf("scheduling", SCHED, seed, { algo }, algo === "fcfs" ? 1 : algo === "hrrn" || algo === "srt" ? 3 : 2),
+      type: "mcq",
+      prompt: `프로세스 ${table}를 **${SCHED_LABEL[algo]}${algo === "rr" ? "(q = 1)" : ""}**로 스케줄링할 때, **시각 ${t}~${t + 1}**에 실행 중인 프로세스는?`,
+      choices: names,
+      answerIndex: names.indexOf(answer),
+      explanation: `p.11 필기("표 보여주고 시간 4일때 시작되는 프로그램은?")와 같은 유형. 규칙: ${SCHED_RULE[algo]}. 시각 0부터의 실행 순서 = ${line} → 시각 ${t}~${t + 1}에 실행되는 것은 ${answer}. 완료 시각: ${names.map((n) => `${n} ${r.finish[n]}`).join(", ")}.`,
+      summary: `${SCHED_LABEL[algo]} 실행 순서를 시각 0부터 따라가며 그 시각의 프로세스를 찾는다`,
+    };
+    return q;
+  },
+};
+
 /** 폴트 수 기준 규칙: 해설에 다른 기준(초기 적재 포함)의 값을 한 줄로 적는다 */
 export function otherBasis(r: { faults: number; misses: number }): string {
   return `초기 적재까지 포함하면 ${r.misses}회(초기 적재 ${r.misses - r.faults}회 + F ${r.faults}회).`;
@@ -724,5 +775,6 @@ export const OS_GENERATORS: GeneratorMap = Object.fromEntries(
     replacementGen,
     processSwitchGen,
     memoryCapacityGen,
+    schedulingGen,
   ].map((g) => [g.name, g as unknown as Generator]),
 );

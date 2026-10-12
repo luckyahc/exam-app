@@ -127,10 +127,10 @@ describe("기존 과목 회귀 · 새 과목 등록", () => {
     for (const c of algorithm.chapters) expect(await c.load(), c.id).toHaveLength(0);
   });
 
-  it("OS Ch09: 기존 4개 챕터 뒤에 준비 중(문제 0개)으로 추가", async () => {
+  it("OS Ch09: 기존 4개 챕터 뒤에 추가(Sprint 19에 문제를 채우고 준비 중 해제)", async () => {
     const ch09 = os.chapters.find((c) => c.id === "ch09")!;
     expect(os.chapters.map((c) => c.id)).toEqual(["ch02", "ch03", "ch07", "ch08", "ch09"]);
-    expect(ch09.status).toBe("preparing");
-    expect(await ch09.load()).toHaveLength(0);
+    expect("status" in ch09).toBe(false);
+    expect((await ch09.load()).length).toBeGreaterThanOrEqual(ch09.minQuestions);
   });
 });

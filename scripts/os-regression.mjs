@@ -9,6 +9,7 @@ const OS_CHAPTERS = [
   { id: "ch03", title: "Ch03. 프로세스 기술과 제어" },
   { id: "ch07", title: "Ch07. 메모리 관리" },
   { id: "ch08", title: "Ch08. 가상 메모리" },
+  { id: "ch09", title: "Ch09. 단일 프로세서 스케줄링" },
 ];
 
 const results = [];
@@ -37,12 +38,6 @@ for (const ch of OS_CHAPTERS) {
     r.status === 200 && r.html.includes(ch.title),
     `${r.status} ${r.url}`,
   );
-}
-
-// 1-1. Ch09(2026-10-12 추가, 문제 준비 중)도 챕터 화면이 열린다 — 홈 링크 도달(4번)은 문제가 생긴 뒤 OS_CHAPTERS에 옮긴다
-{
-  const r = await get("/s/os/chapter/ch09");
-  check("Ch09 /s/os/chapter/ch09 → 챕터 화면", r.status === 200 && r.html.includes("Ch09. 단일 프로세서 스케줄링"), `${r.status} ${r.url}`);
 }
 
 // 2. 존재하지 않는 챕터는 404

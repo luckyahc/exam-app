@@ -50,13 +50,11 @@ const os = {
       load: withHints("ch08", () => import("./ch08"), () => import("./ch08-hint")),
     },
     {
-      // 2026-10-12 시험 범위에 추가(docs/jokbo-plan.md). 문제는 Sprint 19(일반)·20(족보)에서 채운다.
-      // minQuestions는 Sprint 19에서 PDF 분석 후 기존 규칙(⭐ 8 + 일반 소주제 2~4의 합)으로 정한다 — 지금은 자리값 1
+      // 2026-10-12 시험 범위에 추가(docs/jokbo-plan.md). minQuestions = 소주제 목표 합계(⭐ 4 × 8 + 일반 13개 2~4, docs/progress/sprint-19.md §2)
       id: "ch09",
       title: "Ch09. 단일 프로세서 스케줄링",
       shortTitle: "스케줄링",
-      minQuestions: 1,
-      status: "preparing",
+      minQuestions: 79,
       load: withHints("ch09", () => import("./ch09")),
     },
   ],

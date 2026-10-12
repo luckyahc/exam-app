@@ -14,7 +14,7 @@ import { englishCounts, hintRows, isTermQuestion } from "./hintStats";
 import os from "./index";
 
 const all = async () => (await Promise.all(os.chapters.map((c) => c.load()))).flat() as Question[];
-const SLIDE = /^Ch0[2378] p\.\d+(-\d+)?$/;
+const SLIDE = /^Ch0[23789] p\.\d+(-\d+)?$/;
 
 describe("OS 시험 힌트 반영", () => {
   it("연결한 문항 id가 모두 있고, 힌트가 붙은 문항은 ⭐(exam)이다", async () => {
