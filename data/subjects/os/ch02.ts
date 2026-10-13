@@ -887,7 +887,7 @@ const questions: readonly Question[] = [
     prompt: "CPU 이용률은 'CPU가 바쁜(non-idle) 시간 / 전체 시간'으로 정의한다.",
     answer: true,
     explanation:
-      "p.21 정의 그대로다. 유효 CPU 이용률은 이와 달리 스위칭 시간 등을 뺀 '유효 프로그램 실행시간 / 총 경과시간'이다.",
+      "p.21 정의 그대로다. 유효 CPU 이용률은 이와 달리 스위칭 시간 등을 뺀 '유효 프로그램 실행시간 / 총 경과시간'이다. 주의: 계산 문제에서 교수님은 스위칭 시간을 뺀 '유효 실행 시간 / 전체 시간'으로 채점한다(os-ch02-time-calc-007, 족보 os-ch02-jokbo-010 참고).",
   },
 
   {
