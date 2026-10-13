@@ -191,7 +191,7 @@ variantGroup 13개(접두사 `algorithm-vg-`): `nfact-bounds`(analysis 001·002�
 
 ## 6. 충돌·주의 (Sprint 21에 확정 — 상세: `docs/verification/algorithm-*.md`)
 
-- 충돌 1: sorting-011(족보 답 삽입·힙·계수 → 검증 답 삽입·계수). 원본 스캔 대조 수정 1: recurrence-003(전사본 반복 범위 오류).
+- 충돌 1: sorting-011(족보 답 삽입·힙·계수, 이론상 힙 정렬은 Θ(n log n)) → **교수님 기준 채택**(2026-10-13): 정답 삽입·힙·계수, 이론은 해설에. 원본 스캔 대조 수정 1: recurrence-003(전사본 반복 범위 오류).
 
 이전 후보 목록(Sprint 18):
 

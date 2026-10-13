@@ -25,7 +25,7 @@
 | 19 | [OS 9장](./jokbo-plan.md#sprint-19--os-9장) | Ch09 분석, 스케줄링 시뮬레이터, 일반 문항·용어, `verification/os-ch09.md` | DONE |
 | 20 | [OS 족보 문항](./jokbo-plan.md#sprint-20--os-족보-문항) | 대표 56문항(Ch02~Ch09), 대조 기록 | DONE |
 | 21 | [알고리즘 족보 문항](./jokbo-plan.md#sprint-21--알고리즘-족보-문항) | 대표 53문항, 알고리즘 시뮬레이터·기준값 테스트, `verification/algorithm-*.md` | DONE |
-| 22 | [족보 마무리](./jokbo-plan.md#sprint-22--마무리) | 전체 검사, 족보 필터 점검, README·알려진 한계, 배포 후 확인 항목 | TODO |
+| 22 | [족보 마무리](./jokbo-plan.md#sprint-22--마무리) | 전체 검사, 족보 필터 점검, README·알려진 한계, 배포 후 확인 항목 | DONE |
 
 ## 의존 관계 요약
 
@@ -93,3 +93,4 @@ Sprint 1 ──▶ Sprint 2 ──▶ Sprint 3 ──▶ Sprint 5 ─┐
 - 2026-10-13: 족보 계획 갱신 — 족보 문항은 원문 그대로 출제(문장·보기·순서·형식, 오타만 고침, 서술형 변환 규칙 삭제), 데이터 규칙과 충돌 시 족보 문항만 예외, 그림은 원본 스캔을 잘라 `public/jokbo/<과목>/<id>.png`로(`docs/jokbo-plan.md` §4).
 - 2026-10-13: **Sprint 20 OS 족보 문항.** 대표 56문항을 원문 그대로(`chNN-jokbo.ts`, 보기 순서 고정, 원문 그림은 ```text 고정폭 블록), 2022 LMS 정답 41개 슬라이드 대조(일치 40, 충돌 1 — 22-8 CPU 이용률), 2023 전용 15문항은 슬라이드·시뮬레이터로, 계산·추적 정답 lib/sim/os 테스트 고정, 데이터 규칙 예외 0, 대조 기록 `verification/os-jokbo.md`. 진행 기록 `docs/progress/sprint-20.md`.
 - 2026-10-13: **Sprint 21 알고리즘 족보 문항.** 원본 스캔 전수 대조(전사본 오류 1: M21-10 반복 범위, M21·T22·F22에 LMS 정답·해설 확인), 시뮬레이터 `lib/sim/algorithm/`(기준값 21), 대표 53문항 원문 그대로(족보 해설 45·생성 8, 그래프 그림 6), 족보 예외 6(예/아니오 2지선다 5, 정답 1개 복수 선택 1), 충돌 1(sorting-011 힙 정렬), 대조 기록 `verification/algorithm-*.md`, 과목 준비 중 해제. 진행 기록 `docs/progress/sprint-21.md`.
+- 2026-10-13: **Sprint 22 족보 마무리.** 족보 충돌 2건을 교수님 채점 기준으로(os-ch02-jokbo-010 → 0.6, algorithm-sorting-jokbo-011 → 삽입·힙·계수, 해설에 이론) + 규칙 "족보 답과 이론이 다르면 교수님 기준, 해설에 이론"(`jokbo-plan.md` §4), 실제 데이터 족보 필터 테스트, README·`known-limitations.md`(족보)·`deploy-checklist.md` 6번. 진행 기록 `docs/progress/sprint-22.md`.

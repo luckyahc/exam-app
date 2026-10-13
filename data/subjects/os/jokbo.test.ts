@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { buddyBlocks, simulateBuddy } from "@/lib/sim/os/buddy";
+import { utilization } from "@/lib/sim/os/cpuTime";
 import { logicalToPhysical, physicalToLogical } from "@/lib/sim/os/paging";
 import { chooseHole, type Hole } from "@/lib/sim/os/placement";
 import { clockReplace, enhancedClockVictim, simulateReplacement } from "@/lib/sim/os/replacement";
@@ -69,9 +70,12 @@ describe("OS 족보 문항", async () => {
     expect(picked("os-ch02-jokbo-007")).toBe(String(firstOutput(simulate("fcfs", procs))));
   });
 
-  it("Ch02 CPU 이용률(충돌): 바쁜 시간/전체 = 0.7 (LMS 답 0.6 = 유효 CPU 이용률)", () => {
-    expect(picked("os-ch02-jokbo-010")).toBe(String((6 + 0.3 + 0.7) / 10));
-    expect(byId.get("os-ch02-jokbo-010")!.explanation).toMatch(/^족보 답\(0\.6\)과 다름/);
+  it("Ch02 CPU 이용률(충돌 → 교수님 기준 채택): 유효 실행 시간 기준 0.6 = Ch02 ⭐ 시간 계산 예제와 같은 계산", () => {
+    expect(picked("os-ch02-jokbo-010")).toBe(String(utilization(6, 0.3 + 0.7 + 3)));
+    expect(byId.get("os-ch02-jokbo-010")!.explanation).toMatch(/^교수님 채점 기준\(2022 시험\)/);
+    // 같은 방식: os-ch02-time-calc-007(⭐) = utilization(6, 0.5 + 0.5 + 3)
+    const star = all.find((q) => q.id === "os-ch02-time-calc-007") as Question & { answer: number };
+    expect(star.answer).toBe(Math.round(utilization(6, 0.5 + 0.5 + 3) * 100) / 100);
   });
 
   it("Ch07 버디: 반납 후 128 할당·128 free·256 free, 129K 요청은 256K 블록", () => {

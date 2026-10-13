@@ -138,3 +138,30 @@ describe("기존 과목 회귀 · 새 과목 등록", () => {
     expect((await ch09.load()).length).toBeGreaterThanOrEqual(ch09.minQuestions);
   });
 });
+
+describe("실제 데이터 족보 필터 점검(Sprint 22)", () => {
+  // 과목 홈 "족보만 풀기 (N)"·챕터 시작 개수·퀴즈(/quiz?…&source=jokbo)·문제 목록 분류가 모두 같은 문항을 가리킨다
+  const expected: Record<string, Record<string, number>> = {
+    os: { ch02: 10, ch03: 13, ch07: 14, ch08: 13, ch09: 6 },
+    algorithm: { analysis: 9, recurrence: 11, sorting: 12, dc: 6, dp: 15 },
+  };
+  it.each(SUBJECTS.map((s) => [s.id, s] as const))("%s: 챕터별 족보 수 = 챕터 메타 = 퀴즈 필터 = 문제 목록 필터", async (id, s) => {
+    let total = 0;
+    for (const c of s.chapters) {
+      const qs = await c.load();
+      const meta = await chapterMeta(s, c);
+      const quiz = filterQuestions(qs, { source: parseSource("jokbo"), shuffle: true, seed: "s22" });
+      expect(meta.jokboIds.length, `${id}/${c.id}`).toBe(expected[id]?.[c.id] ?? 0);
+      expect(quiz.map((q) => q.id).sort(), `${id}/${c.id}`).toEqual([...meta.jokboIds].sort());
+      expect(meta.rows.filter((r) => r.jokbo)).toHaveLength(meta.jokboIds.length);
+      const rows = listRows(qs, undefined);
+      expect(visibleRows(rows, "all", { source: "jokbo" })).toHaveLength(meta.jokboIds.length);
+      expect(visibleRows(rows, "all", { source: "general" })).toHaveLength(qs.length - meta.jokboIds.length);
+      // 다른 필터(유형)와 함께 써도 족보만 남는다
+      const types = [...new Set(quiz.map((q) => q.type))].slice(0, 1);
+      expect(filterQuestions(qs, { source: "jokbo", types, seed: "s22" }).every((q) => isJokbo(q) && types.includes(q.type))).toBe(true);
+      total += meta.jokboIds.length;
+    }
+    expect(total).toBe(Object.values(expected[id] ?? {}).reduce((a, b) => a + b, 0));
+  });
+});

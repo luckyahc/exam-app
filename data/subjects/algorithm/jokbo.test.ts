@@ -93,9 +93,9 @@ describe("알고리즘 족보 문항", async () => {
     expect(picked("dp-jokbo-015")).toBe(String(bellmanFord(["0", "a", "b", "c", "d", "e", "f", "g"], e, "0").e));
   });
 
-  it("충돌 문항(sorting-011)은 해설이 '족보 답(…)과 다름'으로 시작하고 힙 정렬을 정답에서 뺀다", () => {
-    expect(q("sorting-jokbo-011").explanation).toMatch(/^족보 답\(삽입·힙·계수 정렬\)과 다름/);
-    expect(pickedMany("sorting-jokbo-011")).toEqual(["삽입 정렬", "계수 정렬"]);
+  it("충돌 문항(sorting-011)은 교수님 채점 기준(삽입·힙·계수)을 정답으로 하고 해설에 이론(Θ(n log n))을 함께 적는다", () => {
+    expect(q("sorting-jokbo-011").explanation).toMatch(/^교수님 채점 기준\(2022 시험\)\. 이론적으로 힙 정렬은 정렬된 입력에서도 Θ\(n log n\)이다\(강의 자료 3 p\.63\)/);
+    expect(pickedMany("sorting-jokbo-011")).toEqual(["힙 정렬", "삽입 정렬", "계수 정렬"]);
   });
 
   it.each(["analysis", "recurrence", "sorting", "dc", "dp"])("docs/verification/algorithm-%s.md: id·순서 = 데이터, 요약 숫자 = 표", async (ch) => {

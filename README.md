@@ -1,4 +1,4 @@
-# 시험 대비 웹앱 — 운영체제(Ch02·Ch03·Ch07·Ch08) · 데이터 통신(Ch01·Ch02) · 데이터과학(Lec1~Lec6)
+# 시험 대비 웹앱 — 운영체제(Ch02·Ch03·Ch07·Ch08·Ch09) · 데이터 통신(Ch01·Ch02) · 데이터과학(Lec1~Lec6) · 알고리즘(족보, 강의 1~5)
 
 요구사항 원문: `antigravity_prompt_os_exam_app.md` · 개발 계획: `docs/` (`docs/02-roadmap.md`, `docs/sprints/`)
 
@@ -17,7 +17,7 @@ npm run test:os-regression  # OS 회귀 점검 — 먼저 `npm run build && npx 
 
 ## 구조
 
-여러 과목(운영체제 `os`, 데이터 통신 `data-comm`, 데이터과학 `data-science`)을 한 앱에서 푼다. 설계: `docs/multi-subject-design.md`.
+여러 과목(운영체제 `os`, 데이터 통신 `data-comm`, 데이터과학 `data-science`, 알고리즘 `algorithm`)을 한 앱에서 푼다. 설계: `docs/multi-subject-design.md`.
 
 - `app/` — 라우트: `/`(과목 선택), `/s/[subject]`(과목 홈), `/s/[subject]/chapter/[id]`, `/quiz`, `/result`, `/review?subject=`, `/stats?subject=`. 옛 `/chapter/[id]`는 `/s/os/chapter/[id]`로 리다이렉트
 - `data/subjects/registry.ts` — **과목 등록 지점**. 새 과목 = `data/subjects/{과목}/` 폴더(`index.ts` + 챕터별 문제 파일) + 이 파일에 한 줄
@@ -105,6 +105,16 @@ npm run build && npm start       # 프로덕션 모드 확인
 5. `npm test`(규칙·비중 — 코드 빈칸 60% 이상·작성형 15% 이하·결과 고르기 30% 이하·복수 선택 8% 이상·mcq 30% 이하) → `npm run verify:ds`(실행)
 6. **대조 기록**: `docs/verification/data-science-lec{N}.md` 표에 문항마다 한 줄(id·slideRef·검증 방식·결과·수정 내용). `lib/verify/records.test.ts`가 표와 문항 데이터가 같은지 검사한다
 
+## 족보 문항 (운영체제·알고리즘)
+
+지난 시험 문제(족보)를 **원문 그대로**(문장·보기·보기 순서·숫자·형식) 출제한다. 계획·규칙: `docs/jokbo-plan.md`, 자료 목록·중복 판정: `docs/jokbo/<과목>/inventory.md`, 대조 기록: `docs/verification/os-jokbo.md`·`docs/verification/algorithm-*.md`.
+
+- **문항 수**: 운영체제 56(일반 665와 함께), 알고리즘 53(전부 족보 — 챕터 analysis 9 · recurrence 11 · sorting 12 · dc 6 · dp 15)
+- **데이터**: `origin: "jokbo"`, `jokbo { occurrences, variantGroup?, explanationSource }`, id `<과목>-<챕터>-jokbo-NNN`, 보기 섞지 않음(`shuffle: false`). 표·코드·메모리 그림은 ```text 원문 블록, 그래프는 원본 스캔을 자른 그림(`public/jokbo/<과목>/<id>.png`, 가로 1200px·300KB 이하, `figure` 필드)
+- **화면**: 과목 홈 "족보만 풀기 (N)"(`/quiz?subject=…&source=jokbo`), 챕터 시작·문제 목록 "분류: 전체 / 족보 / 일반", 문항 뱃지 "족보"/"족보 N회", 해설 머리 "족보 해설"/"생성 해설"
+- **정답**: 족보 답과 이론이 다르면 교수님 채점 기준을 정답으로 하고 해설에 이론을 함께 적는다. 계산·추적 문항은 `lib/sim/os`·`lib/sim/algorithm`으로 다시 계산해 `data/subjects/{os,algorithm}/jokbo.test.ts`가 고정한다
+- 한계(범위 밖 문항, 잘린 원본, 해설 출처): [`docs/known-limitations.md`](docs/known-limitations.md) "족보"
+
 ## 과목 추가 방법
 
 1. `data/subjects/{과목}/index.ts`에 `SubjectDef`(id, 이름, 라이트/다크 대표 색, 챕터 목록과 `load`)를 만들고 챕터별 문제 파일을 둔다 — `data/subjects/os/` 참고
@@ -130,4 +140,4 @@ npm run build && npm start       # 프로덕션 모드 확인
 2. [vercel.com/new](https://vercel.com/new)에서 저장소 **Import** — Framework Preset은 Next.js로 자동 인식된다
 3. **Deploy**. 이후 `main`에 push하면 자동 배포, PR마다 미리보기 배포가 만들어진다
 
-배포한 뒤에는 [`docs/deploy-checklist.md`](docs/deploy-checklist.md)로 엔진 파일 응답 헤더와 휴대폰 로딩 시간을 확인한다.
+배포한 뒤에는 [`docs/deploy-checklist.md`](docs/deploy-checklist.md)로 엔진 파일 응답 헤더와 휴대폰 로딩 시간, 족보 화면(6번)을 확인한다.
