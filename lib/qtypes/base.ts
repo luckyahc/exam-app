@@ -50,6 +50,11 @@ export interface BaseQ<T extends string = string> {
   /** 데이터과학 작성 시 검증 방식(Sprint 14 — lib/verify/). 다른 과목은 쓰지 않는다 */
   verify?: VerifySpec;
   /**
+   * 실행 검증이 없는 SQL 문항(개념·실행 제외)이 특정 테이블의 데이터를 알아야 풀 때, 지문 아래 "사용 테이블"로 보여 줄
+   * 준비 스크립트(lib/qtypes/dsSchemas.ts SQL_SETUPS 이름)와 테이블. 표 내용은 scripts/build-sql-tables.mjs가 미리 만든다
+   */
+  showTables?: { setup: "firstDB" | "studentCourse"; tables: string[] };
+  /**
    * 문제 분류(Sprint 18, docs/jokbo-plan.md). 없으면 일반 문항, "jokbo"면 족보에서 만든 문항 — jokbo 필수.
    * 계획 문서의 `source: "jokbo"`에 해당한다 — `source`는 코드 빈칸(code-blank)의 코드 본문 필드라 이름을 `origin`으로 했다
    */

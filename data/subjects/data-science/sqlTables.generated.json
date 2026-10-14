@@ -1,0 +1,794 @@
+{
+ "sql": {
+  "setups": {
+   "firstDB": {
+    "hash": "d920af6e2b46",
+    "tables": {
+     "학생": {
+      "columns": [
+       {
+        "name": "학번",
+        "type": "CHAR(2)"
+       },
+       {
+        "name": "이름",
+        "type": "VARCHAR(20)"
+       },
+       {
+        "name": "주소",
+        "type": "VARCHAR(50)"
+       },
+       {
+        "name": "전화번호",
+        "type": "CHAR(13)"
+       },
+       {
+        "name": "생년월일",
+        "type": "DATE"
+       }
+      ],
+      "rows": [
+       [
+        "s1",
+        "홍길동",
+        "경기 파주",
+        "010-1111-1111",
+        "2001-01-15"
+       ],
+       [
+        "s2",
+        "강감찬",
+        "전북 전주",
+        "010-2222-2222",
+        "2002-12-25"
+       ],
+       [
+        "s3",
+        "을지문덕",
+        "서울 강남",
+        "010-3333-3333",
+        "2000-05-05"
+       ],
+       [
+        "s4",
+        "이순신",
+        "대전 유성",
+        "010-4444-4444",
+        "2002-07-17"
+       ],
+       [
+        "s5",
+        "김유신",
+        "강원도 원주",
+        "해당사항 없음",
+        null
+       ]
+      ]
+     },
+     "과목": {
+      "columns": [
+       {
+        "name": "과목번호",
+        "type": "CHAR(2)"
+       },
+       {
+        "name": "과목명",
+        "type": "VARCHAR(20)"
+       },
+       {
+        "name": "강의실",
+        "type": "VARCHAR(2)"
+       },
+       {
+        "name": "시간수",
+        "type": "INT"
+       }
+      ],
+      "rows": [
+       [
+        "c1",
+        "인공지능개론",
+        "r1",
+        3
+       ],
+       [
+        "c2",
+        "웃음치료",
+        "r2",
+        2
+       ],
+       [
+        "c3",
+        "경영학",
+        "r3",
+        3
+       ],
+       [
+        "c4",
+        "3D 디자인",
+        "r4",
+        4
+       ]
+      ]
+     },
+     "수강": {
+      "columns": [
+       {
+        "name": "학번",
+        "type": "CHAR(2)"
+       },
+       {
+        "name": "과목번호",
+        "type": "CHAR(2)"
+       },
+       {
+        "name": "학점",
+        "type": "CHAR(1)"
+       }
+      ],
+      "rows": [
+       [
+        "s1",
+        "c1",
+        "A"
+       ],
+       [
+        "s1",
+        "c2",
+        "A"
+       ],
+       [
+        "s2",
+        "c2",
+        "B"
+       ],
+       [
+        "s2",
+        "c3",
+        "D"
+       ],
+       [
+        "s4",
+        "c1",
+        "C"
+       ],
+       [
+        "s4",
+        "c3",
+        "A"
+       ],
+       [
+        "s5",
+        "c1",
+        "B"
+       ]
+      ]
+     }
+    }
+   },
+   "studentCourse": {
+    "hash": "eb971a4861e1",
+    "tables": {
+     "학생": {
+      "columns": [
+       {
+        "name": "학번",
+        "type": "CHAR(2)"
+       },
+       {
+        "name": "이름",
+        "type": "VARCHAR(20)"
+       },
+       {
+        "name": "주소",
+        "type": "VARCHAR(50)"
+       },
+       {
+        "name": "전화번호",
+        "type": "CHAR(13)"
+       },
+       {
+        "name": "생년월일",
+        "type": "DATE"
+       }
+      ],
+      "rows": [
+       [
+        "s1",
+        "홍길동",
+        "경기 파주",
+        "010-1111-1111",
+        "2001-01-15"
+       ],
+       [
+        "s2",
+        "강감찬",
+        "전북 전주",
+        "010-2222-2222",
+        "2002-12-25"
+       ],
+       [
+        "s3",
+        "을지문덕",
+        "서울 강남",
+        "010-3333-3333",
+        "2000-05-05"
+       ],
+       [
+        "s4",
+        "이순신",
+        "대전 유성",
+        "010-4444-4444",
+        "2002-07-17"
+       ],
+       [
+        "s5",
+        "김유신",
+        "강원도 원주",
+        "해당사항 없음",
+        null
+       ]
+      ]
+     },
+     "과목": {
+      "columns": [
+       {
+        "name": "과목번호",
+        "type": "CHAR(2)"
+       },
+       {
+        "name": "과목명",
+        "type": "VARCHAR(20)"
+       },
+       {
+        "name": "강의실",
+        "type": "VARCHAR(2)"
+       },
+       {
+        "name": "시간수",
+        "type": "INT"
+       }
+      ],
+      "rows": [
+       [
+        "c1",
+        "인공지능개론",
+        "r1",
+        3
+       ],
+       [
+        "c2",
+        "웃음치료",
+        "r2",
+        2
+       ],
+       [
+        "c3",
+        "경영학",
+        "r3",
+        3
+       ],
+       [
+        "c4",
+        "3D 디자인",
+        "r4",
+        4
+       ]
+      ]
+     }
+    }
+   }
+  },
+  "questions": {
+   "data-science-lec5-createtable-002": {
+    "setup": "studentCourse",
+    "tables": [
+     "학생",
+     "과목"
+    ]
+   },
+   "data-science-lec5-insert-001": {
+    "setup": "firstDB",
+    "tables": [
+     "과목"
+    ],
+    "before": true
+   },
+   "data-science-lec5-insert-003": {
+    "setup": "firstDB",
+    "tables": [
+     "수강"
+    ],
+    "before": true
+   },
+   "data-science-lec5-select-001": {
+    "setup": "firstDB",
+    "tables": [
+     "학생"
+    ]
+   },
+   "data-science-lec5-select-002": {
+    "setup": "firstDB",
+    "tables": [
+     "수강"
+    ]
+   },
+   "data-science-lec5-select-003": {
+    "setup": "firstDB",
+    "tables": [
+     "수강"
+    ]
+   },
+   "data-science-lec5-select-004": {
+    "setup": "firstDB",
+    "tables": [
+     "학생"
+    ]
+   },
+   "data-science-lec5-where-001": {
+    "setup": "firstDB",
+    "tables": [
+     "수강"
+    ]
+   },
+   "data-science-lec5-where-002": {
+    "setup": "firstDB",
+    "tables": [
+     "수강"
+    ]
+   },
+   "data-science-lec5-like-001": {
+    "setup": "firstDB",
+    "tables": [
+     "학생"
+    ]
+   },
+   "data-science-lec5-like-002": {
+    "setup": "firstDB",
+    "tables": [
+     "학생"
+    ]
+   },
+   "data-science-lec5-between-001": {
+    "setup": "firstDB",
+    "tables": [
+     "과목"
+    ]
+   },
+   "data-science-lec5-between-002": {
+    "setup": "firstDB",
+    "tables": [
+     "과목"
+    ]
+   },
+   "data-science-lec5-group-001": {
+    "setup": "firstDB",
+    "tables": [
+     "수강"
+    ]
+   },
+   "data-science-lec5-group-002": {
+    "setup": "firstDB",
+    "tables": [
+     "수강"
+    ]
+   },
+   "data-science-lec5-group-003": {
+    "setup": "firstDB",
+    "tables": [
+     "수강"
+    ]
+   },
+   "data-science-lec5-join-001": {
+    "setup": "firstDB",
+    "tables": [
+     "학생",
+     "수강"
+    ]
+   },
+   "data-science-lec5-join-002": {
+    "setup": "firstDB",
+    "tables": [
+     "학생",
+     "수강"
+    ]
+   },
+   "data-science-lec5-join-003": {
+    "setup": "firstDB",
+    "tables": [
+     "학생",
+     "과목",
+     "수강"
+    ]
+   },
+   "data-science-lec5-outer-001": {
+    "setup": "firstDB",
+    "tables": [
+     "학생",
+     "수강"
+    ]
+   },
+   "data-science-lec5-outer-002": {
+    "setup": "firstDB",
+    "tables": [
+     "학생",
+     "수강"
+    ]
+   },
+   "data-science-lec5-outer-004": {
+    "setup": "firstDB",
+    "tables": [
+     "학생",
+     "수강"
+    ]
+   },
+   "data-science-lec5-sub-001": {
+    "setup": "firstDB",
+    "tables": [
+     "수강"
+    ]
+   },
+   "data-science-lec5-sub-002": {
+    "setup": "firstDB",
+    "tables": [
+     "학생",
+     "수강"
+    ]
+   },
+   "data-science-lec5-sub-003": {
+    "setup": "firstDB",
+    "tables": [
+     "학생"
+    ]
+   },
+   "data-science-lec5-isnull-001": {
+    "setup": "firstDB",
+    "tables": [
+     "학생"
+    ]
+   },
+   "data-science-lec5-isnull-002": {
+    "setup": "firstDB",
+    "tables": [
+     "학생"
+    ]
+   },
+   "data-science-lec5-union-001": {
+    "setup": "firstDB",
+    "tables": [
+     "과목",
+     "수강"
+    ]
+   },
+   "data-science-lec5-update-001": {
+    "setup": "firstDB",
+    "tables": [
+     "학생"
+    ],
+    "before": true
+   },
+   "data-science-lec5-update-002": {
+    "setup": "firstDB",
+    "tables": [
+     "학생"
+    ],
+    "before": true
+   },
+   "data-science-lec5-del-001": {
+    "setup": "firstDB",
+    "tables": [
+     "수강"
+    ],
+    "before": true
+   },
+   "data-science-lec5-del-002": {
+    "setup": "firstDB",
+    "tables": [
+     "학생",
+     "수강"
+    ],
+    "before": true
+   },
+   "data-science-lec5-del-003": {
+    "setup": "firstDB",
+    "tables": [
+     "학생",
+     "수강"
+    ],
+    "before": true
+   }
+  }
+ },
+ "python": {
+  "setups": {
+   "06701cdf9a13": {
+    "files": [],
+    "frames": [
+     {
+      "name": "df",
+      "columns": [
+       {
+        "name": "이름",
+        "type": "str"
+       },
+       {
+        "name": "성별",
+        "type": "str"
+       },
+       {
+        "name": "나이",
+        "type": "int64"
+       },
+       {
+        "name": "키",
+        "type": "int64"
+       }
+      ],
+      "index": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7
+      ],
+      "rows": [
+       [
+        "허준호",
+        "남자",
+        30,
+        183
+       ],
+       [
+        "이가원",
+        "여자",
+        24,
+        162
+       ],
+       [
+        "배규민",
+        "남자",
+        23,
+        179
+       ],
+       [
+        "고고림",
+        "남자",
+        21,
+        182
+       ],
+       [
+        "이새봄",
+        "여자",
+        28,
+        160
+       ],
+       [
+        "이보람",
+        "여자",
+        26,
+        163
+       ],
+       [
+        "이루리",
+        "여자",
+        24,
+        157
+       ],
+       [
+        "오다현",
+        "여자",
+        24,
+        172
+       ]
+      ]
+     }
+    ]
+   },
+   "18309ece49e1": {
+    "files": [],
+    "frames": [
+     {
+      "name": "df",
+      "columns": [
+       {
+        "name": "이름",
+        "type": "str"
+       },
+       {
+        "name": "성별",
+        "type": "str"
+       },
+       {
+        "name": "나이",
+        "type": "str"
+       },
+       {
+        "name": "키",
+        "type": "str"
+       }
+      ],
+      "index": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7
+      ],
+      "rows": [
+       [
+        "허준호",
+        "남자",
+        "30",
+        "183"
+       ],
+       [
+        "이가원",
+        "여자",
+        "24",
+        "162"
+       ],
+       [
+        "배규민",
+        "남자",
+        "23",
+        "179"
+       ],
+       [
+        "고고림",
+        "남자",
+        "21",
+        "182"
+       ],
+       [
+        "이새봄",
+        "여자",
+        "28",
+        "160"
+       ],
+       [
+        "이보람",
+        "여자",
+        "26",
+        "163"
+       ],
+       [
+        "이루리",
+        "여자",
+        "24",
+        "157"
+       ],
+       [
+        "오다현",
+        "여자",
+        "24",
+        "172"
+       ]
+      ]
+     }
+    ]
+   },
+   "42372548166e": {
+    "files": [
+     {
+      "kind": "csv",
+      "name": "write.csv",
+      "encoding": "cp949",
+      "text": "ID,이름,상징색,취미,특징\n001,뽀로로,파랑색,낚시,펭귄\n002,에디,주황색,과학실험,사막여우\n003,크롱,초록색,눈싸움,공룡\n004,루피,분홍색,요리,비버\n005,패티,보라색,운동,펭귄\n"
+     }
+    ],
+    "frames": []
+   },
+   "a5216232c31e": {
+    "files": [
+     {
+      "kind": "csv",
+      "name": "characters.csv",
+      "encoding": "cp949",
+      "text": "ID,이름,상징색,취미,특징\n001,뽀로로,파랑색,낚시,펭귄\n002,에디,주황색,과학실험,사막여우\n003,크롱,초록색,눈싸움,공룡\n004,루피,분홍색,요리,비버\n005,패티,보라색,운동,펭귄\n"
+     }
+    ],
+    "frames": []
+   },
+   "dfcacb4716ef": {
+    "files": [
+     {
+      "kind": "xlsx",
+      "name": "characters.xlsx",
+      "sheets": [
+       {
+        "name": "Sheet1",
+        "rows": [
+         [
+          "ID",
+          "이름",
+          "상징색",
+          "취미",
+          "특징"
+         ],
+         [
+          1,
+          "뽀로로",
+          "파랑색",
+          "낚시",
+          "펭귄"
+         ],
+         [
+          2,
+          "에디",
+          "주황색",
+          "과학실험",
+          "사막여우"
+         ],
+         [
+          3,
+          "크롱",
+          "초록색",
+          "눈싸움",
+          "공룡"
+         ],
+         [
+          4,
+          "루피",
+          "분홍색",
+          "요리",
+          "비버"
+         ],
+         [
+          5,
+          "패티",
+          "보라색",
+          "운동",
+          "펭귄"
+         ]
+        ]
+       }
+      ]
+     }
+    ],
+    "frames": []
+   }
+  },
+  "noData": [],
+  "questions": {
+   "data-science-lec3-read-001": "a5216232c31e",
+   "data-science-lec3-read-002": "a5216232c31e",
+   "data-science-lec3-read-003": "a5216232c31e",
+   "data-science-lec3-write-002": "42372548166e",
+   "data-science-lec3-xlread-001": "dfcacb4716ef",
+   "data-science-lec3-xlread-002": "dfcacb4716ef",
+   "data-science-lec3-xlread-003": "dfcacb4716ef",
+   "data-science-lec3-read-008": "a5216232c31e",
+   "data-science-lec3-xlread-005": "dfcacb4716ef",
+   "data-science-lec3-read-009": "a5216232c31e",
+   "data-science-lec3-read-010": "a5216232c31e",
+   "data-science-lec3-write-008": "42372548166e",
+   "data-science-lec3-xlread-006": "dfcacb4716ef",
+   "data-science-lec6-csv-001": "18309ece49e1",
+   "data-science-lec6-view-001": "06701cdf9a13",
+   "data-science-lec6-view-003": "06701cdf9a13",
+   "data-science-lec6-order-001": "18309ece49e1",
+   "data-science-lec6-order-002": "18309ece49e1",
+   "data-science-lec6-query-001": "06701cdf9a13",
+   "data-science-lec6-query-002": "06701cdf9a13",
+   "data-science-lec6-query-003": "06701cdf9a13",
+   "data-science-lec6-query-004": "06701cdf9a13",
+   "data-science-lec6-query-005": "18309ece49e1",
+   "data-science-lec6-query-007": "06701cdf9a13",
+   "data-science-lec6-stat-001": "06701cdf9a13",
+   "data-science-lec6-stat-003": "06701cdf9a13",
+   "data-science-lec6-loc-001": "06701cdf9a13",
+   "data-science-lec6-struct-001": "06701cdf9a13",
+   "data-science-lec6-struct-002": "06701cdf9a13",
+   "data-science-lec6-struct-005": "06701cdf9a13",
+   "data-science-lec6-group-001": "06701cdf9a13",
+   "data-science-lec6-group-002": "06701cdf9a13",
+   "data-science-lec6-group-003": "06701cdf9a13"
+  }
+ }
+}

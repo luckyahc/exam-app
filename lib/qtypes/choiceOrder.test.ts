@@ -24,8 +24,10 @@ const choiceQs = all.filter((q): q is McqQ | MultiQ => q.type === "mcq" || q.typ
 /** 렌더 결과에서 태그·마크다운 기호를 뺀 글자 */
 const plain = (html: string) => html.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#x27;/g, "'");
 const md = (s: string) => s.replace(/\*\*|`/g, "");
+/** 지문 아래 "사용 테이블"·"사용 데이터" 영역(데이터과학)은 보기가 아니므로 뺀다 — 표의 "s1"·"7행" 같은 글자가 보기와 겹친다 */
+const withoutData = (html: string) => html.replace(/<section aria-label="(사용 테이블|실행 전 테이블|사용 데이터)"[\s\S]*?<\/section>/g, "");
 const render = (q: Question, answer: unknown, result: ReturnType<typeof gradeQuestion> | null) =>
-  plain(renderToStaticMarkup(createElement(QuestionRenderer, { question: q, answer: answer as never, onAnswer: () => {}, result })));
+  plain(withoutData(renderToStaticMarkup(createElement(QuestionRenderer, { question: q, answer: answer as never, onAnswer: () => {}, result }))));
 /** 결과·오답노트의 비교 화면만(QuestionRenderer는 결과가 있으면 잠긴 Input도 함께 그리므로 Review를 따로 그린다) */
 const renderReview = (q: Question, answer: unknown) =>
   plain(renderToStaticMarkup(createElement(uiFor(q.type).Review as never, { question: q, answer, result: gradeQuestion(q, answer as never) })));

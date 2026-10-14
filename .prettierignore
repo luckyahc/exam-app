@@ -4,3 +4,5 @@ package-lock.json
 source
 docs
 *.md
+# 생성 파일(scripts/build-sql-tables.mjs)
+data/subjects/data-science/sqlTables.generated.json

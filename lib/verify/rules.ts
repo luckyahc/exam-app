@@ -96,6 +96,12 @@ export function staticVerifyErrors(q: Question): string[] {
     }
     if (v.sql?.mode === "tables" && !v.sql.tables?.length) e.push("verify.sql mode: tables에는 tables 필요");
   }
+  // 표시용 테이블은 실행 검증의 준비 SQL이 없는 문항만(있으면 그 준비 SQL로 자동 표시된다)
+  if (q.showTables) {
+    const hasSqlSetup = (q.type === "code-write" && !!q.sql) || (v?.mode === "run" && !!v.sql);
+    if (hasSqlSetup) e.push("showTables는 준비 SQL(verify.sql·sql)이 없는 문항만 — 있으면 자동으로 표를 보여 준다");
+    if (!q.showTables.tables.length) e.push("showTables.tables가 비어 있음");
+  }
   // 출력 문제(전체 작성형·출력 고르기)에 Pyodide·Colab 결과가 다를 수 있는 코드 금지
   const outputQuestion = q.type === "code-write" || (v?.mode === "run" && v.check?.kind === "output");
   if (code && outputQuestion && code.language === "python") {
