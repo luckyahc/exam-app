@@ -5,7 +5,7 @@
 //   관련 테이블 = 문항 코드(지문 코드·빈칸 코드·모범 답안)에 이름이 나오는 테이블. 없으면 준비 SQL의 모든 테이블.
 //   준비 SQL이 없는 개념 문항은 문항의 showTables로 지정한다.
 // - Python: 숨긴 준비 코드(python.setup)를 Pyodide로 실행한 뒤 작업 폴더의 CSV(파일 내용)·엑셀(시트별 셀)과
-//   이름 공간의 DataFrame을 뽑는다(화면에서 판다스 엔진을 띄우지 않으려고 미리 만든다). 준비 코드는 SHA-256 앞 12자리로 묶는다.
+//   이름 공간의 DataFrame(열 이름·값만 — dtype은 Pyodide와 Colab에서 다를 수 있어 넣지 않는다, 결정 15)을 뽑는다(화면에서 판다스 엔진을 띄우지 않으려고 미리 만든다). 준비 코드는 SHA-256 앞 12자리로 묶는다.
 //
 // 문항 데이터·준비 SQL을 고치면 `node scripts/build-sql-tables.mjs`를 다시 실행한다 — data/subjects/data-science/sqlTables.test.ts가 어긋남을 잡는다.
 // Pyodide 파일은 public/engine/(npm run prepare-engine)에서 읽는다.
@@ -135,7 +135,7 @@ for _n in sorted(_os.listdir('.')):
 for _k, _v in list(globals().items()):
     if not _k.startswith('_') and type(_v).__name__ == 'DataFrame':
         _s = _json.loads(_v.to_json(orient='split', force_ascii=False))
-        _out["frames"].append({"name": _k, "columns": [{"name": str(_c), "type": str(_d)} for _c, _d in zip(_v.columns, _v.dtypes)], "index": _s["index"], "rows": _s["data"]})
+        _out["frames"].append({"name": _k, "columns": [{"name": str(_c)} for _c in _v.columns], "index": _s["index"], "rows": _s["data"]})
 _json.dumps(_out, ensure_ascii=False)
 `;
 

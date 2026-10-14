@@ -28,6 +28,10 @@ describe("데이터과학 표 스냅샷", () => {
     expect([...known].filter((h) => !used.has(h)), `쓰지 않는 준비 코드 스냅샷 — ${RERUN}`).toEqual([]);
   });
 
+  it("Python DataFrame 스냅샷에는 dtype이 없다(Pyodide·Colab 차이, 결정 15)", () => {
+    for (const s of Object.values(DS_SNAPSHOTS.python.setups)) for (const f of s.frames) expect(f.columns.filter((c) => c.type !== undefined), f.name).toEqual([]);
+  });
+
   it("Lec5 SQL 문항 중 준비 SQL이 있는 문항(빈 데이터베이스에서 시작하는 문항 제외)은 모두 표가 있다", async () => {
     const qs = (await loadDsQuestions()) as { id: string; chapter: string; type: string; sql?: { setup: string }; verify?: { mode: string; sql?: { setup: string } } }[];
     const withSetup = qs.filter((q) => {

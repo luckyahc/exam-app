@@ -508,20 +508,16 @@
       "name": "df",
       "columns": [
        {
-        "name": "이름",
-        "type": "str"
+        "name": "이름"
        },
        {
-        "name": "성별",
-        "type": "str"
+        "name": "성별"
        },
        {
-        "name": "나이",
-        "type": "int64"
+        "name": "나이"
        },
        {
-        "name": "키",
-        "type": "int64"
+        "name": "키"
        }
       ],
       "index": [
@@ -594,20 +590,16 @@
       "name": "df",
       "columns": [
        {
-        "name": "이름",
-        "type": "str"
+        "name": "이름"
        },
        {
-        "name": "성별",
-        "type": "str"
+        "name": "성별"
        },
        {
-        "name": "나이",
-        "type": "str"
+        "name": "나이"
        },
        {
-        "name": "키",
-        "type": "str"
+        "name": "키"
        }
       ],
       "index": [

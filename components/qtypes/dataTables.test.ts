@@ -40,7 +40,7 @@ describe("사용 테이블·사용 데이터(지문 아래 표)", () => {
       expect(html(byId(id))).not.toContain("<section aria-label=\"사용");
     }
   });
-  it("Python: CSV 파일 내용·엑셀 시트 셀·DataFrame(dtype 포함)", () => {
+  it("Python: CSV 파일 내용·엑셀 시트 셀·DataFrame(열 이름·값만, dtype 없음 — 결정 15)", () => {
     const csv = html(byId("data-science-lec3-read-002"));
     expect(csv).toContain('aria-label="사용 데이터"');
     expect(csv).toContain("characters.csv");
@@ -50,7 +50,7 @@ describe("사용 테이블·사용 데이터(지문 아래 표)", () => {
     expect(xl).toContain("사막여우");
     const df = html(byId("data-science-lec6-query-004"));
     expect(df).toContain("허준호");
-    expect(df).toContain("int64");
+    for (const t of ["int64", "int32", "float64", "object", ">str<"]) expect(df).not.toContain(t);
   });
   it(`${FOLD_ROWS}행을 넘으면 접고 '모두 보기'`, () => {
     const rows = Array.from({ length: 20 }, (_, i) => [`r${i}`]);

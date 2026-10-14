@@ -8,7 +8,7 @@ import raw from "@/data/subjects/data-science/sqlTables.generated.json";
 export type Cell = string | number | boolean | null;
 export interface SnapColumn {
   name: string;
-  /** SQL 선언 자료형(CHAR(2) 등) 또는 판다스 dtype */
+  /** SQL 선언 자료형(CHAR(2) 등). DataFrame 열에는 없다(dtype은 Pyodide·Colab에서 다를 수 있음, 결정 15) */
   type?: string;
 }
 export interface SqlSnapTable {
