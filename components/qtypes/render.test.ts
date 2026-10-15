@@ -23,8 +23,15 @@ describe.skipIf(all.length === 0)("챕터 문제 렌더링 (전 과목·전 챕�
     expect(blank).toContain(`${q.id}-prompt`);
 
     const result = gradeQuestion(q, answerKey(q));
-    expect(result.score).toBe(1);
     const graded = render(q, answerKey(q), result);
+    if (q.type === "essay") {
+      // 서술형(자기 채점): 정답/오답 배너 없이 내 답·모범답안·채점 포인트
+      expect(result.selfCheck).toBe(true);
+      expect(graded).not.toContain(`role="status"`);
+      for (const s of ["내 답", "모범답안", "채점 포인트"]) expect(graded).toContain(s);
+      return;
+    }
+    expect(result.score).toBe(1);
     expect(graded).toContain("정답");
   });
 });

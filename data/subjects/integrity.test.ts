@@ -62,7 +62,9 @@ describe("과목 레지스트리", () => {
     (_, s) => {
       const dir = path.join(ROOT, s.sourceDir);
       expect(existsSync(dir)).toBe(true);
-      expect(readdirSync(dir).some((f) => f.toLowerCase().endsWith(".pdf"))).toBe(true);
+      // 심리학개론은 교재 PDF 대신 사진 전사본(docs/psychology/source-*.md)이 근거다
+      const ext = s.sourceDir.startsWith("docs/") ? ".md" : ".pdf";
+      expect(readdirSync(dir).some((f) => f.toLowerCase().endsWith(ext))).toBe(true);
     },
   );
 
@@ -125,7 +127,8 @@ describe("문제 데이터 (전 과목·전 챕터)", () => {
       for (const c of s.chapters) {
         for (const q of await c.load()) {
           const r = gradeQuestion(q, answerKey(q));
-          if (r.score !== 1) wrong.push(`${q.id}: ${r.score}`);
+          // 서술형(essay)은 자기 채점 — 점수 대신 selfCheck 표시가 붙어야 한다
+          if (q.type === "essay" ? r.selfCheck !== true : r.score !== 1) wrong.push(`${q.id}: ${r.score}`);
         }
       }
     }

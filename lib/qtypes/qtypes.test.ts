@@ -29,7 +29,7 @@ function fixture<K extends QType>(type: K): QuestionOf<K> {
 }
 
 describe("레지스트리 · 더미 문제", () => {
-  it("12개 유형이 모두 등록되어 있고 유형마다 더미 문제가 있다", () => {
+  it("13개 유형이 모두 등록되어 있고 유형마다 더미 문제가 있다(essay — 심리학개론 2026-10-16)", () => {
     expect(QTYPES).toEqual([
       "mcq",
       "multi",
@@ -43,6 +43,7 @@ describe("레지스트리 · 더미 문제", () => {
       "graph",
       "code-blank",
       "code-write",
+      "essay",
     ]);
     for (const t of QTYPES) expect(QTYPE_FIXTURES.some((f) => f.type === t)).toBe(true);
   });
@@ -424,6 +425,9 @@ describe("정답/오답 판정: 완전히 맞았을 때만 정답 (부분 점수
             break;
           case "code-write":
             a = { source: q.solution, run: { input: rand() < 0.5 ? q.solution : "x", status: "done", passed: rand() < 0.5, quotesFixed: false } };
+            break;
+          case "essay":
+            a = rand() < 0.5 ? q.modelAnswer : "x";
             break;
         }
         const r = gradeQuestion(q, a);

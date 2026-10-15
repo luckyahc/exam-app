@@ -136,7 +136,7 @@ export function QuestionRenderer({ question, answer, onAnswer, result }: Props) 
 
       {result && (
         <section aria-label="채점 결과" className="flex flex-col gap-3 border-t border-border pt-4">
-          <ResultBanner correct={result.correct} score={result.score} />
+          {!result.selfCheck && <ResultBanner correct={result.correct} score={result.score} />}
           <Review question={question as never} answer={answer as never} result={result as never} />
           <div className="flex flex-col gap-1 rounded-lg bg-surface p-3 text-sm leading-relaxed">
             <ExplanationSource question={question} />

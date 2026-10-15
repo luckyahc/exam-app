@@ -124,6 +124,7 @@ export interface Tally {
 }
 
 export interface SessionSummary {
+  /** 채점 대상 문제 수 — 자기 채점(서술형)은 빼고 selfCheckIds에 따로 둔다 */
   total: number;
   correct: number;
   /** 채점되지 않은(답하지 않은) 문제 수 */
@@ -131,6 +132,8 @@ export interface SessionSummary {
   /** 틀린 문제(부분 점수만 받은 문제 포함) + 미응답 */
   wrongIds: string[];
   partialIds: string[];
+  /** 자기 채점(서술형)으로 푼 문제 — 정답/오답·정답률에 넣지 않는다 */
+  selfCheckIds: string[];
   byType: Tally[];
   byTopic: Tally[];
   bySubject: Tally[];
@@ -163,12 +166,16 @@ export function answerForReview(session: QuizSession, q: Question): AnyAnswer {
 }
 
 export function summarizeSession(session: QuizSession, questions: ReadonlyMap<string, Question>): SessionSummary {
-  const rows = session.items.map((it) => {
+  const all = session.items.map((it) => {
     const r = session.results[it.id];
     const q = questions.get(it.id);
     return { it, q, r, ok: r?.correct === true };
   });
+  // 서술형(자기 채점): 채점 결과 selfCheck, 또는 답하지 않은 서술형 — 정답/오답 집계에서 뺀다
+  const self = (x: (typeof all)[number]) => x.r?.selfCheck === true || (!x.r && x.q?.type === "essay");
+  const rows = all.filter((x) => !self(x));
   return {
+    selfCheckIds: all.filter(self).map((x) => x.it.id),
     total: rows.length,
     correct: rows.filter((x) => x.ok).length,
     unanswered: rows.filter((x) => !x.r).length,

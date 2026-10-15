@@ -17,6 +17,8 @@ function shownTexts(q: Question): [string, string][] {
     items?: (string | { label: string })[];
     pairs?: { left: string; right: string }[];
     falseReason?: string;
+    modelAnswer?: string;
+    keyPoints?: string[];
   };
   const t: [string, string][] = [
     ["prompt", q.prompt],
@@ -25,6 +27,8 @@ function shownTexts(q: Question): [string, string][] {
   if (q.summary) t.push(["summary", q.summary]);
   if (a.text) t.push(["text", a.text]);
   if (a.falseReason) t.push(["falseReason", a.falseReason]);
+  if (a.modelAnswer) t.push(["modelAnswer", a.modelAnswer]);
+  for (const x of a.keyPoints ?? []) t.push(["keyPoints", x]);
   // 실행 결과를 고르는 보기(verify output — 데이터과학, Sprint 15)는 프로그램 출력 그대로라(print 구분 공백 두 칸 등) "출력" 칸으로 따로 둔다
   const outputChoices = q.verify?.mode === "run" && q.verify.check?.kind === "output";
   for (const x of a.choices ?? []) t.push([outputChoices ? "출력" : "보기", x]);

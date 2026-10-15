@@ -8,6 +8,8 @@ export interface ProgressRecord {
   lastScore: number | null;
   /** ISO 문자열 */
   lastAt: string | null;
+  /** 자기 채점(서술형) 기록 — "풀었음"만 뜻한다. 정답률·오답노트·약점 통계에서 뺀다(lib/storage/records.ts) */
+  selfCheck?: true;
 }
 
 export interface WrongRecord {

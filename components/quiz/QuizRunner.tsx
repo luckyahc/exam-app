@@ -170,8 +170,8 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
             {session.items.map((it, i) => {
               const r = session.results[it.id];
               const answered = session.answers[it.id] !== undefined;
-              const mark = r ? (r.correct ? "✓" : "✗") : answered && isExam ? "•" : "";
-              const label = r ? (r.correct ? "정답" : "오답") : answered && isExam ? "답함" : "안 풂";
+              const mark = r ? (r.selfCheck ? "✎" : r.correct ? "✓" : "✗") : answered && isExam ? "•" : "";
+              const label = r ? (r.selfCheck ? "풀었음(자기 채점)" : r.correct ? "정답" : "오답") : answered && isExam ? "답함" : "안 풂";
               return (
                 <button
                   key={it.id}

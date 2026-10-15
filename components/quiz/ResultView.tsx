@@ -98,6 +98,7 @@ export function ResultView() {
         <p className="text-sm text-muted">
           완전히 맞은 문제만 정답으로 셉니다. 틀림 {sum.total - sum.correct - sum.unanswered}
           {sum.partialIds.length > 0 && ` (그중 부분 점수 ${sum.partialIds.length})`} · 미응답 {sum.unanswered}
+          {sum.selfCheckIds.length > 0 && ` · 서술형(자기 채점, 점수에서 제외) ${sum.selfCheckIds.length}`}
         </p>
         <div className="mt-2 flex flex-wrap gap-2">
           {sum.wrongIds.length > 0 && (

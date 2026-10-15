@@ -5,6 +5,7 @@ import { calcCore } from "./calc";
 import { classifyCore } from "./classify";
 import { codeBlankCore } from "./codeBlank";
 import { codeWriteCore } from "./codeWrite";
+import { essayCore } from "./essay";
 import { graphCore } from "./graph";
 import { matchCore } from "./match";
 import { mcqCore } from "./mcq";
@@ -15,7 +16,7 @@ import { traceCore } from "./trace";
 
 /**
  * ★ 문제 유형 등록 지점 1 (순수 로직). 새 유형은 lib/qtypes/{type}.ts를 만들고 여기에 한 줄,
- * components/qtypes/registry.ts에 한 줄(빠뜨리면 빌드 실패). 서술형 유형은 등록하지 않는다.
+ * components/qtypes/registry.ts에 한 줄(빠뜨리면 빌드 실패). 서술형은 자기 채점 유형 essay 하나만(심리학개론, selfCheck).
  */
 export const QTYPE_CORE = {
   mcq: mcqCore,
@@ -32,6 +33,8 @@ export const QTYPE_CORE = {
   "code-blank": codeBlankCore,
   // 전체 작성형(Sprint 13) — 실행 결과로 0/1
   "code-write": codeWriteCore,
+  // 서술형(2026-10-16, 심리학개론) — 자기 채점, 정답/오답 기록 없음
+  essay: essayCore,
 } as const;
 
 // 전체 문제 유니온·답안 타입은 레지스트리에서 유도한다(손으로 유니온을 관리하지 않음).

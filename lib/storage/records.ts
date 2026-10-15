@@ -9,15 +9,20 @@ import type { SubjectRecords } from "./schema";
  * - 정답 수(`correctCount`)·정답률·오답노트는 이 정답/오답만으로 센다.
  * - 부분 점수(0..1)는 `lastScore`에 따로 저장만 한다(판정·통계에 쓰지 않음).
  * - 오답이면 오답노트에 쌓고(wrongCount+1, resolved=false), 나중에 완전히 맞히면 resolved=true.
+ * - 자기 채점(서술형, `result.selfCheck`)은 정답/오답이 없다 — "풀었음"(풀이 횟수·시각)만 남기고 오답노트에는 넣지 않는다.
  */
 export function recordAttempt(
   records: SubjectRecords,
   questionId: string,
-  result: Pick<GradeResult, "correct" | "score">,
+  result: Pick<GradeResult, "correct" | "score" | "selfCheck">,
   at: string,
   gen?: GeneratorRef,
 ): SubjectRecords {
   const prev = records.progress[questionId];
+  if (result.selfCheck) {
+    const done = { attempts: (prev?.attempts ?? 0) + 1, correctCount: 0, lastScore: null, lastAt: at, selfCheck: true as const };
+    return { ...records, progress: { ...records.progress, [questionId]: done } };
+  }
   const attempts = (prev?.attempts ?? 0) + 1;
   const progress = {
     ...records.progress,
@@ -60,7 +65,7 @@ export interface AccuracySummary {
   openWrong: number;
 }
 
-/** 정답률·오답 수 요약. 완전히 맞음 기준으로만 센다(부분 점수는 반영하지 않음). */
+/** 정답률·오답 수 요약. 완전히 맞음 기준으로만 센다(부분 점수는 반영하지 않음). 자기 채점(서술형) 기록은 세지 않는다. */
 export function summarize(
   records: SubjectRecords,
   questionIds?: readonly string[],
@@ -70,6 +75,7 @@ export function summarize(
   let attempts = 0;
   let correct = 0;
   for (const p of pick(records.progress)) {
+    if (p.selfCheck) continue;
     attempts += p.attempts;
     correct += p.correctCount;
   }

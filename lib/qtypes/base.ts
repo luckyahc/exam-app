@@ -155,6 +155,8 @@ export interface GradeResult<D = unknown> {
   score: number;
   /** 유형별 칸/항목별 정오 — 비교 UI가 사용 */
   detail: D;
+  /** 자기 채점(서술형 essay): 정답/오답이 없다 — 기록은 "풀었음"만, 정답률·오답노트·약점 통계에서 뺀다 */
+  selfCheck?: true;
 }
 
 /** 문제 유형 하나의 순수 로직(채점·검증). React를 import하지 않는다. */

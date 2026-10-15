@@ -91,7 +91,7 @@ function save(id: string, next: SubjectRecords) {
 export function recordResult(
   subjectId: string,
   questionId: string,
-  result: Pick<GradeResult, "correct" | "score">,
+  result: Pick<GradeResult, "correct" | "score" | "selfCheck">,
   gen?: GeneratorRef,
 ) {
   ensureLoaded();

@@ -32,5 +32,8 @@ export function answerKey(q: Question): AnyAnswer {
     case "code-write":
       // 정답 키 = 모범 답안을 실행해 기대 결과와 같았다는 실행 기록(실제 실행 검증은 엔진 테스트·Sprint 14)
       return { source: q.solution, run: { input: q.solution, status: "done", passed: true, quotesFixed: false } };
+    case "essay":
+      // 자기 채점 — "정답"이 없으므로 모범답안을 답으로 쓴다(채점 결과는 selfCheck)
+      return q.modelAnswer;
   }
 }

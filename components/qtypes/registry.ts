@@ -4,6 +4,7 @@ import { CalcUI } from "./Calc";
 import { ClassifyUI } from "./Classify";
 import { CodeBlankUI } from "./CodeBlank";
 import { CodeWriteUI } from "./CodeWrite";
+import { EssayUI } from "./Essay";
 import { GraphUI } from "./Graph";
 import { MatchUI } from "./Match";
 import { McqUI } from "./Mcq";
@@ -30,6 +31,7 @@ export const QTYPE_UI = {
   graph: GraphUI,
   "code-blank": CodeBlankUI,
   "code-write": CodeWriteUI,
+  essay: EssayUI,
 } satisfies { [K in QType]: QTypeUI<K> };
 
 /** 유니온 문제에 맞는 UI를 꺼낸다(유형 ↔ UI 대응 단언은 이 한 곳에서만). */

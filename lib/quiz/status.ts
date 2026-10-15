@@ -15,7 +15,8 @@ export const STATUS_LABEL: Record<QStatus, string> = { unsolved: "안 푼 문제
 export function questionStatus(records: SubjectRecords | undefined, id: string): QStatus {
   const p = records?.progress[id];
   if (!p || p.attempts <= 0) return "unsolved";
-  if (p.lastScore === 1) return "correct";
+  // 자기 채점(서술형)은 맞고 틀림이 없다 — 풀었으면 "틀린 문제"에 섞이지 않게 맞힌 쪽으로 둔다
+  if (p.lastScore === 1 || p.selfCheck) return "correct";
   if (p.lastScore !== null) return "wrong";
   const w = records?.wrong[id];
   if (w && !w.resolved) return "wrong";

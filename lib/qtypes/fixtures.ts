@@ -327,4 +327,19 @@ export const QTYPE_FIXTURES: Question[] = [
   },
   DS_CODE_BLANK_PYTHON,
   DS_CODE_WRITE_PYTHON,
+  {
+    id: "psychology-ch01-demo-essay-001",
+    subject: "psychology",
+    chapter: "ch01",
+    topic: "상관과 인과",
+    type: "essay",
+    exam: false,
+    difficulty: 2,
+    slideRef: "Ch01 p.32",
+    prompt: "두 변인 사이에 강한 상관이 있다는 결과만으로 인과관계를 주장할 수 없는 이유를 설명하라.",
+    modelAnswer:
+      "상관은 두 변인이 함께 변하는 정도를 보여 줄 뿐 어느 쪽이 원인인지 알려 주지 않는다. 한 변인이 다른 변인의 원인일 수도, 그 반대일 수도 있다. 또 제3의 변인이 두 변인 모두에 영향을 줄 수도 있다. 인과관계를 확인하려면 변인을 조작하고 무선할당을 하는 실험이 필요하다.",
+    keyPoints: ["상관은 함께 변하는 정도만 보여 준다", "방향(어느 쪽이 원인인지)을 알 수 없다", "제3의 변인 가능성", "인과 확인은 실험(조작 + 무선할당)"],
+    explanation: "상관연구는 처치가 없어 원인과 결과를 명세하지 못한다(표 1.2). 인과를 확인하는 방법은 실험법이다.",
+  },
 ];

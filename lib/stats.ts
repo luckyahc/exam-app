@@ -7,6 +7,7 @@ import type { SubjectRecords } from "@/lib/storage/schema";
  * - 진행률 = 한 번이라도 푼 문제 / 전체 문제
  * - 정답률 = 완전히 맞힌 횟수 / 푼 횟수 (`summarize`)
  * - ⭐ 달성도 = ⭐ 문제 중 **마지막 풀이가 완전히 맞음**(lastScore === 1)인 문제 / ⭐ 문제 수
+ * 자기 채점(서술형)은 정답률에서 빠지고(summarize), ⭐ 달성도에서는 풀었으면 달성으로 본다(맞고 틀림이 없으므로).
  * 문제 데이터에 있는 id만 센다 — "비슷한 문제 새로 생성"으로 만든 문제(id가 다름)는 원래 문제 수치에 섞이지 않는다.
  */
 export interface StatLine {
@@ -31,6 +32,7 @@ export function statLine(
 ): StatLine {
   const r = rec ?? { progress: {}, wrong: {}, bookmarks: [] };
   const s = summarize(r, ids);
+  const done = (id: string) => r.progress[id]?.lastScore === 1 || r.progress[id]?.selfCheck === true;
   return {
     total: ids.length,
     solved: ids.filter((id) => r.progress[id]).length,
@@ -38,15 +40,15 @@ export function statLine(
     correct: s.correct,
     rate: s.rate,
     star: starIds.length,
-    starDone: starIds.filter((id) => r.progress[id]?.lastScore === 1).length,
+    starDone: starIds.filter(done).length,
     openWrong: s.openWrong,
     ...(by
       ? {
           starBy: {
             hw: by.hw.length,
-            hwDone: by.hw.filter((id) => r.progress[id]?.lastScore === 1).length,
+            hwDone: by.hw.filter(done).length,
             hint: by.hint.length,
-            hintDone: by.hint.filter((id) => r.progress[id]?.lastScore === 1).length,
+            hintDone: by.hint.filter(done).length,
           },
         }
       : {}),
@@ -103,7 +105,7 @@ export function generatedAttempts(rec: SubjectRecords | undefined, knownIds: Rea
   let attempts = 0;
   let correct = 0;
   for (const [id, p] of Object.entries(rec?.progress ?? {})) {
-    if (knownIds.has(id)) continue;
+    if (knownIds.has(id) || p.selfCheck) continue;
     attempts += p.attempts;
     correct += p.correctCount;
   }

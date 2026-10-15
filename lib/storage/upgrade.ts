@@ -52,6 +52,7 @@ function toProgress(raw: unknown): ProgressRecord {
     correctCount: Math.min(num(r.correctCount ?? r.correct, 0), attempts),
     lastScore: lastScore !== null && lastScore >= 0 && lastScore <= 1 ? lastScore : null,
     lastAt: str(r.lastAt),
+    ...(r.selfCheck === true ? { selfCheck: true as const } : {}),
   };
 }
 
@@ -102,6 +103,7 @@ function mergeProgress(a: ProgressRecord, b: ProgressRecord): ProgressRecord {
     correctCount: Math.max(a.correctCount, b.correctCount),
     lastScore: newer.lastScore ?? a.lastScore ?? b.lastScore,
     lastAt: later(a.lastAt, b.lastAt),
+    ...(a.selfCheck || b.selfCheck ? { selfCheck: true as const } : {}),
   };
 }
 
