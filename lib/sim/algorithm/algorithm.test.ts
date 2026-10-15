@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { bellmanFord, edgeLimited, floydUpTo, INF, lcsTable, matrixChain, maxPathSum, pebbleMax, scholarshipMax } from "./dp";
+import { closestPair, closestPairCalls, middleRegion } from "./closestPair";
+import { bellmanFord, coinChange, editDistanceTable, edgeLimited, floydUpTo, greedyCoins, INF, knapsackItems, knapsackTable, lcsTable, matrixChain, maxPathSum, pebbleMax, scholarshipMax } from "./dp";
 import { euclidCalls, fibCalls, hanoiMoves, matMulTriangular, recurrence, sampleOneCall, sampleTwoCalls } from "./recursion";
 import {
   buildHeapSteps,
@@ -164,5 +165,39 @@ describe("동적 계획법·최단 경로 (Lec5)", () => {
       ["g", "e", 8], ["g", "d", 8], ["e", "f", 12], ["e", "c", 5], ["b", "c", 5], ["c", "d", 4], ["d", "e", -7],
     ];
     expect(bellmanFord(["0", "a", "b", "c", "d", "e", "f", "g"], e, "0").e).toBe(7);
+  });
+});
+
+// 일반 문항(2026-10-15)용 시뮬레이터 — 강의 자료 예제 값
+describe("최근접 점의 쌍 (Lec4 p.40-60)", () => {
+  it("중간 영역: p.46 d = 10 → 26 − 10 = 16 ~ 28 + 10 = 38 (교수님 필기대로 (17,-) 포함)", () => {
+    expect(middleRegion([1, 13, 17, 25, 26, 28, 30, 37, 45, 56], 5, 10)).toEqual([17, 25, 26, 28, 30, 37]);
+  });
+  it("ClosestPair = 모든 쌍 비교의 최솟값, 호출 수(|SL| = |SR| + 1, 3개 이하에서 멈춤)", () => {
+    const pts: [number, number][] = [[0, 0], [4, 9], [7, 1], [11, 6], [13, 13], [18, 2], [21, 9], [25, 4], [29, 12]];
+    let best = Infinity;
+    for (const p of pts) for (const q of pts) if (p !== q) best = Math.min(best, Math.hypot(p[0] - q[0], p[1] - q[1]));
+    const t = closestPair(pts);
+    expect(t.result.dist).toBe(best);
+    expect(t.calls).toBe(closestPairCalls(9));
+    expect([2, 3, 4, 5, 8, 13].map(closestPairCalls)).toEqual([1, 1, 3, 3, 7, 9]);
+  });
+});
+
+describe("편집 거리·배낭·동전 거스름돈 (Lec5 p.65-121)", () => {
+  it("편집 거리: strong → stone 표(p.78) E[6, 5] = 2, E[4, 3] = 1", () => {
+    const e = editDistanceTable("strong", "stone");
+    expect(e.map((r) => r.join(""))).toEqual(["012345", "101234", "210123", "321123", "432123", "543212", "654322"]);
+  });
+  it("배낭: p.92-104 C = 10 — K[1, 5] = 10, K[2, 4] = 40, K[2, 9] = 50, K[4, 10] = 90(물건 2, 4)", () => {
+    const items: [number, number][] = [[5, 10], [4, 40], [6, 30], [3, 50]];
+    const k = knapsackTable(items, 10);
+    expect([k[1][5], k[2][4], k[2][5], k[2][9], k[4][10]]).toEqual([10, 40, 40, 50, 90]);
+    expect(knapsackItems(items, 10)).toEqual([2, 4]);
+  });
+  it("동전 거스름돈: p.113-120 16·10·5·1원 20원 — DP C[20] = 2, 그리디 5개", () => {
+    const { c } = coinChange([16, 10, 5, 1], 20);
+    expect([c[4], c[5], c[9], c[10], c[20]]).toEqual([4, 1, 5, 1, 2]);
+    expect(greedyCoins([16, 10, 5, 1], 20)).toBe(5);
   });
 });

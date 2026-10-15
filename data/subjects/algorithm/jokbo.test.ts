@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { bellmanFord, edgeLimited, floydUpTo, INF, lcsTable, matrixChain, maxPathSum, pebbleMax, scholarshipMax } from "@/lib/sim/algorithm/dp";
 import { countingSort, isMinHeap, linearSelectRatio, partition, radixPositions, selectStep } from "@/lib/sim/algorithm/sorting";
 import { answerKey } from "@/lib/qtypes/answerKey";
+import { isJokbo } from "@/lib/quiz/jokbo";
 import type { Question } from "@/types/question";
 import algorithm from "./index";
 
@@ -14,7 +15,8 @@ const inventory = readFileSync(path.join(ROOT, "docs/jokbo/algorithm/inventory.m
 type Choice = Question & { choices: string[]; answerIndex: number; answerIndexes: number[] };
 
 describe("알고리즘 족보 문항", async () => {
-  const all = (await Promise.all(algorithm.chapters.map((c) => c.load()))).flat();
+  // 일반 문항(2026-10-15, general.test.ts)은 빼고 족보 문항만 본다
+  const all = (await Promise.all(algorithm.chapters.map((c) => c.load()))).flat().filter(isJokbo);
   const byId = new Map(all.map((q) => [q.id, q]));
   const q = (id: string) => byId.get(`algorithm-${id}`) as Choice;
   const picked = (id: string) => q(id).choices[q(id).answerIndex];
@@ -101,7 +103,7 @@ describe("알고리즘 족보 문항", async () => {
   it.each(["analysis", "recurrence", "sorting", "dc", "dp"])("docs/verification/algorithm-%s.md: id·순서 = 데이터, 요약 숫자 = 표", async (ch) => {
     const doc = readFileSync(path.join(ROOT, `docs/verification/algorithm-${ch}.md`), "utf8").split(/\r?\n/);
     const rows = doc.filter((l) => /^\| \d+ \| `algorithm-/.test(l)).map((l) => l.replace(/^\||\|$/g, "").split("|").map((c) => c.trim()));
-    const ids = (await algorithm.chapters.find((c) => c.id === ch)!.load()).map((x) => x.id);
+    const ids = (await algorithm.chapters.find((c) => c.id === ch)!.load()).filter(isJokbo).map((x) => x.id);
     expect(rows.map((r) => r[1].replaceAll("`", ""))).toEqual(ids);
     const sum = (label: string) => Number(doc.find((l) => l.startsWith(`| ${label} | `))?.split("|")[2]);
     expect(sum("전체")).toBe(rows.length);

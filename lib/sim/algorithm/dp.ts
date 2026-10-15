@@ -84,4 +84,76 @@ export function bellmanFord(n: string[], edges: readonly [string, string, number
   return d;
 }
 
+/** 편집 거리 표(Lec5 p.65-85, EditDistance): E[i][j] = min{E[i][j-1]+1, E[i-1][j]+1, E[i-1][j-1]+α}, 0행·0열 포함 */
+export function editDistanceTable(s: string, t: string): number[][] {
+  const e = Array.from({ length: s.length + 1 }, (_, i) => Array.from({ length: t.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0)));
+  for (let i = 1; i <= s.length; i++)
+    for (let j = 1; j <= t.length; j++) e[i][j] = Math.min(e[i][j - 1] + 1, e[i - 1][j] + 1, e[i - 1][j - 1] + (s[i - 1] === t[j - 1] ? 0 : 1));
+  return e;
+}
+
+/** 0-1 배낭 표(Lec5 p.87-105, Knapsack): K[i][w], 물건 i = items[i-1] = [무게, 가치] */
+export function knapsackTable(items: readonly (readonly [number, number])[], cap: number): number[][] {
+  const k = Array.from({ length: items.length + 1 }, () => Array<number>(cap + 1).fill(0));
+  for (let i = 1; i <= items.length; i++) {
+    const [wi, vi] = items[i - 1];
+    for (let w = 1; w <= cap; w++) k[i][w] = wi > w ? k[i - 1][w] : Math.max(k[i - 1][w], k[i - 1][w - wi] + vi);
+  }
+  return k;
+}
+
+/** 배낭 최적해에 담긴 물건 번호(1부터) — 표를 거꾸로 따라간다 */
+export function knapsackItems(items: readonly (readonly [number, number])[], cap: number): number[] {
+  const k = knapsackTable(items, cap);
+  const out: number[] = [];
+  for (let i = items.length, w = cap; i > 0; i--)
+    if (k[i][w] !== k[i - 1][w]) {
+      out.unshift(i);
+      w -= items[i - 1][0];
+    }
+  return out;
+}
+
+/** 가치/무게 비율이 큰 물건부터 들어가면 담는 그리디(오답 비교용) */
+export function knapsackGreedyByRatio(items: readonly (readonly [number, number])[], cap: number): { items: number[]; value: number } {
+  const order = items.map((it, i) => [i + 1, it[1] / it[0]] as const).sort((a, b) => b[1] - a[1]);
+  let left = cap;
+  let value = 0;
+  const picked: number[] = [];
+  for (const [i] of order)
+    if (items[i - 1][0] <= left) {
+      left -= items[i - 1][0];
+      value += items[i - 1][1];
+      picked.push(i);
+    }
+  return { items: picked.sort((a, b) => a - b), value };
+}
+
+/**
+ * 동전 거스름돈(Lec5 p.107-121, DPCoinChange): C[0..n]과 j별 line 6(C[j] 갱신) 실행 횟수.
+ * coins = d1 > d2 > … > dk = 1, 바깥 반복 j, 안쪽 반복 i = 1..k(큰 동전부터).
+ */
+export function coinChange(coins: readonly number[], n: number): { c: number[]; updates: number[] } {
+  const c = Array<number>(n + 1).fill(INF);
+  const updates = Array<number>(n + 1).fill(0);
+  c[0] = 0;
+  for (let j = 1; j <= n; j++)
+    for (const d of coins)
+      if (d <= j && c[j - d] + 1 < c[j]) {
+        c[j] = c[j - d] + 1;
+        updates[j]++;
+      }
+  return { c, updates };
+}
+
+/** 큰 동전부터 최대한 쓰는 그리디의 동전 수 */
+export function greedyCoins(coins: readonly number[], n: number): number {
+  let count = 0;
+  for (const d of coins) {
+    count += Math.floor(n / d);
+    n %= d;
+  }
+  return count;
+}
+
 export { INF };

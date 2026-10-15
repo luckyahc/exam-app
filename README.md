@@ -109,7 +109,7 @@ npm run build && npm start       # 프로덕션 모드 확인
 
 지난 시험 문제(족보)를 **원문 그대로**(문장·보기·보기 순서·숫자·형식) 출제한다. 계획·규칙: `docs/jokbo-plan.md`, 자료 목록·중복 판정: `docs/jokbo/<과목>/inventory.md`, 대조 기록: `docs/verification/os-jokbo.md`·`docs/verification/algorithm-*.md`.
 
-- **문항 수**: 운영체제 56(일반 665와 함께), 알고리즘 53(전부 족보 — 챕터 analysis 9 · recurrence 11 · sorting 12 · dc 6 · dp 15)
+- **문항 수**: 운영체제 56(일반 665와 함께), 알고리즘 53(챕터 analysis 9 · recurrence 11 · sorting 12 · dc 6 · dp 15) + 족보에 없던 주제의 일반 문항 13(dc 최근접 점의 쌍 4, dp 편집 거리·배낭·동전 거스름돈 9 — 족보 형식, 대조 기록 `docs/verification/algorithm-general.md`)
 - **데이터**: `origin: "jokbo"`, `jokbo { occurrences, variantGroup?, explanationSource }`, id `<과목>-<챕터>-jokbo-NNN`, 보기 섞지 않음(`shuffle: false`). 표·코드·메모리 그림은 ```text 원문 블록, 그래프는 원본 스캔을 자른 그림(`public/jokbo/<과목>/<id>.png`, 가로 1200px·300KB 이하, `figure` 필드)
 - **화면**: 과목 홈 "족보만 풀기 (N)"(`/quiz?subject=…&source=jokbo`), 챕터 시작·문제 목록 "분류: 전체 / 족보 / 일반", 문항 뱃지 "족보"/"족보 N회", 해설 머리 "족보 해설"/"생성 해설"
 - **정답**: 족보 답과 이론이 다르면 교수님 채점 기준을 정답으로 하고 해설에 이론을 함께 적는다. 계산·추적 문항은 `lib/sim/os`·`lib/sim/algorithm`으로 다시 계산해 `data/subjects/{os,algorithm}/jokbo.test.ts`가 고정한다

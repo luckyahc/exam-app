@@ -1,9 +1,42 @@
 import type { Question } from "@/types/question";
 import { block, figureOf, jokboOf } from "./jokboSource";
 
-// 동적 계획법(최단 경로 포함) — 족보 문항만(원문 그대로). 대조: docs/verification/algorithm-dp.md
+// 동적 계획법(최단 경로 포함) — 족보 문항(원문 그대로, 대조: docs/verification/algorithm-dp.md) 뒤에 일반 문항(편집 거리·배낭·동전 거스름돈)
 // 그래프 그림은 원본 스캔(2022 기말 대비 테스트 2~5·7번)에서 자른 것 — public/jokbo/algorithm/
 const base = { subject: "algorithm", chapter: "dp", shuffle: false } as const;
+const general = { ...base, exam: false } as const;
+const EDIT_CODE = block(
+  "EditDistance",
+  "1. for i=0 to m  E[i, 0] = i",
+  "2. for j=0 to n  E[0, j] = j",
+  "3. for i=1 to m",
+  "4.     for j=1 to n",
+  "5.         E[i, j] = min{E[i, j-1]+1, E[i-1, j]+1, E[i-1, j-1]+α}   // α = 0 (sᵢ = tⱼ), 1 (sᵢ ≠ tⱼ)",
+  "6. return E[m, n]",
+);
+const KNAP_CODE = block(
+  "Knapsack",
+  "1. for i = 0 to n  K[i,0]=0",
+  "2. for w = 0 to C  K[0,w]=0",
+  "3. for i = 1 to n",
+  "4.     for w = 1 to C",
+  "5.         if ( wi > w )",
+  "6.             K[i, w] = K[i-1, w]",
+  "7.         else",
+  "8.             K[i, w] = max{K[i-1, w], K[i-1, w-wi]+vi}",
+  "9. return K[n, C]",
+);
+const COIN_CODE = block(
+  "DPCoinChange",
+  "입력: 거스름돈 n원, k개의 동전의 액면, d1 > d2 > ⋯ > dk = 1",
+  "1. for i = 1 to n  C[i]=∞",
+  "2. C[0]=0",
+  "3. for j = 1 to n",
+  "4.     for i = 1 to k",
+  "5.         if (di ≤ j) and (C[j-di]+1 < C[j])",
+  "6.             C[j] = C[j-di] + 1",
+  "7. return C[n]",
+);
 
 const grid = (rows: (string | number)[][]) => rows.map((r) => r.map((x) => String(x).padStart(4)).join(" ")).join("\n");
 const MATRIX_RULE = "[행렬 이동 규칙]\n- 오른쪽이나 아래쪽으로만 이동할 수 있다.\n- 왼쪽, 위쪽, 대각선 이동은 허용하지 않는다.";
@@ -319,6 +352,174 @@ const questions: Question[] = [
     choices: ["6", "7", "8", "9", "10"],
     answerIndex: 1,
     explanation: "LMS 해설: 벨만-포드 알고리즘을 수행하면, 노드 0에서 노드 e까지 경로는 0 -> f -> b -> c -> d -> e이므로 7이 됨(10 − 5 + 5 + 4 − 7). 간선 수 제한 DP(Lec5 p.133-138, optional)를 정점 수 − 1번 반복한 것과 같다(lib/sim/algorithm/dp.ts bellmanFord).",
+  },
+  // ── 일반 문항(족보에 없던 주제 — 편집 거리·배낭·동전 거스름돈, 족보 형식을 따라 만듦 — 2026-10-15 사용자 요청)
+  // 정답 검증: lib/sim/algorithm/dp.ts, data/subjects/algorithm/general.test.ts, 대조: docs/verification/algorithm-general.md
+  {
+    ...general,
+    id: "algorithm-dp-edit-distance-001",
+    topic: "편집 거리",
+    type: "blank",
+    difficulty: 2,
+    slideRef: "Lec5 p.74-85",
+    prompt: `문자열 S = "bread"를 문자열 T = "board"로 바꾸는 편집 거리를 구하려고 한다. 우리 교재의 EditDistance 알고리즘에 따라 아래의 표 E를 채워 나간다고 할 때, (7) + (13) + (18) + (25)의 값은 무엇인가? (행은 S, 열은 T의 문자이다.)\n${EDIT_CODE}\n${block(
+      "  T        ε     b     o     a     r     d",
+      "S   ε      0     1     2     3     4     5",
+      "    b      1    (1)   (2)   (3)   (4)   (5)",
+      "    r      2    (6)   (7)   (8)   (9)  (10)",
+      "    e      3   (11)  (12)  (13)  (14)  (15)",
+      "    a      4   (16)  (17)  (18)  (19)  (20)",
+      "    d      5   (21)  (22)  (23)  (24)  (25)",
+    )}`,
+    text: "답: {{0}}",
+    blanks: [{ accept: ["8"] }],
+    explanation:
+      "Lec5 p.74-85: E[i, j] = min{E[i, j-1] + 1(삽입), E[i-1, j] + 1(삭제), E[i-1, j-1] + α}, α는 sᵢ = tⱼ이면 0, 아니면 1. 행 b: 0 1 2 3 4, 행 r: 1 1 2 2 3, 행 e: 2 2 2 3 3, 행 a: 3 3 2 3 4, 행 d: 4 4 3 3 3. (7) = E[2, 2] = 1(br → bo: r을 o로 대체), (13) = E[3, 3] = 2, (18) = E[4, 3] = 2(brea → boa: E[3, 2] + 0, a = a), (25) = E[5, 5] = 3 → 합 8. 편집 거리는 E[5, 5] = 3(r → o 대체, e → a 대체, a → r 대체)이다(lib/sim/algorithm/dp.ts editDistanceTable).",
+  },
+  {
+    ...general,
+    id: "algorithm-dp-edit-distance-002",
+    topic: "편집 거리",
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Lec5 p.65-85",
+    prompt: `삽입, 삭제, 대체 연산을 사용하여 문자열 S = "algorithm"을 문자열 T = "logarithm"으로 변환하려고 한다. 우리 교재의 EditDistance 알고리즘으로 계산한 편집 거리 E[9, 9]의 값은?\n${EDIT_CODE}`,
+    choices: ["2", "3", "4", "5", "6"],
+    answerIndex: 1,
+    explanation:
+      "Lec5 p.65-85: 두 문자열의 뒷부분 \"rithm\"은 같으므로 앞부분 \"algo\" → \"loga\"의 편집 거리와 같다. 표로 계산하면 E[4, 4] = 3이고, 이후 r, i, t, h, m은 sᵢ = tⱼ라 α = 0으로 대각선을 따라 E[9, 9] = 3이다(lib/sim/algorithm/dp.ts editDistanceTable). 3회 편집의 예: algo → lgo(a 삭제) → logo(o 삽입) → loga(o를 a로 대체), 또는 a l g o의 1·2·4번째 글자를 l, o, a로 대체. 2회 이하로는 바꿀 수 없다.",
+  },
+  {
+    ...general,
+    id: "algorithm-dp-edit-distance-003",
+    topic: "편집 거리",
+    type: "mcq",
+    difficulty: 2,
+    slideRef: "Lec5 p.70-77",
+    prompt: `아래의 코드는 우리 교재의 편집 거리 알고리즘이다. line 5의 (1), (2), (3)은 각각 문자열 S의 i번째 문자와 T의 j번째 문자에 대해 어떤 편집 연산을 수행한 경우이며, α의 값은 무엇인가?\n${block(
+      "EditDistance",
+      "입력: 스트링 S, T, 단, S와 T의 길이는 각각 m과 n이다.",
+      "출력: S를 T로 변환하는 편집 거리, E[m, n]",
+      "1. for i=0 to m  E[i, 0] = i",
+      "2. for j=0 to n  E[0, j] = j",
+      "3. for i=1 to m",
+      "4.     for j=1 to n",
+      "5.         E[i, j] = min{E[i, j-1]+1, E[i-1, j]+1, E[i-1, j-1]+α}",
+      "                         (1)          (2)          (3)",
+      "6. return E[m, n]",
+    )}`,
+    choices: [
+      "(1) 삽입, (2) 삭제, (3) 대체 또는 그대로 사용, α는 sᵢ = tⱼ이면 0, 아니면 1",
+      "(1) 삭제, (2) 삽입, (3) 대체 또는 그대로 사용, α는 sᵢ = tⱼ이면 0, 아니면 1",
+      "(1) 삽입, (2) 삭제, (3) 대체 또는 그대로 사용, α는 sᵢ = tⱼ이면 1, 아니면 0",
+      "(1) 삭제, (2) 삽입, (3) 대체 또는 그대로 사용, α는 sᵢ = tⱼ이면 1, 아니면 0",
+      "(1) 대체, (2) 삭제, (3) 삽입, α는 sᵢ = tⱼ이면 0, 아니면 1",
+    ],
+    answerIndex: 0,
+    explanation:
+      "Lec5 p.70-77: (1) E[i, j-1] + 1은 S의 처음 i개 문자를 T의 처음 j-1개로 바꾼 뒤 tⱼ를 삽입한 경우, (2) E[i-1, j] + 1은 sᵢ를 삭제한 경우, (3) E[i-1, j-1] + α는 sᵢ를 tⱼ로 대체하거나(α = 1) 같은 문자라 그대로 사용한 경우(α = 0)다. 예: 'stro' → 'sto'의 E[4, 3]은 E[4, 2] + 1(t₃ = 'o' 삽입), E[3, 3] + 1(s₄ = 'o' 삭제), E[3, 2] + 0(s₄ = t₃ = 'o') 중 최솟값이다(p.75).",
+  },
+  {
+    ...general,
+    id: "algorithm-dp-knapsack-001",
+    topic: "배낭 문제",
+    type: "blank",
+    difficulty: 2,
+    slideRef: "Lec5 p.87-105",
+    prompt: `배낭의 용량이 C = 8kg이고, 4개의 물건의 무게와 가치가 아래와 같이 주어진 0-1 배낭 문제를 우리 교재의 Knapsack 알고리즘으로 해결하려고 한다. K[i, w]는 물건 1~i까지만 고려하고 (임시) 배낭의 용량이 w일 때의 최대 가치이다. 아래의 표에서 (A), (B), (C)에 들어갈 값을 차례대로 입력하라. (가치의 단위는 만원이다.)\n${KNAP_CODE}\n${block(
+      "물건      1     2     3     4",
+      "무게     3kg   4kg   2kg   5kg",
+      "가치     25    30    15    40",
+      "",
+      "K[i,w]  w=0    1     2     3     4     5     6     7     8",
+      "i=0       0    0     0     0     0     0     0     0     0",
+      "i=1       0    0     0    25    25    25    25    25    25",
+      "i=2       0    0     0    25    30    30    30   (A)   55",
+      "i=3       0    0    15    25    30   (B)   45",
+      "i=4                                                    (C)",
+    )}`,
+    text: "(A) = {{0}}, (B) = {{1}}, (C) = {{2}}",
+    blanks: [{ accept: ["55"] }, { accept: ["40"] }, { accept: ["65"] }],
+    explanation:
+      "Lec5 p.87-105: K[i, w] = K[i-1, w] (wᵢ > w), 아니면 max{K[i-1, w], K[i-1, w-wᵢ] + vᵢ}. (A) = K[2, 7] = max{K[1, 7], K[1, 3] + 30} = max{25, 55} = 55(물건 1, 2). (B) = K[3, 5] = max{K[2, 5], K[2, 3] + 15} = max{30, 40} = 40(물건 1, 3). (C) = K[4, 8] = max{K[3, 8], K[3, 3] + 40} = max{55, 25 + 40} = 65 — 물건 1(3kg)과 물건 4(5kg)를 담는다(K[3, 8] = 55는 물건 1, 2)(lib/sim/algorithm/dp.ts knapsackTable).",
+  },
+  {
+    ...general,
+    id: "algorithm-dp-knapsack-002",
+    topic: "배낭 문제",
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Lec5 p.87-105",
+    prompt: `배낭의 용량이 C = 10kg이고, 4개의 물건이 아래와 같이 주어졌다. 각 물건은 1개씩만 있다. 무게 대비 가치(가치/무게)가 큰 물건부터 배낭에 들어가는 대로 담는 방법과 달리, 우리 교재의 Knapsack 알고리즘(DP)은 항상 최적해를 찾는다. Knapsack 알고리즘이 리턴하는 K[4, 10]의 값과 그 때 배낭에 담기는 물건으로 옳은 것은? (가치의 단위는 만원이다.)\n${block(
+      "물건      1      2      3      4",
+      "무게     6kg    5kg    5kg    2kg",
+      "가치     48     35     34      8",
+    )}`,
+    choices: ["48, 물건 1", "56, 물건 1, 4", "69, 물건 2, 3", "77, 물건 2, 3, 4", "83, 물건 1, 2"],
+    answerIndex: 2,
+    explanation:
+      "Lec5 p.87-105: 가치/무게는 물건 1이 8, 물건 2가 7, 물건 3이 6.8, 물건 4가 4다. 비율 순으로 담으면 물건 1(6kg) 다음 물건 2·3(5kg)은 들어가지 않고 물건 4(2kg)만 들어가 56. DP로 표를 채우면 K[4, 10] = max{K[3, 10], K[3, 8] + 8}이고 K[3, 10] = max{K[2, 10], K[2, 5] + 34} = max{48, 35 + 34} = 69이므로 물건 2, 3(10kg)을 담은 69가 최적이다. 77(물건 2, 3, 4)은 12kg, 83(물건 1, 2)은 11kg으로 용량 10kg을 넘는다(lib/sim/algorithm/dp.ts knapsackTable·knapsackItems).",
+  },
+  {
+    ...general,
+    id: "algorithm-dp-coin-change-001",
+    topic: "동전 거스름돈",
+    type: "blank",
+    difficulty: 2,
+    slideRef: "Lec5 p.107-121",
+    prompt: `동전의 종류가 d₁ = 15원, d₂ = 9원, d₃ = 1원일 때, 우리 교재의 DPCoinChange 알고리즘으로 거스름돈을 계산하려고 한다. C[j]는 j원을 거슬러 받을 때 사용되는 최소의 동전 수이다. C[10], C[18]의 값과, 18원을 큰 동전부터 '욕심 내어' 거슬러 주는 그리디 알고리즘이 사용하는 동전의 수를 차례대로 입력하라.\n${COIN_CODE}`,
+    text: "C[10] = {{0}}, C[18] = {{1}}, 그리디 알고리즘의 동전 수 = {{2}}",
+    blanks: [{ accept: ["2"] }, { accept: ["2"] }, { accept: ["4"] }],
+    explanation:
+      "Lec5 p.107-121: C[j] = min{C[j-15], C[j-9], C[j-1]} + 1 (j - dᵢ ≥ 0인 것만). C[10] = C[9] + 1 = 2(9원 + 1원 — C[1] + 1도 2). C[18] = min{C[3], C[9], C[17]} + 1 = min{3, 1, 3} + 1 = 2(9원 2개). 그리디는 15원을 먼저 취해 3원이 남고 1원 3개를 더해 4개라고 답한다 — 교재 예(16, 10, 5, 1원으로 20원: DP 2개, 그리디 5개)처럼 그리디는 최적해를 못 찾는 경우가 있다(lib/sim/algorithm/dp.ts coinChange·greedyCoins).",
+  },
+  {
+    ...general,
+    id: "algorithm-dp-coin-change-002",
+    topic: "동전 거스름돈",
+    type: "blank",
+    difficulty: 3,
+    slideRef: "Lec5 p.107-121",
+    prompt: `동전의 종류가 d₁ = 10원, d₂ = 7원, d₃ = 1원이고, 거스름돈 n = 21원일 때 우리 교재의 DPCoinChange 알고리즘으로 배열 C를 채워 나간다. C[13], C[14], C[17], C[21]의 값을 차례대로 입력하라.\n${block(
+      "[주의 사항]",
+      "숫자만 입력하고, 숫자사이에는 공백을 입력하지 마시오.",
+    )}\n${COIN_CODE}`,
+    text: "답: {{0}}",
+    blanks: [{ accept: ["4223"] }],
+    explanation:
+      "Lec5 p.107-121: C[0..21] = 0 1 2 3 4 5 6 1 2 3 1 2 3 4 2 3 4 2 3 4 2 3. C[13] = min{C[3], C[6], C[12]} + 1 = min{3, 6, 3} + 1 = 4(10 + 1 + 1 + 1 — 7원을 쓰면 7 + 1×6 = 7개). C[14] = C[7] + 1 = 2(7원 2개 — 그리디라면 10 + 1×4 = 5개). C[17] = min{C[7], C[10], C[16]} + 1 = 2(10 + 7). C[21] = min{C[11], C[14], C[20]} + 1 = min{2, 2, 2} + 1 = 3 → 4223(lib/sim/algorithm/dp.ts coinChange).",
+  },
+  {
+    ...general,
+    id: "algorithm-dp-coin-change-003",
+    topic: "동전 거스름돈",
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Lec5 p.112-121",
+    prompt: `아래의 코드는 우리 교재의 동전 거스름돈 알고리즘이다. 동전의 종류가 d₁ = 14원, d₂ = 9원, d₃ = 5원, d₄ = 1원이고 거스름돈 n = 18원일 때, j = 18에서 line 6이 실행되는 횟수와 알고리즘이 리턴하는 C[18]의 값으로 옳은 것은? (j < 18인 C[j]는 이미 올바르게 계산되어 있다.)\n${COIN_CODE}`,
+    choices: ["1회, 2", "2회, 2", "2회, 5", "3회, 2", "4회, 5"],
+    answerIndex: 1,
+    explanation:
+      "Lec5 p.112-121: j = 18에서 C[18] = ∞로 시작해 i = 1부터 동전을 차례로 본다. i = 1(14원): C[4] + 1 = 5 < ∞ → 갱신(1회, C[18] = 5). i = 2(9원): C[9] + 1 = 1 + 1 = 2 < 5 → 갱신(2회, C[18] = 2). i = 3(5원): C[13] + 1 = 5 + 1 = 6 < 2 아님. i = 4(1원): C[17] + 1 = 4 + 1 = 5 < 2 아님. 따라서 line 6은 2회, C[18] = 2(9원 2개). 5는 14원을 먼저 쓰는 그리디의 답(14 + 1×4)이다(lib/sim/algorithm/dp.ts coinChange).",
+  },
+  {
+    ...general,
+    id: "algorithm-dp-complexity-001",
+    topic: "DP 응용 비교",
+    type: "mcq",
+    difficulty: 2,
+    slideRef: "Lec5 p.76-121",
+    prompt: "편집 거리, 배낭, 동전 거스름돈 문제를 위한 우리 교재의 동적 계획 알고리즘에 대한 설명으로 옳지 않은 것은?",
+    choices: [
+      "EditDistance 알고리즘의 시간 복잡도는 O(mn)이다. 단, m과 n은 두 스트링의 길이이다.",
+      "Knapsack 알고리즘의 시간 복잡도는 O(nC)이다. 단, n은 물건의 수, C는 배낭의 용량이다.",
+      "DPCoinChange 알고리즘의 시간 복잡도는 O(nk)이다. 단, n은 거스름돈 액수, k는 동전 종류의 수이다.",
+      "동전의 액면이 d₁ > d₂ > ⋯ > dₖ = 1이면, 큰 동전부터 최대한 사용하는 그리디 알고리즘이 항상 최소 동전 수를 찾는다.",
+      "편집 거리 표의 0번 행이 0, 1, 2, ⋯, n으로 초기화된 것은 S가 공 문자열일 때 T의 문자를 하나씩 만들어 가는 삽입 연산 횟수를 뜻한다.",
+    ],
+    answerIndex: 3,
+    explanation:
+      "Lec5 p.107·120: 동전 거스름돈 문제는 대부분 그리디로 해결되지만 해결하지 못하는 경우도 있다 — 16, 10, 5, 1원으로 20원을 거슬러 줄 때 그리디는 16 + 1×4 = 5개, DP는 10원 2개. 나머지는 옳다: 편집 거리 O(mn)(p.85), 배낭 O(nC)(p.105), 동전 거스름돈 O(nk)(p.121), 0번 행 = 삽입 횟수·0번 열 = 삭제 횟수(p.76).",
   },
 ];
 

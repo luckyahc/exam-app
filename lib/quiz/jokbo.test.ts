@@ -123,12 +123,12 @@ describe("기존 과목 회귀 · 새 과목 등록", () => {
     expect(meta.rows.filter((r) => r.jokbo)).toHaveLength(10);
   });
 
-  it("알고리즘: 족보 주제 챕터 5개, 문항 53개 모두 족보(Sprint 21에 준비 중 해제)", async () => {
+  it("알고리즘: 족보 주제 챕터 5개, 족보 53 + 일반 13(2026-10-15, 족보에 없던 주제 — dc 4·dp 9)", async () => {
     expect("status" in algorithm).toBe(false);
     expect(algorithm.chapters.map((c) => c.id)).toEqual(["analysis", "recurrence", "sorting", "dc", "dp"]);
     const all = (await Promise.all(algorithm.chapters.map((c) => c.load()))).flat();
-    expect(all).toHaveLength(53);
-    expect(all.every(isJokbo)).toBe(true);
+    expect(all.filter(isJokbo)).toHaveLength(53);
+    expect(all.filter((q) => !isJokbo(q)).map((q) => q.chapter)).toEqual([...Array(4).fill("dc"), ...Array(9).fill("dp")]);
   });
 
   it("OS Ch09: 기존 4개 챕터 뒤에 추가(Sprint 19에 문제를 채우고 준비 중 해제)", async () => {

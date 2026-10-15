@@ -1,7 +1,7 @@
 import type { SubjectDef } from "../types";
 
-// 알고리즘: 문제는 족보에서만 만든다(docs/jokbo-plan.md). 챕터 = 족보에 나온 주제(docs/jokbo/algorithm/inventory.md §3),
-// minQuestions = 챕터별 족보 대표 문항 수(2019 예상문제 E19 제외 후). Sprint 21에 53문항을 채우고 "준비 중"을 뗐다.
+// 알고리즘: 족보 문항(docs/jokbo-plan.md) + 족보에 없던 주제의 일반 문항(2026-10-15, dc·dp — docs/verification/algorithm-general.md).
+// 챕터 = 족보에 나온 주제(docs/jokbo/algorithm/inventory.md §3), minQuestions = 챕터별 족보 대표 문항 수(2019 예상문제 E19 제외 후).
 const algorithm = {
   id: "algorithm",
   name: "알고리즘",
