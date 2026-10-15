@@ -42,6 +42,11 @@ interface Props {
   result: GradeResult | null;
 }
 
+/** 해설 끝의 근거 한 줄("\n근거: 교재 표 3.1 + 보충", 심리학개론)은 본문과 떼어 출처처럼 작게 보인다 */
+const BASIS = /\n(근거: [^\n]+)$/;
+export const explanationBody = (e: string) => e.replace(BASIS, "");
+export const explanationBasis = (e: string) => BASIS.exec(e)?.[1] ?? null;
+
 /**
  * 핵심 한 줄 요약: 문제에 summary가 있으면 그것, 없으면 해설의 첫 문장(앞의 "p.N:"·"교수님 필기 기준(p.N):" 출처 표기는 뗀다).
  * 너무 길면 120자에서 자른다. 출처(slideRef)는 아래 줄에 따로 보여 준다.
@@ -147,8 +152,9 @@ export function QuestionRenderer({ question, answer, onAnswer, result }: Props) 
               </p>
             )}
             <p>
-              <RichText text={question.explanation} />
+              <RichText text={explanationBody(question.explanation)} />
             </p>
+            {explanationBasis(question.explanation) && <p className="text-xs text-muted">{explanationBasis(question.explanation)}</p>}
             <p className="text-xs text-muted">출처: {question.slideRef}</p>
           </div>
         </section>

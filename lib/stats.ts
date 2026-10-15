@@ -7,7 +7,7 @@ import type { SubjectRecords } from "@/lib/storage/schema";
  * - 진행률 = 한 번이라도 푼 문제 / 전체 문제
  * - 정답률 = 완전히 맞힌 횟수 / 푼 횟수 (`summarize`)
  * - ⭐ 달성도 = ⭐ 문제 중 **마지막 풀이가 완전히 맞음**(lastScore === 1)인 문제 / ⭐ 문제 수
- * 자기 채점(서술형)은 정답률에서 빠지고(summarize), ⭐ 달성도에서는 풀었으면 달성으로 본다(맞고 틀림이 없으므로).
+ * 자기 채점(서술형 essay)은 정답률(summarize)과 ⭐ 달성도(분모·분자 모두)에서 빠지고, 진행률(푼 문제)에만 들어간다.
  * 문제 데이터에 있는 id만 센다 — "비슷한 문제 새로 생성"으로 만든 문제(id가 다름)는 원래 문제 수치에 섞이지 않는다.
  */
 export interface StatLine {
@@ -32,7 +32,7 @@ export function statLine(
 ): StatLine {
   const r = rec ?? { progress: {}, wrong: {}, bookmarks: [] };
   const s = summarize(r, ids);
-  const done = (id: string) => r.progress[id]?.lastScore === 1 || r.progress[id]?.selfCheck === true;
+  const done = (id: string) => r.progress[id]?.lastScore === 1;
   return {
     total: ids.length,
     solved: ids.filter((id) => r.progress[id]).length,
@@ -55,24 +55,30 @@ export function statLine(
   };
 }
 
+/** ⭐ 달성도 대상: 서술형(자기 채점)은 맞고 틀림이 없어 뺀다 */
+const scoredStars = (meta: ChapterMeta, ids: readonly string[]) => {
+  const essay = new Set(meta.ids.filter((_, i) => meta.rows[i].type === "essay"));
+  return ids.filter((id) => !essay.has(id));
+};
+
 export function chapterStats(rec: SubjectRecords | undefined, meta: ChapterMeta) {
   const byTopic = new Map<string, { ids: string[]; star: string[] }>();
   meta.rows.forEach((row, i) => {
     const t = byTopic.get(row.topic) ?? { ids: [], star: [] };
     t.ids.push(meta.ids[i]);
-    if (row.exam) t.star.push(meta.ids[i]);
+    if (row.exam && row.type !== "essay") t.star.push(meta.ids[i]);
     byTopic.set(row.topic, t);
   });
   return {
-    line: statLine(rec, meta.ids, meta.starIds, { hw: meta.starHwIds, hint: meta.starHintIds }),
+    line: statLine(rec, meta.ids, scoredStars(meta, meta.starIds), { hw: scoredStars(meta, meta.starHwIds), hint: scoredStars(meta, meta.starHintIds) }),
     topics: meta.topics.map((t) => ({ topic: t.topic, ...statLine(rec, byTopic.get(t.topic)!.ids, byTopic.get(t.topic)!.star) })),
   };
 }
 
 export function subjectStats(rec: SubjectRecords | undefined, chapters: readonly ChapterMeta[]): StatLine {
-  return statLine(rec, chapters.flatMap((c) => c.ids), chapters.flatMap((c) => c.starIds), {
-    hw: chapters.flatMap((c) => c.starHwIds),
-    hint: chapters.flatMap((c) => c.starHintIds),
+  return statLine(rec, chapters.flatMap((c) => c.ids), chapters.flatMap((c) => scoredStars(c, c.starIds)), {
+    hw: chapters.flatMap((c) => scoredStars(c, c.starHwIds)),
+    hint: chapters.flatMap((c) => scoredStars(c, c.starHintIds)),
   });
 }
 

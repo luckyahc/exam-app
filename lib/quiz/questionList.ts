@@ -11,8 +11,8 @@ import { questionStatus, type QStatus } from "./status";
  * 목록은 챕터의 원래 문제(정적 + 고정 seed 생성기 문항)만 다룬다. "비슷한 문제"로 새로 만든 문제는 챕터 데이터에 없으므로 나오지 않는다.
  */
 export type ListTab = "all" | QStatus | "bookmark";
-export const LIST_TABS: readonly ListTab[] = ["all", "unsolved", "correct", "wrong", "bookmark"];
-export const TAB_LABEL: Record<ListTab, string> = { all: "전체", unsolved: "안 푼 문제", correct: "맞힌 문제", wrong: "틀린 문제", bookmark: "북마크" };
+export const LIST_TABS: readonly ListTab[] = ["all", "unsolved", "correct", "wrong", "submitted", "bookmark"];
+export const TAB_LABEL: Record<ListTab, string> = { all: "전체", unsolved: "안 푼 문제", correct: "맞힌 문제", wrong: "틀린 문제", submitted: "제출함(서술형)", bookmark: "북마크" };
 
 export interface ListFilter {
   chapter?: string | null;

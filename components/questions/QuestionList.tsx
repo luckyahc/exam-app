@@ -19,6 +19,7 @@ const MARK = {
   correct: { icon: "✓", text: "맞음", cls: "text-correct" },
   wrong: { icon: "✗", text: "틀림", cls: "text-incorrect" },
   unsolved: { icon: "–", text: "미풀이", cls: "text-muted" },
+  submitted: { icon: "✎", text: "제출함", cls: "text-foreground" },
 } as const;
 
 /** 과목별 문제 목록: 풀이 상태 탭 + 필터, 줄을 누르면 바로 풀기 / 정답·해설 보기(기록 안 함), 이 목록으로 풀기 */

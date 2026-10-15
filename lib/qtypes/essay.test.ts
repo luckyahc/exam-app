@@ -67,11 +67,11 @@ describe("서술형 essay (자기 채점)", () => {
     expect(summarize(rec)).toEqual({ attempts: 2, correct: 1, rate: 0.5, openWrong: 1 });
   });
 
-  it("통계: 진행률(푼 문제)에는 들어가고 정답률·오답 수에서는 빠지며, ⭐ 달성도는 풀었으면 달성", () => {
+  it("통계: 진행률(푼 문제)에는 들어가고 정답률·오답 수에서는 빠지며, 풀이 상태는 '제출함'(⭐ 제외는 lib/stats.test.ts)", () => {
     const rec = recordAttempt(empty(), essay.id, gradeQuestion(essay, "답"), "2026-10-16T00:00:00Z");
-    const line = statLine(rec, [essay.id, "psychology-ch01-z-001"], [essay.id]);
-    expect([line.solved, line.attempts, line.correct, line.rate, line.openWrong, line.starDone]).toEqual([1, 0, 0, null, 0, 1]);
-    expect(questionStatus(rec, essay.id)).toBe("correct");
+    const line = statLine(rec, [essay.id, "psychology-ch01-z-001"], []);
+    expect([line.solved, line.attempts, line.correct, line.rate, line.openWrong]).toEqual([1, 0, 0, null, 0]);
+    expect(questionStatus(rec, essay.id)).toBe("submitted");
   });
 
   it("세션 결과: 서술형은 정답/오답 집계(total·wrongIds·토픽별)에서 빠지고 selfCheckIds에 따로", () => {

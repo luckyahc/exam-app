@@ -19,3 +19,14 @@ describe("keyLine — 핵심 한 줄 요약(summary가 없을 때)", () => {
     expect(keyLine("가".repeat(200))).toHaveLength(120);
   });
 });
+
+describe("해설 끝의 근거 한 줄(심리학개론)", async () => {
+  const { explanationBasis, explanationBody } = await import("./QuestionRenderer");
+  it("본문과 근거를 나누고, 근거가 없는 해설은 그대로 둔다", () => {
+    const e = "정답: 가. 오답: 나. 연결: 다.\n근거: 교재 표 3.1 + 보충";
+    expect(explanationBody(e)).toBe("정답: 가. 오답: 나. 연결: 다.");
+    expect(explanationBasis(e)).toBe("근거: 교재 표 3.1 + 보충");
+    expect(explanationBody("p.21: 설명.")).toBe("p.21: 설명.");
+    expect(explanationBasis("p.21: 설명.")).toBeNull();
+  });
+});

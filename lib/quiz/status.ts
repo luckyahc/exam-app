@@ -5,22 +5,24 @@ import type { SubjectRecords } from "@/lib/storage/schema";
  * - 안 푼 문제(unsolved): 기록 없음. 시험 모드에서 답하지 않은 문제는 기록하지 않으므로 여기에 들어간다
  * - 맞힌 문제(correct): 마지막 풀이가 완전히 맞음(lastScore === 1 — 부분 점수는 오답)
  * - 틀린 문제(wrong): 마지막 풀이가 오답
+ * - 제출함(submitted): 서술형(자기 채점 essay)을 제출함 — 맞고 틀림이 없어 맞힌/틀린 문제와 따로 둔다(진도 "풀었음"에는 들어간다)
  * 마지막 점수가 없는 옛 기록(v1 이관, lastScore null)은 오답노트가 미해결이면 틀림, 아니면 정답 횟수가 있으면 맞힘으로 본다.
  * "비슷한 문제"(생성기 seed가 다른 문제)의 기록은 원래 문제 id와 달라 섞이지 않는다 — 목록에는 챕터의 원래 문제만 나온다.
  */
-export type QStatus = "unsolved" | "correct" | "wrong";
+export type QStatus = "unsolved" | "correct" | "wrong" | "submitted";
 
-export const STATUS_LABEL: Record<QStatus, string> = { unsolved: "안 푼 문제", correct: "맞힌 문제", wrong: "틀린 문제" };
+export const STATUS_LABEL: Record<QStatus, string> = { unsolved: "안 푼 문제", correct: "맞힌 문제", wrong: "틀린 문제", submitted: "제출함" };
 
 export function questionStatus(records: SubjectRecords | undefined, id: string): QStatus {
   const p = records?.progress[id];
   if (!p || p.attempts <= 0) return "unsolved";
-  // 자기 채점(서술형)은 맞고 틀림이 없다 — 풀었으면 "틀린 문제"에 섞이지 않게 맞힌 쪽으로 둔다
-  if (p.lastScore === 1 || p.selfCheck) return "correct";
+  // 자기 채점(서술형)은 맞고 틀림이 없다 — 맞힌/틀린 문제가 아니라 "제출함"
+  if (p.selfCheck) return "submitted";
+  if (p.lastScore === 1) return "correct";
   if (p.lastScore !== null) return "wrong";
   const w = records?.wrong[id];
   if (w && !w.resolved) return "wrong";
   return p.correctCount > 0 ? "correct" : "wrong";
 }
 
-export const isStatus = (s: string): s is QStatus => s === "unsolved" || s === "correct" || s === "wrong";
+export const isStatus = (s: string): s is QStatus => s === "unsolved" || s === "correct" || s === "wrong" || s === "submitted";

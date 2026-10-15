@@ -81,8 +81,8 @@ describe("심리학개론 1~3장", async () => {
     }
   });
 
-  it("해설 = 정답 이유 + 오답이 틀린 이유 + 같은 장의 관련 개념(맥락 연결)", () => {
-    const bad = all.filter((q) => !/^정답: [^]+ 오답: [^]+ 연결: [^]+$/.test(q.explanation));
+  it("해설 = 정답 이유 + 오답이 틀린 이유 + 같은 장의 관련 개념(맥락 연결) + 끝에 근거 한 줄('(보충)'은 문장마다 붙이지 않는다)", () => {
+    const bad = all.filter((q) => !/^정답: [^\n]+ 오답: [^\n]+ 연결: [^\n]+\n근거: 교재 [^\n]+$/.test(q.explanation) || q.explanation.includes("(보충)"));
     expect(bad.map((q) => q.id)).toEqual([]);
   });
 
@@ -107,7 +107,7 @@ describe("심리학개론 1~3장", async () => {
         }
     }
     expect(missing).toEqual([]);
-    const supplement = all.filter((q) => JSON.stringify(q).includes("(보충)")).length;
+    const supplement = all.filter((q) => /\n근거: .*보충/.test(q.explanation)).length;
     const doc = [
       "# 용어 커버리지 — 심리학개론 1~3장",
       "",
@@ -121,7 +121,7 @@ describe("심리학개론 1~3장", async () => {
       `| 용어 | ${rows.length} |`,
       `| 누락 | ${missing.length} |`,
       `| 전체 문항 | ${all.length} |`,
-      `| "(보충)" 표시가 있는 문항 | ${supplement} |`,
+      `| 근거에 보충(표준 정의)이 들어간 문항 | ${supplement} |`,
       "",
       "## 용어별",
       "",

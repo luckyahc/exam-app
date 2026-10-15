@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { ChapterMeta } from "@/lib/chapterMeta";
+import { questionStatus } from "@/lib/quiz/status";
 import { recordAttempt } from "@/lib/storage/records";
 import { emptySubjectRecords, type SubjectRecords } from "@/lib/storage/schema";
 import { chapterStats, generatedAttempts, statLine, subjectStats, sumLines } from "./stats";
@@ -66,5 +67,50 @@ describe("대시보드 집계 — 수동 시나리오와 일치", () => {
     const total = sumLines([subj, statLine(undefined, ["x"], [])]);
     expect(total).toMatchObject({ total: 5, solved: 3, attempts: 3, correct: 2, star: 2, starDone: 1 });
     expect(total.rate).toBeCloseTo(2 / 3);
+  });
+});
+
+describe("서술형(essay, 자기 채점) — 제출함 / 정답 수 미포함 / ⭐ 미포함 (심리학개론 2026-10-16)", () => {
+  // e = ⭐ 서술형, m = ⭐ 객관식, n = 일반 객관식
+  const pm: ChapterMeta = {
+    ...meta,
+    subjectId: "psychology",
+    chapterId: "ch01",
+    ids: ["e", "m", "n"],
+    starIds: ["e", "m"],
+    starHwIds: [],
+    starHintIds: [],
+    rows: [
+      { type: "essay", topic: "표", exam: true, hw: false, hint: false, jokbo: false, difficulty: 2 },
+      { type: "mcq", topic: "표", exam: true, hw: false, hint: false, jokbo: false, difficulty: 1 },
+      { type: "mcq", topic: "연구", exam: false, hw: false, hint: false, jokbo: false, difficulty: 1 },
+    ],
+    topics: [
+      { topic: "표", count: 2, star: true },
+      { topic: "연구", count: 1, star: false },
+    ],
+  };
+  const rec = () => {
+    let r = recordAttempt(emptySubjectRecords(), "e", { correct: false, score: 0, selfCheck: true }, "2026-10-16T00:00:00.000Z");
+    r = recordAttempt(r, "m", { correct: true, score: 1 }, "2026-10-16T00:00:01.000Z");
+    return r;
+  };
+
+  it("풀이 상태는 '제출함'(맞힌 문제·틀린 문제가 아님)", () => {
+    expect(questionStatus(rec(), "e")).toBe("submitted");
+    expect(questionStatus(rec(), "m")).toBe("correct");
+  });
+
+  it("진도(푼 문제)에는 들어가고, 정답 수·풀이 횟수·오답에는 들어가지 않는다", () => {
+    const { line } = chapterStats(rec(), pm);
+    expect([line.total, line.solved, line.attempts, line.correct, line.rate, line.openWrong]).toEqual([3, 2, 1, 1, 1, 0]);
+    expect(subjectStats(rec(), [pm]).solved).toBe(2);
+  });
+
+  it("⭐ 달성도는 서술형을 분모·분자 모두에서 뺀다(토픽별도 같음)", () => {
+    const { line, topics } = chapterStats(rec(), pm);
+    expect([line.star, line.starDone]).toEqual([1, 1]);
+    expect(subjectStats(rec(), [pm])).toMatchObject({ star: 1, starDone: 1 });
+    expect(topics.find((t) => t.topic === "표")).toMatchObject({ total: 2, solved: 2, star: 1, starDone: 1 });
   });
 });
