@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProgressStats } from "@/components/progress/ProgressStats";
 import { subjectMeta } from "@/lib/chapterMeta";
+import { FUNCTION_SUBJECTS } from "@/lib/dsFunctions";
 import { getSubject, starLabel } from "@/lib/subjects";
 
 export default async function SubjectHomePage({ params }: PageProps<"/s/[subject]">) {
@@ -50,6 +51,11 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
         {subject.loadGlossary && (
           <Link href={`/s/${subject.id}/glossary`} className={link}>
             용어 정리
+          </Link>
+        )}
+        {(FUNCTION_SUBJECTS as readonly string[]).includes(subject.id) && (
+          <Link href={`/s/${subject.id}/functions`} className={link}>
+            함수 정리
           </Link>
         )}
       </div>
