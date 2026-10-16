@@ -4,7 +4,6 @@ import os from "@/data/subjects/os";
 import { SUBJECTS } from "@/data/subjects/registry";
 import { chapterMeta } from "@/lib/chapterMeta";
 import { validateBase } from "@/lib/qtypes/base";
-import { coreFor } from "@/lib/qtypes/registry";
 import { QTYPE_FIXTURES } from "@/lib/qtypes/fixtures";
 import type { Question } from "@/types/question";
 import { explanationSourceLabel, isJokbo, jokboBadge, matchesSource, parseSource } from "./jokbo";
@@ -68,10 +67,6 @@ describe("족보 필드 데이터 검증 (validateBase)", () => {
     expect(validateBase({ ...general, basedOn: ["os-ch08-jokbo-001", "os-ch02-jokbo-010"] })).toEqual([]);
     expect(validateBase({ ...jokbo(1), basedOn: ["os-ch08-jokbo-002"] }).join()).toMatch(/생성 문항만/);
     expect(validateBase({ ...general, basedOn: [] }).join()).toMatch(/1개 이상/);
-    // 원문 형식(예/아니오 2개 보기)을 따르는 mcq는 basedOn이 있을 때만 허용
-    const yn = { ...general, choices: ["예", "아니오"], answerIndex: 0 } as Question;
-    expect(coreFor(yn).validate(yn as never).join()).toMatch(/4~5개/);
-    expect(coreFor({ ...yn, basedOn: ["os-ch08-jokbo-001"] } as Question).validate({ ...yn, basedOn: ["os-ch08-jokbo-001"] } as never)).toEqual([]);
     expect(validateBase({ ...general, basedOn: ["os-ch08-jokbo-001", "os-ch08-jokbo-001"] }).join()).toMatch(/두 번/);
     for (const id of ["os-ch08-clock-001", "algorithm-dc-jokbo-001", "os-ch08-jokbo-1"]) expect(validateBase({ ...general, basedOn: [id] }).join(), id).toMatch(/basedOn은 'os-/);
   });

@@ -23,7 +23,7 @@ import algorithm from "./index";
 // docs/jokbo/algorithm/pattern-analysis.md = 데이터
 
 const ROOT = path.resolve(import.meta.dirname, "../../..");
-type Q = Question & { choices: string[]; answerIndex: number; answerIndexes: number[] };
+type Q = Question & { choices: string[]; answerIndex: number; answerIndexes: number[]; answer: boolean };
 /** 개념 문항 — 시뮬레이터로 정답을 계산할 수 없다(문서의 검증 열 "개념") */
 const UNVERIFIED = ["algorithm-sorting-linear-001", "algorithm-sorting-linear-002"];
 /** 강의 범위가 애매해 유형 분석에서 뺀 족보(피보나치 중복 재귀 — 출처가 강의 자료 5 DP) */
@@ -68,7 +68,9 @@ describe("알고리즘 족보 유형 생성 문항", async () => {
         expect(b.chapter, x.id).toBe(x.chapter);
         expect(EXCLUDED).not.toContain(b.id);
       }
-      expect(bases.map((b) => b.type), x.id).toContain(x.type);
+      // 예/아니오 2지선다 mcq 족보(원문 ox)를 본뜬 문항은 ox
+      const yn = (b: Q) => b.type === "mcq" && b.choices.length === 2 && b.choices.every((c) => c === "예" || c === "아니오");
+      expect(bases.flatMap((b) => (yn(b as Q) ? ["ox", "mcq"] : [b.type])), x.id).toContain(x.type);
       expect([2, 3], x.id).toContain(x.difficulty);
       if (x.type === "mcq" || x.type === "multi") expect(x.shuffle, x.id).toBe(false);
       const kind = x.id.replace(/-\d{3}$/, "");
@@ -83,7 +85,7 @@ describe("알고리즘 족보 유형 생성 문항", async () => {
   });
 
   it("점근 분석: 입력별 시간 → O·Ω·Θ, 함수 관계, 포함 순서 = 증가율 비교", () => {
-    expect(picked("analysis-bound-001")).toBe(holds([N2, N], "Ω", N) ? "예" : "아니오");
+    expect(q("analysis-bound-001").answer).toBe(holds([N2, N], "Ω", N));
     const three = [N2, LOG, NLOGN];
     const pairs: [Rel, LnFn][][] = [[["O", N2], ["Ω", LOG]], [["O", NLOGN], ["Ω", N]], [["Θ", NLOGN]], [["O", N2], ["Ω", NLOGN]]];
     expect(truthIdx(pairs.map((p) => p.every(([r, g]) => holds(three, r, g))))).toEqual([q("analysis-bound-002").answerIndex]);
@@ -206,13 +208,13 @@ describe("알고리즘 족보 유형 생성 문항", async () => {
     const down = (x: number) => up(x).reverse();
     const cmp = (f: (a: number[]) => number, input: (x: number) => number[]) => lnOf((n) => f(input(Math.log2(n))));
     expect(sameAs(cmp(quickSortComparisons, down), [N2, N, term(0.5, 1), term(0.5), NLOGN], 7, 12)).toEqual([q("sorting-input-001").answerIndex]);
-    // 정렬된 입력: 삽입 n, 퀵 n²(함정), 병합 n log n — 힙 정렬은 이론상 n log n이지만 족보(교수님) 채점 기준으로 정답
-    expect(compareGrowth(cmp(insertionComparisons, up), N, 8, 14)).toBe(0);
-    expect(compareGrowth(cmp(quickSortComparisons, up), N2, 7, 12)).toBe(0);
-    expect(compareGrowth(cmp(mergeSortComparisons, up), NLOGN, 8, 14)).toBe(0);
-    expect(compareGrowth(cmp(heapSortComparisons, up), NLOGN, 8, 14)).toBe(0);
-    expect(pickedMany("sorting-input-002")).toEqual(["삽입 정렬", "힙 정렬", "계수 정렬"]);
-    expect(q("sorting-input-002").explanation).toMatch(/^풀이: 족보 채점 기준을 따른다 .*이론적으로 힙 정렬은 정렬된 입력에서도 Θ\(n log n\)이다/);
+    // 정렬된 입력(이론): 삽입 n, 계수 n + k, 퀵 n², 병합·힙 n log n — Θ(n)인 것만 정답
+    // 계수 정렬: C1 세기 n + 누적 k + 배치 n번(k = 100만 고정, n ≫ k이므로 n = 2²⁴·2³⁰에서 비교)
+    const countingOps = lnOf((n) => 2 * n + 1_000_000);
+    const onSorted: [LnFn, number, number][] = [[cmp(quickSortComparisons, up), 7, 12], [cmp(insertionComparisons, up), 8, 14], [cmp(mergeSortComparisons, up), 8, 14], [cmp(heapSortComparisons, up), 8, 14], [countingOps, 24, 30]];
+    expect(truthIdx(onSorted.map(([f, x1, x2]) => compareGrowth(f, N, x1, x2) === 0))).toEqual(q("sorting-input-002").answerIndexes);
+    expect(countingSort([1, 3, 3, 5], 5).b).toEqual([1, 3, 3, 5]);
+    expect(compareGrowth(onSorted[3][0], NLOGN, 8, 14)).toBe(0); // 힙 정렬: 이론 n log n(족보 채점과 다름 — 이 문항은 이론 기준)
   });
 
   it("docs/jokbo/algorithm/pattern-analysis.md: 유형표가 강의 자료 2·3 족보를 빠짐없이 한 번씩 묶고, 문항표 = 데이터(id·순서·난이도·정답·검증)", () => {
@@ -227,7 +229,7 @@ describe("알고리즘 족보 유형 생성 문항", async () => {
     const rows = doc.filter((l) => /^\| \d+ \| `algorithm-/.test(l)).map(cells);
     expect(rows.map((r) => r[1].replaceAll("`", ""))).toEqual(pats.map((x) => x.id));
     for (const [i, x] of pats.entries()) {
-      const answer = x.type === "mcq" ? picked(x.id.slice(10)) : x.type === "multi" ? pickedMany(x.id.slice(10)).join(" / ") : blank(x.id.slice(10));
+      const answer = x.type === "ox" ? (q(x.id.slice(10)).answer ? "O" : "X") : x.type === "mcq" ? picked(x.id.slice(10)) : x.type === "multi" ? pickedMany(x.id.slice(10)).join(" / ") : blank(x.id.slice(10));
       expect(rows[i][3], x.id).toBe(x.difficulty === 2 ? "보통" : "어려움");
       expect(rows[i][5], x.id).toBe(answer);
       expect(rows[i][6], x.id).toBe(UNVERIFIED.includes(x.id) ? "개념" : "시뮬레이터");
