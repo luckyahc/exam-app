@@ -63,6 +63,12 @@ describe("족보 필드 데이터 검증 (validateBase)", () => {
     expect(validateBase({ ...general, id: "os-ch08-jokbo-001" }).join()).toMatch(/족보 문항만/);
   });
 
+  it("sourceRef(강의자료 예제 출처, 선택): lecture·label 필수, page는 1 이상 정수 — 없으면 기존 문항 그대로", () => {
+    expect(validateBase({ ...general, sourceRef: { lecture: "Ch02", page: 14, label: "Another Example" } })).toEqual([]);
+    expect(validateBase({ ...general, sourceRef: { lecture: "", page: 14, label: "x" } }).join()).toMatch(/lecture·label/);
+    expect(validateBase({ ...general, sourceRef: { lecture: "Ch02", page: 0, label: "x" } }).join()).toMatch(/page/);
+  });
+
   it("basedOn(족보 유형 생성 문항, 선택): 생성 문항만, 족보 id 1개 이상·중복 없음 — 없으면 기존 문항 그대로", () => {
     expect(validateBase({ ...general, basedOn: ["os-ch08-jokbo-001", "os-ch02-jokbo-010"] })).toEqual([]);
     expect(validateBase({ ...jokbo(1), basedOn: ["os-ch08-jokbo-002"] }).join()).toMatch(/생성 문항만/);

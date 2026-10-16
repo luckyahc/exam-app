@@ -227,6 +227,20 @@ const questions: Question[] = [
     explanation:
       "s.9 (p.5): 위상·주파수가 같고 진폭만 다른 두 신호 — 위아래로 흔들리는 폭(피크 진폭)이 작은 쪽이 답이다. 주기(가로 간격)는 두 그림이 같다.",
   },
+  {
+    ...base,
+    ...plain,
+    id: "data-comm-ch02-sine-005",
+    sourceRef: { lecture: "Ch02", page: 5, label: "Example 2.1" },
+    topic: T.sine,
+    type: "ox",
+    difficulty: 1,
+    slideRef: "Ch02 s.10",
+    prompt: "배터리의 전압(The voltage of a battery)처럼 값이 일정한(constant) 신호는 주파수가 0이고 주기가 무한대인 주기 신호로 볼 수 있다.",
+    answer: true,
+    explanation:
+      "s.10 (p.5) Example 2.1: The voltage of a battery is constant. → This can be considered as periodic with frequency of 0 and period of infinity. 같은 쪽 그림처럼 1초에 반복 횟수가 많을수록 주파수가 크고(12 Hz, 6 Hz), 일정한 값은 한 번도 반복되지 않으므로 주파수 0·주기 무한대로 본다.",
+  },
   signalGen.generate(11, { variant: "frequency" }),
 
   // ───────────────────────────── 4. 위상 (s.11-12)
@@ -545,6 +559,36 @@ const questions: Question[] = [
     explanation:
       "s.26 (p.13) Example 2.5: 10 log₁₀ 0.5 = 10(−0.3) = −3 dB — 3 dB를 잃는 것은 전력의 절반을 잃는 것이다. 양수 3으로 답하면 증폭이 된다. (보충) dB 반올림 규칙은 슬라이드에 없다 — 소수 첫째 자리, ±0.05 dB 허용(정확값 −3.01).",
   }),
+  calc({
+    ...plain,
+    id: "data-comm-ch02-impairment-004",
+    sourceRef: { lecture: "Ch02", page: 14, label: "Another Example" },
+    topic: T.impairment,
+    difficulty: 1,
+    slideRef: "Ch02 s.27",
+    prompt: "A signal travels through an amplifier, and its power is increased 10 times(P₂ = 10P₁). 이 **증폭(gain of power)**은 몇 dB인가?",
+    answer: decibel(10, 1),
+    tolerance: 0.05,
+    unit: "dB",
+    steps: ["10 log₁₀(P₂ / P₁) = 10 log₁₀(10P₁ / P₁)", "= 10 log₁₀ 10 = 10(1) = 10 dB"],
+    explanation:
+      "s.27 (p.14) Another Example: 10 log₁₀(P₂/P₁) = 10 log₁₀(10P₁/P₁) = 10 log₁₀ 10 = 10(1) = 10 dB. 사용한 공식: dB = 10 log₁₀(P₂/P₁)(s.26). 증폭은 양수, 감쇠는 음수다(Example 2.5는 −3 dB). (보충) dB 반올림 규칙은 슬라이드에 없다 — ±0.05 dB 허용.",
+  }),
+  calc({
+    ...plain,
+    id: "data-comm-ch02-impairment-005",
+    sourceRef: { lecture: "Ch02", page: 14, label: "Another Example (Also)" },
+    topic: T.impairment,
+    difficulty: 1,
+    slideRef: "Ch02 s.27",
+    prompt: "증폭기를 지난 신호의 전력이 **100배**가 되었다(P₂ = 100P₁). 10 log₁₀(100P₁ / P₁)은 몇 dB인가?",
+    answer: decibel(100, 1),
+    tolerance: 0.05,
+    unit: "dB",
+    steps: ["10 log₁₀(100P₁ / P₁) = 10 log₁₀ 100", "= 10 × 2 = 20 dB"],
+    explanation:
+      "s.27 (p.14) Another Example: Also, 10 log₁₀(100 P₁ / P₁) = 20 dB. 사용한 공식: dB = 10 log₁₀(P₂/P₁). 전력이 10배면 10 dB, 100배면 20 dB — 전력 배수가 아니라 log₁₀ 값에 10을 곱한다(100배를 100 dB로 답하면 틀린다). (보충) dB 반올림 규칙은 슬라이드에 없다 — ±0.05 dB 허용.",
+  }),
   decibelGen.generate(15, { variant: "gain" }),
 
   // ───────────────────────────── 10. 왜곡·잡음 (s.28-29)
@@ -831,6 +875,22 @@ const questions: Question[] = [
     steps: ["C = 10⁶ × log₂(1 + 63) = 10⁶ × log₂ 64", "= 10⁶ × 6 = 6 Mbps"],
     explanation: `s.40 (p.20) Example 2.9: C = 10⁶ log₂ 64 = 6 Mbps가 상한이다. 슬라이드는 성능을 위해 그보다 낮은 4 Mbps를 골라 Nyquist로 L = 4를 구한다. ${SHANNON_BASIS}`,
   }),
+  calc({
+    ...star,
+    id: "data-comm-ch02-shannon-007",
+    sourceRef: { lecture: "Ch02", page: 20, label: "Example 2.9" },
+    summary: "Example 2.9: 상한 6 Mbps보다 낮은 4 Mbps를 고르면 Nyquist로 L = 4(s.40)",
+    topic: T.shannon,
+    difficulty: 2,
+    slideRef: "Ch02 s.40",
+    prompt:
+      "We have a channel with a 1-MHz bandwidth. The SNR for this channel is 63. Shannon 상한(6 Mbps)보다 낮은 **4 Mbps**를 비트율로 고를 때, Nyquist 공식으로 구한 **신호 레벨 수 L**은?",
+    answer: nyquistLevels(4e6, 1e6).levels,
+    tolerance: 0,
+    unit: "레벨",
+    steps: ["4 Mbps = 2 × 1 MHz × log₂ L", "log₂ L = 2", "L = 4"],
+    explanation: `s.40 (p.20) Example 2.9: The Shannon formula gives us 6 Mbps, the upper limit. For better performance, we choose something lower, 4 Mbps. Then, 4 Mbps = 2 × 1 MHz × log₂ L → log₂ L = 2 → L = 4. 사용한 공식: Nyquist 비트율 = 2 × 대역폭 × log₂ L(s.35). log₂ L 값(2)을 L로 답하면 틀린다. ${SHANNON_BASIS}`,
+  }),
   capacityGen.generate(25, { variant: "bothLevels" }),
   capacityGen.generate(24, { variant: "bothTrace" }),
 
@@ -862,6 +922,42 @@ const questions: Question[] = [
     blanks: [{ accept: ["처리량", "throughput", "Throughput", "스루풋", "쓰루풋", "처리율"] }],
     explanation:
       "s.41 (p.21): Bandwidth = Theoretical maximum bit rate, Throughput = Actual effective bit rate. s.44: 대역폭은 링크의 잠재적 측정치, 처리량은 실제로 얼마나 빨리 보내는지의 측정치다.",
+  },
+  calc({
+    ...plain,
+    id: "data-comm-ch02-perf-005",
+    sourceRef: { lecture: "Ch02", page: 22, label: "Example 2.10" },
+    topic: T.perf,
+    difficulty: 1,
+    slideRef: "Ch02 s.43",
+    prompt:
+      "The bandwidth of a subscriber line is 4 kHz for voice or data. The bandwidth of this line for data transmission can be up to 56 kbps, using a sophisticated device (i.e., modem). 전화 회사가 회선 품질을 높여 대역폭을 **8 kHz**로 늘리면 몇 kbps를 보낼 수 있는가?",
+    answer: 56 * (8 / 4),
+    tolerance: 0,
+    unit: "kbps",
+    steps: ["대역폭 4 kHz → 56 kbps", "대역폭이 8 kHz로 2배 → 56 × 2 = 112 kbps"],
+    explanation:
+      "s.43 (p.22) Examples 2.10 and 2.11: If the telephone company improves the quality of the line and increases the bandwidth to 8 kHz, we can send 112 kbps. 헤르츠 단위 대역폭이 2배(4 → 8 kHz)가 되면 bps 단위 대역폭도 2배가 된다(56 → 112 kbps) — 대역폭의 두 의미(Hz·bps)가 서로 비례한다. (보충) 비례 관계는 슬라이드 수치(4 kHz → 56 kbps, 8 kHz → 112 kbps)에서 읽은 것이다.",
+  }),
+  {
+    ...base,
+    ...plain,
+    id: "data-comm-ch02-perf-006",
+    sourceRef: { lecture: "Ch02", page: 22, label: "Example 2.11" },
+    topic: T.perf,
+    type: "mcq",
+    difficulty: 1,
+    slideRef: "Ch02 s.43",
+    prompt: "One can say that the bandwidth of a fast Ethernet network is 100 Mbps. 이 말의 뜻으로 옳은 것은?",
+    choices: [
+      "이 네트워크로 100 Mbps를 보낼 수 있다(bps 단위 대역폭)",
+      "이 네트워크 신호가 차지하는 주파수 범위가 100 MHz다",
+      "이 네트워크의 실제 처리량은 언제나 100 Mbps다",
+      "이 네트워크의 신호 요소는 초당 100 M개다",
+    ],
+    answerIndex: 0,
+    explanation:
+      "s.43 (p.22) Examples 2.10 and 2.11: This means we can send 100 Mbps through this network. bps로 말한 대역폭은 보낼 수 있는 비트율(이론 최대 전송률, s.41)이다. 실제 처리량은 대역폭보다 작을 수 있고(s.44: T always less than B), 주파수 범위(Hz)나 초당 신호 요소 수(보오율, s.68)와는 다른 말이다.",
   },
   {
     ...base,

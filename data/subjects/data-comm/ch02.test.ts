@@ -119,6 +119,10 @@ describe("데이터 통신 Ch02 — 슬라이드 예제 기준값(lib/sim/data-c
     ["data-comm-ch02-shannon-002", 0, 0, "s.37 (p.19) Example 2.7 → C = 0"],
     ["data-comm-ch02-shannon-003", 34_881, 0.5, "s.38 (p.19) Example 2.8 → 34,881 bps"],
     ["data-comm-ch02-shannon-006", 6, 0, "s.40 (p.20) Example 2.9 → 6 Mbps"],
+    ["data-comm-ch02-impairment-004", 10, 1e-12, "s.27 (p.14) Another Example → 10 dB"],
+    ["data-comm-ch02-impairment-005", 20, 1e-12, "s.27 (p.14) Another Example(Also) → 20 dB"],
+    ["data-comm-ch02-shannon-007", 4, 0, "s.40 (p.20) Example 2.9 → 4 Mbps면 L = 4"],
+    ["data-comm-ch02-perf-005", 112, 0, "s.43 (p.22) Example 2.10 → 8 kHz면 112 kbps"],
     ["data-comm-ch02-perf-004", 2, 0, "s.45 (p.23) → 처리량 2 Mbps"],
     ["data-comm-ch02-delay-003", 50, 1e-9, "s.47 (p.24) → 전파 시간 50 ms"],
     ["data-comm-ch02-delay-004", 0.02, 1e-12, "s.47 (p.24) → 전송 시간 0.020 ms"],
@@ -132,6 +136,23 @@ describe("데이터 통신 Ch02 — 슬라이드 예제 기준값(lib/sim/data-c
     // 슬라이드에 적힌 근사값도 정답으로 채점된다
     const q = byId(id);
     expect(gradeQuestion(q, String(expected)).correct, `${id} 슬라이드 값 정답 처리`).toBe(true);
+  });
+
+  it("예제 출처(sourceRef): 쪽 = ⌈슬라이드 ÷ 2⌉, 해설이 그 예제 이름을 적는다", () => {
+    const withRef = ch02.filter((q) => q.sourceRef);
+    expect(withRef.map((q) => q.id)).toEqual([
+      "data-comm-ch02-sine-005",
+      "data-comm-ch02-impairment-004",
+      "data-comm-ch02-impairment-005",
+      "data-comm-ch02-shannon-007",
+      "data-comm-ch02-perf-005",
+      "data-comm-ch02-perf-006",
+    ]);
+    for (const q of withRef) {
+      const slide = Number(/s\.(\d+)/.exec(q.slideRef)![1]);
+      expect(q.sourceRef!.page, q.id).toBe(page(slide));
+      expect(q.explanation, q.id).toContain(q.sourceRef!.label.replace(/ \(Also\)$/, "").replace(/^Example 2\.1[01]$/, "Examples 2.10 and 2.11"));
+    }
   });
 
   it("슬라이드 근사값 정답 처리: 310 V, 1.046 rad, −3 dB, 34.881 kbps", () => {

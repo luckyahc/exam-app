@@ -62,6 +62,11 @@ export interface BaseQ<T extends string = string> {
   jokbo?: JokboInfo;
   /** 족보 유형을 본뜬 생성 문항(origin 없음)이 바탕으로 삼은 족보 문항 id(2026-10-16, docs/jokbo/algorithm/pattern-analysis.md) */
   basedOn?: string[];
+  /**
+   * 강의자료 예제를 원본 그대로 옮긴 문항의 출처(2026-10-16, docs/verification/data-comm-examples.md): 강의·PDF 쪽·예제 번호.
+   * 계획 문서의 `source: { lecture, page, label }`에 해당한다 — `source`는 코드 빈칸의 코드 본문 필드라 이름을 `sourceRef`로 했다
+   */
+  sourceRef?: { lecture: string; page: number; label: string };
   /** 지문 아래 그림(족보 원본 스캔에서 자른 그래프 등, Sprint 21). 표·배열·코드는 그림 대신 글자로 옮긴다 */
   figure?: QuestionFigure;
 }
@@ -113,6 +118,11 @@ export function validateJokbo(q: BaseQ): string[] {
     else if (new Set(q.basedOn).size !== q.basedOn.length) errors.push("basedOn에 같은 id가 두 번 있음");
     for (const id of q.basedOn ?? [])
       if (!new RegExp(`^${q.subject}-[a-z0-9]+-jokbo-\\d{3}$`).test(id)) errors.push(`basedOn은 '${q.subject}-{chapter}-jokbo-NNN': ${id}`);
+  }
+  if (q.sourceRef !== undefined) {
+    const r = q.sourceRef;
+    if (!r.lecture?.trim() || !r.label?.trim()) errors.push("sourceRef.lecture·label이 비어 있음");
+    if (!Number.isInteger(r.page) || r.page < 1) errors.push("sourceRef.page는 1 이상의 정수");
   }
   const j = q.jokbo;
   if (!j) return errors;
