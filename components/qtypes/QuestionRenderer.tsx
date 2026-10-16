@@ -3,7 +3,7 @@
 import type { ExamBasis, GradeResult } from "@/lib/qtypes/base";
 import { questionData } from "@/lib/qtypes/dataSnapshots";
 import { coreFor, type AnyAnswer, type Question } from "@/lib/qtypes/registry";
-import { explanationSourceLabel, jokboBadge } from "@/lib/quiz/jokbo";
+import { exampleBadge, explanationSourceLabel, jokboBadge } from "@/lib/quiz/jokbo";
 import { uiFor } from "./registry";
 import { CodeBlock } from "./CodeBlock";
 import { DataTables } from "./DataTables";
@@ -107,6 +107,9 @@ export function QuestionRenderer({ question, answer, onAnswer, result }: Props) 
         <span className="rounded-full bg-surface px-2 py-0.5 font-medium">{core.label}</span>
         {question.exam && question.examBasis && <ExamBadge basis={question.examBasis} hintIds={question.hintIds} />}
         <JokboBadge question={question} />
+        {exampleBadge(question) && (
+          <span className="inline-flex items-center rounded-full border border-foreground/40 px-2 py-0.5 text-xs font-medium">{exampleBadge(question)}</span>
+        )}
         <span className="text-muted">
           {question.topic} · 난이도 {"●".repeat(question.difficulty)}
           {"○".repeat(3 - question.difficulty)}

@@ -247,6 +247,7 @@ const questions: Question[] = [
   calc({
     ...plain,
     id: "data-comm-ch02-phase-001",
+    sourceRef: { lecture: "Ch02", page: 6, label: "위상 예시(1/6 주기)" },
     topic: T.phase,
     difficulty: 2,
     slideRef: "Ch02 s.11",
@@ -317,6 +318,7 @@ const questions: Question[] = [
   calc({
     ...plain,
     id: "data-comm-ch02-wavelength-003",
+    sourceRef: { lecture: "Ch02", page: 7, label: "빨간빛 파장 예시" },
     topic: T.wavelength,
     difficulty: 2,
     slideRef: "Ch02 s.13",
@@ -381,6 +383,7 @@ const questions: Question[] = [
   calc({
     ...plain,
     id: "data-comm-ch02-bandwidth-003",
+    sourceRef: { lecture: "Ch02", page: 9, label: "복합 신호 대역폭 예시" },
     topic: T.bandwidth,
     difficulty: 1,
     slideRef: "Ch02 s.17",
@@ -454,6 +457,7 @@ const questions: Question[] = [
   calc({
     ...plain,
     id: "data-comm-ch02-digital-003",
+    sourceRef: { lecture: "Ch02", page: 10, label: "Example 2.3" },
     topic: T.digital,
     difficulty: 1,
     slideRef: "Ch02 s.20",
@@ -468,6 +472,7 @@ const questions: Question[] = [
   calc({
     ...plain,
     id: "data-comm-ch02-digital-004",
+    sourceRef: { lecture: "Ch02", page: 11, label: "Example 2.4" },
     topic: T.digital,
     difficulty: 2,
     slideRef: "Ch02 s.21",
@@ -548,6 +553,7 @@ const questions: Question[] = [
   calc({
     ...plain,
     id: "data-comm-ch02-impairment-003",
+    sourceRef: { lecture: "Ch02", page: 13, label: "Example 2.5" },
     topic: T.impairment,
     difficulty: 1,
     slideRef: "Ch02 s.26",
@@ -647,6 +653,7 @@ const questions: Question[] = [
   calc({
     ...plain,
     id: "data-comm-ch02-snr-001",
+    sourceRef: { lecture: "Ch02", page: 15, label: "SNR 예시" },
     topic: T.snr,
     difficulty: 2,
     slideRef: "Ch02 s.30",
@@ -753,6 +760,7 @@ const questions: Question[] = [
   calc({
     ...star,
     id: "data-comm-ch02-nyquist-005",
+    sourceRef: { lecture: "Ch02", page: 18, label: "Examples 2.6" },
     summary: "265 kbps·20 kHz → log₂ L = 6.625, L ≈ 98.7(s.35)",
     topic: T.nyquist,
     difficulty: 2,
@@ -768,6 +776,7 @@ const questions: Question[] = [
   calc({
     ...star,
     id: "data-comm-ch02-nyquist-006",
+    sourceRef: { lecture: "Ch02", page: 18, label: "Examples 2.6" },
     summary: "L이 2의 거듭제곱이 아니면 128레벨 → 280 kbps, 64레벨 → 240 kbps(s.35)",
     topic: T.nyquist,
     difficulty: 2,
@@ -802,6 +811,7 @@ const questions: Question[] = [
   calc({
     ...star,
     id: "data-comm-ch02-shannon-002",
+    sourceRef: { lecture: "Ch02", page: 19, label: "Example 2.7" },
     summary: "SNR ≈ 0이면 C = B log₂ 1 = 0, 대역폭과 무관(s.37)",
     topic: T.shannon,
     difficulty: 1,
@@ -816,6 +826,7 @@ const questions: Question[] = [
   calc({
     ...star,
     id: "data-comm-ch02-shannon-003",
+    sourceRef: { lecture: "Ch02", page: 19, label: "Example 2.8" },
     summary: "전화선 3000 Hz·SNR 3162 → C = 34,881 bps(s.38)",
     topic: T.shannon,
     difficulty: 2,
@@ -864,6 +875,7 @@ const questions: Question[] = [
   calc({
     ...star,
     id: "data-comm-ch02-shannon-006",
+    sourceRef: { lecture: "Ch02", page: 20, label: "Example 2.9" },
     summary: "1 MHz·SNR 63 → 상한 6 Mbps, 4 Mbps를 고르면 L = 4(s.40)",
     topic: T.shannon,
     difficulty: 2,
@@ -976,6 +988,7 @@ const questions: Question[] = [
   calc({
     ...plain,
     id: "data-comm-ch02-perf-004",
+    sourceRef: { lecture: "Ch02", page: 23, label: "처리량 Example" },
     topic: T.perf,
     difficulty: 2,
     slideRef: "Ch02 s.45",
@@ -1020,6 +1033,7 @@ const questions: Question[] = [
   calc({
     ...plain,
     id: "data-comm-ch02-delay-003",
+    sourceRef: { lecture: "Ch02", page: 24, label: "전파·전송 시간 Example" },
     topic: T.delay,
     difficulty: 1,
     slideRef: "Ch02 s.47",
@@ -1034,6 +1048,7 @@ const questions: Question[] = [
   calc({
     ...plain,
     id: "data-comm-ch02-delay-004",
+    sourceRef: { lecture: "Ch02", page: 24, label: "전파·전송 시간 Example" },
     topic: T.delay,
     difficulty: 2,
     slideRef: "Ch02 s.47",
@@ -1066,6 +1081,7 @@ const questions: Question[] = [
     ...base,
     ...star,
     id: "data-comm-ch02-bdp-002",
+    sourceRef: { lecture: "Ch02", page: 26, label: "Example 2.12" },
     summary: "파이프 비유: 단면적 = 대역폭, 길이 = 지연, 부피 = 대역폭-지연 곱(s.51)",
     topic: T.bdp,
     type: "blank",
@@ -1084,6 +1100,7 @@ const questions: Question[] = [
   calc({
     ...star,
     id: "data-comm-ch02-bdp-003",
+    sourceRef: { lecture: "Ch02", page: 25, label: "Filling the Link" },
     summary: "대역폭 × 지연: 5 bps × 5 s = 25비트(1 bps × 5 s = 5비트)(s.49-50)",
     topic: T.bdp,
     difficulty: 1,
@@ -1100,6 +1117,7 @@ const questions: Question[] = [
     ...base,
     ...star,
     id: "data-comm-ch02-bdp-004",
+    sourceRef: { lecture: "Ch02", page: 26, label: "지터 예시" },
     summary: "지터 = 패킷 도착 시간의 변동 — 20·45·40 ms면 실시간 응용이 지터를 겪는다(s.52)",
     topic: T.bdp,
     type: "ox",
@@ -1195,6 +1213,7 @@ const questions: Question[] = [
   calc({
     ...plain,
     id: "data-comm-ch02-pcm-003",
+    sourceRef: { lecture: "Ch02", page: 31, label: "Example 2.13" },
     topic: T.pcm,
     difficulty: 2,
     slideRef: "Ch02 s.61",
@@ -1457,6 +1476,7 @@ const questions: Question[] = [
   calc({
     ...plain,
     id: "data-comm-ch02-fdm-004",
+    sourceRef: { lecture: "Ch02", page: 44, label: "Guard Band Example" },
     topic: T.fdm,
     difficulty: 2,
     slideRef: "Ch02 s.87",
@@ -1677,6 +1697,7 @@ const questions: Question[] = [
   calc({
     ...plain,
     id: "data-comm-ch02-wireless-004",
+    sourceRef: { lecture: "Ch02", page: 51, label: "적외선 파장 예시" },
     topic: T.wireless,
     difficulty: 2,
     slideRef: "Ch02 s.101",

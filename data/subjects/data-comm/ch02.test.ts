@@ -138,8 +138,8 @@ describe("데이터 통신 Ch02 — 슬라이드 예제 기준값(lib/sim/data-c
     expect(gradeQuestion(q, String(expected)).correct, `${id} 슬라이드 값 정답 처리`).toBe(true);
   });
 
-  it("예제 출처(sourceRef): 쪽 = ⌈슬라이드 ÷ 2⌉, 해설이 그 예제 이름을 적는다", () => {
-    const withRef = ch02.filter((q) => q.sourceRef);
+  it("예제에서 새로 만든 문항의 출처(sourceRef): 쪽 = ⌈슬라이드 ÷ 2⌉, 해설이 그 예제 이름을 적는다(기존 중복 예제 문항은 examples.test.ts)", () => {
+    const withRef = ["sine-005", "impairment-004", "impairment-005", "shannon-007", "perf-005", "perf-006"].map((s) => byId(`data-comm-ch02-${s}`));
     expect(withRef.map((q) => q.id)).toEqual([
       "data-comm-ch02-sine-005",
       "data-comm-ch02-impairment-004",

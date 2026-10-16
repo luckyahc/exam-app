@@ -10,7 +10,8 @@
 - 제외: 개념 설명 속 "For example" 문장. 예로 DC-1 s.~22의 "see the tasks at each layer", DC-2 s.18의 "a 1 can be encoded as a positive voltage"가 있다. 풀이나 수치가 없는 예시는 넣지 않았다.
 - 중복 판정: 기존 데이터 통신 문항(Ch01 58 + Ch02 112 = 170) 중 같은 조건·수치로 이미 출제된 것은 그 문항 id를 적고 새로 만들지 않았다.
 - 정답 검증: 계산 문항은 `lib/sim/data-comm` 함수로 계산하고, `data/subjects/data-comm/ch02.test.ts`의 "슬라이드 예제 기준값" 표가 슬라이드 값과 대조한다.
-- 출처: 새 문항에는 `sourceRef: { lecture, page, label }`을 붙였다. 계획의 `source`는 코드 빈칸 필드 이름과 겹쳐 `sourceRef`로 했다.
+- 출처: 예제 문항(중복 22 + 새 문항 6 = 28)에 `sourceRef: { lecture, page, label }`을 붙였다. 계획의 `source`는 코드 빈칸 필드 이름과 겹쳐 `sourceRef`로 했다.
+- 강의 예제 분류: `sourceRef`가 있는 문항은 앱에서 "강의 예제" 분류로 따로 모인다 — 과목 홈 "강의 예제만 풀기", 챕터 시작·문제 목록의 분류 필터, 문항 뱃지(`예제 · Example 2.1 (Ch02 p.5)`). 족보·일반 분류와 겹칠 수 있다(예제 문항도 일반 문항이다).
 - ⭐: 기존 Ch02 규칙(⭐는 인쇄 강조 근거가 있는 3개 소주제만, `ch02.test.ts`)과 충돌해 그 규칙을 따랐다. 그래서 Shannon 소주제 문항만 ⭐ printed-emphasis이고, 나머지는 `exam: false`다.
 
 ## 목록

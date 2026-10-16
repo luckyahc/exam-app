@@ -337,6 +337,7 @@ const questions: Question[] = [
     ...base,
     ...plain,
     id: "data-comm-ch01-topology-003",
+    sourceRef: { lecture: "Ch01", page: 5, label: "완전 연결 메시 그림(n = 5)" },
     topic: T.topology,
     type: "ox",
     difficulty: 1,

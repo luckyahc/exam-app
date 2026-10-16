@@ -6,7 +6,7 @@ import { chapterMeta } from "@/lib/chapterMeta";
 import { validateBase } from "@/lib/qtypes/base";
 import { QTYPE_FIXTURES } from "@/lib/qtypes/fixtures";
 import type { Question } from "@/types/question";
-import { explanationSourceLabel, isJokbo, jokboBadge, matchesSource, parseSource } from "./jokbo";
+import { exampleBadge, explanationSourceLabel, isExample, isJokbo, jokboBadge, matchesSource, parseSource } from "./jokbo";
 import { listRows, tabCounts, visibleRows } from "./questionList";
 import { filterQuestions } from "./session";
 
@@ -87,6 +87,17 @@ describe("분류 필터", () => {
     expect(pool.filter((q) => matchesSource(q, "all"))).toHaveLength(3);
     expect(pool.filter((q) => matchesSource(q, null))).toHaveLength(3);
     expect([parseSource("jokbo"), parseSource("general"), parseSource("all"), parseSource(null), parseSource("x")]).toEqual(["jokbo", "general", null, null, null]);
+  });
+
+  it("강의 예제(sourceRef) 분류: 족보·일반과 별도로 고르고 뱃지에 예제 이름·쪽을 적는다", () => {
+    const ex = { ...general, id: "os-ch08-ex-001", sourceRef: { lecture: "Ch08", page: 3, label: "Example 8.1" } };
+    const qs = [...pool, ex];
+    expect(qs.filter((q) => matchesSource(q, "example"))).toEqual([ex]);
+    expect(matchesSource(ex, "general")).toBe(true);
+    expect(parseSource("example")).toBe("example");
+    expect([isExample(ex), isExample(general)]).toEqual([true, false]);
+    expect([exampleBadge(ex), exampleBadge(general)]).toEqual(["예제 · Example 8.1 (Ch08 p.3)", null]);
+    expect(filterQuestions(qs, { source: "example", seed: "s" })).toEqual([ex]);
   });
 
   it("퀴즈 문제 고르기(filterQuestions)에 적용된다", () => {

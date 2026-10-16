@@ -15,12 +15,13 @@ const meta: ChapterMeta = {
   starHwIds: ["a"],
   starHintIds: ["c"],
   jokboIds: [],
+  exampleIds: [],
   types: [],
   rows: [
-    { type: "mcq", topic: "TLB", exam: true, hw: true, hint: false, jokbo: false, difficulty: 1 },
-    { type: "mcq", topic: "TLB", exam: false, hw: false, hint: false, jokbo: false, difficulty: 2 },
-    { type: "ox", topic: "Clock", exam: true, hw: false, hint: true, jokbo: false, difficulty: 2 },
-    { type: "ox", topic: "Clock", exam: false, hw: false, hint: false, jokbo: false, difficulty: 3 },
+    { type: "mcq", topic: "TLB", exam: true, hw: true, hint: false, jokbo: false, example: false, difficulty: 1 },
+    { type: "mcq", topic: "TLB", exam: false, hw: false, hint: false, jokbo: false, example: false, difficulty: 2 },
+    { type: "ox", topic: "Clock", exam: true, hw: false, hint: true, jokbo: false, example: false, difficulty: 2 },
+    { type: "ox", topic: "Clock", exam: false, hw: false, hint: false, jokbo: false, example: false, difficulty: 3 },
   ],
   difficulties: [
     { difficulty: 1, count: 1 },
@@ -81,9 +82,9 @@ describe("서술형(essay, 자기 채점) — 제출함 / 정답 수 미포함 /
     starHwIds: [],
     starHintIds: [],
     rows: [
-      { type: "essay", topic: "표", exam: true, hw: false, hint: false, jokbo: false, difficulty: 2 },
-      { type: "mcq", topic: "표", exam: true, hw: false, hint: false, jokbo: false, difficulty: 1 },
-      { type: "mcq", topic: "연구", exam: false, hw: false, hint: false, jokbo: false, difficulty: 1 },
+      { type: "essay", topic: "표", exam: true, hw: false, hint: false, jokbo: false, example: false, difficulty: 2 },
+      { type: "mcq", topic: "표", exam: true, hw: false, hint: false, jokbo: false, example: false, difficulty: 1 },
+      { type: "mcq", topic: "연구", exam: false, hw: false, hint: false, jokbo: false, example: false, difficulty: 1 },
     ],
     topics: [
       { topic: "표", count: 2, star: true },
