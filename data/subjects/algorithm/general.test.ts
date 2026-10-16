@@ -15,7 +15,7 @@ type Choice = Question & { choices: string[]; answerIndex: number };
 
 describe("알고리즘 일반 문항", async () => {
   const all = (await Promise.all(algorithm.chapters.map((c) => c.load()))).flat();
-  const general = all.filter((x) => !isJokbo(x));
+  const general = all.filter((x) => !isJokbo(x) && !x.basedOn); // 족보 유형 생성 문항(basedOn)은 patterns.test.ts
   const q = (id: string) => all.find((x) => x.id === `algorithm-${id}`) as Choice;
   const picked = (id: string) => q(id).choices[q(id).answerIndex];
   const blanks = (id: string) => answerKey(q(id)) as string[];

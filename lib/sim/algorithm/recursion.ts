@@ -44,3 +44,49 @@ export function recurrence(n: number, parts: readonly ((n: number) => number)[],
   memo.set(n, v);
   return v;
 }
+
+// ── 증가율 비교(족보 유형 생성 문항, 2026-10-16 — docs/jokbo/algorithm/pattern-analysis.md) ──
+// 함수는 ln f를 x = log₂n의 함수로 준다(2ⁿ·n³ 같은 큰 값도 넘치지 않게). 두 지점 x1 < x2에서 ln(f/g)의 변화량이
+// 0 근처면 같은 증가율(Θ), 음수면 f가 느리고 양수면 f가 빠르다. 로그 인수 하나의 차이도 x2 = 2·x1이면 ln 2 ≈ 0.69만큼 벌어진다.
+
+export type LnFn = (x: number) => number;
+export const GROWTH_EPS = 0.35;
+
+/** n^p · (log₂n)^q · 2^(c·n) · coef 의 ln (x = log₂n) */
+export const term =
+  (p: number, q = 0, c = 0, coef = 1): LnFn =>
+  (x) =>
+    p * x * Math.LN2 + q * Math.log(x) + c * 2 ** x * Math.LN2 + Math.log(coef);
+
+/** 여러 항의 합의 ln(가장 큰 항 기준 log-sum-exp) */
+export const sum =
+  (...ts: LnFn[]): LnFn =>
+  (x) => {
+    const v = ts.map((t) => t(x));
+    const m = Math.max(...v);
+    return m + Math.log(v.reduce((s, y) => s + Math.exp(y - m), 0));
+  };
+
+/** f와 g의 증가율 비교: -1 = f가 느림(f = o(g)), 0 = 같음(Θ), 1 = f가 빠름 */
+export function compareGrowth(f: LnFn, g: LnFn, x1 = 64, x2 = 128): -1 | 0 | 1 {
+  const d = f(x2) - g(x2) - (f(x1) - g(x1));
+  return Math.abs(d) < GROWTH_EPS ? 0 : d < 0 ? -1 : 1;
+}
+
+/**
+ * 마스터 정리(기본 세 경우, Lec2 p.63-72) 판정: T(n) = aT(n/b) + f(n)에서 f(n)/h(n) = n^e (log n)^k 꼴의 e·k를
+ * 세 지점(x = 64·128·256)에서 구한다. a < 1이면 쓸 수 없음. e < 0 → "h"(h(n)이 다항식만큼 큼), e > 0 → "f", e = k = 0 → "same", 그 밖 → null
+ */
+export function masterCase(a: number, b: number, f: LnFn): "h" | "f" | "same" | null {
+  if (a < 1 || b <= 1) return null;
+  const hExp = Math.log(a) / Math.log(b);
+  const r = (x: number) => (f(x) - hExp * x * Math.LN2) / Math.LN2; // log₂(f/h)
+  const d1 = r(128) - r(64);
+  const d2 = r(256) - r(128);
+  const e = (d2 - d1) / 64;
+  const k = d1 - 64 * e;
+  const tol = 1e-3;
+  if (e < -tol) return "h";
+  if (e > tol) return "f";
+  return Math.abs(k) < tol ? "same" : null;
+}

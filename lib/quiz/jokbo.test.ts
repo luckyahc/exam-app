@@ -4,6 +4,7 @@ import os from "@/data/subjects/os";
 import { SUBJECTS } from "@/data/subjects/registry";
 import { chapterMeta } from "@/lib/chapterMeta";
 import { validateBase } from "@/lib/qtypes/base";
+import { coreFor } from "@/lib/qtypes/registry";
 import { QTYPE_FIXTURES } from "@/lib/qtypes/fixtures";
 import type { Question } from "@/types/question";
 import { explanationSourceLabel, isJokbo, jokboBadge, matchesSource, parseSource } from "./jokbo";
@@ -61,6 +62,18 @@ describe("족보 필드 데이터 검증 (validateBase)", () => {
     expect(validateBase({ ...jokbo(1), origin: undefined }).join()).toMatch(/origin: "jokbo" 필수/);
     expect(validateBase({ ...jokbo(1), jokbo: undefined }).join()).toMatch(/jokbo 필드 필수/);
     expect(validateBase({ ...general, id: "os-ch08-jokbo-001" }).join()).toMatch(/족보 문항만/);
+  });
+
+  it("basedOn(족보 유형 생성 문항, 선택): 생성 문항만, 족보 id 1개 이상·중복 없음 — 없으면 기존 문항 그대로", () => {
+    expect(validateBase({ ...general, basedOn: ["os-ch08-jokbo-001", "os-ch02-jokbo-010"] })).toEqual([]);
+    expect(validateBase({ ...jokbo(1), basedOn: ["os-ch08-jokbo-002"] }).join()).toMatch(/생성 문항만/);
+    expect(validateBase({ ...general, basedOn: [] }).join()).toMatch(/1개 이상/);
+    // 원문 형식(예/아니오 2개 보기)을 따르는 mcq는 basedOn이 있을 때만 허용
+    const yn = { ...general, choices: ["예", "아니오"], answerIndex: 0 } as Question;
+    expect(coreFor(yn).validate(yn as never).join()).toMatch(/4~5개/);
+    expect(coreFor({ ...yn, basedOn: ["os-ch08-jokbo-001"] } as Question).validate({ ...yn, basedOn: ["os-ch08-jokbo-001"] } as never)).toEqual([]);
+    expect(validateBase({ ...general, basedOn: ["os-ch08-jokbo-001", "os-ch08-jokbo-001"] }).join()).toMatch(/두 번/);
+    for (const id of ["os-ch08-clock-001", "algorithm-dc-jokbo-001", "os-ch08-jokbo-1"]) expect(validateBase({ ...general, basedOn: [id] }).join(), id).toMatch(/basedOn은 'os-/);
   });
 });
 
@@ -123,12 +136,13 @@ describe("기존 과목 회귀 · 새 과목 등록", () => {
     expect(meta.rows.filter((r) => r.jokbo)).toHaveLength(10);
   });
 
-  it("알고리즘: 족보 주제 챕터 5개, 족보 53 + 일반 13(2026-10-15, 족보에 없던 주제 — dc 4·dp 9)", async () => {
+  it("알고리즘: 족보 주제 챕터 5개, 족보 53 + 일반 13(2026-10-15, 족보에 없던 주제 — dc 4·dp 9) + 족보 유형 생성 40(2026-10-16, analysis 10·recurrence 15·sorting 15)", async () => {
     expect("status" in algorithm).toBe(false);
     expect(algorithm.chapters.map((c) => c.id)).toEqual(["analysis", "recurrence", "sorting", "dc", "dp"]);
     const all = (await Promise.all(algorithm.chapters.map((c) => c.load()))).flat();
     expect(all.filter(isJokbo)).toHaveLength(53);
-    expect(all.filter((q) => !isJokbo(q)).map((q) => q.chapter)).toEqual([...Array(4).fill("dc"), ...Array(9).fill("dp")]);
+    expect(all.filter((q) => !isJokbo(q) && !q.basedOn).map((q) => q.chapter)).toEqual([...Array(4).fill("dc"), ...Array(9).fill("dp")]);
+    expect(all.filter((q) => q.basedOn).map((q) => q.chapter)).toEqual([...Array(10).fill("analysis"), ...Array(15).fill("recurrence"), ...Array(15).fill("sorting")]);
   });
 
   it("OS Ch09: 기존 4개 챕터 뒤에 추가(Sprint 19에 문제를 채우고 준비 중 해제)", async () => {

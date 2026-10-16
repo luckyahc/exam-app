@@ -60,6 +60,8 @@ export interface BaseQ<T extends string = string> {
    */
   origin?: "jokbo";
   jokbo?: JokboInfo;
+  /** 족보 유형을 본뜬 생성 문항(origin 없음)이 바탕으로 삼은 족보 문항 id(2026-10-16, docs/jokbo/algorithm/pattern-analysis.md) */
+  basedOn?: string[];
   /** 지문 아래 그림(족보 원본 스캔에서 자른 그래프 등, Sprint 21). 표·배열·코드는 그림 대신 글자로 옮긴다 */
   figure?: QuestionFigure;
 }
@@ -104,6 +106,13 @@ export function validateJokbo(q: BaseQ): string[] {
   } else {
     if (q.jokbo) errors.push("jokbo 필드가 있으면 origin: \"jokbo\" 필수");
     if (q.id.startsWith(`${q.subject}-${q.chapter}-jokbo-`)) errors.push("'-jokbo-' id는 족보 문항만 쓴다");
+  }
+  if (q.basedOn !== undefined) {
+    if (q.origin === "jokbo") errors.push("basedOn은 족보 문항이 아닌 생성 문항만 쓴다");
+    if (!Array.isArray(q.basedOn) || q.basedOn.length === 0) errors.push("basedOn은 족보 문항 id 1개 이상");
+    else if (new Set(q.basedOn).size !== q.basedOn.length) errors.push("basedOn에 같은 id가 두 번 있음");
+    for (const id of q.basedOn ?? [])
+      if (!new RegExp(`^${q.subject}-[a-z0-9]+-jokbo-\\d{3}$`).test(id)) errors.push(`basedOn은 '${q.subject}-{chapter}-jokbo-NNN': ${id}`);
   }
   const j = q.jokbo;
   if (!j) return errors;

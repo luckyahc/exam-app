@@ -156,3 +156,35 @@ export function quickSortComparisons(a: readonly number[]): number {
   qs(1, arr.length);
   return cmp;
 }
+
+/** 기수 정렬(LSD) 단계마다의 배열 — 해설의 단계별 배열 확인용 */
+export function radixSteps(nums: readonly string[]): string[][] {
+  let cur = [...nums];
+  const out: string[][] = [];
+  for (let d = nums[0].length - 1; d >= 0; d--) {
+    cur = [...cur].sort((x, y) => Number(x[d]) - Number(y[d]));
+    out.push(cur);
+  }
+  return out;
+}
+
+/** 병합 정렬 비교 횟수 — 정렬된 입력에서도 n log n에 비례 */
+export function mergeSortComparisons(a: readonly number[]): number {
+  let cmp = 0;
+  const sort = (xs: number[]): number[] => {
+    if (xs.length <= 1) return xs;
+    const m = xs.length >> 1;
+    const l = sort(xs.slice(0, m));
+    const r = sort(xs.slice(m));
+    const out: number[] = [];
+    let i = 0;
+    let j = 0;
+    while (i < l.length && j < r.length) {
+      cmp++;
+      out.push(l[i] <= r[j] ? l[i++] : r[j++]);
+    }
+    return out.concat(l.slice(i), r.slice(j));
+  };
+  sort([...a]);
+  return cmp;
+}
