@@ -1,6 +1,6 @@
 import type { SubjectDef } from "../types";
 
-// 챕터 = 강의(Lec1~Lec6). 구성·최소 문항 수 근거: docs/ds-source-analysis.md, docs/coverage-matrix.md 데이터과학 절,
+// 챕터 = 강의(Lec1~Lec7). 구성·최소 문항 수 근거: docs/ds-source-analysis.md, docs/coverage-matrix.md 데이터과학 절,
 // 결정 사항: docs/ds-question-types.md §10(2026-10-06). 문제는 Sprint 15·16에서 채웠다(Lec6까지 들어가 준비 중 표시를 뗐다).
 const dataScience = {
   id: "data-science",
@@ -19,6 +19,8 @@ const dataScience = {
     { id: "lec4", title: "Lec4. 셀레니움 · 웹 크롤링", shortTitle: "셀레니움", minQuestions: 32, load: () => import("./lec4").then((m) => m.default) },
     { id: "lec5", title: "Lec5. 데이터베이스 · MySQL", shortTitle: "MySQL", minQuestions: 66, load: () => import("./lec5").then((m) => m.default) },
     { id: "lec6", title: "Lec6. 넘파이 · 판다스", shortTitle: "넘파이·판다스", minQuestions: 78, load: () => import("./lec6").then((m) => m.default) },
+    // Lec7은 s.1~25(맷플롯립 기초·기온 CSV 준비)만(2026-10-17) — 맷플롯립 코드는 로컬 CPython으로 검증(lib/verify/matplotlib.test.ts)
+    { id: "lec7", title: "Lec7. 데이터 시각화 · 맷플롯립", shortTitle: "맷플롯립", minQuestions: 44, load: () => import("./lec7").then((m) => m.default) },
   ],
 } as const satisfies SubjectDef;
 

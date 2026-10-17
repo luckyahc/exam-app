@@ -152,7 +152,12 @@ export type VerifySpec =
       sql?: { setup: "firstDB" | "studentCourse" | "empty"; mode: "select" | "tables"; tables?: string[]; orderMatters?: boolean; compareColumns?: boolean };
       check?: VerifyCheck;
     }
-  | { mode: "skip"; reason: string };
+  /**
+   * `local: "matplotlib"`(2026-10-17, Lec7): 앱 실행 엔진(Pyodide)에 맷플롯립이 없어 앱·verify:ds 엔진으로는 실행하지 않고,
+   * 로컬 CPython(Agg 백엔드)으로 그래프 객체·통계를 검사한다 — scripts/verify-matplotlib.py, lib/verify/matplotlib.test.ts.
+   * 이 검사가 결과를 확인하므로 실행 결과를 묻는 문제로 낼 수 있다
+   */
+  | { mode: "skip"; reason: string; local?: "matplotlib" };
 
 export type VerifyCheck =
   /** 코드 출력 고르기: mcq는 정답 보기 = 실제 출력·오답 보기 ≠ 출력, multi는 정답 보기만 출력 줄, blank는 첫 정답 = 출력 줄.

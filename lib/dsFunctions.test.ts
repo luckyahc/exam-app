@@ -12,7 +12,7 @@ describe("함수 정리 필터", () => {
     expect(filterFunctions(DS_FUNCTIONS, { query: "GROUPBY" }).map((f) => f.name)).toEqual(["GROUP BY", "df.groupby"]);
     expect(filterFunctions(DS_FUNCTIONS, { query: "group by" }).map((f) => f.name)).toEqual(["GROUP BY", "df.groupby"]);
     expect(filterFunctions(DS_FUNCTIONS, { category: "SQL" }).every((f) => f.lang === "sql")).toBe(true);
-    expect(categoriesOf(DS_FUNCTIONS)).toEqual(["Python 기본", "파일(CSV·엑셀)", "셀레니움", "SQL", "NumPy", "pandas"]);
+    expect(categoriesOf(DS_FUNCTIONS)).toEqual(["Python 기본", "파일(CSV·엑셀)", "셀레니움", "SQL", "NumPy", "pandas", "맷플롯립"]);
   });
 
   it("관련 문항 찾기: 메서드는 낱말(빈칸 정답 'iloc'도), 같은 장에 같은 이름이 있으면 좁힌다(np.sort ↔ a.sort), 내장 함수는 호출 모양", () => {

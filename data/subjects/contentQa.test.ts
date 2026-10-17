@@ -43,7 +43,7 @@ function shownTexts(q: Question): [string, string][] {
  * 데이터과학(결정 2, 2026-10-06): 인쇄된 슬라이드 번호 'Lec2 s.25', 번호 없는 쪽은 PDF 쪽 'Lec2 p.46'.
  */
 export function slideRefOk(subject: string, ref: string): boolean {
-  if (subject === "data-science") return /^Lec[1-6] (s|p)\.\d+([-,·~]\s?((s|p)\.)?\d+)*$/.test(ref);
+  if (subject === "data-science") return /^Lec[1-7] (s|p)\.\d+([-,·~]\s?((s|p)\.)?\d+)*$/.test(ref);
   // 알고리즘(Sprint 21): 강의 자료 번호와 PDF 쪽 'Lec2 p.6', 'Lec5 p.133-138'
   if (subject === "algorithm") return /^Lec[1-5] p\.\d+([-,·~]\s?(p\.)?\d+)*$/.test(ref);
   return /^Ch0\d (p|s)\.\d+([-,·]\s?(p\.)?\d+)*$/.test(ref);
@@ -52,7 +52,7 @@ export function slideRefOk(subject: string, ref: string): boolean {
 describe("slideRef 형식 규칙", () => {
   it("데이터과학은 'Lec2 s.25' / 'Lec2 p.46', 기존 과목은 'Ch08 p.48' / 'Ch02 s.38'", () => {
     for (const ok of ["Lec2 s.25", "Lec2 p.46", "Lec5 s.43-45", "Lec2 p.41-43", "Lec6 s.24·s.25"]) expect(slideRefOk("data-science", ok), ok).toBe(true);
-    for (const bad of ["Ch02 s.25", "Lec7 s.1", "lec2 s.25", "Lec2 25", "Lec2 s.25 "]) expect(slideRefOk("data-science", bad), bad).toBe(false);
+    for (const bad of ["Ch02 s.25", "Lec8 s.1", "lec2 s.25", "Lec2 25", "Lec2 s.25 "]) expect(slideRefOk("data-science", bad), bad).toBe(false);
     for (const ok of ["Ch08 p.48", "Ch02 s.38", "Ch08 p.43-50"]) expect(slideRefOk("os", ok), ok).toBe(true);
     expect(slideRefOk("os", "Lec2 s.25")).toBe(false);
   });

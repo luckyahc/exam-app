@@ -1876,7 +1876,12 @@
     "relatedQuestionIds": [
       "data-science-lec6-csv-001",
       "data-science-lec6-csv-002",
-      "data-science-lec6-csv-003"
+      "data-science-lec6-csv-003",
+      "data-science-lec7-csv-002",
+      "data-science-lec7-csv-003"
+    ],
+    "alsoIn": [
+      "lec7"
     ]
   },
   {
@@ -1918,7 +1923,12 @@
       "data-science-lec6-query-007",
       "data-science-lec6-stat-003",
       "data-science-lec6-struct-002",
-      "data-science-lec6-struct-005"
+      "data-science-lec6-struct-005",
+      "data-science-lec7-csv-002",
+      "data-science-lec7-csv-003"
+    ],
+    "alsoIn": [
+      "lec7"
     ]
   },
   {
@@ -2212,6 +2222,369 @@
     "relatedQuestionIds": [
       "data-science-lec6-group-002",
       "data-science-lec6-group-004"
+    ]
+  },
+  {
+    "id": "lec7-plt-plot",
+    "lecture": "lec7",
+    "category": "맷플롯립",
+    "name": "plt.plot",
+    "lang": "python",
+    "signature": "plt.plot([x값 리스트], y값 리스트, ['포맷 스타일'])",
+    "description": "꺾은선 그래프(Line chart)를 그린다. x값 리스트를 생략하면 0부터의 인덱스를 x로 쓴다(보충)",
+    "usage": "시간 데이터를 x축에 두고 연속형 변수의 추세를 볼 때.",
+    "example": "line, = plt.plot([-1, 2, 3, 4])\nprint([float(x) for x in line.get_xdata()])\nprint(line.get_ydata())",
+    "setup": "import matplotlib.pyplot as plt",
+    "localRun": "matplotlib",
+    "exampleOutput": "[0.0, 1.0, 2.0, 3.0]\n[-1  2  3  4]",
+    "pitfall": "포맷 스타일 'rs:'처럼 색·마커·선 스타일을 붙여 쓴다. 선 스타일 없이 마커만 쓰면('g.') 선을 긋지 않는다.",
+    "relatedQuestionIds": [
+      "data-science-lec7-types-002",
+      "data-science-lec7-plot-001",
+      "data-science-lec7-plot-002",
+      "data-science-lec7-font-001",
+      "data-science-lec7-font-003",
+      "data-science-lec7-fmt-001",
+      "data-science-lec7-fmt-002",
+      "data-science-lec7-fmt-003",
+      "data-science-lec7-fmt-004",
+      "data-science-lec7-axis-001",
+      "data-science-lec7-axis-002",
+      "data-science-lec7-axis-004",
+      "data-science-lec7-legend-001",
+      "data-science-lec7-legend-002",
+      "data-science-lec7-subplot-002",
+      "data-science-lec7-subplot-004",
+      "data-science-lec7-box-001"
+    ]
+  },
+  {
+    "id": "lec7-plt-rcparams",
+    "lecture": "lec7",
+    "category": "맷플롯립",
+    "name": "plt.rcParams",
+    "lang": "python",
+    "signature": "plt.rcParams['설정 이름'] = 값",
+    "description": "맷플롯립 설정 사전. 글꼴(font.family)·축 음수 기호(axes.unicode_minus) 등을 바꾼다.",
+    "usage": "한글 폰트를 지정하고 축의 음수 기호가 깨지지 않게 할 때.",
+    "example": "plt.rcParams['font.family'] = 'Malgun Gothic'\nplt.rcParams['axes.unicode_minus'] = False\nprint(plt.rcParams['font.family'], plt.rcParams['axes.unicode_minus'])",
+    "setup": "import matplotlib.pyplot as plt",
+    "localRun": "matplotlib",
+    "exampleOutput": "['Malgun Gothic'] False",
+    "pitfall": "사전이라 대괄호로 쓴다 — plt.rcParams(...)처럼 부르면 TypeError.",
+    "relatedQuestionIds": [
+      "data-science-lec7-plot-001",
+      "data-science-lec7-plot-002",
+      "data-science-lec7-font-001",
+      "data-science-lec7-font-002",
+      "data-science-lec7-font-003"
+    ]
+  },
+  {
+    "id": "lec7-plt-rc",
+    "lecture": "lec7",
+    "category": "맷플롯립",
+    "name": "plt.rc",
+    "lang": "python",
+    "signature": "plt.rc('font', family='폰트 이름')",
+    "description": "설정 묶음 이름과 키워드 인자로 맷플롯립 설정을 바꾸는 함수.",
+    "usage": "설치한 나눔고딕 같은 한글 폰트를 지정할 때(Colab은 설치 후 런타임 재시작).",
+    "example": "plt.rc('font', family='NanumGothic')\nprint(plt.rcParams['font.family'])",
+    "setup": "import matplotlib.pyplot as plt",
+    "localRun": "matplotlib",
+    "exampleOutput": "['NanumGothic']",
+    "pitfall": "함수라 괄호로 부른다 — plt.rc['font.family']는 TypeError.",
+    "relatedQuestionIds": [
+      "data-science-lec7-font-001",
+      "data-science-lec7-font-003",
+      "data-science-lec7-font-004"
+    ]
+  },
+  {
+    "id": "lec7-plt-title",
+    "lecture": "lec7",
+    "category": "맷플롯립",
+    "name": "plt.title",
+    "lang": "python",
+    "signature": "plt.title('제목')",
+    "description": "그래프 제목을 붙인다.",
+    "usage": "그래프 위에 제목('대한민국', 'Report')을 표시할 때.",
+    "example": "plt.title('대한민국')\nplt.plot([-1, 2, 3, 4])\nplt.show()",
+    "noRun": "그래프만 그린다(출력: 그래프) — 화면에 찍히는 글자 출력이 없고, 맷플롯립은 앱 실행 엔진에 없다",
+    "exampleOutput": null,
+    "relatedQuestionIds": [
+      "data-science-lec7-plot-001",
+      "data-science-lec7-plot-002",
+      "data-science-lec7-font-001",
+      "data-science-lec7-font-003",
+      "data-science-lec7-bar-001",
+      "data-science-lec7-bar-002"
+    ]
+  },
+  {
+    "id": "lec7-plt-axis",
+    "lecture": "lec7",
+    "category": "맷플롯립",
+    "name": "plt.axis",
+    "lang": "python",
+    "signature": "plt.axis([x 최솟값, x 최댓값, y 최솟값, y 최댓값])",
+    "description": "x축·y축 범위를 한 번에 지정하고, 지정한 범위를 돌려준다.",
+    "usage": "데이터 범위보다 조금 넓게 축을 잡아 그래프를 보기 좋게 할 때.",
+    "example": "plt.plot([2014, 2017, 2020, 2023], [25000, 31000, 53000, 63000], 'rs:')\nx0, x1, y0, y1 = plt.axis([2013, 2024, 20000, 70000])\nprint(x0, x1, y0, y1)",
+    "setup": "import matplotlib.pyplot as plt",
+    "localRun": "matplotlib",
+    "exampleOutput": "2013.0 2024.0 20000.0 70000.0",
+    "pitfall": "값 4개를 리스트(또는 튜플) 하나로 넘긴다 — 슬라이드 형식 설명처럼 따로 넘기면 TypeError다(보충)",
+    "relatedQuestionIds": [
+      "data-science-lec7-fmt-004",
+      "data-science-lec7-axis-001",
+      "data-science-lec7-axis-002",
+      "data-science-lec7-axis-003"
+    ]
+  },
+  {
+    "id": "lec7-plt-legend",
+    "lecture": "lec7",
+    "category": "맷플롯립",
+    "name": "plt.legend",
+    "lang": "python",
+    "signature": "plt.legend()",
+    "description": "plot( )에 준 label로 범례를 표시한다.",
+    "usage": "한 차트에 그래프 여러 개를 그리고 구분할 때.",
+    "example": "plt.plot([1, 2, 3], 'k', label='one')\nplt.plot([3, 2, 1], 'r--', label='two')\nleg = plt.legend()\nprint([t.get_text() for t in leg.get_texts()])",
+    "setup": "import matplotlib.pyplot as plt",
+    "localRun": "matplotlib",
+    "exampleOutput": "['one', 'two']",
+    "relatedQuestionIds": [
+      "data-science-lec7-legend-001",
+      "data-science-lec7-legend-002"
+    ]
+  },
+  {
+    "id": "lec7-plt-subplot",
+    "lecture": "lec7",
+    "category": "맷플롯립",
+    "name": "plt.subplot",
+    "lang": "python",
+    "signature": "plt.subplot(행 수, 열 수, 번호)",
+    "description": "격자의 번호 칸에 축을 만들어 다중 그래프(축 여러 개)를 그린다. 번호는 1부터 왼쪽 위 → 오른쪽 → 다음 행.",
+    "usage": "그래프 여러 개를 칸을 나눠 따로 그릴 때.",
+    "example": "for n in range(1, 5):\n    ax = plt.subplot(2, 2, n)\n    print(n, ax.get_subplotspec().rowspan.start + 1, '행', ax.get_subplotspec().colspan.start + 1, '열')",
+    "setup": "import matplotlib.pyplot as plt",
+    "localRun": "matplotlib",
+    "exampleOutput": "1 1 행 1 열\n2 1 행 2 열\n3 2 행 1 열\n4 2 행 2 열",
+    "pitfall": "번호는 0이 아니라 1부터 — plt.subplot(2, 2, 0)은 ValueError.",
+    "relatedQuestionIds": [
+      "data-science-lec7-subplot-001",
+      "data-science-lec7-subplot-002",
+      "data-science-lec7-subplot-003",
+      "data-science-lec7-subplot-004"
+    ]
+  },
+  {
+    "id": "lec7-plt-scatter",
+    "lecture": "lec7",
+    "category": "맷플롯립",
+    "name": "plt.scatter",
+    "lang": "python",
+    "signature": "plt.scatter(x값 리스트, y값 리스트, c='색상', s=크기, marker='모양')",
+    "description": "산점도를 그린다.",
+    "usage": "두 연속형 변수 값의 분포 또는 상관관계를 볼 때.",
+    "example": "sc = plt.scatter([2014, 2017, 2020, 2023], [25000, 31000, 53000, 63000], c='g', s=50, marker='^')\nprint(len(sc.get_offsets()), sc.get_sizes())",
+    "setup": "import matplotlib.pyplot as plt",
+    "localRun": "matplotlib",
+    "exampleOutput": "4 [50]",
+    "relatedQuestionIds": [
+      "data-science-lec7-types-004",
+      "data-science-lec7-scatter-001",
+      "data-science-lec7-scatter-002"
+    ]
+  },
+  {
+    "id": "lec7-plt-hist",
+    "lecture": "lec7",
+    "category": "맷플롯립",
+    "name": "plt.hist",
+    "lang": "python",
+    "signature": "plt.hist(값 리스트, bins=구간의 수)",
+    "description": "히스토그램을 그리고 (구간별 개수, 구간 경계, 막대들)을 돌려준다.",
+    "usage": "연속형 변수의 구간별 분포를 볼 때.",
+    "example": "numbers = [5, 4, 4, 1, 6, 3, 4, 1, 2, 2]\nn, bins, patches = plt.hist(numbers, bins=6)\nprint(n)",
+    "setup": "import matplotlib.pyplot as plt",
+    "localRun": "matplotlib",
+    "exampleOutput": "[2. 2. 1. 3. 1. 1.]",
+    "pitfall": "bins를 생략하면 기본 10구간이다(보충)",
+    "relatedQuestionIds": [
+      "data-science-lec7-types-004",
+      "data-science-lec7-hist-001",
+      "data-science-lec7-hist-002",
+      "data-science-lec7-hist-003",
+      "data-science-lec7-box-004"
+    ]
+  },
+  {
+    "id": "lec7-plt-boxplot",
+    "lecture": "lec7",
+    "category": "맷플롯립",
+    "name": "plt.boxplot",
+    "lang": "python",
+    "signature": "plt.boxplot(값 리스트)",
+    "description": "상자 그래프를 그린다 — Q1~Q3 상자, 중앙값 선, IQR 1.5배 기준 수염, 수염 바깥 이상치(작은 원).",
+    "usage": "연속형 변수의 분포와 이상치를 볼 때.",
+    "example": "numbers = [0, 1.4, 1.6, 1.8, 1.85, 1.9, 2.2, 2.5, 5.7, 9]\nr = plt.boxplot(numbers)\nprint('이상치:', r['fliers'][0].get_ydata())\nprint('중앙값:', r['medians'][0].get_ydata()[0])",
+    "setup": "import matplotlib.pyplot as plt",
+    "localRun": "matplotlib",
+    "exampleOutput": "이상치: [0.  5.7 9. ]\n중앙값: 1.875",
+    "relatedQuestionIds": [
+      "data-science-lec7-types-004",
+      "data-science-lec7-box-002",
+      "data-science-lec7-box-004"
+    ]
+  },
+  {
+    "id": "lec7-plt-bar",
+    "lecture": "lec7",
+    "category": "맷플롯립",
+    "name": "plt.bar",
+    "lang": "python",
+    "signature": "plt.bar(x값 리스트, y값 리스트)",
+    "description": "막대 그래프를 그린다. 범주(문자열)는 x = 0, 1, 2 … 자리에 놓인다(보충)",
+    "usage": "범주형 변수끼리 연속형 값을 비교할 때(과목별 성적).",
+    "example": "bars = plt.bar(['KOR', 'ENG', 'MATH'], [85, 76, 55])\nprint([int(b.get_height()) for b in bars])",
+    "setup": "import matplotlib.pyplot as plt",
+    "localRun": "matplotlib",
+    "exampleOutput": "[85, 76, 55]",
+    "relatedQuestionIds": [
+      "data-science-lec7-types-004",
+      "data-science-lec7-bar-001",
+      "data-science-lec7-bar-002"
+    ]
+  },
+  {
+    "id": "lec7-plt-xlabel",
+    "lecture": "lec7",
+    "category": "맷플롯립",
+    "name": "plt.xlabel",
+    "lang": "python",
+    "signature": "plt.xlabel('x축 이름')",
+    "description": "x축 이름을 붙인다.",
+    "usage": "축이 무엇을 뜻하는지 표시할 때.",
+    "example": "plt.bar(['KOR', 'ENG', 'MATH'], [85, 76, 55])\nplt.xlabel('Subject')\nplt.show()",
+    "noRun": "그래프만 그린다(출력: 그래프) — 화면에 찍히는 글자 출력이 없고, 맷플롯립은 앱 실행 엔진에 없다",
+    "exampleOutput": null,
+    "relatedQuestionIds": [
+      "data-science-lec7-plot-002",
+      "data-science-lec7-bar-001",
+      "data-science-lec7-bar-002"
+    ]
+  },
+  {
+    "id": "lec7-plt-ylabel",
+    "lecture": "lec7",
+    "category": "맷플롯립",
+    "name": "plt.ylabel",
+    "lang": "python",
+    "signature": "plt.ylabel('y축 이름')",
+    "description": "y축 이름을 붙인다.",
+    "usage": "축이 무엇을 뜻하는지 표시할 때.",
+    "example": "plt.bar(['KOR', 'ENG', 'MATH'], [85, 76, 55])\nplt.ylabel('Grade')\nplt.show()",
+    "noRun": "그래프만 그린다(출력: 그래프) — 화면에 찍히는 글자 출력이 없고, 맷플롯립은 앱 실행 엔진에 없다",
+    "exampleOutput": null,
+    "relatedQuestionIds": [
+      "data-science-lec7-bar-001",
+      "data-science-lec7-bar-002"
+    ]
+  },
+  {
+    "id": "lec7-plt-ylim",
+    "lecture": "lec7",
+    "category": "맷플롯립",
+    "name": "plt.ylim",
+    "lang": "python",
+    "signature": "plt.ylim(최솟값, 최댓값)",
+    "description": "y축 범위를 정하고, 정한 범위를 돌려준다.",
+    "usage": "점수처럼 0~100으로 범위를 고정해 비교할 때.",
+    "example": "plt.bar(['KOR', 'ENG', 'MATH'], [85, 76, 55])\nbottom, top = plt.ylim(0, 100)\nprint(bottom, top)",
+    "setup": "import matplotlib.pyplot as plt",
+    "localRun": "matplotlib",
+    "exampleOutput": "0.0 100.0",
+    "relatedQuestionIds": [
+      "data-science-lec7-bar-001",
+      "data-science-lec7-bar-002"
+    ]
+  },
+  {
+    "id": "lec7-plt-text",
+    "lecture": "lec7",
+    "category": "맷플롯립",
+    "name": "plt.text",
+    "lang": "python",
+    "signature": "plt.text(x, y, '글자')",
+    "description": "데이터 좌표 (x, y)에 글자를 쓴다.",
+    "usage": "그래프 안에 설명('Good!')을 붙일 때.",
+    "example": "plt.bar(['KOR', 'ENG', 'MATH'], [85, 76, 55])\nt = plt.text(0, 90, 'Good!')\nprint(t.get_text(), t.get_position())",
+    "setup": "import matplotlib.pyplot as plt",
+    "localRun": "matplotlib",
+    "exampleOutput": "Good! (0, 90)",
+    "relatedQuestionIds": [
+      "data-science-lec7-bar-001",
+      "data-science-lec7-bar-002"
+    ]
+  },
+  {
+    "id": "lec7-plt-pie",
+    "lecture": "lec7",
+    "category": "맷플롯립",
+    "name": "plt.pie",
+    "lang": "python",
+    "signature": "plt.pie(값 리스트, labels=레이블 리스트, autopct='%.숫자f%%', colors=색상, explode=띄우는 값 리스트)",
+    "description": "파이 차트를 그린다. autopct를 주면 (조각, 레이블, 비율 글자)를 돌려준다.",
+    "usage": "범주형 변수끼리 연속형 값의 비율을 비교할 때.",
+    "example": "wedges, texts, autotexts = plt.pie([20, 15, 5, 5, 10], labels=['Apple', 'Banana', 'Cherry', 'Kiwi', 'Grape'], autopct='%.1f%%')\nprint([t.get_text() for t in autotexts])",
+    "setup": "import matplotlib.pyplot as plt",
+    "localRun": "matplotlib",
+    "exampleOutput": "['36.4%', '27.3%', '9.1%', '9.1%', '18.2%']",
+    "pitfall": "'%.1f%%'의 %%가 글자 % 하나다 — %를 하나만 쓰면 오류.",
+    "relatedQuestionIds": [
+      "data-science-lec7-types-004",
+      "data-science-lec7-pie-002",
+      "data-science-lec7-pie-003",
+      "data-science-lec7-pie-004"
+    ]
+  },
+  {
+    "id": "lec7-plt-show",
+    "lecture": "lec7",
+    "category": "맷플롯립",
+    "name": "plt.show",
+    "lang": "python",
+    "signature": "plt.show()",
+    "description": "그린 그래프를 화면에 보여 준다.",
+    "usage": "코드 마지막에 적어 속성 관련 메시지 없이 그래프만 깔끔하게 출력할 때.",
+    "example": "plt.plot([-1, 2, 3, 4])\nplt.show()",
+    "noRun": "그래프만 그린다(출력: 그래프) — 화면에 찍히는 글자 출력이 없고, 맷플롯립은 앱 실행 엔진에 없다",
+    "exampleOutput": null,
+    "relatedQuestionIds": [
+      "data-science-lec7-plot-001",
+      "data-science-lec7-plot-002",
+      "data-science-lec7-plot-003",
+      "data-science-lec7-font-001",
+      "data-science-lec7-font-003",
+      "data-science-lec7-fmt-004",
+      "data-science-lec7-axis-001",
+      "data-science-lec7-axis-002",
+      "data-science-lec7-legend-001",
+      "data-science-lec7-legend-002",
+      "data-science-lec7-subplot-002",
+      "data-science-lec7-subplot-004",
+      "data-science-lec7-scatter-001",
+      "data-science-lec7-hist-001",
+      "data-science-lec7-hist-002",
+      "data-science-lec7-box-002",
+      "data-science-lec7-box-004",
+      "data-science-lec7-bar-001",
+      "data-science-lec7-bar-002",
+      "data-science-lec7-pie-003"
     ]
   }
 ]

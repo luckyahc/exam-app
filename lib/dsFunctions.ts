@@ -2,7 +2,7 @@ import FUNCTIONS from "@/data/subjects/data-science/functions.json";
 import { normalizeText } from "@/lib/qtypes/_shared/textMatch";
 
 /**
- * 데이터과학 장별 함수 정리표(2026-10-16). 데이터: data/subjects/data-science/functions.json — 강의자료(Lec1~6)에 나오는 함수·메서드·SQL 구문만.
+ * 데이터과학 장별 함수 정리표(2026-10-16). 데이터: data/subjects/data-science/functions.json — 강의자료(Lec1~6, Lec7 s.1~25)에 나오는 함수·메서드·SQL 구문만.
  * exampleOutput은 손으로 쓰지 않고 검증 엔진(Pyodide·sql.js)으로 실행한 결과다(lib/verify/dsFunctions.test.ts, 다시 만들기: node scripts/ds-functions.mjs).
  */
 export interface DsFunction {
@@ -18,8 +18,13 @@ export interface DsFunction {
   example: string;
   /** python: 예시 앞에 실행하는 준비 코드(파일 만들기·df 만들기) / sql: 준비 스크립트 이름(lib/qtypes/dsSchemas.ts SQL_SETUPS) */
   setup?: string;
-  /** 검증 엔진에서 실행할 수 없는 이유(셀레니움·MySQL 전용·Colab 전용) — 있으면 exampleOutput이 null */
+  /** 검증 엔진에서 실행할 수 없는 이유(셀레니움·MySQL 전용·Colab 전용, 그래프만 그리는 맷플롯립) — 있으면 exampleOutput이 null */
   noRun?: string;
+  /**
+   * "matplotlib": 앱 실행 엔진(Pyodide)에 맷플롯립이 없어 예시를 로컬 CPython(scripts/verify-matplotlib.py)으로 실행한 출력이 exampleOutput이다
+   * (lib/verify/matplotlib.test.ts가 다시 실행해 확인). 그래프 속성·autopct 글자처럼 글자로 보일 수 있는 것만 print한다
+   */
+  localRun?: "matplotlib";
   exampleOutput: string | null;
   pitfall?: string;
   /** 관련 문항 찾기 정규식(기본: 이름에서 만든 호출 모양) */
@@ -32,14 +37,14 @@ export interface DsFunction {
 export const DS_FUNCTIONS = FUNCTIONS as DsFunction[];
 /** 함수 정리 페이지(/s/[subject]/functions)가 있는 과목 */
 export const FUNCTION_SUBJECTS = ["data-science"] as const;
-export const DS_LECTURES = ["lec1", "lec2", "lec3", "lec4", "lec5", "lec6"] as const;
+export const DS_LECTURES = ["lec1", "lec2", "lec3", "lec4", "lec5", "lec6", "lec7"] as const;
 /** 관련 문항은 장 순서대로 앞에서 이만큼만 적는다(print처럼 거의 모든 문항에 나오는 함수) */
 export const RELATED_MAX = 20;
 
 const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const last = (name: string) => name.split(".").pop()!;
-const MODULES = ["np", "pd", "csv", "openpyxl", "sys", "webdriver", "files"];
+const MODULES = ["np", "pd", "csv", "openpyxl", "sys", "webdriver", "files", "plt"];
 
 /**
  * 문항 본문(지문·코드·보기·빈칸)에서 이 함수가 쓰였는지 찾는 정규식.

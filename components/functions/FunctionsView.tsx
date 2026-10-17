@@ -26,7 +26,7 @@ function Example({ f }: { f: DsFunction }) {
       </pre>
       {f.exampleOutput !== null ? (
         <details className="text-xs">
-          <summary className="cursor-pointer select-none text-muted">실행 결과</summary>
+          <summary className="cursor-pointer select-none text-muted">실행 결과{f.localRun ? " (맷플롯립 — 로컬 실행)" : ""}</summary>
           <pre className={pre + " mt-1"}>{f.exampleOutput}</pre>
         </details>
       ) : (

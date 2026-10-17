@@ -52,6 +52,8 @@ const UNRUNNABLE: { lang: CodeLang; re: RegExp; what: string }[] = [
   { lang: "python", re: /^\s*[!%]/m, what: "Colab·IPython 명령(! 또는 %)" },
   { lang: "python", re: /\bgoogle\.colab\b/, what: "Colab 전용 모듈(google.colab)" },
   { lang: "python", re: /\b(requests|urllib\.request|urlopen)\b/, what: "인터넷 접속" },
+  // 앱 엔진에 맷플롯립 휠이 없다 — 로컬 CPython 검사(verify.local: "matplotlib", lib/verify/matplotlib.test.ts)로만 확인한다
+  { lang: "python", re: /\bmatplotlib\b|\bplt\./, what: "맷플롯립(앱 실행 엔진에 없음)" },
   { lang: "sql", re: /\b(CREATE\s+DATABASE|USE\s+\w+\s*;|SHOW\s+(DATABASES|TABLES)|DESC(RIBE)?\s+\w+\s*;|AUTO_INCREMENT|ENGINE\s*=)/i, what: "MySQL 서버 전용 문법" },
   { lang: "sql", re: /\bVALUES\s*\([^)]*\bDEFAULT\b/i, what: "MySQL 서버 전용 문법(VALUES 안의 DEFAULT)" },
   { lang: "sql", re: /\bVERSION\s*\(\s*\)/i, what: "MySQL 서버 전용 함수(VERSION)" },
@@ -81,6 +83,7 @@ export function staticVerifyErrors(q: Question): string[] {
     e.push("코드가 있는 문항은 verify 필수 — 실행(run) 또는 실행 제외(skip, 이유)");
   } else if (v.mode === "skip") {
     if (v.reason.trim().length < 5) e.push("실행 제외(skip)에는 이유를 적는다");
+    if (v.local === "matplotlib" && code.language !== "python") e.push("local: matplotlib은 Python 코드만");
   } else {
     if (code.language === "sql" && !v.sql) e.push("SQL 코드 실행에는 verify.sql(스키마·mode) 필요");
     if (code.language === "python" && v.sql) e.push("Python 코드에 verify.sql");
@@ -113,8 +116,8 @@ export function staticVerifyErrors(q: Question): string[] {
     const why = unrunnableReason(code);
     if (why && (q.type === "code-write" || v?.mode === "run")) e.push(`실행할 수 없는 코드(${why}) — verify: { mode: "skip", reason }로 표시`);
   }
-  // 실행 결과를 확인할 수 없으므로 결과를 묻는 문제(출력 고르기)로 쓰지 않는다
-  if (v?.mode === "skip" && q.type !== "code-blank" && /실행 결과|결과 표|출력/.test(q.prompt)) {
+  // 실행 결과를 확인할 수 없으므로 결과를 묻는 문제(출력 고르기)로 쓰지 않는다 — 로컬 CPython 검사(local)가 있는 맷플롯립 문항은 예외
+  if (v?.mode === "skip" && !v.local && q.type !== "code-blank" && /실행 결과|결과 표|출력/.test(q.prompt)) {
     e.push("실행 제외 코드는 빈칸형·개념형으로만(실행 결과를 묻는 문제 금지)");
   }
   // 슬라이드 오류 목록의 코드를 쓰면 해설에 "(보충)" + 다른 점

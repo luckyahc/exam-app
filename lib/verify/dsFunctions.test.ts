@@ -78,7 +78,8 @@ describe("데이터과학 함수 정리표", () => {
     it("실행할 수 있는 모든 예시가 오류 없이 돌고, 출력이 exampleOutput과 같다", async () => {
       const got: Record<string, string> = {};
       const errors: string[] = [];
-      for (const f of DS_FUNCTIONS.filter((x) => !x.noRun)) {
+      // 맷플롯립(localRun)은 앱 엔진에 없어 lib/verify/matplotlib.test.ts가 로컬 CPython으로 확인한다
+      for (const f of DS_FUNCTIONS.filter((x) => !x.noRun && !x.localRun)) {
         if (f.lang === "sql") {
           const out = await env.main.runSql({ base: env.sqlBase, setup: SQL_SETUPS[f.setup as SqlSetupName], code: f.example }, 30_000);
           if (out.status !== "done" || out.result.error) errors.push(`${f.id}: ${out.status === "done" ? out.result.error : out.status}`);
@@ -94,11 +95,11 @@ describe("데이터과학 함수 정리표", () => {
       }
       expect(errors).toEqual([]);
       if (UPDATE) {
-        const data = fileEntries().map((f) => ({ ...f, exampleOutput: f.noRun ? null : (got[f.id] ?? null) }));
+        const data = fileEntries().map((f) => ({ ...f, exampleOutput: f.noRun ? null : f.localRun ? f.exampleOutput : (got[f.id] ?? null) }));
         writeFileSync(FILE, JSON.stringify(data, null, 2) + "\n");
         return;
       }
-      expect(Object.fromEntries(DS_FUNCTIONS.filter((x) => !x.noRun).map((f) => [f.id, f.exampleOutput]))).toEqual(got);
+      expect(Object.fromEntries(DS_FUNCTIONS.filter((x) => !x.noRun && !x.localRun).map((f) => [f.id, f.exampleOutput]))).toEqual(got);
     }, 300_000);
   });
 });
