@@ -6,7 +6,7 @@ import type { Question } from "@/types/question";
 import psychology from "./index";
 import { TABLE_TOPICS, TERMS } from "./terms";
 
-// 심리학개론 1~3장(docs/psychology/plan.md): 문항 수·유형 비율, 선택형 안의 성격 순서, 표 6개 각 3문항, 용어 커버리지(docs/psychology/coverage.md),
+// 심리학개론 1~7장(docs/psychology/plan.md, 4~7장은 2026-10-18 2단계): 문항 수·유형 비율, 선택형 안의 성격 순서, 표·그림 16개 각 3문항, 용어 커버리지(docs/psychology/coverage.md),
 // 해설 세 부분, ⭐ 근거. 커버리지 문서를 다시 만들려면 UPDATE_PSY_COVERAGE=1 npx vitest run data/subjects/psychology
 
 const ROOT = path.resolve(import.meta.dirname, "../../..");
@@ -27,12 +27,12 @@ const shown = (q: Any) =>
     [q.prompt, ...(q.choices ?? []), ...(q.items ?? []), ...(q.pairs ?? []).flatMap((p) => [p.left, p.right]), ...(q.distractors ?? []), ...(q.blanks ?? []).flatMap((b) => b.accept), q.modelAnswer ?? "", ...(q.keyPoints ?? [])].join("\n"),
   );
 
-describe("심리학개론 1~3장", async () => {
+describe("심리학개론 1~7장", async () => {
   const byCh = Object.fromEntries(await Promise.all(psychology.chapters.map(async (c) => [c.id, (await c.load()) as Question[]] as const)));
   const all = Object.values(byCh).flat();
 
-  it("장별 문항 수 35 · 45 · 40, 유형 비율 선택형 55% · 단답형 25% · 서술형 20%", () => {
-    expect(Object.fromEntries(Object.entries(byCh).map(([k, v]) => [k, v.length]))).toEqual({ ch01: 35, ch02: 45, ch03: 40 });
+  it("장별 문항 수 35 · 45 · 40 · 40 · 40 · 45 · 45, 유형 비율 선택형 55% · 단답형 25% · 서술형 20%", () => {
+    expect(Object.fromEntries(Object.entries(byCh).map(([k, v]) => [k, v.length]))).toEqual({ ch01: 35, ch02: 45, ch03: 40, ch04: 40, ch05: 40, ch06: 45, ch07: 45 });
     for (const qs of Object.values(byCh)) {
       const n = qs.length;
       const sel = qs.filter((q) => SELECT.has(q.type)).length;
@@ -62,7 +62,7 @@ describe("심리학개론 1~3장", async () => {
     }
   });
 
-  it("표·그림 6개는 각각 3문항 이상, 유형 2가지 이상(선택형·단답형·서술형 섞어서)", () => {
+  it("표·그림(1~7장 16개)은 각각 3문항 이상, 유형 2가지 이상(선택형·단답형·서술형 섞어서)", () => {
     for (const t of TABLE_TOPICS) {
       const qs = all.filter((q) => q.topic === t);
       expect(qs.length, t).toBeGreaterThanOrEqual(3);
@@ -94,41 +94,59 @@ describe("심리학개론 1~3장", async () => {
   });
 
   it("기억해야 할 용어는 장별로 빠짐없이 문제·보기에 1회 이상 — docs/psychology/coverage.md와 같다", () => {
-    const rows: string[] = [];
+    const STAGES = [
+      { title: "1~3장", chs: ["ch01", "ch02", "ch03"] },
+      { title: "4~7장", chs: ["ch04", "ch05", "ch06", "ch07"] },
+    ];
     const missing: string[] = [];
-    for (const [ch, groups] of Object.entries(TERMS)) {
-      const qs = byCh[ch] as Any[];
-      const texts = qs.map((q) => [q.id, shown(q)] as const);
-      for (const [group, terms] of Object.entries(groups))
-        for (const term of terms) {
-          const hits = texts.filter(([, t]) => t.includes(normalizeText(term))).map(([id]) => id.replace(/^psychology-/, ""));
-          if (!hits.length) missing.push(`${ch} ${term}`);
-          rows.push(`| ${ch} | ${group} | ${term} | ${hits.length} | ${hits.slice(0, 4).join(", ")}${hits.length > 4 ? " …" : ""} |`);
-        }
+    const sections: string[] = [];
+    const summary: string[] = [];
+    for (const st of STAGES) {
+      const rows: string[] = [];
+      let miss = 0;
+      for (const ch of st.chs) {
+        const qs = byCh[ch] as Any[];
+        const texts = qs.map((q) => [q.id, shown(q)] as const);
+        for (const [group, terms] of Object.entries(TERMS[ch as keyof typeof TERMS]))
+          for (const term of terms) {
+            const hits = texts.filter(([, t]) => t.includes(normalizeText(term))).map(([id]) => id.replace(/^psychology-/, ""));
+            if (!hits.length) {
+              missing.push(`${ch} ${term}`);
+              miss++;
+            }
+            rows.push(`| ${ch} | ${group} | ${term} | ${hits.length} | ${hits.slice(0, 4).join(", ")}${hits.length > 4 ? " …" : ""} |`);
+          }
+      }
+      const qs = st.chs.flatMap((ch) => byCh[ch]);
+      const supplement = qs.filter((q) => /\n근거: .*보충/.test(q.explanation)).length;
+      // 정답 판단의 근거가 보충뿐 = 근거 줄이 "교재 용어 + 보충(표준 정의)"(용어 박스의 용어를 부록 정의로 판단, plan.md §1)
+      const onlySupplement = qs.filter((q) => /\n근거: 교재 용어 \+ 보충\(표준 정의\)$/.test(q.explanation)).length;
+      summary.push(`| ${st.title} | ${rows.length} | ${miss} | ${qs.length} | ${supplement} | ${onlySupplement} |`);
+      sections.push(
+        `## 용어별 — ${st.title}`,
+        "",
+        "| 장 | 용어 박스 | 용어 | 문항 수 | 문항(앞 4개, id 앞의 psychology- 생략) |",
+        "|---|---|---|---|---|",
+        ...rows,
+        "",
+      );
     }
     expect(missing).toEqual([]);
-    const supplement = all.filter((q) => /\n근거: .*보충/.test(q.explanation)).length;
     const doc = [
-      "# 용어 커버리지 — 심리학개론 1~3장",
+      "# 용어 커버리지 — 심리학개론 1~7장",
       "",
       "원천자료의 \"기억해야 할 용어\"(교재 표기)가 문제·보기·순서 항목·짝·단답 인정 답안·모범답안·채점 포인트에 나온 문항. 해설만 언급한 것은 세지 않는다.",
       "이 문서는 `data/subjects/psychology/psychology.test.ts`가 문항 데이터와 같은지 검사한다(다시 만들기: `UPDATE_PSY_COVERAGE=1 npx vitest run data/subjects/psychology`).",
       "",
       "## 요약",
       "",
-      "| 항목 | 수 |",
-      "|---|---|",
-      `| 용어 | ${rows.length} |`,
-      `| 누락 | ${missing.length} |`,
-      `| 전체 문항 | ${all.length} |`,
-      `| 근거에 보충(표준 정의)이 들어간 문항 | ${supplement} |`,
+      "근거가 보충뿐 = 근거 줄이 \"교재 용어 + 보충(표준 정의)\"(용어 박스의 용어를 부록 정의로 판단한 문항).",
       "",
-      "## 용어별",
+      "| 범위 | 용어 | 누락 | 전체 문항 | 근거에 보충이 들어간 문항 | 근거가 보충뿐 |",
+      "|---|---|---|---|---|---|",
+      ...summary,
       "",
-      "| 장 | 용어 박스 | 용어 | 문항 수 | 문항(앞 4개, id 앞의 psychology- 생략) |",
-      "|---|---|---|---|---|",
-      ...rows,
-      "",
+      ...sections,
     ].join("\n");
     const file = path.join(ROOT, "docs/psychology/coverage.md");
     if (process.env.UPDATE_PSY_COVERAGE) writeFileSync(file, doc);
