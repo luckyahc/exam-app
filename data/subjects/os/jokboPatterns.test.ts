@@ -57,9 +57,18 @@ describe("OS 족보관련 생성 문항", async () => {
     }
   });
 
-  it("해설 = 풀이 + 원문과 달라진 점 1줄 + 함정 1줄", () => {
-    const bad = pats.filter((x) => !/^풀이: [^\n]+ 원문과 달라진 점: [^\n]+ 함정: [^\n]+$/.test(x.explanation) || x.explanation.split("원문과 달라진 점:").length !== 2 || x.explanation.split("함정:").length !== 2);
+  it("해설 = 풀이 + 원문과 달라진 점 1줄 + 함정 1줄 (+ 끝에 근거 줄) — 개념형 문항은 보기별 슬라이드 페이지, 유효 CPU 이용률 문항은 정의 페이지", () => {
+    const bad = pats.filter((x) => !/^풀이: [^\n]+ 원문과 달라진 점: [^\n]+ 함정: [^\n]+(\n근거: [^\n]+)?$/.test(x.explanation) || x.explanation.split("원문과 달라진 점:").length !== 2 || x.explanation.split("함정:").length !== 2);
     expect(bad.map((x) => x.id)).toEqual([]);
+    const needs = pats.filter((x) => (!SIM.includes(x.id) && !ORDER.includes(x.id)) || x.id.includes("utilization"));
+    expect(needs).toHaveLength(24);
+    for (const x of needs) {
+      const basis = /\n근거: (.+)$/.exec(x.explanation)?.[1] ?? "";
+      expect(basis, x.id).toMatch(new RegExp(`^(보기 1(~\\d)? )?Ch${x.chapter.slice(2)} p\\.`));
+      const n = (x as Q).choices.length;
+      if (!x.id.includes("utilization") && !basis.includes(`보기 1~${n}`))
+        for (let k = 1; k <= n; k++) expect(basis, `${x.id} 보기 ${k}`).toMatch(new RegExp(`보기 ${k} `));
+    }
   });
 
   it("Ch02 응답시간·유효 CPU 이용률 = scheduling(0.1초 단위 RR·FCFS)·cpuTime", () => {
