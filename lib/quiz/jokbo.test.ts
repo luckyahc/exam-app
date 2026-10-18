@@ -6,7 +6,7 @@ import { chapterMeta } from "@/lib/chapterMeta";
 import { validateBase } from "@/lib/qtypes/base";
 import { QTYPE_FIXTURES } from "@/lib/qtypes/fixtures";
 import type { Question } from "@/types/question";
-import { exampleBadge, explanationSourceLabel, isExample, isJokbo, jokboBadge, matchesSource, parseSource } from "./jokbo";
+import { exampleBadge, explanationSourceLabel, isExample, isJokbo, isJokboRelated, jokboBadge, matchesSource, parseSource, relatedBadge, SOURCE_LABEL } from "./jokbo";
 import { listRows, tabCounts, visibleRows } from "./questionList";
 import { filterQuestions } from "./session";
 
@@ -98,6 +98,26 @@ describe("분류 필터", () => {
     expect([isExample(ex), isExample(general)]).toEqual([true, false]);
     expect([exampleBadge(ex), exampleBadge(general)]).toEqual(["예제 · Example 8.1 (Ch08 p.3)", null]);
     expect(filterQuestions(qs, { source: "example", seed: "s" })).toEqual([ex]);
+  });
+
+  it("족보관련(basedOn) 분류: 족보 원문과 따로 고르고(일반에도 들어감) 뱃지는 '족보관련'", () => {
+    const rel = { ...general, id: "os-ch08-pattern-x-001", basedOn: ["os-ch08-jokbo-001"] };
+    const qs = [...pool, rel];
+    expect(SOURCE_LABEL.related).toBe("족보관련");
+    expect(qs.filter((q) => matchesSource(q, "related"))).toEqual([rel]);
+    expect(matchesSource(rel, "general")).toBe(true);
+    expect(matchesSource(rel, "jokbo")).toBe(false);
+    expect(parseSource("related")).toBe("related");
+    expect([isJokboRelated(rel), isJokboRelated(general), isJokboRelated(pool[0])]).toEqual([true, false, false]);
+    expect([relatedBadge(rel), relatedBadge(general)]).toEqual(["족보관련", null]);
+    expect(filterQuestions(qs, { source: "related", seed: "s" })).toEqual([rel]);
+  });
+
+  it("챕터 메타: 족보관련 id 목록 — OS Ch02 9 · 알고리즘 analysis 10(같은 분류를 두 과목이 함께 쓴다)", async () => {
+    const o = await chapterMeta(os, os.chapters[0]);
+    expect(o.relatedIds).toHaveLength(9);
+    expect(o.rows.filter((r) => r.related)).toHaveLength(9);
+    expect((await chapterMeta(algorithm, algorithm.chapters[0])).relatedIds).toHaveLength(10);
   });
 
   it("퀴즈 문제 고르기(filterQuestions)에 적용된다", () => {

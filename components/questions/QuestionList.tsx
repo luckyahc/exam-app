@@ -8,7 +8,7 @@ import { coreFor, type Question } from "@/lib/qtypes/registry";
 import { loadSubject } from "@/lib/quiz/loadQuestions";
 import { LIST_TABS, type ListFilter, type ListTab, listRows, promptPreview, revealAnswer, sessionFromList, TAB_LABEL, tabCounts, visibleRows } from "@/lib/quiz/questionList";
 import { newSession, saveSession } from "@/lib/quiz/session";
-import { exampleBadge, isExample, isJokbo, jokboBadge, SOURCE_LABEL, type SourceFilter } from "@/lib/quiz/jokbo";
+import { exampleBadge, isExample, isJokbo, isJokboRelated, jokboBadge, relatedBadge, SOURCE_LABEL, type SourceFilter } from "@/lib/quiz/jokbo";
 import { hasStarChoice, STAR_LABEL, type StarBasis } from "@/lib/quiz/starBasis";
 import { useRecords } from "@/lib/storage/recordsStore";
 
@@ -64,6 +64,7 @@ export function QuestionList({ subject }: { subject: ListSubject }) {
   const starChoice = useMemo(() => hasStarChoice(questions ?? []), [questions]);
   const hasJokbo = useMemo(() => (questions ?? []).some(isJokbo), [questions]);
   const hasExample = useMemo(() => (questions ?? []).some(isExample), [questions]);
+  const hasRelated = useMemo(() => (questions ?? []).some(isJokboRelated), [questions]);
 
   const start = (picked: { shuffle: boolean; count: number | null; label: string; list: typeof visible }) => {
     const s = sessionFromList(picked.list, {
@@ -159,11 +160,11 @@ export function QuestionList({ subject }: { subject: ListSubject }) {
             ))}
           </select>
         </label>
-        {(hasJokbo || hasExample) && (
+        {(hasJokbo || hasExample || hasRelated) && (
           <label className="flex min-w-0 flex-col gap-1 text-xs text-muted">
             분류
             <select className={sel} value={filter.source ?? "all"} onChange={(e) => setFilter({ ...filter, source: e.target.value as SourceFilter })}>
-              {(["all", ...(hasJokbo ? (["jokbo", "general"] as const) : []), ...(hasExample ? (["example"] as const) : [])] as const).map((v) => (
+              {(["all", ...(hasJokbo ? (["jokbo", "general"] as const) : []), ...(hasRelated ? (["related"] as const) : []), ...(hasExample ? (["example"] as const) : [])] as const).map((v) => (
                 <option key={v} value={v}>
                   {SOURCE_LABEL[v]}
                 </option>
@@ -236,6 +237,7 @@ export function QuestionList({ subject }: { subject: ListSubject }) {
                   <span>{coreFor(r.q).label}</span>
                   {r.q.exam && <span aria-label="시험 포인트">⭐</span>}
                   {jokboBadge(r.q) && <span className="font-medium text-foreground">{jokboBadge(r.q)}</span>}
+                  {relatedBadge(r.q) && <span className="font-medium text-foreground">{relatedBadge(r.q)}</span>}
                   {exampleBadge(r.q) && <span className="font-medium text-foreground">{exampleBadge(r.q)}</span>}
                   <span className={m.cls}>
                     <span aria-hidden>{m.icon}</span> {m.text}

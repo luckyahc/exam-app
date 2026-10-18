@@ -20,9 +20,12 @@ const summary = (file: string, label: string) => {
     .find((l) => l.startsWith(`| ${label} | `));
   return Number(line?.split("|")[2]?.trim().split(" ")[0]);
 };
-/** 챕터 대조 기록은 일반 문항만 — 족보 문항(origin: "jokbo")은 docs/verification/os-jokbo.md에 따로 적는다(Sprint 20) */
+/**
+ * 챕터 대조 기록은 일반 문항만 — 족보 문항(origin: "jokbo")은 docs/verification/os-jokbo.md에, 족보관련 생성 문항(basedOn)은
+ * docs/jokbo/os/pattern-analysis.md에 따로 적는다(Sprint 20, 2026-10-19)
+ */
 const loadOf = async (...chapters: string[]) => (await Promise.all(os.chapters.filter((c) => chapters.includes(c.id)).map((c) => c.load()))).flat();
-const idsOf = async (...chapters: string[]) => (await loadOf(...chapters)).filter((q) => q.origin !== "jokbo").map((q) => q.id);
+const idsOf = async (...chapters: string[]) => (await loadOf(...chapters)).filter((q) => q.origin !== "jokbo" && !q.basedOn).map((q) => q.id);
 
 describe("OS 대조 기록 ↔ 문제 데이터", () => {
   it("os-ch02-ch03.md: id·순서 일치, 요약 숫자 = 표", async () => {
