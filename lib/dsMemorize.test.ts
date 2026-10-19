@@ -16,11 +16,11 @@ import {
 } from "@/lib/dsMemorize";
 
 const byName = (n: string) => DS_FUNCTIONS.find((f) => f.name === n)!;
-/** 영문 낱말 경계·대소문자 무시·SQL 띄어쓰기 여러 칸 */
-const word = (t: string) =>
+/** 영문 낱말 경계·SQL 띄어쓰기 여러 칸. 파이썬은 대소문자 무시, SQL은 대문자 표기 그대로 */
+const word = (t: string, sql = false) =>
   new RegExp(
     `(^|[^A-Za-z0-9_])${t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/ /g, "\\s+")}([^A-Za-z0-9_]|$)`,
-    "i",
+    sql ? "" : "i",
   );
 const now = new Date("2026-10-20T03:04:05Z");
 
@@ -40,10 +40,45 @@ describe("방향 A — 보이는 글자에 함수 이름이 남지 않는다", (
     ]
       .filter((s): s is string => !!s)
       .join("\n");
-    // 가린 구현과 따로: 이름 조각을 대소문자 무시·영문 낱말 경계로 다시 찾는다
-    for (const t of nameTokens(f)) expect(visible, t).not.toMatch(word(t));
+    const sql = f.lang === "sql";
+    // 가린 구현과 따로: 이름 조각을 영문 낱말 경계로 다시 찾는다
+    for (const t of nameTokens(f)) expect(visible, t).not.toMatch(word(t, sql));
     // 전체 이름(df.groupby)도 낱말로 남지 않는다 — set_3·f.closed·plt.rcParams처럼 더 긴 낱말의 일부는 이름이 아니다
-    expect(visible).not.toMatch(word(f.name));
+    expect(visible).not.toMatch(word(f.name, sql));
+    // 점으로 이은 이름은 마지막 부분(정답)이 대소문자 무관하게 남지 않는다
+    if (!sql) expect(visible).not.toMatch(word(f.name.split(".").pop()!));
+  });
+
+  it("SQL 키워드는 대문자 표기만 가린다", () => {
+    expect(maskName("SELECT 이름 AS 별칭 — as는 소문자", byName("AS"))).toBe(
+      `SELECT 이름 ${MASK} 별칭 — as는 소문자`,
+    );
+    expect(maskName("WHERE 학번 IN ('s2'); in, In", byName("IN"))).toBe(
+      `WHERE 학번 ${MASK} ('s2'); in, In`,
+    );
+    expect(maskName("USE firstDB; use", byName("USE"))).toBe(`${MASK} firstDB; use`);
+    expect(maskName("GROUP  BY 반; group by", byName("GROUP BY"))).toBe(`${MASK} 반; group by`);
+  });
+
+  it("파이썬 일반 단어 이름은 대소문자 무시·낱말 경계 그대로", () => {
+    expect(maskName("set(), Set, set_3, s.set", byName("set"))).toBe(
+      `${MASK}(), ${MASK}, set_3, s.${MASK}`,
+    );
+    expect(maskName("list(x); List; mylist", byName("list"))).toBe(`${MASK}(x); ${MASK}; mylist`);
+    expect(maskName("type(1); <class 'str'>", byName("type"))).toBe(`${MASK}(1); <class 'str'>`);
+    expect(maskName("str(1); <class 'str'>", byName("str"))).toBe(`${MASK}(1); <class '${MASK}'>`);
+    expect(maskName("print(x); Print", byName("print"))).toBe(`${MASK}(x); ${MASK}`);
+  });
+
+  it("점으로 이은 이름은 마지막 부분만 — 중간 부분은 그대로", () => {
+    expect(maskName("sys.path.insert(0, p); path·insert", byName("sys.path.insert"))).toBe(
+      `sys.path.${MASK}(0, p); path·${MASK}`,
+    );
+    expect(maskName("df.groupby('반'); df", byName("df.groupby"))).toBe(`df.${MASK}('반'); df`);
+    expect(maskName("np.random.randn(3); random", byName("np.random.randn"))).toBe(
+      `np.random.${MASK}(3); random`,
+    );
+    expect(nameTokens(byName("Series.str.contains"))).toEqual(["contains"]);
   });
 
   it("전 항목을 검사한다", () => expect(DS_FUNCTIONS.length).toBeGreaterThanOrEqual(120));
@@ -56,7 +91,9 @@ describe("방향 A — 보이는 글자에 함수 이름이 남지 않는다", (
     expect(maskName("SELECT 이름\nFROM 학생", byName("SELECT … FROM"))).toBe(
       `${MASK} 이름\n${MASK} 학생`,
     );
-    expect(maskName("s.str.contains('a')", byName("Series.str.contains"))).toBe(`s.${MASK}('a')`);
+    expect(maskName("s.str.contains('a')", byName("Series.str.contains"))).toBe(
+      `s.str.${MASK}('a')`,
+    );
     // 다른 낱말 속 조각(sort_values·argsort)은 그대로
     expect(maskName("np.argsort(a); df.sort_values('x'); np.sort(a)", byName("np.sort"))).toBe(
       `np.argsort(a); df.sort_values('x'); np.${MASK}(a)`,

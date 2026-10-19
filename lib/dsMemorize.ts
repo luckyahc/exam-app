@@ -41,24 +41,28 @@ export function parseMemo(v: unknown): MemoRecords {
 type Named = Pick<DsFunction, "name" | "lang">;
 
 /**
- * 가려야 할 이름 조각. 파이썬은 앞의 객체·모듈 이름(np·df·list·driver…)을 뺀 나머지와 그 조각들
- * (df.groupby → groupby, Series.str.contains → str.contains·str·contains), SQL은 "…"로 나뉜 구문들(SELECT … FROM → SELECT·FROM).
+ * 가려야 할 이름 조각. 파이썬은 마지막 부분만 — 전체 이름도 그 부분이 가려져 df.▢▢▢·sys.path.▢▢▢가 되고,
+ * 중간 부분(sys·path·df·str…)은 가리지 않는다. SQL은 "…"로 나뉜 구문들(SELECT … FROM → SELECT·FROM).
  */
 export function nameTokens(f: Named): string[] {
   if (f.lang === "sql") return f.name.split(/\s*…\s*/).filter(Boolean);
-  const parts = f.name.split(".");
-  const core = parts.length > 1 ? parts.slice(1) : parts;
-  return [...new Set([core.join("."), ...core])];
+  return [f.name.split(".").pop()!];
 }
 
 const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-/** 이름 조각을 낱말로(앞뒤가 영문·숫자·_가 아닐 때) 찾는 정규식 — 대소문자·SQL 띄어쓰기 무시. 한글 조사(groupby로)는 경계로 본다 */
+/**
+ * 이름 조각을 낱말로(앞뒤가 영문·숫자·_가 아닐 때) 찾는 정규식. 한글 조사(groupby로)는 경계로 본다.
+ * 파이썬은 대소문자 무시, SQL은 대문자 표기 그대로만(as·in 같은 소문자는 그대로 둔다) — SQL 띄어쓰기는 여러 칸 허용
+ */
 export function namePattern(f: Named): RegExp {
   const alts = nameTokens(f)
     .sort((a, b) => b.length - a.length)
     .map((t) => esc(t).replace(/ /g, "\\s+"));
-  return new RegExp(`(?<![A-Za-z0-9_])(?:${alts.join("|")})(?![A-Za-z0-9_])`, "gi");
+  return new RegExp(
+    `(?<![A-Za-z0-9_])(?:${alts.join("|")})(?![A-Za-z0-9_])`,
+    f.lang === "sql" ? "g" : "gi",
+  );
 }
 
 /** 보이는 글자 안의 함수 이름을 ▢▢▢로(df.groupby('반') → df.▢▢▢('반')) */
