@@ -13,6 +13,8 @@ export const SESSION_KEY = "examapp:session";
 export const progressKey = (subjectId: string) => `examapp:${subjectId}:progress`;
 export const wrongKey = (subjectId: string) => `examapp:${subjectId}:wrong`;
 export const bookmarksKey = (subjectId: string) => `examapp:${subjectId}:bookmarks`;
+/** 함수 정리 암기 기록(방향 A·B별 함수 id → 알았음/몰랐음, 마지막 확인 시각). lib/dsMemorize.ts */
+export const memoKey = (subjectId: string) => `examapp:${subjectId}:memo`;
 
 /** v1(다과목 전환 전, OS 단일 과목) 키. 01-architecture.md에 계획돼 있던 형식. */
 export const LEGACY_PROGRESS_PREFIX = "progress:";

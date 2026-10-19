@@ -4,7 +4,7 @@ import { useSyncExternalStore } from "react";
 import { SUBJECTS } from "@/data/subjects/registry";
 import type { GeneratorRef, GradeResult } from "@/lib/qtypes/base";
 import { ensureStorageMigrated } from "./bootstrap";
-import { bookmarksKey, progressKey, SESSION_KEY, SETTINGS_KEY, THEME_STORAGE_KEY, wrongKey } from "./keys";
+import { bookmarksKey, memoKey, progressKey, SESSION_KEY, SETTINGS_KEY, THEME_STORAGE_KEY, wrongKey } from "./keys";
 import { recordAttempt } from "./records";
 import { getBrowserStorage, safeGetJSON, safeRemove, safeSetJSON } from "./safeStorage";
 import { emptySubjectRecords, type StoreV2, type SubjectRecords } from "./schema";
@@ -126,7 +126,7 @@ export function writeStore(next: StoreV2, subjectIds: readonly string[]) {
 
 /**
  * 데이터 초기화. scope = "all"이면 이 앱의 모든 `examapp:` 키(기록·세션·설정·스키마)를 지우고,
- * 과목 id면 그 과목의 기록 키 3개만 지운다. theme = true면 테마 키도 지운다(전체 초기화에서만 의미 있음).
+ * 과목 id면 그 과목의 기록 키(진행·오답·북마크·함수 암기)만 지운다. theme = true면 테마 키도 지운다(전체 초기화에서만 의미 있음).
  */
 export function resetData(scope: "all" | string, opts: { theme?: boolean } = {}) {
   ensureLoaded();
@@ -148,7 +148,7 @@ export function resetData(scope: "all" | string, opts: { theme?: boolean } = {})
     emit();
     return;
   }
-  for (const k of [progressKey(scope), wrongKey(scope), bookmarksKey(scope)]) safeRemove(k);
+  for (const k of [progressKey(scope), wrongKey(scope), bookmarksKey(scope), memoKey(scope)]) safeRemove(k);
   state = { ...state, subjects: { ...state.subjects, [scope]: emptySubjectRecords() } };
   emit();
 }
