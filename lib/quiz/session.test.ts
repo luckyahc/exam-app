@@ -33,9 +33,11 @@ describe("filterQuestions", () => {
 });
 
 describe("newSession / summarizeSession", () => {
-  it("즉시 채점 모드는 타이머가 없고, 시험 모드는 마감 시각을 정한다", () => {
-    expect(newSession(qs, { mode: "instant", timerSec: 600, label: "", backHref: "/", now: 1000 })).toMatchObject({ timerSec: null, deadline: null });
+  it("제한 시간이 있으면 두 모드 모두 마감 시각을 정하고, 없거나 0이면 타이머가 없다", () => {
+    expect(newSession(qs, { mode: "instant", timerSec: 600, label: "", backHref: "/", now: 1000 })).toMatchObject({ timerSec: 600, deadline: 601000 });
     expect(newSession(qs, { mode: "exam", timerSec: 600, label: "", backHref: "/", now: 1000 })).toMatchObject({ timerSec: 600, deadline: 601000 });
+    expect(newSession(qs, { mode: "instant", label: "", backHref: "/", now: 1000 })).toMatchObject({ timerSec: null, deadline: null });
+    expect(newSession(qs, { mode: "exam", timerSec: 0, label: "", backHref: "/", now: 1000 })).toMatchObject({ timerSec: null, deadline: null });
   });
 
   it("완전히 맞은 문제만 정답, 부분 점수는 틀린 문제에 포함, 미응답 집계", () => {

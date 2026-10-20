@@ -7,9 +7,9 @@ import { SOURCE_LABEL, type SourceFilter } from "@/lib/quiz/jokbo";
 import { STAR_LABEL, type StarBasis } from "@/lib/quiz/starBasis";
 import { questionStatus, type QStatus } from "@/lib/quiz/status";
 import { useRecords } from "@/lib/storage/recordsStore";
+import { TimerPicker } from "./TimerPicker";
 
 const COUNTS = [10, 20, 30, 0] as const; // 0 = 전체
-const TIMERS = [0, 10, 20, 30, 60] as const; // 분, 0 = 없음
 const DIFF_LABEL = { 1: "쉬움", 2: "보통", 3: "어려움" } as const;
 
 function Chip({ on, onClick, children }: { on: boolean; onClick(): void; children: React.ReactNode }) {
@@ -246,14 +246,7 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
         <p className="text-xs text-muted">
           {mode === "instant" ? "문제마다 제출하면 바로 정답과 해설을 보여 줍니다." : "끝까지 푼 뒤 한 번에 채점합니다."}
         </p>
-        {mode === "exam" && (
-          <Radio<number>
-            name="타이머"
-            value={timer}
-            onChange={setTimer}
-            options={TIMERS.map((m) => ({ value: m, label: m ? `${m}분` : "타이머 없음" }))}
-          />
-        )}
+        {mode === "exam" && <TimerPicker value={timer} onChange={setTimer} />}
       </div>
 
       <div className="flex flex-wrap items-center gap-3 border-t border-border pt-4">

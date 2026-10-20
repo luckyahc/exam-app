@@ -28,9 +28,9 @@ export interface QuizSession {
   id: string;
   createdAt: string;
   mode: QuizMode;
-  /** 시험 모드 제한 시간(초). null = 타이머 없음 */
+  /** 제한 시간(초). null = 타이머 없음. 시험 모드는 마감 때 자동 채점, 즉시 채점은 마감 때 결과로 넘어간다 */
   timerSec: number | null;
-  /** 시험 모드 마감 시각(ms). 시작할 때 정한다 */
+  /** 마감 시각(ms). 시작할 때 정한다 */
   deadline: number | null;
   /** 화면 제목: "OS · Ch08", "틀린 문제 다시 풀기" 등 */
   label: string;
@@ -96,7 +96,7 @@ export function newSession(
   opts: { mode: QuizMode; timerSec?: number | null; label: string; backHref: string; now?: number },
 ): QuizSession {
   const now = opts.now ?? Date.now();
-  const timerSec = opts.mode === "exam" ? (opts.timerSec ?? null) : null;
+  const timerSec = opts.timerSec && opts.timerSec > 0 ? opts.timerSec : null;
   return {
     v: 1,
     id: `${now.toString(36)}-${hashString(questions.map((q) => q.id).join(",") + now).toString(36)}`,

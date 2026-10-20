@@ -15,7 +15,8 @@ import { BookmarkButton } from "./BookmarkButton";
 const mmss = (sec: number) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
 
 /**
- * 문제 풀이 화면. 즉시 채점: 문제마다 제출 → 정답/해설. 시험 모드: 끝까지 풀고 한 번에 채점(선택형 타이머).
+ * 문제 풀이 화면. 즉시 채점: 문제마다 제출 → 정답/해설. 시험 모드: 끝까지 풀고 한 번에 채점.
+ * 제한 시간(선택)이 끝나면 시험 모드는 자동 채점, 즉시 채점은 제출한 문제까지로 결과에 넘어간다(나머지는 미응답).
  * 판정 규칙(완전히 맞아야 정답, 부분 점수는 보조 표시)은 gradeQuestion·recordResult가 그대로 따른다.
  */
 export function QuizRunner({ initial, questions }: { initial: QuizSession; questions: ReadonlyMap<string, Question> }) {
@@ -100,10 +101,12 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
     update({ ...session, items, index: session.index + 1 });
   };
 
-  // 타이머: 1초마다 남은 시간 갱신, 0이 되면 자동 채점
+  // 타이머: 1초마다 남은 시간 갱신, 0이 되면 시험 모드는 자동 채점·즉시 채점은 결과로
   const onTick = useEffectEvent(() => {
     setNow(Date.now());
-    if (isExam && !session.finished && session.deadline && Date.now() >= session.deadline) gradeAll();
+    if (session.finished || !session.deadline || Date.now() < session.deadline) return;
+    if (isExam) gradeAll();
+    else finish(session);
   });
   useEffect(() => {
     if (!session.deadline) return;

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProgressStats } from "@/components/progress/ProgressStats";
+import { JokboStart } from "@/components/quiz/JokboStart";
 import { subjectMeta } from "@/lib/chapterMeta";
 import { FUNCTION_SUBJECTS } from "@/lib/dsFunctions";
 import { getSubject, starLabel } from "@/lib/subjects";
@@ -38,12 +39,6 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
             <span aria-hidden>⭐</span> 이 과목 시험 포인트만 풀기 ({stars})
           </Link>
         )}
-        {/* 족보 문항(docs/jokbo-plan.md)이 있는 과목만 — 빈 퀴즈 방지 */}
-        {jokbo > 0 && (
-          <Link href={`/quiz?subject=${subject.id}&source=jokbo&shuffle=1&mode=instant`} className={link}>
-            족보만 풀기 ({jokbo})
-          </Link>
-        )}
         {/* 족보관련 = 족보 유형을 본뜬 생성 문항(basedOn) — 족보 원문과 따로 */}
         {related > 0 && (
           <Link href={`/quiz?subject=${subject.id}&source=related&mode=instant`} className={link}>
@@ -73,6 +68,9 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
           </Link>
         )}
       </div>
+
+      {/* 족보 문항(docs/jokbo-plan.md)이 있는 과목만 — 빈 퀴즈 방지. 제한 시간을 골라 시작한다 */}
+      {jokbo > 0 && <JokboStart subjectId={subject.id} count={jokbo} />}
 
       {/* 용어 퀴즈: 용어 단답형(topic "용어")만 모아 풀기 — 용어 사전이 있는 과목만 */}
       {subject.loadGlossary && allIds.length > 0 && (
