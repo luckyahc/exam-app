@@ -148,12 +148,22 @@ describe("OS 단답형 보강 문항", async () => {
     }
   });
 
-  it("⭐ 규칙: 힌트 범위면 exam-hint + 같은 장의 힌트 id, Ch09는 힌트가 없어 ⭐ 아님", () => {
+  it("⭐ 규칙: 필기 출제 표시 쪽은 handwritten, 그 밖의 힌트 범위는 exam-hint(같은 장의 힌트 id), Ch09는 필기 ⭐ 소주제만", () => {
+    // 각 chNN.ts 머리의 ⭐(handwritten) 쪽 목록. Ch09는 소주제 단위(ch09.test.ts)
+    const HW: Record<string, number[]> = { ch02: [6, 22], ch03: [2, 4, 13, 21, 25, 39, 41], ch07: [16, 21, 23, 34], ch08: [5, 8, 23, 28, 29, 39, 47, 48, 49, 50, 61, 62] };
+    const CH09_STAR = ["HRRN 응답 비율", "스케줄러 호출 시점", "스케줄링 기준(용어)", "시각별 스케줄링 추적"];
+    const pages = (ref: string) =>
+      [...ref.matchAll(/p\.(\d+)(?:-(\d+))?/g)].flatMap((m) => {
+        const [a, b] = [Number(m[1]), Number(m[2] ?? m[1])];
+        return Array.from({ length: b - a + 1 }, (_, i) => a + i);
+      });
     const hintChapter = new Map(HINT_ITEMS.map((h) => [h.id, h.chapter]));
     for (const { q } of items) {
-      if (q.chapter === "ch09") expect(q.exam, q.id).toBe(false);
+      const handwritten = q.chapter === "ch09" ? CH09_STAR.includes(q.topic) : pages(q.slideRef).some((p) => HW[q.chapter].includes(p));
+      if (handwritten) expect([q.exam, q.examBasis], q.id).toEqual([true, "handwritten"]);
+      else if (q.hintIds?.length) expect([q.exam, q.examBasis], q.id).toEqual([true, "exam-hint"]);
+      else expect(q.exam, q.id).toBe(false);
       for (const h of q.hintIds ?? []) expect(hintChapter.get(h), `${q.id}: ${h}`).toBe(q.chapter);
-      if (q.exam) expect(q.examBasis, q.id).toBe("exam-hint");
     }
   });
 

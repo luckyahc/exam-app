@@ -15,7 +15,8 @@ import { block } from "./jokboSource";
 // 후보·중복 판정: docs/os/short-answer-candidates.md, 검증: shortAnswer.test.ts.
 // - 계산형 정답은 lib/sim/os 함수로 계산한다(손계산 없음). 해설의 수치도 같은 계산 결과에서 만든다.
 // - 용어형 정답 문자열은 슬라이드(source/os/*.pdf)에 실제로 있는 표기를 첫 번째 인정 답안으로 둔다.
-// - origin·basedOn 없음(생성 문항, "족보관련" 아님). ⭐은 기존 OS 규칙: 시험 힌트 범위면 hintIds(exam-hint), Ch09는 힌트 없음.
+// - origin·basedOn 없음(생성 문항, "족보관련" 아님). ⭐은 기존 OS 규칙: 필기 출제 표시 쪽이면 handwritten(+힌트 id),
+//   그 밖에 시험 힌트 범위면 exam-hint, Ch09는 힌트가 없어 필기 ⭐ 소주제(HRRN p.22)만 ⭐.
 // - 교수님 족보 채점과 이론이 갈리는 지점(유효 CPU 이용률 0.6 vs 0.7 등)은 만들지 않았다.
 
 export type ShortKind = "용어" | "계산" | "공식·목록";
@@ -28,6 +29,8 @@ export interface ShortItem {
 }
 
 const hint = (...hintIds: string[]) => ({ exam: true, examBasis: "exam-hint", hintIds }) as const;
+/** 교수님 필기의 출제 표시가 있는 쪽(각 chNN.ts 머리의 ⭐(handwritten) 목록) — 필기 근거를 유지하고 힌트 id만 붙인다 */
+const star = (...hintIds: string[]) => ({ exam: true, examBasis: "handwritten", ...(hintIds.length ? { hintIds } : {}) }) as const;
 const plain = { exam: false } as const;
 /** 해설: 정답 이유 + 헷갈리기 쉬운 오답 1줄 + 근거 줄 */
 const why = (reason: string, trap: string, basis: string) => `${reason} 헷갈리기 쉬운 답: ${trap}\n근거: ${basis}`;
@@ -53,8 +56,9 @@ const ch02: ShortItem[] = [
     wrong: [num(b1.n * (b1.t + b1.s) + b1.output), num((b1.n - 1) * b1.t + b1.output)],
     q: {
       ...C2,
-      ...hint("2-10"),
+      ...star("2-10"),
       id: "os-ch02-short-001",
+      summary: "일괄처리 첫 응답 = (N−1)×(T+s) + s + 첫 출력 — 앞 프로그램이 모두 끝나야 실행(p.23)",
       topic: "시간 계산(응답시간/유효 CPU 이용률)",
       difficulty: 2,
       slideRef: "Ch02 p.22-23",
@@ -73,8 +77,9 @@ const ch02: ShortItem[] = [
     wrong: [num(batchFirstResponse({ n: t1.n, t: 2, s: t1.s, output: t1.output })), num(t1.n * (t1.q + t1.s) + t1.output)],
     q: {
       ...C2,
-      ...hint("2-10"),
+      ...star("2-10"),
       id: "os-ch02-short-002",
+      summary: "시분할 첫 응답 = (N−1)×(q+s) + s + 첫 출력 — 앞 프로그램은 time slice만큼만 실행(p.23)",
       topic: "시간 계산(응답시간/유효 CPU 이용률)",
       difficulty: 2,
       slideRef: "Ch02 p.22-23",
@@ -93,8 +98,9 @@ const ch02: ShortItem[] = [
     wrong: [num(b2.n * (b2.t + b2.s) + b2.output), num((b2.n - 1) * b2.t + b2.output)],
     q: {
       ...C2,
-      ...hint("2-10"),
+      ...star("2-10"),
       id: "os-ch02-short-003",
+      summary: "일괄처리 첫 응답 = (N−1)×(T+s) + s + 첫 출력(p.23)",
       topic: "시간 계산(응답시간/유효 CPU 이용률)",
       difficulty: 2,
       slideRef: "Ch02 p.22-23",
@@ -113,8 +119,9 @@ const ch02: ShortItem[] = [
     wrong: [num(t2.n * (t2.q + t2.s) + t2.output), num((t2.n - 1) * t2.q + t2.output)],
     q: {
       ...C2,
-      ...hint("2-10"),
+      ...star("2-10"),
       id: "os-ch02-short-004",
+      summary: "시분할 첫 응답 = (N−1)×(q+s) + s + 첫 출력 — 스위칭 시간 s를 매번 더한다(p.23)",
       topic: "시간 계산(응답시간/유효 CPU 이용률)",
       difficulty: 3,
       slideRef: "Ch02 p.22-23",
@@ -541,8 +548,9 @@ const ch07: ShortItem[] = [
     wrong: [String(p1.logical), String((p1r.frame! - 1) * p1.size + p1r.offset)],
     q: {
       ...C7,
-      ...hint("7-10"),
+      ...star("7-10"),
       id: "os-ch07-short-001",
+      summary: "논리 → 실제: 페이지 = 주소 ÷ 크기, offset = 나머지, 실제 = 프레임 × 크기 + offset(p.34)",
       topic: "주소 변환",
       difficulty: 2,
       slideRef: "Ch07 p.34",
@@ -701,8 +709,9 @@ const ch07: ShortItem[] = [
     wrong: ["256", "384"],
     q: {
       ...C7,
-      ...hint("7-7"),
+      ...star("7-7"),
       id: "os-ch07-short-009",
+      summary: "Buddy: 2의 거듭제곱으로 올려 가장 작은 free 블록을 반씩 나눠 왼쪽 반을 할당(p.21-23)",
       topic: "버디 시스템",
       difficulty: 3,
       slideRef: "Ch07 p.21-23",
@@ -721,8 +730,9 @@ const ch07: ShortItem[] = [
     wrong: ["0", "724"],
     q: {
       ...C7,
-      ...hint("7-7"),
+      ...star("7-7"),
       id: "os-ch07-short-010",
+      summary: "Buddy는 요청을 담는 가장 작은 2의 거듭제곱 블록 전체를 할당 — 남는 부분이 내부 단편화(p.21·23)",
       topic: "버디 시스템",
       difficulty: 2,
       slideRef: "Ch07 p.21, p.23",
@@ -741,8 +751,9 @@ const ch07: ShortItem[] = [
     wrong: [firstHole, worstHole],
     q: {
       ...C7,
-      ...hint("7-6"),
+      ...star("7-6"),
       id: "os-ch07-short-011",
+      summary: "Best-fit = 요청 크기 이상인 블록 중 가장 작은 것(p.16)",
       topic: "배치 알고리즘",
       difficulty: 2,
       slideRef: "Ch07 p.16",
@@ -866,8 +877,9 @@ const ch08: ShortItem[] = [
     wrong: [String(F("lru").misses), String(F("fifo").faults)],
     q: {
       ...C8,
-      ...hint("8-9"),
+      ...star("8-9"),
       id: "os-ch08-short-001",
+      summary: "LRU = 가장 오랫동안 참조되지 않은 페이지 교체, F는 프레임이 다 찬 뒤의 폴트(p.44·48)",
       topic: "교체 알고리즘",
       difficulty: 3,
       slideRef: "Ch08 p.44, p.48",
@@ -886,8 +898,9 @@ const ch08: ShortItem[] = [
     wrong: [String(F("fifo").misses), String(F("lru").faults)],
     q: {
       ...C8,
-      ...hint("8-9"),
+      ...star("8-9"),
       id: "os-ch08-short-002",
+      summary: "FIFO = 메모리에 가장 오래 있던 페이지 교체(참조돼도 순서 그대로)(p.45·48)",
       topic: "교체 알고리즘",
       difficulty: 3,
       slideRef: "Ch08 p.45, p.48",
@@ -906,8 +919,9 @@ const ch08: ShortItem[] = [
     wrong: [String(F("opt").misses), String(F("lru").faults)],
     q: {
       ...C8,
-      ...hint("8-9"),
+      ...star("8-9"),
       id: "os-ch08-short-003",
+      summary: "OPT = 다음 참조까지 가장 먼 페이지 교체 — 폴트 수의 하한(p.43·48)",
       topic: "교체 알고리즘",
       difficulty: 3,
       slideRef: "Ch08 p.43, p.48",
@@ -926,8 +940,9 @@ const ch08: ShortItem[] = [
     wrong: [String(F("clock").misses), String(F("fifo").faults)],
     q: {
       ...C8,
-      ...hint("8-9"),
+      ...star("8-9"),
       id: "os-ch08-short-004",
+      summary: "Clock = pointer부터 use bit 0을 찾아 교체, 지나치는 1은 0으로(p.47-48)",
       topic: "Clock 정책 동작",
       difficulty: 3,
       slideRef: "Ch08 p.47-48",
@@ -946,8 +961,9 @@ const ch08: ShortItem[] = [
     wrong: [String(clockBuf.pointer), "3"],
     q: {
       ...C8,
-      ...hint("8-9"),
+      ...star("8-9"),
       id: "os-ch08-short-005",
+      summary: "Clock 교체: pointer부터 use bit 1은 0으로 바꾸며 지나가고 처음 만난 0을 교체(p.47·49-50)",
       topic: "Clock 정책 동작",
       difficulty: 2,
       slideRef: "Ch08 p.47, p.49-50",
@@ -1315,8 +1331,9 @@ const ch09: ShortItem[] = [
     wrong: hrrnPick.candidates.filter((c) => c.name !== hrrnPick.chosen).map((c) => c.name),
     q: {
       ...C9,
-      ...plain,
+      ...star(),
       id: "os-ch09-short-005",
+      summary: "HRRN은 R = (대기 + 서비스) / 서비스가 가장 큰 프로세스를 비선점으로 고른다(p.22)",
       topic: "HRRN 응답 비율",
       difficulty: 3,
       slideRef: "Ch09 p.22",
@@ -1335,8 +1352,9 @@ const ch09: ShortItem[] = [
     wrong: [num(rrq.waited / rrq.service), num(rrq.service / (rrq.waited + rrq.service))],
     q: {
       ...C9,
-      ...plain,
+      ...star(),
       id: "os-ch09-short-006",
+      summary: "HRRN 응답 비율 R = (대기한 시간 + 예상 서비스 시간) / 예상 서비스 시간(p.22)",
       topic: "HRRN 응답 비율",
       difficulty: 2,
       slideRef: "Ch09 p.22",

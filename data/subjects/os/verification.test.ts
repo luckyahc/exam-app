@@ -51,6 +51,21 @@ describe("OS 대조 기록 ↔ 문제 데이터", () => {
     expect(summary(f, "필기 근거(문항별 확인)")).toBe(rows.filter((r) => r[5].includes("필기")).length);
   });
 
+  it("docs/os/short-answer-candidates.md: 단답형 보강 문항 전부·챕터 순서, ⭐ 열 = 데이터, 장별 × 유형 수 = 표", async () => {
+    const doc = readFileSync(path.join(ROOT, "docs/os/short-answer-candidates.md"), "utf8").split(/\r?\n/);
+    const cells = (l: string) => l.replace(/^\||\|$/g, "").split("|").map((c) => c.trim());
+    const rows = doc.filter((l) => /^\| ch.*`os-ch\d\d-short-\d{3}`/.test(l)).map(cells);
+    const short = (await loadOf("ch02", "ch03", "ch07", "ch08", "ch09")).filter((q) => /-short-\d{3}$/.test(q.id));
+    expect(rows.map((r) => r[6].replaceAll("`", ""))).toEqual(short.map((q) => q.id));
+    const star = (q: (typeof short)[number]) => (!q.exam ? "" : q.examBasis === "handwritten" ? "⭐ 필기" : "⭐ 힌트");
+    expect(rows.map((r) => r[4])).toEqual(short.map(star));
+    for (const ch of ["ch02", "ch03", "ch07", "ch08", "ch09"]) {
+      const line = cells(doc.find((l) => l.startsWith(`| ${ch} | `) && cells(l).slice(1).every((c) => /^\d+$/.test(c)))!);
+      const mine = rows.filter((r) => r[0] === ch);
+      expect(line.slice(1).map(Number), ch).toEqual([...["용어", "계산", "공식·목록"].map((k) => mine.filter((r) => r[2] === k).length), mine.length]);
+    }
+  });
+
   it("os-jokbo.md: 족보 문항 전부·챕터 순서, 요약 숫자 = 표", async () => {
     const f = "os-jokbo.md";
     const rows = rowsOf(f);

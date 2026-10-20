@@ -25,8 +25,9 @@ const TARGET: Record<string, number> = {
 describe("OS Ch09 소주제 목표", async () => {
   const ch09 = os.chapters.find((c) => c.id === "ch09")!;
   // 족보 문항(origin: "jokbo")과 족보관련 생성 문항(basedOn — jokboPatterns.test.ts)은 소주제 목표·⭐ 규칙 밖(docs/jokbo-plan.md §4)
-  // 단답형 보강 문항(-short-, shortAnswer.test.ts)도 소주제 목표 밖
-  const qs = (await ch09.load()).filter((q) => q.topic !== "용어" && q.origin !== "jokbo" && !q.basedOn && !/-short-\d{3}$/.test(q.id));
+  // 단답형 보강 문항(-short-, 2026-10-21)은 소주제 목표 수(Sprint 19 계획 세트)에서만 빼고, ⭐ 규칙은 함께 지킨다
+  const all = (await ch09.load()).filter((q) => q.topic !== "용어" && q.origin !== "jokbo" && !q.basedOn);
+  const qs = all.filter((q) => !/-short-\d{3}$/.test(q.id));
 
   it("소주제별 문항 수 = 목표, 합계 = minQuestions", () => {
     const count: Record<string, number> = {};
@@ -38,7 +39,7 @@ describe("OS Ch09 소주제 목표", async () => {
   it("⭐ 소주제는 6~10문항·유형 3종 이상이고, ⭐는 그 소주제에만 있다(필기 근거)", () => {
     const stars = new Map<string, Set<string>>();
     const n = new Map<string, number>();
-    for (const q of qs.filter((x) => x.exam)) {
+    for (const q of all.filter((x) => x.exam)) {
       expect(q.examBasis, q.id).toBe("handwritten");
       (stars.get(q.topic) ?? stars.set(q.topic, new Set()).get(q.topic)!).add(q.type);
       n.set(q.topic, (n.get(q.topic) ?? 0) + 1);
@@ -48,7 +49,7 @@ describe("OS Ch09 소주제 목표", async () => {
       expect(types.size, topic).toBeGreaterThanOrEqual(3);
       expect(n.get(topic), topic).toBeGreaterThanOrEqual(6);
       expect(n.get(topic), topic).toBeLessThanOrEqual(10);
-      expect(qs.filter((q) => q.topic === topic).every((q) => q.exam), topic).toBe(true);
+      expect(all.filter((q) => q.topic === topic).every((q) => q.exam), topic).toBe(true);
     }
   });
 });
