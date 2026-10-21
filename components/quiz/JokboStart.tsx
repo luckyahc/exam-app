@@ -16,7 +16,7 @@ const MODES: { value: QuizMode; label: string; help: string }[] = [
  * 과목 홈 "족보만 풀기"·"단답형만 풀기"(source): 모드(즉시 채점 / 시험 모드)와 제한 시간을 고르고 시작한다(섞기).
  * 제한 시간이 끝나면 시험 모드는 자동 채점, 즉시 채점은 제출한 문제까지로 결과에 넘어간다(components/quiz/QuizRunner.tsx).
  */
-export function JokboStart({ subjectId, count, source = "jokbo" }: { subjectId: string; count: number; source?: "jokbo" | "short" }) {
+export function JokboStart({ subjectId, count, source = "jokbo" }: { subjectId: string; count: number; source?: "jokbo" | "related2" | "short" }) {
   const router = useRouter();
   const [mode, setMode] = useState<QuizMode>("instant");
   const [timer, setTimer] = useState(0);

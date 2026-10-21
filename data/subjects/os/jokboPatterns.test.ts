@@ -32,7 +32,8 @@ const ORDER = ["ch03-pattern-interrupt-001", "ch03-pattern-state-002", "ch08-pat
 
 describe("OS 족보관련 생성 문항", async () => {
   const all = (await Promise.all(os.chapters.map((c) => c.load()))).flat();
-  const pats = all.filter((x) => x.basedOn) as Q[];
+  // 족보관련2(id "-jr2-", jokboRelated2.test.ts)는 따로 검사한다
+  const pats = all.filter((x) => x.basedOn && /-pattern-/.test(x.id)) as Q[];
   const byId = new Map(all.map((x) => [x.id, x as Q]));
   const q = (id: string) => byId.get(`os-${id}`)!;
   const picked = (id: string) => q(id).choices[q(id).answerIndex];

@@ -8,7 +8,7 @@ import { coreFor, type Question } from "@/lib/qtypes/registry";
 import { loadSubject } from "@/lib/quiz/loadQuestions";
 import { LIST_TABS, type ListFilter, type ListTab, listRows, promptPreview, revealAnswer, sessionFromList, TAB_LABEL, tabCounts, visibleRows } from "@/lib/quiz/questionList";
 import { newSession, saveSession } from "@/lib/quiz/session";
-import { exampleBadge, isExample, isJokbo, isJokboRelated, isShortAnswer, jokboBadge, relatedBadge, SOURCE_LABEL, type SourceFilter } from "@/lib/quiz/jokbo";
+import { exampleBadge, isExample, isJokbo, isJokboRelated, isJokboRelated2, isShortAnswer, jokboBadge, relatedBadge, SOURCE_LABEL, type SourceFilter } from "@/lib/quiz/jokbo";
 import { hasStarChoice, STAR_LABEL, type StarBasis } from "@/lib/quiz/starBasis";
 import { useRecords } from "@/lib/storage/recordsStore";
 
@@ -65,6 +65,7 @@ export function QuestionList({ subject }: { subject: ListSubject }) {
   const hasJokbo = useMemo(() => (questions ?? []).some(isJokbo), [questions]);
   const hasExample = useMemo(() => (questions ?? []).some(isExample), [questions]);
   const hasRelated = useMemo(() => (questions ?? []).some(isJokboRelated), [questions]);
+  const hasRelated2 = useMemo(() => (questions ?? []).some(isJokboRelated2), [questions]);
   const hasShort = useMemo(() => (questions ?? []).some(isShortAnswer), [questions]);
 
   const start = (picked: { shuffle: boolean; count: number | null; label: string; list: typeof visible }) => {
@@ -161,11 +162,11 @@ export function QuestionList({ subject }: { subject: ListSubject }) {
             ))}
           </select>
         </label>
-        {(hasJokbo || hasExample || hasRelated || hasShort) && (
+        {(hasJokbo || hasExample || hasRelated || hasRelated2 || hasShort) && (
           <label className="flex min-w-0 flex-col gap-1 text-xs text-muted">
             분류
             <select className={sel} value={filter.source ?? "all"} onChange={(e) => setFilter({ ...filter, source: e.target.value as SourceFilter })}>
-              {(["all", ...(hasJokbo ? (["jokbo", "general"] as const) : []), ...(hasRelated ? (["related"] as const) : []), ...(hasShort ? (["short"] as const) : []), ...(hasExample ? (["example"] as const) : [])] as const).map((v) => (
+              {(["all", ...(hasJokbo ? (["jokbo", "general"] as const) : []), ...(hasRelated ? (["related"] as const) : []), ...(hasRelated2 ? (["related2"] as const) : []), ...(hasShort ? (["short"] as const) : []), ...(hasExample ? (["example"] as const) : [])] as const).map((v) => (
                 <option key={v} value={v}>
                   {SOURCE_LABEL[v]}
                 </option>

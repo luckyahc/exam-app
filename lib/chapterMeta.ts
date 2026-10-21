@@ -1,6 +1,6 @@
 import type { ChapterDef, SubjectDef } from "@/data/subjects/types";
 import { coreFor, type QType, QTYPES } from "@/lib/qtypes/registry";
-import { isExample, isJokbo, isJokboRelated, isShortAnswer } from "@/lib/quiz/jokbo";
+import { isExample, isJokbo, isJokboRelated, isJokboRelated2, isShortAnswer } from "@/lib/quiz/jokbo";
 import { matchesStar } from "@/lib/quiz/starBasis";
 
 /** 화면(서버 컴포넌트)에서 클라이언트 카드로 넘기는 챕터 요약. 문제 본문은 넘기지 않는다. */
@@ -20,12 +20,14 @@ export interface ChapterMeta {
   exampleIds: string[];
   /** 족보관련 문항(basedOn — 족보 유형 생성 문항) — 있으면 분류 필터에 "족보관련"을 보인다 */
   relatedIds: string[];
+  /** 족보관련2 문항(id "-jr2-") — 있으면 분류 필터에 "족보관련2"를 보인다 */
+  related2Ids: string[];
   /** 단답형 보강 문항(id "-short-NNN") — 있으면 분류 필터에 "단답형"을 보인다 */
   shortIds: string[];
   /** 그 챕터 데이터에 있는 유형(레지스트리 순서), 라벨 포함 */
   types: { type: QType; label: string; count: number }[];
   /** 문제별 필터 키(시작 전 문제 수 미리 보기용) */
-  rows: { type: QType; topic: string; exam: boolean; hw: boolean; hint: boolean; jokbo: boolean; example: boolean; related: boolean; short: boolean; difficulty: 1 | 2 | 3 }[];
+  rows: { type: QType; topic: string; exam: boolean; hw: boolean; hint: boolean; jokbo: boolean; example: boolean; related: boolean; related2: boolean; short: boolean; difficulty: 1 | 2 | 3 }[];
   /** 난이도별 문제 수(1~3, 0문항 난이도 포함) */
   difficulties: { difficulty: 1 | 2 | 3; count: number }[];
   /** 토픽: 처음 나온 순서 */
@@ -55,11 +57,12 @@ export async function chapterMeta(subject: SubjectDef, chapter: ChapterDef): Pro
     jokboIds: qs.filter(isJokbo).map((q) => q.id),
     exampleIds: qs.filter(isExample).map((q) => q.id),
     relatedIds: qs.filter(isJokboRelated).map((q) => q.id),
+    related2Ids: qs.filter(isJokboRelated2).map((q) => q.id),
     shortIds: qs.filter(isShortAnswer).map((q) => q.id),
     types: [...typeCount]
       .sort((a, b) => QTYPES.indexOf(a[0]) - QTYPES.indexOf(b[0]))
       .map(([type, count]) => ({ type, label: coreFor({ type } as never).label, count })),
-    rows: qs.map((q) => ({ type: q.type, topic: q.topic, exam: q.exam, hw: matchesStar(q, "handwritten"), hint: matchesStar(q, "hint"), jokbo: isJokbo(q), example: isExample(q), related: isJokboRelated(q), short: isShortAnswer(q), difficulty: q.difficulty })),
+    rows: qs.map((q) => ({ type: q.type, topic: q.topic, exam: q.exam, hw: matchesStar(q, "handwritten"), hint: matchesStar(q, "hint"), jokbo: isJokbo(q), example: isExample(q), related: isJokboRelated(q), related2: isJokboRelated2(q), short: isShortAnswer(q), difficulty: q.difficulty })),
     difficulties: ([1, 2, 3] as const).map((d) => ({ difficulty: d, count: qs.filter((q) => q.difficulty === d).length })),
     topics: [...topicMap.values()],
   };
