@@ -4,9 +4,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { ChapterMeta } from "@/lib/chapterMeta";
 import { SOURCE_LABEL, type SourceFilter } from "@/lib/quiz/jokbo";
+import type { ExamView } from "@/lib/quiz/session";
 import { STAR_LABEL, type StarBasis } from "@/lib/quiz/starBasis";
 import { questionStatus, type QStatus } from "@/lib/quiz/status";
 import { useRecords } from "@/lib/storage/recordsStore";
+import { ExamViewPicker } from "./ExamViewPicker";
 import { TimerPicker } from "./TimerPicker";
 
 const COUNTS = [10, 20, 30, 0] as const; // 0 = 전체
@@ -71,6 +73,7 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
   const [shuffle, setShuffle] = useState(true);
   const [mode, setMode] = useState<"instant" | "exam">("instant");
   const [timer, setTimer] = useState<number>(0);
+  const [view, setView] = useState<ExamView>("eclass");
   const [status, setStatus] = useState<QStatus | "all">("all");
   const records = useRecords().subjects[meta.subjectId];
   // 풀이 상태는 기기에 저장된 기록으로 정한다(lib/quiz/status.ts) — rows와 ids는 같은 순서
@@ -101,6 +104,7 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
     if (count) p.set("count", String(count));
     if (shuffle) p.set("shuffle", "1");
     if (mode === "exam" && timer) p.set("timer", String(timer * 60));
+    if (mode === "exam" && view === "eclass") p.set("view", "eclass");
     router.push(`/quiz?${p.toString()}`);
   };
 
@@ -249,6 +253,7 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
           {mode === "instant" ? "문제마다 제출하면 바로 정답과 해설을 보여 줍니다." : "끝까지 푼 뒤 한 번에 채점합니다."}
         </p>
         {mode === "exam" && <TimerPicker value={timer} onChange={setTimer} />}
+        {mode === "exam" && <ExamViewPicker value={view} onChange={setView} />}
       </div>
 
       <div className="flex flex-wrap items-center gap-3 border-t border-border pt-4">

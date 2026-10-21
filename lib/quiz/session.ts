@@ -23,6 +23,9 @@ export interface SessionItem {
   gen?: GeneratorRef;
 }
 
+/** 시험 모드 화면: "eclass" = 학교 e-Class 시험 화면을 본뜬 화면(components/quiz/ExamScreen.tsx), "app" = 기본 풀이 화면 */
+export type ExamView = "app" | "eclass";
+
 export interface QuizSession {
   v: 1;
   id: string;
@@ -40,6 +43,8 @@ export interface QuizSession {
   answers: Record<string, AnyAnswer>;
   results: Record<string, GradeResult>;
   index: number;
+  /** 시험 모드 화면(없으면 기본 화면). 푸는 중에 바꿀 수 있다 */
+  view?: ExamView;
   /** 시험 모드: 한 번에 채점을 마쳤는가 / 즉시 채점: 결과 화면으로 넘어갔는가 */
   finished: boolean;
 }
@@ -93,7 +98,7 @@ export function filterQuestions(questions: readonly Question[], f: QuizFilter): 
 
 export function newSession(
   questions: readonly Question[],
-  opts: { mode: QuizMode; timerSec?: number | null; label: string; backHref: string; now?: number },
+  opts: { mode: QuizMode; timerSec?: number | null; view?: ExamView; label: string; backHref: string; now?: number },
 ): QuizSession {
   const now = opts.now ?? Date.now();
   const timerSec = opts.timerSec && opts.timerSec > 0 ? opts.timerSec : null;
@@ -102,6 +107,7 @@ export function newSession(
     id: `${now.toString(36)}-${hashString(questions.map((q) => q.id).join(",") + now).toString(36)}`,
     createdAt: new Date(now).toISOString(),
     mode: opts.mode,
+    ...(opts.mode === "exam" && opts.view === "eclass" ? { view: "eclass" as const } : {}),
     timerSec,
     deadline: timerSec ? now + timerSec * 1000 : null,
     label: opts.label,

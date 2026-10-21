@@ -33,6 +33,12 @@ describe("filterQuestions", () => {
 });
 
 describe("newSession / summarizeSession", () => {
+  it("시험 화면(view): 시험 모드에서 eclass를 고른 경우만 남는다(없으면 기본 화면)", () => {
+    expect(newSession(qs, { mode: "exam", view: "eclass", label: "", backHref: "/" }).view).toBe("eclass");
+    expect(newSession(qs, { mode: "exam", view: "app", label: "", backHref: "/" }).view).toBeUndefined();
+    expect(newSession(qs, { mode: "instant", view: "eclass", label: "", backHref: "/" }).view).toBeUndefined();
+  });
+
   it("제한 시간이 있으면 두 모드 모두 마감 시각을 정하고, 없거나 0이면 타이머가 없다", () => {
     expect(newSession(qs, { mode: "instant", timerSec: 600, label: "", backHref: "/", now: 1000 })).toMatchObject({ timerSec: 600, deadline: 601000 });
     expect(newSession(qs, { mode: "exam", timerSec: 600, label: "", backHref: "/", now: 1000 })).toMatchObject({ timerSec: 600, deadline: 601000 });

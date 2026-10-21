@@ -6,11 +6,12 @@ import { QuestionRenderer } from "@/components/qtypes/QuestionRenderer";
 import { useQuizShortcuts } from "@/lib/hooks/useQuizShortcuts";
 import type { GradeResult } from "@/lib/qtypes/base";
 import { type AnyAnswer, coreFor, gradeQuestion, type Question } from "@/lib/qtypes/registry";
-import { gradeInSession, type QuizSession, saveSession } from "@/lib/quiz/session";
+import { type ExamView, gradeInSession, type QuizSession, saveSession } from "@/lib/quiz/session";
 import { makeSimilar } from "@/lib/quiz/similar";
 import { getSubject } from "@/lib/subjects";
 import { recordResult } from "@/lib/storage/recordsStore";
 import { BookmarkButton } from "./BookmarkButton";
+import { ExamScreen } from "./ExamScreen";
 
 const mmss = (sec: number) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
 
@@ -110,11 +111,13 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
     if (isExam) gradeAll();
     else finish(session);
   });
+  // 실제 시험 화면은 제한 시간이 없어도 경과 시간을 보이므로 1초마다 갱신한다
+  const eclass = isExam && session.view === "eclass";
   useEffect(() => {
-    if (!session.deadline) return;
+    if (!session.deadline && !eclass) return;
     const t = setInterval(onTick, 1000);
     return () => clearInterval(t);
-  }, [session.deadline]);
+  }, [session.deadline, eclass]);
   const remaining = session.deadline ? Math.max(0, Math.ceil((session.deadline - now) / 1000)) : null;
 
   useQuizShortcuts({
@@ -136,6 +139,22 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
   const btn = "rounded-lg border border-border px-4 py-2 text-sm disabled:opacity-40";
   const primary = "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-background disabled:opacity-40";
   const last = session.index === total - 1;
+  const setView = (view: ExamView) => update({ ...session, view });
+
+  if (eclass)
+    return (
+      <ExamScreen
+        session={session}
+        getQ={getQ}
+        remaining={remaining}
+        now={now}
+        answeredCount={answeredCount}
+        onAnswer={setAnswer}
+        goTo={(i) => i >= 0 && i < total && goTo(i)}
+        onSubmit={gradeAll}
+        onSwitchView={() => setView("app")}
+      />
+    );
 
   return (
     <div className="flex flex-col gap-5">
@@ -153,6 +172,11 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
                 </span>
               )}
             </span>
+            {isExam && (
+              <button type="button" onClick={() => setView("eclass")} className="text-muted underline hover:text-foreground">
+                실제 시험 화면으로
+              </button>
+            )}
             {/* 제출·다음 버튼(하단)과 떨어진 상단에 두고, 누르면 한 번 더 묻는다 */}
             {!isExam && gradedCount > 0 && !(result && last) && (
               <button type="button" onClick={() => setConfirmingStop(true)} className="text-muted underline hover:text-foreground">

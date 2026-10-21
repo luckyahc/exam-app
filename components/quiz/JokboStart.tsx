@@ -3,7 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SOURCE_LABEL } from "@/lib/quiz/jokbo";
-import type { QuizMode } from "@/lib/quiz/session";
+import type { ExamView, QuizMode } from "@/lib/quiz/session";
+import { ExamViewPicker } from "./ExamViewPicker";
 import { TimerPicker } from "./TimerPicker";
 
 const MODES: { value: QuizMode; label: string; help: string }[] = [
@@ -19,10 +20,12 @@ export function JokboStart({ subjectId, count, source = "jokbo" }: { subjectId: 
   const router = useRouter();
   const [mode, setMode] = useState<QuizMode>("instant");
   const [timer, setTimer] = useState(0);
+  const [view, setView] = useState<ExamView>("eclass");
 
   const start = () => {
     const p = new URLSearchParams({ subject: subjectId, source, shuffle: "1", mode });
     if (timer) p.set("timer", String(timer * 60));
+    if (mode === "exam" && view === "eclass") p.set("view", "eclass");
     router.push(`/quiz?${p.toString()}`);
   };
 
@@ -47,6 +50,7 @@ export function JokboStart({ subjectId, count, source = "jokbo" }: { subjectId: 
         </div>
         <p className="text-xs text-muted">{MODES.find((m) => m.value === mode)?.help}</p>
       </div>
+      {mode === "exam" && <ExamViewPicker value={view} onChange={setView} />}
       <div className="flex flex-col gap-1.5">
         <span className="text-xs font-medium text-muted">제한 시간</span>
         <TimerPicker value={timer} onChange={setTimer} />
