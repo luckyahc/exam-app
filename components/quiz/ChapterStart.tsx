@@ -60,11 +60,12 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
   const [star, setStar] = useState<StarBasis | null>(null);
   const starChoice = meta.starHwIds.length > 0 && meta.starHintIds.length > 0;
   const starRow = (r: ChapterMeta["rows"][number]) => !star || (star === "handwritten" ? r.hw : star === "hint" ? r.hint : r.exam);
-  // 분류: 족보·족보관련·강의 예제 문항이 있는 챕터만 고를 수 있다
+  // 분류: 족보·족보관련·강의 예제·단답형 문항이 있는 챕터만 고를 수 있다
   const [source, setSource] = useState<SourceFilter>("all");
   const jokboCount = meta.jokboIds.length;
   const exampleCount = meta.exampleIds.length;
   const relatedCount = meta.relatedIds.length;
+  const shortCount = meta.shortIds.length;
   const [diffs, setDiffs] = useState<number[]>([]);
   const [count, setCount] = useState<number>(20);
   const [shuffle, setShuffle] = useState(true);
@@ -83,7 +84,7 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
   // 조건에 맞는 문제 수(시작 전 미리 보기) — 메타의 토픽·유형 집계로는 교집합을 알 수 없어 서버에서 받은 행으로 센다
   const available = meta.rows.filter(
     (r, i) => (status === "all" || statuses[i] === status) && (!types.length || types.includes(r.type)) && starRow(r) &&
-      (source === "all" || (source === "example" ? r.example : source === "related" ? r.related : r.jokbo === (source === "jokbo"))) &&
+      (source === "all" || (source === "example" ? r.example : source === "related" ? r.related : source === "short" ? r.short : r.jokbo === (source === "jokbo"))) &&
       (!topics.length || topics.includes(r.topic)) &&
       (!diffs.length || diffs.includes(r.difficulty)),
   ).length;
@@ -146,7 +147,7 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
         </div>
       )}
 
-      {(jokboCount > 0 || exampleCount > 0 || relatedCount > 0) && (
+      {(jokboCount > 0 || exampleCount > 0 || relatedCount > 0 || shortCount > 0) && (
         <div className={section}>
           <h2 className={h}>분류</h2>
           <Radio<SourceFilter>
@@ -162,6 +163,7 @@ export function ChapterStart({ meta }: { meta: ChapterMeta }) {
                   ]
                 : []),
               ...(relatedCount > 0 ? [{ value: "related" as const, label: `${SOURCE_LABEL.related} ${relatedCount}` }] : []),
+              ...(shortCount > 0 ? [{ value: "short" as const, label: `${SOURCE_LABEL.short} ${shortCount}` }] : []),
               ...(exampleCount > 0 ? [{ value: "example" as const, label: `${SOURCE_LABEL.example} ${exampleCount}` }] : []),
             ]}
           />

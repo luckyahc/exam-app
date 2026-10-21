@@ -17,6 +17,7 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
   const jokbo = chapters.reduce((n, c) => n + c.jokboIds.length, 0);
   const examples = chapters.reduce((n, c) => n + c.exampleIds.length, 0);
   const related = chapters.reduce((n, c) => n + c.relatedIds.length, 0);
+  const shorts = chapters.reduce((n, c) => n + c.shortIds.length, 0);
   const link = "rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium hover:border-primary";
 
   return (
@@ -71,6 +72,8 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
 
       {/* 족보 문항(docs/jokbo-plan.md)이 있는 과목만 — 빈 퀴즈 방지. 제한 시간을 골라 시작한다 */}
       {jokbo > 0 && <JokboStart subjectId={subject.id} count={jokbo} />}
+      {/* 단답형 보강 문항(id "-short-NNN")이 있는 과목만 — 전 챕터 단답형을 한 번에 */}
+      {shorts > 0 && <JokboStart subjectId={subject.id} count={shorts} source="short" />}
 
       {/* 용어 퀴즈: 용어 단답형(topic "용어")만 모아 풀기 — 용어 사전이 있는 과목만 */}
       {subject.loadGlossary && allIds.length > 0 && (

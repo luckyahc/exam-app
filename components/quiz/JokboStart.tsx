@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { SOURCE_LABEL } from "@/lib/quiz/jokbo";
 import type { QuizMode } from "@/lib/quiz/session";
 import { TimerPicker } from "./TimerPicker";
 
@@ -11,16 +12,16 @@ const MODES: { value: QuizMode; label: string; help: string }[] = [
 ];
 
 /**
- * 과목 홈 "족보만 풀기": 모드(즉시 채점 / 시험 모드)와 제한 시간을 고르고 시작한다(섞기).
+ * 과목 홈 "족보만 풀기"·"단답형만 풀기"(source): 모드(즉시 채점 / 시험 모드)와 제한 시간을 고르고 시작한다(섞기).
  * 제한 시간이 끝나면 시험 모드는 자동 채점, 즉시 채점은 제출한 문제까지로 결과에 넘어간다(components/quiz/QuizRunner.tsx).
  */
-export function JokboStart({ subjectId, count }: { subjectId: string; count: number }) {
+export function JokboStart({ subjectId, count, source = "jokbo" }: { subjectId: string; count: number; source?: "jokbo" | "short" }) {
   const router = useRouter();
   const [mode, setMode] = useState<QuizMode>("instant");
   const [timer, setTimer] = useState(0);
 
   const start = () => {
-    const p = new URLSearchParams({ subject: subjectId, source: "jokbo", shuffle: "1", mode });
+    const p = new URLSearchParams({ subject: subjectId, source, shuffle: "1", mode });
     if (timer) p.set("timer", String(timer * 60));
     router.push(`/quiz?${p.toString()}`);
   };
@@ -30,9 +31,9 @@ export function JokboStart({ subjectId, count }: { subjectId: string; count: num
     (on ? "border-primary bg-primary/10 font-semibold" : "border-border text-muted hover:text-foreground");
 
   return (
-    <section aria-labelledby="jokbo-start" className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
-      <h2 id="jokbo-start" className="text-sm font-semibold">
-        족보만 풀기 <span className="font-normal text-muted">— {count}문제</span>
+    <section aria-labelledby={`${source}-start`} className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
+      <h2 id={`${source}-start`} className="text-sm font-semibold">
+        {SOURCE_LABEL[source]}만 풀기 <span className="font-normal text-muted">— {count}문제</span>
       </h2>
       <div className="flex flex-col gap-1.5">
         <span className="text-xs font-medium text-muted">채점 방식</span>

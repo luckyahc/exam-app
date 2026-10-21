@@ -6,7 +6,7 @@ import { chapterMeta } from "@/lib/chapterMeta";
 import { validateBase } from "@/lib/qtypes/base";
 import { QTYPE_FIXTURES } from "@/lib/qtypes/fixtures";
 import type { Question } from "@/types/question";
-import { exampleBadge, explanationSourceLabel, isExample, isJokbo, isJokboRelated, jokboBadge, matchesSource, parseSource, relatedBadge, SOURCE_LABEL } from "./jokbo";
+import { exampleBadge, explanationSourceLabel, isExample, isJokbo, isJokboRelated, isShortAnswer, jokboBadge, matchesSource, parseSource, relatedBadge, SOURCE_LABEL } from "./jokbo";
 import { listRows, tabCounts, visibleRows } from "./questionList";
 import { filterQuestions } from "./session";
 
@@ -111,6 +111,30 @@ describe("분류 필터", () => {
     expect([isJokboRelated(rel), isJokboRelated(general), isJokboRelated(pool[0])]).toEqual([true, false, false]);
     expect([relatedBadge(rel), relatedBadge(general)]).toEqual(["족보관련", null]);
     expect(filterQuestions(qs, { source: "related", seed: "s" })).toEqual([rel]);
+  });
+
+  it("단답형(id '-short-NNN') 분류: 일반에도 들어가고, 퀴즈·문제 목록 필터에 적용된다", () => {
+    const sh = { ...general, id: "os-ch08-short-001" };
+    const qs = [...pool, sh];
+    expect(SOURCE_LABEL.short).toBe("단답형");
+    expect(qs.filter((q) => matchesSource(q, "short"))).toEqual([sh]);
+    expect(matchesSource(sh, "general")).toBe(true);
+    expect(parseSource("short")).toBe("short");
+    expect([isShortAnswer(sh), isShortAnswer(general), isShortAnswer({ ...general, id: "os-ch08-short-01" })]).toEqual([true, false, false]);
+    expect(filterQuestions(qs, { source: "short", seed: "s" })).toEqual([sh]);
+    expect(visibleRows(listRows(qs, undefined), "all", { source: "short" })).toHaveLength(1);
+  });
+
+  it("실제 데이터 단답형: OS 71(Ch02 8·Ch03 14·Ch07 15·Ch08 17·Ch09 17) = 챕터 메타, 심리학 72, 그 밖 과목 0", async () => {
+    const os2 = await Promise.all(os.chapters.map((c) => chapterMeta(os, c)));
+    expect(os2.map((m) => m.shortIds.length)).toEqual([8, 14, 15, 17, 17]);
+    for (const m of os2) expect(m.rows.filter((r) => r.short)).toHaveLength(m.shortIds.length);
+    for (const s of SUBJECTS) {
+      const all = (await Promise.all(s.chapters.map((c) => c.load()))).flat();
+      const short = filterQuestions(all, { source: "short", seed: "s" });
+      expect(short.length, s.id).toBe(s.id === "os" ? 71 : s.id === "psychology" ? 72 : 0);
+      expect(short.every((q) => q.type === "blank" || s.id !== "os"), s.id).toBe(true);
+    }
   });
 
   it("챕터 메타: 족보관련 id 목록 — OS Ch02 9 · 알고리즘 analysis 10(같은 분류를 두 과목이 함께 쓴다)", async () => {
