@@ -23,6 +23,8 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
   const router = useRouter();
   const [session, setSession] = useState(initial);
   const [confirming, setConfirming] = useState(false);
+  /** 즉시 채점 "여기까지 풀고 결과 보기" 확인 — 제출 버튼과 떨어진 상단에 두고 한 번 더 묻는다(잘못 누름 방지) */
+  const [confirmingStop, setConfirmingStop] = useState(false);
   const [now, setNow] = useState(() => Date.now());
   /** "비슷한 문제 새로 생성"으로 이번 세션에 끼워 넣은 문제 */
   const [extra, setExtra] = useState<ReadonlyMap<string, Question>>(() => new Map());
@@ -141,16 +143,39 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
       <div className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
           <span className="font-semibold">{session.label}</span>
-          <span className="text-muted">
-            {isExam ? `시험 모드 · 답한 문제 ${answeredCount}/${total}` : `즉시 채점 · 채점 ${gradedCount}/${total}`}
-            {remaining !== null && (
-              <span className={remaining <= 60 ? " font-semibold text-foreground" : ""}>
-                {" "}
-                · <span aria-hidden>⏱</span> 남은 시간 {mmss(remaining)}
-              </span>
+          <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span className="text-muted">
+              {isExam ? `시험 모드 · 답한 문제 ${answeredCount}/${total}` : `즉시 채점 · 채점 ${gradedCount}/${total}`}
+              {remaining !== null && (
+                <span className={remaining <= 60 ? " font-semibold text-foreground" : ""}>
+                  {" "}
+                  · <span aria-hidden>⏱</span> 남은 시간 {mmss(remaining)}
+                </span>
+              )}
+            </span>
+            {/* 제출·다음 버튼(하단)과 떨어진 상단에 두고, 누르면 한 번 더 묻는다 */}
+            {!isExam && gradedCount > 0 && !(result && last) && (
+              <button type="button" onClick={() => setConfirmingStop(true)} className="text-muted underline hover:text-foreground">
+                여기까지 풀고 결과 보기
+              </button>
             )}
           </span>
         </div>
+        {confirmingStop && (
+          <div role="alertdialog" aria-labelledby="stop-title" className="flex flex-col gap-3 rounded-lg border border-primary bg-surface p-4">
+            <p id="stop-title" className="text-sm font-semibold">
+              여기까지 풀고 결과를 볼까요? 채점한 문제 {gradedCount}/{total}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <button type="button" onClick={() => finish(session)} className={primary}>
+                결과 보기
+              </button>
+              <button type="button" onClick={() => setConfirmingStop(false)} className={btn}>
+                계속 풀기
+              </button>
+            </div>
+          </div>
+        )}
         <div className="flex items-center gap-3">
           <span className="shrink-0 text-sm font-semibold">
             {session.index + 1} / {total}
@@ -254,12 +279,6 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
           )}
         </div>
       </div>
-
-      {!isExam && gradedCount > 0 && !(result && last) && (
-        <button type="button" onClick={() => finish(session)} className="self-end text-sm text-muted underline hover:text-foreground">
-          여기까지 풀고 결과 보기
-        </button>
-      )}
 
       {confirming && (
         <div role="alertdialog" aria-labelledby="confirm-title" className="flex flex-col gap-3 rounded-lg border border-primary bg-surface p-4">
