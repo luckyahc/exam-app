@@ -157,3 +157,23 @@ export function greedyCoins(coins: readonly number[], n: number): number {
 }
 
 export { INF };
+
+// ── 족보관련1·2 모의시험(2026-10-22, docs/jokbo/algorithm/mock-exams.md) ──
+
+/** 행렬 경로 DP 표 c[i][j](Lec5 p.21, 0행·0열 = 0 포함) */
+export function matrixPathTable(m: readonly (readonly number[])[]): number[][] {
+  const c = Array.from({ length: m.length + 1 }, () => Array<number>(m[0].length + 1).fill(0));
+  for (let i = 1; i <= m.length; i++) for (let j = 1; j <= m[0].length; j++) c[i][j] = m[i - 1][j - 1] + Math.max(c[i - 1][j], c[i][j - 1]);
+  return c;
+}
+
+/** 조약돌 놓기 DP 표 peb[i][p](Lec5 p.32-34): 열 i(1부터), 패턴 p = 1({1행}) 2({2행}) 3({3행}) 4({1행,3행}) */
+export function pebbleTable(m: readonly (readonly number[])[]): number[][] {
+  const patterns = [[0], [1], [2], [0, 2]];
+  const compat = (a: number[], b: number[]) => !a.some((r) => b.includes(r));
+  const val = (c: number, p: number[]) => p.reduce((s, r) => s + m[r][c], 0);
+  const t: number[][] = [[]];
+  for (let c = 0; c < m[0].length; c++)
+    t.push(patterns.map((p) => val(c, p) + (c === 0 ? 0 : Math.max(...patterns.map((q, k) => (compat(p, q) ? t[c][k] : -Infinity))))));
+  return t.map((row) => [0, ...row]);
+}

@@ -137,11 +137,11 @@ describe("분류 필터", () => {
     }
   });
 
-  it("챕터 메타: 족보관련 id 목록 — OS Ch02 9 · 알고리즘 analysis 10(같은 분류를 두 과목이 함께 쓴다)", async () => {
+  it("챕터 메타: 족보관련 id 목록 — OS Ch02 9 · 알고리즘 analysis 20(족보 유형 10 + 족보관련1·2 모의시험 5·5, 같은 분류를 두 과목이 함께 쓴다)", async () => {
     const o = await chapterMeta(os, os.chapters[0]);
     expect(o.relatedIds).toHaveLength(9);
     expect(o.rows.filter((r) => r.related)).toHaveLength(9);
-    expect((await chapterMeta(algorithm, algorithm.chapters[0])).relatedIds).toHaveLength(10);
+    expect((await chapterMeta(algorithm, algorithm.chapters[0])).relatedIds).toHaveLength(20);
   });
 
   it("퀴즈 문제 고르기(filterQuestions)에 적용된다", () => {
@@ -198,7 +198,8 @@ describe("기존 과목 회귀 · 새 과목 등록", () => {
     const all = (await Promise.all(algorithm.chapters.map((c) => c.load()))).flat();
     expect(all.filter(isJokbo)).toHaveLength(53);
     expect(all.filter((q) => !isJokbo(q) && !q.basedOn).map((q) => q.chapter)).toEqual([...Array(4).fill("dc"), ...Array(9).fill("dp")]);
-    expect(all.filter((q) => q.basedOn).map((q) => q.chapter)).toEqual([...Array(10).fill("analysis"), ...Array(15).fill("recurrence"), ...Array(15).fill("sorting")]);
+    // 족보 유형 생성 문항(analysis 10·recurrence 15·sorting 15) + 족보관련1·2 모의시험(세트마다 5·6·7·3·9)
+    expect(all.filter((q) => q.basedOn).map((q) => q.chapter)).toEqual([...Array(20).fill("analysis"), ...Array(27).fill("recurrence"), ...Array(29).fill("sorting"), ...Array(6).fill("dc"), ...Array(18).fill("dp")]);
   });
 
   it("OS Ch09: 기존 4개 챕터 뒤에 추가(Sprint 19에 문제를 채우고 준비 중 해제)", async () => {

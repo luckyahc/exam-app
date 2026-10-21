@@ -15,7 +15,7 @@ import {
   radixSteps,
 } from "@/lib/sim/algorithm/sorting";
 import { answerKey } from "@/lib/qtypes/answerKey";
-import { isJokbo } from "@/lib/quiz/jokbo";
+import { isJokbo, mockSetOf } from "@/lib/quiz/jokbo";
 import type { Question } from "@/types/question";
 import algorithm from "./index";
 
@@ -47,7 +47,8 @@ const holds = (fs: LnFn[], rel: Rel, g: LnFn) =>
 
 describe("알고리즘 족보 유형 생성 문항", async () => {
   const all = (await Promise.all(algorithm.chapters.map((c) => c.load()))).flat();
-  const pats = all.filter((x) => x.basedOn) as Q[];
+  // 족보관련1·2 모의시험(id "-mock1-"·"-mock2-", mockExams.test.ts)은 따로 검사한다
+  const pats = all.filter((x) => x.basedOn && !mockSetOf(x)) as Q[];
   const byId = new Map(all.map((x) => [x.id, x as Q]));
   const q = (id: string) => byId.get(`algorithm-${id}`)!;
   const picked = (id: string) => q(id).choices[q(id).answerIndex];

@@ -90,3 +90,10 @@ export function masterCase(a: number, b: number, f: LnFn): "h" | "f" | "same" | 
   if (e > tol) return "f";
   return Math.abs(k) < tol ? "same" : null;
 }
+
+/** 중복 재귀 피보나치(Lec5 p.11: fib(1) = fib(2) = 1)로 fib(n)을 계산할 때 fib(k)가 호출되는 횟수 */
+export function fibCallsOf(n: number, k: number): number {
+  if (n === k) return 1;
+  if (n <= 2) return 0;
+  return fibCallsOf(n - 1, k) + fibCallsOf(n - 2, k);
+}

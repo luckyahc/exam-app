@@ -3,7 +3,7 @@ import { type AnyAnswer, coreFor, gradeQuestion, type QType, type Question } fro
 import { hashString, mulberry32 } from "@/lib/random";
 import { SESSION_KEY } from "@/lib/storage/keys";
 import { safeGetJSON, safeSetJSON } from "@/lib/storage/safeStorage";
-import { matchesSource, type SourceFilter } from "./jokbo";
+import { isMockSource, matchesSource, mockOrder, type SourceFilter } from "./jokbo";
 import { matchesStar, type StarBasis } from "./starBasis";
 import type { QStatus } from "./status";
 
@@ -85,7 +85,9 @@ export function filterQuestions(questions: readonly Question[], f: QuizFilter): 
       (!f.topics?.length || f.topics.includes(q.topic)) &&
       (!f.difficulties?.length || f.difficulties.includes(q.difficulty)),
   );
-  if (f.shuffle) {
+  // 모의시험 세트(족보관련1·2)는 섞지 않고 세트 순서(id 끝 번호) 그대로
+  if (isMockSource(f.source)) out = [...out].sort((x, y) => mockOrder(x) - mockOrder(y));
+  else if (f.shuffle) {
     const rand = mulberry32(hashString(f.seed));
     out = [...out];
     for (let i = out.length - 1; i > 0; i--) {

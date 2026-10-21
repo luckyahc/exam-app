@@ -188,3 +188,84 @@ export function mergeSortComparisons(a: readonly number[]): number {
   sort([...a]);
   return cmp;
 }
+
+// ── 족보관련1·2 모의시험(2026-10-22, docs/jokbo/algorithm/mock-exams.md) ──
+
+/** 선택 정렬(Lec3 p.15: 최댓값을 찾아 맨 오른쪽과 교환) 비교 횟수 — 입력과 관계없이 n(n−1)/2 */
+export function selectionComparisons(a: readonly number[]): number {
+  const arr = [...a];
+  let cmp = 0;
+  for (let last = arr.length - 1; last >= 1; last--) {
+    let k = 0;
+    for (let i = 1; i <= last; i++) {
+      cmp++;
+      if (arr[i] > arr[k]) k = i;
+    }
+    [arr[k], arr[last]] = [arr[last], arr[k]];
+  }
+  return cmp;
+}
+
+/** 버블 정렬(Lec3 p.18: 조기 종료 없음) 비교 횟수 — 정렬된 입력에서도 n(n−1)/2 */
+export function bubbleComparisons(a: readonly number[]): number {
+  const arr = [...a];
+  let cmp = 0;
+  for (let last = arr.length - 1; last >= 1; last--)
+    for (let i = 0; i < last; i++) {
+      cmp++;
+      if (arr[i] > arr[i + 1]) [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+    }
+  return cmp;
+}
+
+/** 교재 heapSort(Lec3 p.63-64, 최소 힙): buildHeap 결과와 for 반복(A[1]↔A[i], heapify(A, 1, i−1))마다의 배열 */
+export function heapSortSteps(a: readonly number[]): { built: number[]; rounds: number[][] } {
+  const arr = [...a];
+  const heapify = (k: number, n: number) => {
+    const l = 2 * k;
+    const r = l + 1;
+    let s: number;
+    if (r <= n) s = arr[l - 1] < arr[r - 1] ? l : r;
+    else if (l <= n) s = l;
+    else return;
+    if (arr[s - 1] < arr[k - 1]) {
+      [arr[k - 1], arr[s - 1]] = [arr[s - 1], arr[k - 1]];
+      heapify(s, n);
+    }
+  };
+  for (let i = Math.floor(arr.length / 2); i >= 1; i--) heapify(i, arr.length);
+  const built = [...arr];
+  const rounds: number[][] = [];
+  for (let i = arr.length; i >= 2; i--) {
+    [arr[0], arr[i - 1]] = [arr[i - 1], arr[0]];
+    heapify(1, i - 1);
+    rounds.push([...arr]);
+  }
+  return { built, rounds };
+}
+
+/** 평균 선형 선택 select(A, p, r, i) 전체 실행(Lec4 p.20): 호출마다 [p, r, i, k]와 찾은 값 */
+export function selectTrace(a: readonly number[], i: number): { calls: [number, number, number, number | null][]; value: number } {
+  const arr = [...a];
+  const calls: [number, number, number, number | null][] = [];
+  const go = (p: number, r: number, i: number): number => {
+    if (p === r) {
+      calls.push([p, r, i, null]);
+      return arr[p - 1];
+    }
+    const q = partition(arr, p, r);
+    const k = q - p + 1;
+    calls.push([p, r, i, k]);
+    if (i < k) return go(p, q - 1, i);
+    if (i === k) return arr[q - 1];
+    return go(q + 1, r, i - k);
+  };
+  return { calls, value: go(1, arr.length, i) };
+}
+
+/** 계수 정렬 마지막 반복(for j ← n downto 1)에서 j = stop까지 마친 직후의 C(값 1..k) */
+export function countingCAfter(a: readonly number[], k: number, stop: number): number[] {
+  const c = [...countingSort(a, k).c2];
+  for (let j = a.length; j >= stop; j--) c[a[j - 1] - 1]--;
+  return c;
+}
