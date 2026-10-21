@@ -10,10 +10,12 @@
 
 ## 요약
 
+> 2026-10-21: 단답형 핵심 용어(`os-chNN-short-NNN`, docs/os/short-answer-candidates.md)로 옮긴 용어의 용어 단답형(`os-chNN-term-NNN`) 줄은 지웠다(문항이 없어짐).
+
 | 항목 | 수 |
 |---|---|
-| 전체 | 98 |
-| 일치 | 94 |
+| 전체 | 79 |
+| 일치 | 75 |
 | 수정 | 4 |
 | 필기 근거(문항별 확인) | 19 |
 
@@ -100,22 +102,3 @@
 | 77 | `os-ch09-compare-002` | order | Ch09 p.27 |  | 인쇄 | simulate 5종 | 일치 | SRT → SPN → HRRN → FCFS → RR(q=1) |
 | 78 | `os-ch09-compare-003` | mcq | Ch09 p.27 |  | 인쇄 | simulate rr·srt | 일치 | 평균 반환시간은 크지만 짧은 작업의 응답성은 우수하다 |
 | 79 | `os-ch09-compare-004` | calc | Ch09 p.27 |  | 인쇄 | simulate srt | 일치 | 1.59 |
-| 80 | `os-ch09-term-001` | blank | Ch09 p.3 |  | 인쇄 |  | 일치 | 장기 스케줄링 |
-| 81 | `os-ch09-term-002` | blank | Ch09 p.3 |  | 인쇄 |  | 일치 | 중기 스케줄링 |
-| 82 | `os-ch09-term-003` | blank | Ch09 p.3 |  | 인쇄 |  | 일치 | 단기 스케줄링 |
-| 83 | `os-ch09-term-004` | blank | Ch09 p.5 |  | 인쇄 |  | 일치 | 마감시간 |
-| 84 | `os-ch09-term-005` | blank | Ch09 p.6 |  | 인쇄 |  | 일치 | 기아 |
-| 85 | `os-ch09-term-006` | blank | Ch09 p.9 |  | 인쇄 |  | 일치 | 선점형 |
-| 86 | `os-ch09-term-007` | blank | Ch09 p.10 |  | 인쇄 |  | 일치 | 서비스 시간 |
-| 87 | `os-ch09-term-008` | blank | Ch09 p.12 |  | 인쇄 |  | 일치 | CPU 중심 프로세스 |
-| 88 | `os-ch09-term-009` | blank | Ch09 p.12 |  | 인쇄 |  | 일치 | I/O 중심 프로세스 |
-| 89 | `os-ch09-term-010` | blank | Ch09 p.11 |  | 인쇄 |  | 일치 | 선착순 |
-| 90 | `os-ch09-term-011` | blank | Ch09 p.13 |  | 인쇄 |  | 일치 | 라운드 로빈 |
-| 91 | `os-ch09-term-012` | blank | Ch09 p.15 |  | 인쇄 |  | 일치 | 가상 라운드 로빈 |
-| 92 | `os-ch09-term-013` | blank | Ch09 p.18 |  | 인쇄 |  | 일치 | 지수 평균 |
-| 93 | `os-ch09-term-014` | blank | Ch09 p.19 |  | 인쇄 |  | 일치 | 최단 작업 우선 |
-| 94 | `os-ch09-term-015` | blank | Ch09 p.21 |  | 인쇄 |  | 일치 | 최단 잔여 시간 우선 |
-| 95 | `os-ch09-term-016` | blank | Ch09 p.22 |  | 인쇄 |  | 일치 | 최고 응답 비율 우선 |
-| 96 | `os-ch09-term-017` | blank | Ch09 p.23 |  | 인쇄 |  | 일치 | 피드백 |
-| 97 | `os-ch09-term-018` | blank | Ch09 p.26 |  | 인쇄 |  | 일치 | 대기시간 |
-| 98 | `os-ch09-term-019` | blank | Ch09 p.26 |  | 인쇄 |  | 일치 | 정규화 반환시간 |

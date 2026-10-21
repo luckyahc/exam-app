@@ -7,7 +7,7 @@ export type SourceFilter = "all" | "jokbo" | "general" | "example" | "related" |
 /**
  * "example" = 강의자료 예제 문항(sourceRef, docs/verification/data-comm-examples.md) — 족보·일반과 겹칠 수 있는 별도 묶음.
  * "related" = 족보관련: 족보 유형을 본뜬 생성 문항(basedOn, 2026-10-19) — 족보 원문(jokbo)과 다른 묶음이며 "일반"에도 들어간다.
- * "short" = 단답형 보강 문항(id가 "-short-NNN"으로 끝남 — OS data/subjects/os/shortAnswer.ts, 심리학 short()) — "일반"에도 들어간다
+ * "short" = 단답형 문항(id가 "-short-NNN"으로 끝남 — OS data/subjects/os/shortAnswer.ts, 심리학 short()) — "일반"에도 들어간다
  */
 export const SOURCE_LABEL: Record<SourceFilter, string> = { all: "전체", jokbo: "족보", general: "일반", example: "강의 예제", related: "족보관련", short: "단답형" };
 

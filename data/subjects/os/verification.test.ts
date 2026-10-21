@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import os from "./index";
+import { SHORT_ITEMS } from "./shortAnswer";
 
 /**
  * OS 문항별 대조 기록(docs/verification/os-*.md)이 실제 문제 데이터와 맞는지 — 전 문항이 한 줄씩, 같은 순서,
@@ -22,7 +23,7 @@ const summary = (file: string, label: string) => {
 };
 /**
  * 챕터 대조 기록은 일반 문항만 — 족보 문항(origin: "jokbo")은 docs/verification/os-jokbo.md에, 족보관련 생성 문항(basedOn)은
- * docs/jokbo/os/pattern-analysis.md에 따로 적는다(Sprint 20, 2026-10-19). 단답형 보강 문항(-short-, 2026-10-21)은 docs/os/short-answer-candidates.md에 적는다
+ * docs/jokbo/os/pattern-analysis.md에 따로 적는다(Sprint 20, 2026-10-19). 단답형 핵심 용어(-short-, 2026-10-21)는 docs/os/short-answer-candidates.md에 적는다
  */
 const loadOf = async (...chapters: string[]) => (await Promise.all(os.chapters.filter((c) => chapters.includes(c.id)).map((c) => c.load()))).flat();
 const idsOf = async (...chapters: string[]) => (await loadOf(...chapters)).filter((q) => q.origin !== "jokbo" && !q.basedOn && !/-short-\d{3}$/.test(q.id)).map((q) => q.id);
@@ -51,7 +52,7 @@ describe("OS 대조 기록 ↔ 문제 데이터", () => {
     expect(summary(f, "필기 근거(문항별 확인)")).toBe(rows.filter((r) => r[5].includes("필기")).length);
   });
 
-  it("docs/os/short-answer-candidates.md: 단답형 보강 문항 전부·챕터 순서, ⭐ 열 = 데이터, 장별 × 유형 수 = 표", async () => {
+  it("docs/os/short-answer-candidates.md: 단답형 핵심 용어 전부·챕터 순서, 오답·⭐ 열 = 데이터, 장별 수 = 표", async () => {
     const doc = readFileSync(path.join(ROOT, "docs/os/short-answer-candidates.md"), "utf8").split(/\r?\n/);
     const cells = (l: string) => l.replace(/^\||\|$/g, "").split("|").map((c) => c.trim());
     const rows = doc.filter((l) => /^\| ch.*`os-ch\d\d-short-\d{3}`/.test(l)).map(cells);
@@ -59,11 +60,13 @@ describe("OS 대조 기록 ↔ 문제 데이터", () => {
     expect(rows.map((r) => r[6].replaceAll("`", ""))).toEqual(short.map((q) => q.id));
     const star = (q: (typeof short)[number]) => (!q.exam ? "" : q.examBasis === "handwritten" ? "⭐ 필기" : "⭐ 힌트");
     expect(rows.map((r) => r[4])).toEqual(short.map(star));
+    const items = Object.values(SHORT_ITEMS).flat();
+    expect(rows.map((r) => r[3])).toEqual(items.map((i) => i.wrong.join(", ")));
     for (const ch of ["ch02", "ch03", "ch07", "ch08", "ch09"]) {
-      const line = cells(doc.find((l) => l.startsWith(`| ${ch} | `) && cells(l).slice(1).every((c) => /^\d+$/.test(c)))!);
-      const mine = rows.filter((r) => r[0] === ch);
-      expect(line.slice(1).map(Number), ch).toEqual([...["용어", "계산", "공식·목록"].map((k) => mine.filter((r) => r[2] === k).length), mine.length]);
+      const line = cells(doc.find((l) => l.startsWith(`| ${ch} | `) && /^\d+$/.test(cells(l)[1]))!);
+      expect(Number(line[1]), ch).toBe(rows.filter((r) => r[0] === ch).length);
     }
+    expect(doc).toContain(`| 합계 | ${rows.length} |`);
   });
 
   it("os-jokbo.md: 족보 문항 전부·챕터 순서, 요약 숫자 = 표", async () => {

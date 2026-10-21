@@ -5,7 +5,7 @@ import { applyHints } from "./hints";
 type Mod = Promise<{ default: readonly Question[] }>;
 /**
  * 챕터 문항 + 시험 힌트 보강 문항(chNN-hint.ts) + 족보 문항(chNN-jokbo.ts, Sprint 20) + 족보관련 생성 문항(jokboPatterns.ts, 2026-10-19)
- * + 단답형 보강 문항(shortAnswer.ts, 2026-10-21)
+ * + 단답형 핵심 용어(shortAnswer.ts, 2026-10-21)
  * + 용어 단답형(terms.ts)을 합치고 힌트 연결(⭐)을 적용한다.
  * 반환 타입을 적어 레지스트리 타입 추론이 순환하지 않게
  */

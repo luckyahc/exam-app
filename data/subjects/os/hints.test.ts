@@ -62,7 +62,8 @@ describe("OS 용어 사전", () => {
   it("정의가 있는 모든 용어에 단답형이 연결되고, 그 accept에 영어·약자(있으면)가 들어 있다. 정의가 없는 용어는 문제가 없다", async () => {
     const qs = await all();
     const byId = new Map(qs.map((q) => [q.id, q]));
-    const terms = qs.filter(isTermQuestion);
+    // 단답형 핵심 용어(os-chNN-short-NNN)로 고른 용어는 terms.ts가 용어 단답형을 만들지 않는다
+    const terms = qs.filter((q) => isTermQuestion(q) || /^os-ch\d\d-short-\d{3}$/.test(q.id));
     const problems: string[] = [];
     for (const e of OS_GLOSSARY) {
       const linked = e.linkedQuestionIds ?? [];
