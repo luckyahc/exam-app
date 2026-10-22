@@ -83,6 +83,7 @@ export function QuizEntry() {
         mode,
         timerSec: Number(params.get("timer")) || null,
         view: params.get("view") === "eclass" ? "eclass" : "app",
+        source,
         label: `${subject.shortName}${chapter ? ` · ${chapter.id.toUpperCase()} ${chapter.shortTitle}` : " 전체"}${star}`,
         backHref,
       });

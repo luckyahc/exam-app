@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useSetScores } from "@/lib/storage/setScoresStore";
 import { type HintSet, isHintSource, isMockSource, SOURCE_LABEL } from "@/lib/quiz/jokbo";
 import type { ExamView, QuizMode } from "@/lib/quiz/session";
 import { ExamViewPicker } from "./ExamViewPicker";
@@ -21,7 +22,10 @@ const MODES: { value: QuizMode; label: string; help: string }[] = [
 export function JokboStart({ subjectId, count, source = "jokbo" }: { subjectId: string; count: number; source?: "jokbo" | "related2" | "mock1" | "mock2" | `hint${HintSet}` | "short" }) {
   const router = useRouter();
   const mock = isMockSource(source);
-  const set = mock || isHintSource(source);
+  const hint = isHintSource(source);
+  const set = mock || hint;
+  // 힌트관련 세트: 끝까지 다 푼 회차마다 맞힌 수/전체(lib/quiz/setScores.ts)
+  const scores = useSetScores(subjectId, source);
   const [mode, setMode] = useState<QuizMode>(set ? "exam" : "instant");
   const [timer, setTimer] = useState(0);
   const [view, setView] = useState<ExamView>("eclass");
@@ -42,6 +46,22 @@ export function JokboStart({ subjectId, count, source = "jokbo" }: { subjectId: 
       <h2 id={`${source}-start`} className="text-sm font-semibold">
         {set ? `${SOURCE_LABEL[source]} 풀기` : `${SOURCE_LABEL[source]}만 풀기`}{" "}
         <span className="font-normal text-muted">— {count}문제{mock ? " · 모의시험(고정 순서)" : set ? " · 모의시험(문제 순서 무작위)" : ""}</span>
+        {hint && (
+          <span className="ml-2 font-normal">
+            {scores.length === 0 ? (
+              <span className="text-muted">· 아직 기록 없음</span>
+            ) : (
+              <>
+                <span className="text-muted">· 기록 </span>
+                {scores.map((x, i) => (
+                  <span key={x.session} title={new Date(x.at).toLocaleString("ko-KR")} className="mr-1.5 inline-block rounded border border-border px-1.5 text-xs">
+                    {i + 1}회 <b>{x.correct}</b>/{x.total}
+                  </span>
+                ))}
+              </>
+            )}
+          </span>
+        )}
       </h2>
       <div className="flex flex-col gap-1.5">
         <span className="text-xs font-medium text-muted">채점 방식</span>

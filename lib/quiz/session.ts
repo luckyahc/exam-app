@@ -43,6 +43,8 @@ export interface QuizSession {
   answers: Record<string, AnyAnswer>;
   results: Record<string, GradeResult>;
   index: number;
+  /** 문제를 고른 분류(퀴즈 주소의 source). 힌트관련 세트면 끝까지 푼 회차 점수를 남긴다(lib/quiz/setScores.ts) */
+  source?: SourceFilter;
   /** 시험 모드 화면(없으면 기본 화면). 푸는 중에 바꿀 수 있다 */
   view?: ExamView;
   /** 시험 모드: 한 번에 채점을 마쳤는가 / 즉시 채점: 결과 화면으로 넘어갔는가 */
@@ -100,7 +102,7 @@ export function filterQuestions(questions: readonly Question[], f: QuizFilter): 
 
 export function newSession(
   questions: readonly Question[],
-  opts: { mode: QuizMode; timerSec?: number | null; view?: ExamView; label: string; backHref: string; now?: number },
+  opts: { mode: QuizMode; timerSec?: number | null; view?: ExamView; source?: SourceFilter | null; label: string; backHref: string; now?: number },
 ): QuizSession {
   const now = opts.now ?? Date.now();
   const timerSec = opts.timerSec && opts.timerSec > 0 ? opts.timerSec : null;
@@ -110,6 +112,7 @@ export function newSession(
     createdAt: new Date(now).toISOString(),
     mode: opts.mode,
     ...(opts.mode === "exam" && opts.view === "eclass" ? { view: "eclass" as const } : {}),
+    ...(opts.source ? { source: opts.source } : {}),
     timerSec,
     deadline: timerSec ? now + timerSec * 1000 : null,
     label: opts.label,

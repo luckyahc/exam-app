@@ -6,10 +6,12 @@ import { QuestionRenderer } from "@/components/qtypes/QuestionRenderer";
 import { useQuizShortcuts } from "@/lib/hooks/useQuizShortcuts";
 import type { GradeResult } from "@/lib/qtypes/base";
 import { type AnyAnswer, coreFor, gradeQuestion, type Question } from "@/lib/qtypes/registry";
-import { type ExamView, gradeInSession, type QuizSession, saveSession } from "@/lib/quiz/session";
+import { setScoreOf } from "@/lib/quiz/setScores";
+import { type ExamView, gradeInSession, type QuizSession, saveSession, summarizeSession } from "@/lib/quiz/session";
 import { makeSimilar } from "@/lib/quiz/similar";
 import { getSubject } from "@/lib/subjects";
 import { recordResult } from "@/lib/storage/recordsStore";
+import { recordSetScore } from "@/lib/storage/setScoresStore";
 import { BookmarkButton } from "./BookmarkButton";
 import { ExamScreen } from "./ExamScreen";
 
@@ -60,6 +62,10 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
 
   const finish = (s: QuizSession) => {
     update({ ...s, finished: true });
+    // 힌트관련 세트를 끝까지 다 풀었으면(미응답 없음) 회차 점수를 남긴다 — 과목 홈 시작 상자에 "N회 맞힌 수/전체"로 보인다
+    const qs = new Map(s.items.flatMap((it) => (getQ(it.id) ? [[it.id, getQ(it.id)!] as const] : [])));
+    const rec = setScoreOf(s, summarizeSession(s, qs));
+    if (rec) recordSetScore(s.items[0].subject, rec.source, rec.score);
     router.push(`/result?session=${s.id}`);
   };
 
