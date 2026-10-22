@@ -15,6 +15,7 @@ import { T as T2 } from "./ch02";
 //   = 배점(선택형 1점, 주관식 2~3점)으로 30점. 장별 Ch01 8 · Ch02 17(슬라이드 44 : 101), 난이도는 중간(2)·어려움(3)만.
 // id = data-comm-{chapter}-hint{세트}-{세트 안 번호}. 실제 시험처럼 문제 순서·보기 순서를 섞어 낸다(문제 화면에는 번호가 없다).
 // 계산 정답은 lib/sim/data-comm 함수로 구하고, 계산형 객관식은 hintExams.test.ts가 같은 함수로 다시 계산한다.
+// 계산 비중은 세트당 약 6문항(주관식 계산 3 + 계산형 객관식 3) — 나머지 객관식은 같은 소주제의 개념 문항(2026-10-23 줄임).
 // 해설은 "s.번호 (p.쪽):"으로 시작한다(PDF 쪽 = ⌈슬라이드 ÷ 2⌉). 슬라이드에 없는 내용은 "(보충)".
 
 type Ch = "ch01" | "ch02";
@@ -170,12 +171,18 @@ export const HINT1: Question[] = [
     topic: T2.phase,
     type: "mcq",
     difficulty: 2,
-    slideRef: "Ch02 s.11",
-    prompt: "사인파가 시각 0을 기준으로 **3/8 주기** 어긋나 있다. 이 신호의 위상은?",
-    choices: ["135°, 3π/4 rad", "135°, 3π/8 rad", "67.5°, 3π/8 rad", "45°, π/4 rad", "270°, 3π/2 rad"],
+    slideRef: "Ch02 s.11-12",
+    prompt: "위상(phase)에 대한 설명으로 옳은 것은?",
+    choices: [
+      "위상은 시각 0을 기준으로 한 파형의 위치를 나타내며, 360°는 2π rad이다",
+      "위상은 1초 동안 반복되는 주기의 수를 나타낸다",
+      "진폭과 주파수가 같은 두 사인파는 위상도 반드시 같다",
+      "위상은 신호가 한 주기 동안 이동하는 거리다",
+      "360°는 π rad에 해당한다",
+    ],
     answerIndex: 0,
     explanation:
-      "s.11 (p.6): 360° = 2π rad. 3/8 × 360° = 135°, 3/8 × 2π = 3π/4 rad. 함정: 라디안을 3/8 × π로 계산하면 3π/8이 된다(한 주기는 π가 아니라 2π).",
+      "s.11 (p.6): Phase describes the position of the waveform relative to time 0, 360° = 2π rad. s.12 (p.6): 진폭·주파수가 같아도 위상이 다른 사인파가 있다. 1초당 주기 수는 주파수, 한 주기 동안 이동하는 거리는 파장(s.13)이다.",
   },
   {
     ...H("ch02"),
@@ -184,11 +191,17 @@ export const HINT1: Question[] = [
     type: "mcq",
     difficulty: 2,
     slideRef: "Ch02 s.13",
-    prompt: "전파 속도가 **2 × 10⁸ m/s**인 케이블에서 주파수 **4 MHz** 신호의 파장은?",
-    choices: ["50 m", "75 m", "0.02 m", "500 m", "5 m"],
+    prompt: "파장(wavelength)에 대한 설명으로 옳은 것은?",
+    choices: [
+      "파장은 단순 신호가 한 주기 동안 이동할 수 있는 거리다",
+      "파장은 주파수에 비례해, 주파수가 2배면 파장도 2배다",
+      "파장은 전파 속도와 무관하고 주파수만으로 정해진다",
+      "파장은 디지털 신호의 1비트가 전송 매체에서 차지하는 거리다",
+      "파장은 신호가 한 번 진동하는 데 걸리는 시간이다",
+    ],
     answerIndex: 0,
     explanation:
-      "s.13 (p.7): 파장 λ = 전파 속도 / 주파수 = (2 × 10⁸) / (4 × 10⁶) = 50 m. 함정: 빛의 속도 3 × 10⁸을 넣으면 75 m, 분모·분자를 바꾸면 0.02 m가 된다 — 문제에 주어진 전파 속도를 쓴다.",
+      "s.13 (p.7): The distance a simple signal can travel in one period — 파장 = 전파 속도 × 주기 = 전파 속도 / 주파수. 주파수가 2배면 파장은 절반이고, 같은 주파수라도 매체의 전파 속도에 따라 달라진다. s.21 (p.11): 1비트가 차지하는 거리는 비트 길이다(파장은 아날로그 신호의 한 주기). 한 번 진동하는 데 걸리는 시간은 주기다.",
   },
   {
     ...H("ch02"),
@@ -251,12 +264,17 @@ export const HINT1: Question[] = [
     type: "mcq",
     difficulty: 3,
     slideRef: "Ch02 s.25-27",
-    prompt:
-      "신호가 케이블 A를 지나며 전력이 **절반**으로 줄고, 증폭기에서 전력이 **10배**가 된 뒤, 케이블 B를 지나며 다시 전력이 **절반**으로 줄었다. 처음과 비교한 전체 전력 변화는?",
-    choices: ["약 +4 dB", "약 −4 dB", "약 +16 dB", "약 −16 dB", "약 +2.5 dB"],
+    prompt: "감쇠·증폭과 데시벨(dB)에 대한 설명으로 옳은 것은?",
+    choices: [
+      "dB는 두 전력의 상대적인 세기를 나타내며, 여러 구간의 dB 값을 더해 전체 변화를 구할 수 있다",
+      "감쇠는 신호가 에너지를 얻는 것이라 dB 값이 양수로 나온다",
+      "전력이 절반으로 줄면 −0.5 dB다",
+      "증폭기는 신호 전력을 줄여 잡음을 없애는 장치다",
+      "dB는 전력의 절대 크기를 와트 단위로 나타낸 값이다",
+    ],
     answerIndex: 0,
     explanation:
-      "s.26 (p.13) Example 2.5: 전력이 절반이면 10 log₁₀ 0.5 ≈ −3 dB. s.27 (p.14): 10배 증폭은 +10 dB. dB는 더할 수 있으므로 −3 + 10 − 3 = +4 dB(정확히는 10 log₁₀ 2.5 ≈ 3.98 dB). 함정: 전력비 2.5를 그대로 답하거나 부호를 바꾸면 틀린다.",
+      "s.25 (p.13): Attenuation means a loss of energy. s.26 (p.13): 10 log₁₀(P2 / P1)로 구하며, 전력이 절반이면 −3 dB(손실은 음수). s.27 (p.14): 10배 증폭은 +10 dB. (보충) dB는 두 점 사이 전력의 상대 비율이라 구간마다 더하고 뺄 수 있다.",
   },
   {
     ...H("ch02"),
@@ -342,12 +360,12 @@ export const HINT1: Question[] = [
     topic: T2.pcm,
     type: "mcq",
     difficulty: 2,
-    slideRef: "Ch02 s.59-61",
-    prompt: "최고 주파수가 **5 kHz**인 아날로그 신호를 PCM으로 디지털화한다. Nyquist 최소 표본화율로 표본화하고 표본마다 **8비트**를 쓸 때 비트율은?",
-    choices: ["80 kbps", "40 kbps", "160 kbps", "10 kbps", "64 kbps"],
+    slideRef: "Ch02 s.59-60",
+    prompt: "PCM 부호기(encoder)의 3과정을 순서대로 바르게 나열한 것은?",
+    choices: ["표본화 → 양자화 → 부호화", "양자화 → 표본화 → 부호화", "표본화 → 부호화 → 양자화", "부호화 → 양자화 → 표본화", "변조 → 표본화 → 양자화"],
     answerIndex: 0,
     explanation:
-      "s.61 (p.31): 표본화율은 최고 주파수의 2배 이상 → 2 × 5 kHz = 10,000 표본/s. 비트율 = 10,000 × 8 = 80 kbps. 함정: 2배를 빼먹으면 40 kbps, 사람 목소리 예제(64 kbps)를 외워 답하면 틀린다.",
+      "s.59 (p.30): A PCM encoder has 3 processes — Sampling(T초마다 표본화) → Quantizing(표본을 펄스로) → Encoding(펄스를 비트열로). s.60 (p.30): 표본화한 결과가 PAM(Pulse Amplitude Modulation) 신호다.",
   },
   {
     ...H("ch02"),
@@ -356,11 +374,17 @@ export const HINT1: Question[] = [
     type: "mcq",
     difficulty: 2,
     slideRef: "Ch02 s.68",
-    prompt: "디지털 데이터를 아날로그 신호로 보낸다. 비트율이 **12 kbps**이고 신호 요소 하나가 **4비트**를 실어 나를 때(r = 4) 보오율(baud rate)은?",
-    choices: ["3,000 baud", "48,000 baud", "12,000 baud", "4,000 baud", "6,000 baud"],
+    prompt: "디지털→아날로그 변환의 비트율(bit rate)과 보오율(baud rate)에 대한 설명으로 옳은 것은?",
+    choices: [
+      "보오율은 초당 신호 요소 수이고, 디지털 데이터의 아날로그 전송에서 보오율은 비트율보다 크지 않다",
+      "보오율은 초당 비트 수이고 단위는 bps다",
+      "신호 요소 하나가 실어 나르는 비트 수 r가 클수록 같은 비트율에서 보오율이 커진다",
+      "디지털 데이터의 아날로그 전송에서는 항상 보오율이 비트율보다 크다",
+      "오늘날 가장 효율적이고 널리 쓰는 방식은 ASK다",
+    ],
     answerIndex: 0,
     explanation:
-      "s.68 (p.34): S [baud] = N [bps] × 1/r = 12,000 / 4 = 3,000 baud. 디지털 데이터의 아날로그 전송에서 신호율 ≤ 비트율이다. 함정: r을 곱하면 48,000 baud가 되어 비트율보다 커진다.",
+      "s.68 (p.34): Data rate(bit rate) = 초당 비트 수(bps), Signal rate(baud rate) = 초당 신호 요소 수(baud). In the analog transmission of digital data, signal rate ≤ bit rate. S = N × 1/r — r가 클수록 보오율은 작아진다. QAM is the most efficient and commonly used today.",
   },
   {
     ...H("ch02"),
@@ -594,12 +618,18 @@ export const HINT2: Question[] = [
     topic: T2.sine,
     type: "mcq",
     difficulty: 3,
-    slideRef: "Ch02 s.8",
-    prompt: "실효값(effective value)이 **100 V**인 사인파 전압의 최대 진폭(peak amplitude)은 약 몇 V인가? (√2 ≈ 1.41)",
-    choices: ["약 141 V", "약 71 V", "약 200 V", "약 100 V", "약 173 V"],
+    slideRef: "Ch02 s.8-10",
+    prompt: "가정용 전원(220 V, 최대 진폭 약 310 V)과 사인파에 대한 설명으로 옳은 것은?",
+    choices: [
+      "220 V는 실효값(effective value)이고, 최대 진폭은 실효값의 √2배다",
+      "310 V가 실효값이고, 220 V가 최대 진폭이다",
+      "사인파는 주기·진폭·위상 중 진폭 하나만으로 완전히 표현된다",
+      "주파수와 주기는 서로 비례한다",
+      "전압이 일정한 배터리는 주파수가 무한대인 주기 신호로 볼 수 있다",
+    ],
     answerIndex: 0,
     explanation:
-      "s.8 (p.4): The peak value is equal to 2½ × average (or effective) value — 220 V 전원의 최대 진폭이 약 310 V인 것과 같다. 100 × √2 ≈ 141 V. 함정: √2로 나누면 약 71 V, 2를 곱하면 200 V, √3을 곱하면 약 173 V다.",
+      "s.8 (p.4): 사인파는 주기·진폭·위상 3요소로 표현된다. The power in your house can be represented by a sine wave with a peak amplitude of 310 V ... the voltage of the power is 220 V. The peak value is equal to 2½ × average (or effective) value. f = 1/T라 주파수와 주기는 역수 관계다. s.10 (p.5) Example 2.1: 배터리 전압은 주파수 0, 주기 무한대인 주기 신호로 볼 수 있다.",
   },
   {
     ...H("ch02"),
@@ -642,11 +672,17 @@ export const HINT2: Question[] = [
     type: "mcq",
     difficulty: 2,
     slideRef: "Ch02 s.18-19",
-    prompt: "신호 레벨이 **16개**인 디지털 신호에서, 신호 요소 하나가 실어 나르는 비트 수(r)는?",
-    choices: ["4비트", "16비트", "8비트", "2비트", "5비트"],
+    prompt: "디지털 신호의 레벨과 r(신호 요소당 비트 수)에 대한 설명으로 옳은 것은?",
+    choices: [
+      "디지털 신호는 레벨이 둘보다 많을 수 있고, 그러면 레벨 하나로 1비트보다 많이 보낼 수 있다",
+      "디지털 신호는 항상 두 레벨(0과 1)만 가질 수 있다",
+      "r는 초당 보내는 신호 요소의 수다",
+      "레벨 수를 늘리면 신호 요소 하나가 실어 나르는 비트 수가 줄어든다",
+      "레벨 수를 늘릴수록 시스템의 신뢰성은 항상 높아진다",
+    ],
     answerIndex: 0,
     explanation:
-      "s.18 (p.9): 디지털 신호는 레벨이 둘보다 많을 수 있고, 그러면 레벨마다 1비트보다 많이 보낼 수 있다. s.19 (p.10): r = 신호 요소가 실어 나르는 비트 수 — 레벨 L개면 log₂ L = log₂ 16 = 4비트. 함정: 레벨 수(16)나 그 절반(8)을 답하면 틀린다.",
+      "s.18 (p.9): A digital signal can have more than two levels. In this case, we can send more than 1 bit for each level. s.19 (p.10): r = 신호 요소 하나가 실어 나르는 데이터 요소(비트) 수 — 레벨이 많을수록 r가 커진다(L = 2^r). 초당 신호 요소 수는 보오율이다(s.68). s.34 (p.17): Increasing the levels of a signal may reduce the reliability of the system.",
   },
   {
     ...H("ch02"),
@@ -701,13 +737,18 @@ export const HINT2: Question[] = [
     topic: T2.delay,
     type: "mcq",
     difficulty: 3,
-    slideRef: "Ch02 s.46-47",
-    prompt:
-      "거리 **4,800 km**, 전파 속도 **2.4 × 10⁸ m/s**인 링크로 **1 Mbyte**(10⁶바이트) 메시지를 대역폭 **100 Mbps**로 보낸다. 큐잉·처리 시간을 무시할 때 지연(latency)은?",
-    choices: ["100 ms", "20 ms", "80 ms", "30 ms", "0.1 ms"],
+    slideRef: "Ch02 s.46",
+    prompt: "지연(latency)에 대한 설명으로 옳은 것은?",
+    choices: [
+      "전송 시간은 메시지 크기를 대역폭으로 나눈 값이라, 메시지가 길수록 커진다",
+      "전파 시간은 메시지 크기를 대역폭으로 나눈 값이다",
+      "지연은 첫 비트가 목적지에 도착할 때까지만의 시간이다",
+      "큐잉 시간은 신호가 매체를 따라 이동하는 데 걸리는 시간이다",
+      "지연은 전파 시간과 전송 시간 두 요소로만 이루어진다",
+    ],
     answerIndex: 0,
     explanation:
-      "s.46 (p.23): Latency = 전파 시간 + 전송 시간 + 큐잉 시간 + 처리 시간. 전파 시간 = 거리 / 전파 속도 = 4.8 × 10⁶ / 2.4 × 10⁸ = 20 ms, 전송 시간 = 메시지 크기 / 대역폭 = 8 × 10⁶비트 / 10⁸ bps = 80 ms → 100 ms. 함정: 한쪽만 답하면 20 ms·80 ms, 바이트를 비트로 바꾸지 않으면 전송 시간이 10 ms라 30 ms가 된다.",
+      "s.46 (p.23): Latency = 첫 비트를 보낸 때부터 메시지 전체가 목적지에 도착할 때까지 = 전파 시간 + 전송 시간 + 큐잉 시간 + 처리 시간. Propagation time = Distance / Propagation speed, Transmission time = Message size / Bandwidth, 큐잉 시간은 중간·종단 장치가 처리 전에 메시지를 붙잡아 두는 시간이다. 함정: 전파 시간과 전송 시간의 공식을 바꾸기 쉽다.",
   },
   {
     ...H("ch02"),
@@ -1041,13 +1082,18 @@ export const HINT3: Question[] = [
     topic: T2.perf,
     type: "mcq",
     difficulty: 3,
-    slideRef: "Ch02 s.42-43",
-    prompt:
-      "대역폭이 **4 kHz**인 가입자선으로 모뎀을 써서 최대 **56 kbps**를 보낸다. 같은 기술을 쓰며 선의 품질을 높여 대역폭을 **12 kHz**로 늘리면 보낼 수 있는 데이터율은?",
-    choices: ["168 kbps", "112 kbps", "56 kbps", "224 kbps", "60 kbps"],
+    slideRef: "Ch02 s.41-44",
+    prompt: "네트워킹에서 쓰는 '대역폭'의 두 가지 의미에 대한 설명으로 옳은 것은?",
+    choices: [
+      "헤르츠 단위 대역폭이 늘면 bps 단위 대역폭도 늘며, 그 관계는 기저대역 전송인지 변조를 쓰는지에 따라 다르다",
+      "헤르츠 단위 대역폭은 채널이 1초에 통과시키는 비트 수다",
+      "bps 단위 대역폭은 신호에 들어 있는 주파수의 범위다",
+      "헤르츠 단위 대역폭과 bps 단위 대역폭은 서로 관계가 없다",
+      "대역폭은 실제로 데이터를 보내는 속도이고, 처리량은 이론적인 최대 속도다",
+    ],
     answerIndex: 0,
     explanation:
-      "s.42 (p.21): 헤르츠 단위 대역폭이 늘면 bps 단위 대역폭도 는다. s.43 (p.22) Examples 2.10·2.11: 4 kHz → 56 kbps, 8 kHz → 112 kbps(2배). 12 kHz는 3배 → 168 kbps. 함정: 예제의 8 kHz 값(112 kbps)을 외워 답하거나, 56 + 4 = 60처럼 더하면 틀린다.",
+      "s.42 (p.21): Bandwidth in hertz = 주파수 범위, Bandwidth in bits per second = 채널이 통과시키는 비트 수. Increase in bandwidth in hertz means increase in bandwidth in bits per second — 관계는 baseband인지 modulation인지에 따라 다르다. s.43 (p.22): 4 kHz 가입자선 → 56 kbps, 8 kHz → 112 kbps. s.41 (p.21)·s.44 (p.22): 대역폭은 이론 최대, 처리량은 실제 유효 전송률이다.",
   },
   {
     ...H("ch02"),
@@ -1055,12 +1101,12 @@ export const HINT3: Question[] = [
     topic: T2.impairment,
     type: "mcq",
     difficulty: 2,
-    slideRef: "Ch02 s.25-27",
-    prompt: "신호가 매체를 지나는 동안 전력이 **100 mW에서 1 mW**로 줄었다. 감쇠는 몇 dB인가?",
-    choices: ["−20 dB", "−10 dB", "−99 dB", "+20 dB", "−3 dB"],
+    slideRef: "Ch02 s.24",
+    prompt: "전송 장애(transmission impairment)의 세 가지 원인을 바르게 고른 것은?",
+    choices: ["감쇠, 왜곡, 잡음", "감쇠, 지터, 잡음", "왜곡, 누화, 지연", "감쇠, 증폭, 왜곡", "잡음, 지연, 처리량"],
     answerIndex: 0,
     explanation:
-      "s.26 (p.13): 감쇠 = 10 log₁₀(P2 / P1) = 10 log₁₀(1 / 100) = −20 dB — 손실이라 음수다. s.27 (p.14): 100배 증폭이 +20 dB인 것과 부호만 다르다. 함정: 전력 차(99)를 쓰거나 부호를 바꾸면 틀리고, −3 dB는 절반으로 줄 때다.",
+      "s.24 (p.12): Three causes of impairment are attenuation, distortion, and noise. 누화는 잡음의 한 종류(s.29), 지연·지터·처리량은 성능 지표(s.41), 증폭은 감쇠를 되돌리는 것이다.",
   },
   {
     ...H("ch02"),
@@ -1157,12 +1203,18 @@ export const HINT3: Question[] = [
     topic: T2.d2d,
     type: "mcq",
     difficulty: 3,
-    slideRef: "Ch02 s.56-57",
-    prompt: "**4B/5B** 블록 코딩을 쓴다. 원래 데이터율이 **100 Mbps**일 때, 블록 코딩 후 보내야 하는 데이터율은?",
-    choices: ["125 Mbps", "80 Mbps", "100 Mbps", "120 Mbps", "500 Mbps"],
+    slideRef: "Ch02 s.54-57",
+    prompt: "블록 코딩(mB/nB)에 대한 설명으로 옳은 것은?",
+    choices: [
+      "m비트 블록을 n비트 블록(n > m)으로 바꾸며, 나누기·대체·결합의 3단계를 거친다",
+      "n비트 블록을 더 짧은 m비트 블록으로 압축해 전송량을 줄인다",
+      "블록 코딩은 디지털→디지털 변환에서 항상 필요하다",
+      "블록 코딩은 아날로그 신호를 디지털 데이터로 바꾸는 과정이다",
+      "블록 코딩이 더하는 중복(redundancy)은 동기화와 관계가 없다",
+    ],
     answerIndex: 0,
     explanation:
-      "s.56 (p.28): mB/nB 블록 코딩은 m비트 그룹마다 n비트 그룹(n > m)으로 바꾼다 — 4비트마다 5비트를 보내므로 100 × 5/4 = 125 Mbps. (보충) 늘어난 비트가 동기화·오류 검출을 위한 중복(redundancy)이다. 함정: 4/5를 곱하면 80 Mbps가 되어 오히려 줄어든다.",
+      "s.56 (p.28): We need redundancy to ensure synchronization and to provide some kind of inherent error detecting. Block coding changes a block of m bits into a block of n bits, where n > m — 3 steps: division, substitution, and combination. s.54 (p.27): 항상 필요한 것은 라인 코딩이고, 블록 코딩·스크램블링은 필요할 때만 쓴다. 아날로그→디지털 변환은 PCM·DM(s.58)이다.",
   },
   {
     ...H("ch02"),
@@ -1170,13 +1222,18 @@ export const HINT3: Question[] = [
     topic: T2.pcm,
     type: "mcq",
     difficulty: 3,
-    slideRef: "Ch02 s.59-61",
-    prompt:
-      "주파수가 **1 kHz~11 kHz**인 아날로그 신호를 PCM으로 디지털화한다. Nyquist 정리에 따른 최소 표본화율로 표본화하고 표본마다 **8비트**를 쓸 때 비트율은?",
-    choices: ["176 kbps", "160 kbps", "88 kbps", "80 kbps", "192 kbps"],
+    slideRef: "Ch02 s.61",
+    prompt: "Nyquist 표본화 정리에 대한 설명으로 옳은 것은?",
+    choices: [
+      "표본화율은 신호에 들어 있는 가장 높은 주파수의 2배 이상이어야 한다",
+      "표본화율은 신호 대역폭의 절반 이상이면 충분하다",
+      "표본화율은 신호에 들어 있는 가장 낮은 주파수의 2배 이상이어야 한다",
+      "표본화율은 표본당 비트 수의 2배 이상이어야 한다",
+      "표본화율은 Nyquist 비트율 공식 2B log₂ L로 구한다",
+    ],
     answerIndex: 0,
     explanation:
-      "s.61 (p.31): the sampling rate must be at least 2 times the highest frequency contained in the signal → 2 × 11 kHz = 22,000 표본/s, 비트율 = 22,000 × 8 = 176 kbps. 함정: 대역폭(10 kHz)의 2배로 계산하면 160 kbps, 2배를 빼먹으면 88 kbps다.",
+      "s.61 (p.31): According to the Nyquist theorem, the sampling rate must be at least 2 times the highest frequency contained in the signal — 사람 목소리(0~4000 Hz)는 8000 표본/s, 표본당 8비트면 64 kbps. 함정: 2B log₂ L은 잡음 없는 채널의 최대 비트율(s.34)이다.",
   },
   {
     ...H("ch02"),
@@ -1217,11 +1274,17 @@ export const HINT3: Question[] = [
     type: "mcq",
     difficulty: 3,
     slideRef: "Ch02 s.77-79",
-    prompt: "대역폭이 **4 kHz**인 음성 신호를 AM으로 변조할 때와 **β = 4**인 FM으로 변조할 때 필요한 대역폭을 바르게 짝지은 것은?",
-    choices: ["AM 8 kHz, FM 40 kHz", "AM 4 kHz, FM 20 kHz", "AM 8 kHz, FM 32 kHz", "AM 16 kHz, FM 40 kHz", "AM 8 kHz, FM 16 kHz"],
+    prompt: "아날로그→아날로그 변조에 대한 설명으로 옳은 것은?",
+    choices: [
+      "매체가 대역통과(bandpass) 성질이거나 대역통과 채널만 쓸 수 있을 때 변조가 필요하다",
+      "AM 신호의 대역폭은 변조 신호의 대역폭과 같다",
+      "FM의 β는 변조 방식과 무관하게 항상 1이다",
+      "아날로그→아날로그 변조는 디지털 데이터를 아날로그 신호로 나타내는 것이다",
+      "AM·FM 중 대역폭이 더 좁은 것은 FM이다",
+    ],
     answerIndex: 0,
     explanation:
-      "s.78 (p.39): B_AM = 2B = 8 kHz. s.79 (p.40): B_FM = 2(1 + β)B = 2 × 5 × 4 = 40 kHz. 함정: FM에서 1을 빼면 2βB = 32 kHz, 2를 빼면 20 kHz다.",
+      "s.77 (p.39): Modulation is needed (i) if the medium is bandpass in nature or (ii) if only a bandpass channel is available to us. 종류는 AM·FM·PM. s.78 (p.39): B_AM = 2B. s.79 (p.40): β는 변조 방식에 따라 다르고 흔히 4 — B_FM = 2(1 + β)B로 AM보다 넓다. 디지털 데이터를 아날로그 신호로 바꾸는 것은 디지털→아날로그 변환(s.67)이다.",
   },
   {
     ...H("ch02"),
@@ -1428,11 +1491,17 @@ export const HINT4: Question[] = [
     type: "mcq",
     difficulty: 3,
     slideRef: "Ch02 s.8",
-    prompt: "최대 진폭(peak amplitude)이 **311 V**인 사인파 전압의 실효값(effective value)은 약 몇 V인가?",
-    choices: ["약 220 V", "약 440 V", "약 155 V", "약 311 V", "약 180 V"],
+    prompt: "사인파 s(t) = A sin(2πft)에 대한 설명으로 옳지 **않은** 것은?",
+    choices: [
+      "주파수 f와 주기 T는 비례 관계라, 주기가 길수록 주파수도 높다",
+      "A는 최대 진폭(peak amplitude)이다",
+      "사인파는 주기·진폭·위상 3요소로 표현할 수 있다",
+      "220 V 전원의 최대 진폭이 약 310 V인 것은 최대값이 실효값의 √2배이기 때문이다",
+      "각 주파수 ω는 단위 시간당 진행한 각 변위다",
+    ],
     answerIndex: 0,
     explanation:
-      "s.8 (p.4): The peak value is equal to 2½ × average (or effective) value → 실효값 = 311 / √2 ≈ 220 V(슬라이드의 310 V ↔ 220 V). 함정: 최대 진폭을 구할 때처럼 √2를 곱하면 약 440 V, 2로 나누면 약 155 V, √3으로 나누면 약 180 V다.",
+      "s.8 (p.4): s(t) = A sin(2πft) = A sin(2π/T t), A = peak amplitude, f = 1/T, T = 1/f — 주파수와 주기는 역수 관계라 주기가 길수록 주파수는 낮다. A sine wave can be represented by 3 parameters: period, amplitude, and phase. The peak value is equal to 2½ × average (or effective) value(310 V ↔ 220 V). ω(angular frequency)는 단위 시간당 진행한 각 변위다.",
   },
   {
     ...H("ch02"),
@@ -1455,12 +1524,18 @@ export const HINT4: Question[] = [
     topic: T2.wavelength,
     type: "mcq",
     difficulty: 3,
-    slideRef: "Ch02 s.8-13",
-    prompt: "주기가 **2 μs**인 신호가 전파 속도 **2 × 10⁸ m/s**인 매체를 지난다. 이 신호의 파장은?",
-    choices: ["400 m", "600 m", "100 m", "0.01 m", "4 m"],
+    slideRef: "Ch02 s.13",
+    prompt: "파장·주기·주파수의 관계를 바르게 설명한 것은?",
+    choices: [
+      "같은 신호가 전파 속도가 더 느린 매체로 들어가면 주파수는 그대로이고 파장은 짧아진다",
+      "같은 신호가 전파 속도가 더 느린 매체로 들어가면 파장은 그대로이고 주파수가 낮아진다",
+      "파장 = 전파 속도 / 주기이다",
+      "주파수가 같으면 어떤 매체에서든 파장이 같다",
+      "주기가 길수록 파장은 짧아진다",
+    ],
     answerIndex: 0,
     explanation:
-      "s.13 (p.7): 파장 = 전파 속도 × 주기(λ = cT) = 2 × 10⁸ × 2 × 10⁻⁶ = 400 m. 함정: 빛의 속도 3 × 10⁸을 쓰면 600 m, 주기로 나누면 엉뚱한 값이 나온다. 주파수(500 kHz)로 바꿔 λ = c / f로 풀어도 400 m다.",
+      "s.13 (p.7): Wavelength = propagation speed × period = propagation speed / frequency. (보충) 주파수는 보내는 쪽이 정하므로 매체가 바뀌어도 그대로이고, 전파 속도가 느려지면 λ = c / f에 따라 파장이 짧아진다. 주기가 길수록(주파수가 낮을수록) 파장은 길다. 함정: 곱(× 주기)과 나눗셈(÷ 주파수)을 섞으면 '전파 속도 / 주기'가 된다.",
   },
   {
     ...H("ch02"),
@@ -1573,12 +1648,11 @@ export const HINT4: Question[] = [
     type: "mcq",
     difficulty: 3,
     slideRef: "Ch02 s.35",
-    prompt:
-      "대역폭 **20 kHz**인 잡음 없는 채널로 **265 kbps**를 보내려면 약 98.7레벨이 필요하다. 2의 거듭제곱이 아니므로 레벨을 **64개**로 줄여 쓰기로 했다. 이때의 비트율은?",
-    choices: ["240 kbps", "280 kbps", "265 kbps", "256 kbps", "120 kbps"],
+    prompt: "잡음 없는 채널에서 Nyquist 공식으로 구한 신호 레벨 수가 **2의 거듭제곱이 아닐 때** 해야 할 일로 옳은 것은?",
+    choices: ["레벨 수를 늘리거나 비트율을 줄인다", "구한 레벨 수를 소수점까지 그대로 쓴다", "대역폭을 줄여 레벨 수를 맞춘다", "레벨 수는 줄이고 비트율은 그대로 유지한다", "Shannon 공식으로 바꿔 계산해 2의 거듭제곱인 레벨 수를 얻는다"],
     answerIndex: 0,
     explanation:
-      "s.35 (p.18) Example 2.6: If we have 128 levels, the bit rate is 280 kbps. If we have 64 levels, the bit rate is 240 kbps — 2 × 20,000 × log₂ 64 = 240 kbps. 함정: 레벨을 늘리는 쪽(128레벨 → 280 kbps)과 헷갈리거나, 2를 빼면 120 kbps다.",
+      "s.35 (p.18) Example 2.6: 265 kbps, 20 kHz → 약 98.7레벨. Since this result is not a power of 2, we need to either increase the number of levels or reduce the bit rate — 128레벨이면 280 kbps, 64레벨이면 240 kbps. 함정: 레벨을 줄이면 비트율도 함께 줄어든다. s.39 (p.20): Shannon 공식은 상한을 줄 뿐이고, 레벨 수는 Nyquist 공식으로 정한다.",
   },
   {
     ...H("ch02"),
@@ -1667,11 +1741,11 @@ export const HINT4: Question[] = [
     type: "mcq",
     difficulty: 3,
     slideRef: "Ch02 s.68",
-    prompt: "디지털 데이터를 아날로그 신호로 보낸다. 보오율이 **1,000 baud**이고 신호 요소 하나가 **3비트**를 실어 나를 때 비트율은?",
-    choices: ["3,000 bps", "333 bps", "1,000 bps", "8,000 bps", "9,000 bps"],
+    prompt: "디지털 데이터를 아날로그 신호로 보낼 때, **보오율을 그대로 두고** 비트율을 높이는 방법으로 옳은 것은?",
+    choices: ["신호 요소 하나가 실어 나르는 비트 수(r)를 늘린다", "신호 요소 하나가 1비트만 싣도록 r를 1로 줄인다", "초당 보내는 신호 요소의 수를 늘린다", "신호 요소의 수와 비트 수를 같게 맞춘다", "비트율은 보오율과 항상 같으므로 높일 방법이 없다"],
     answerIndex: 0,
     explanation:
-      "s.68 (p.34): S = N × 1/r → N = S × r = 1,000 × 3 = 3,000 bps. 함정: 비트율에서 보오율을 구할 때처럼 나누면 333 bps, 레벨 수 2³ = 8을 곱하면 8,000 bps다.",
+      "s.68 (p.34): S [baud] = N [bps] × 1/r → N = S × r. 보오율 S를 그대로 두고 비트율 N을 높이려면 r를 늘린다 — 그래서 신호 요소 하나에 여러 비트를 싣는 QAM이 가장 효율적이다. 함정: 초당 신호 요소 수를 늘리는 것은 보오율을 높이는 것이고, 디지털 데이터의 아날로그 전송에서는 signal rate ≤ bit rate라 둘이 늘 같지는 않다.",
   },
 ];
 
@@ -1859,12 +1933,18 @@ export const HINT5: Question[] = [
     topic: T2.wavelength,
     type: "mcq",
     difficulty: 2,
-    slideRef: "Ch02 s.13",
-    prompt: "공기 중에서 주파수가 **30 GHz**인 마이크로파의 파장은? (c = 3 × 10⁸ m/s)",
-    choices: ["10 mm", "1 mm", "0.1 mm", "100 mm", "9 mm"],
+    slideRef: "Ch02 s.13-21",
+    prompt: "파장과 비트 길이(bit length)를 바르게 비교한 것은?",
+    choices: [
+      "파장은 아날로그 신호의 한 주기가, 비트 길이는 디지털 신호의 1비트가 전송 매체에서 차지하는 거리다",
+      "파장은 디지털 신호의 1비트가, 비트 길이는 아날로그 신호의 한 주기가 전송 매체에서 차지하는 거리다",
+      "비트 길이는 비트율에 비례해, 비트율이 2배면 비트 길이도 2배다",
+      "파장 = 주파수 / 전파 속도다",
+      "파장은 주파수가 높을수록 길어진다",
+    ],
     answerIndex: 0,
     explanation:
-      "s.13 (p.7): λ = c / f = (3 × 10⁸) / (3 × 10¹⁰) = 10⁻² m = 10 mm. 함정: 적외선 예(300 GHz → 1 mm, s.101)를 외워 답하면 1 mm — 주파수가 1/10이면 파장은 10배다.",
+      "s.21 (p.11): Bit length = the distance 1 bit occupies on the transmission medium, bit length = 1 / bit rate. Cf. Wavelength for an analog signal = the distance 1 cycle occupies on the transmission medium. 비트율이 2배면 비트 길이는 절반이다. s.13 (p.7): λ = c / f — 주파수가 높을수록 파장은 짧다.",
   },
   {
     ...H("ch02"),
@@ -1872,12 +1952,12 @@ export const HINT5: Question[] = [
     topic: T2.nyquist,
     type: "mcq",
     difficulty: 3,
-    slideRef: "Ch02 s.19-34",
-    prompt: "대역폭 **4 kHz**인 잡음 없는 채널에서 신호 레벨을 **4개에서 8개로** 늘렸다. Nyquist 최대 비트율은 어떻게 바뀌는가?",
-    choices: ["16 kbps → 24 kbps", "16 kbps → 32 kbps", "32 kbps → 64 kbps", "8 kbps → 12 kbps", "16 kbps → 48 kbps"],
+    slideRef: "Ch02 s.33-36",
+    prompt: "데이터 전송률을 정하는 세 요인 가운데 **Nyquist 공식에는 없고 Shannon 공식에만** 들어가는 것은?",
+    choices: ["채널 품질(잡음 수준)", "가용 대역폭", "신호 레벨 수", "전파 속도", "메시지 크기"],
     answerIndex: 0,
     explanation:
-      "s.34 (p.17): BitRate = 2B log₂ L — 4레벨: 2 × 4000 × 2 = 16 kbps, 8레벨: 2 × 4000 × 3 = 24 kbps. 레벨이 2배여도 비트율은 2배가 아니라 log₂ L이 1 늘어난 만큼(1.5배)만 는다. 함정: 레벨 수에 비례한다고 보면 32 kbps다.",
+      "s.33 (p.17): Data rate depends on three factors — the bandwidth available, the level of the signals we use, the quality of the channel(the level of noise). s.34 (p.17): Nyquist(잡음 없는 채널) BitRate = 2 × B × log₂ L — 대역폭과 레벨 수. s.36 (p.18): Shannon C = B log₂(1 + SNR) — 대역폭과 SNR(채널 품질)이고 레벨 수는 없다. 함정: 전파 속도·메시지 크기는 지연(s.46)을 구할 때 쓴다.",
   },
   {
     ...H("ch02"),
@@ -1932,11 +2012,17 @@ export const HINT5: Question[] = [
     type: "mcq",
     difficulty: 2,
     slideRef: "Ch02 s.34",
-    prompt: "대역폭 **5 kHz**인 잡음 없는 채널의 Nyquist 비트율이 **80 kbps**가 되려면 신호 레벨은 몇 개여야 하는가?",
-    choices: ["256", "8", "16", "128", "512"],
+    prompt: "잡음 없는 채널에서 신호 레벨 수를 늘리는 것에 대한 설명으로 옳은 것은?",
+    choices: [
+      "비트율은 높일 수 있지만 시스템의 신뢰성이 떨어질 수 있다",
+      "비트율이 레벨 수에 정비례해 늘어난다",
+      "신뢰성이 높아지고 잡음에 더 강해진다",
+      "레벨 수를 늘려도 Nyquist 비트율은 변하지 않는다",
+      "레벨 수를 늘리면 채널의 헤르츠 단위 대역폭도 그만큼 늘어난다",
+    ],
     answerIndex: 0,
     explanation:
-      "s.34 (p.17): 80,000 = 2 × 5,000 × log₂ L → log₂ L = 8 → L = 2⁸ = 256. 함정: log₂ L 값(8)을 레벨 수로 답하거나, 2를 빼서 log₂ L = 16으로 보면 틀린다.",
+      "s.34 (p.17): BitRate = 2 × B × log₂ L — 레벨이 늘면 비트율은 log₂ L만큼(레벨 수에 정비례가 아니라) 는다. Increasing the levels of a signal may reduce the reliability of the system. 함정: 레벨을 2배로 해도 비트율은 2배가 아니고, 대역폭 B는 레벨과 따로 주어지는 채널의 성질이다.",
   },
   {
     ...H("ch02"),
@@ -2029,12 +2115,18 @@ export const HINT5: Question[] = [
     topic: T2.keying,
     type: "mcq",
     difficulty: 3,
-    slideRef: "Ch02 s.68-71",
-    prompt: "비트율 **4 kbps**인 데이터를 BFSK로 보낸다. 신호 요소 하나가 1비트(r = 1), **d = 0**, **Δf = 2 kHz**일 때 필요한 대역폭은?",
-    choices: ["8 kHz", "6 kHz", "4 kHz", "12 kHz", "10 kHz"],
+    slideRef: "Ch02 s.69-73",
+    prompt: "BASK·BFSK에 대한 설명으로 옳은 것은?",
+    choices: [
+      "BASK는 온오프 키잉이라고도 하며, 대역폭 식의 d는 0과 1 사이 값이다",
+      "BFSK는 반송파의 진폭을 바꿔 비트를 나타낸다",
+      "d는 변조·필터링 과정과 무관하게 항상 1이다",
+      "BFSK의 대역폭은 BASK와 같고 Δf와 무관하다",
+      "BASK는 반송파의 위상을 바꿔 비트를 나타낸다",
+    ],
     answerIndex: 0,
     explanation:
-      "s.71 (p.36): BFSK 대역폭 B = (1 + d)S + 2Δf = 1 × 4000 + 2 × 2000 = 8 kHz. 함정: 2Δf 대신 Δf를 더하면 6 kHz, BASK 공식((1 + d)S)을 쓰면 4 kHz, d = 1을 넣으면 12 kHz다.",
+      "s.69 (p.35): ASK is also called on-off keying (OOK). The factor d depends on the modulation and filtering process, between 0 and 1 — B = (1 + d)S. s.71 (p.36): BFSK는 주파수를 바꾸며 B = (1 + d)S + 2Δf로 BASK보다 2Δf만큼 넓다. 위상을 바꾸는 것은 BPSK(s.73)다.",
   },
   {
     ...H("ch02"),
@@ -2043,11 +2135,17 @@ export const HINT5: Question[] = [
     type: "mcq",
     difficulty: 3,
     slideRef: "Ch02 s.78-80",
-    prompt: "대역폭이 **10 kHz**인 오디오 신호를 **β = 1**인 **PM**으로 변조할 때 필요한 대역폭은?",
-    choices: ["40 kHz", "100 kHz", "20 kHz", "30 kHz", "80 kHz"],
+    prompt: "AM·FM·PM의 대역폭에 대한 설명으로 옳은 것은?",
+    choices: [
+      "FM과 PM은 대역폭 식이 2(1 + β)B로 같은 모양이지만, β 값은 서로 다를 수 있다",
+      "AM 신호의 대역폭은 변조 신호 대역폭의 4배다",
+      "FM에서 흔히 쓰는 β 값은 1이다",
+      "같은 신호라면 PM은 항상 AM보다 대역폭이 좁다",
+      "세 방식 모두 대역폭이 변조 신호의 대역폭 B와 같다",
+    ],
     answerIndex: 0,
     explanation:
-      "s.80 (p.40): B_PM = 2(1 + β)B = 2 × 2 × 10 = 40 kHz. 함정: FM에서 흔히 쓰는 β = 4로 계산하면 100 kHz(s.79), AM처럼 2B로 계산하거나 2(1 + β)에서 1이나 2를 빠뜨리면 20 kHz다 — 문제에 준 β를 쓴다.",
+      "s.78 (p.39): B_AM = 2B. s.79 (p.40): B_FM = 2(1 + β)B, β depends on modulation technique with a common value of 4. s.80 (p.40): B_PM = 2(1 + β)B. (보충) 식은 같아도 FM과 PM의 β는 서로 다른 값을 쓸 수 있으니 문제에 주어진 β를 쓴다. β ≥ 0이라 FM·PM의 대역폭은 AM(2B)보다 좁아지지 않는다.",
   },
   {
     ...H("ch02"),
