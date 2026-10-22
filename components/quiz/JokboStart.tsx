@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { isMockSource, SOURCE_LABEL } from "@/lib/quiz/jokbo";
+import { isHintSource, isMockSource, SOURCE_LABEL } from "@/lib/quiz/jokbo";
 import type { ExamView, QuizMode } from "@/lib/quiz/session";
 import { ExamViewPicker } from "./ExamViewPicker";
 import { TimerPicker } from "./TimerPicker";
@@ -15,12 +15,14 @@ const MODES: { value: QuizMode; label: string; help: string }[] = [
 /**
  * 과목 홈 "족보만 풀기"·"단답형만 풀기"(source): 모드(즉시 채점 / 시험 모드)와 제한 시간을 고르고 시작한다(섞기).
  * 모의시험 세트(source "mock1"·"mock2" — 족보관련1·2 풀기)는 섞지 않고 세트 순서 그대로, 기본 모드는 시험 모드다.
+ * 힌트관련1~3(source "hint1"~"hint3", 데이터 통신)도 기본 모드는 시험 모드지만, 실제 시험처럼 문제 순서를 섞는다.
  * 제한 시간이 끝나면 시험 모드는 자동 채점, 즉시 채점은 제출한 문제까지로 결과에 넘어간다(components/quiz/QuizRunner.tsx).
  */
-export function JokboStart({ subjectId, count, source = "jokbo" }: { subjectId: string; count: number; source?: "jokbo" | "related2" | "mock1" | "mock2" | "short" }) {
+export function JokboStart({ subjectId, count, source = "jokbo" }: { subjectId: string; count: number; source?: "jokbo" | "related2" | "mock1" | "mock2" | "hint1" | "hint2" | "hint3" | "short" }) {
   const router = useRouter();
   const mock = isMockSource(source);
-  const [mode, setMode] = useState<QuizMode>(mock ? "exam" : "instant");
+  const set = mock || isHintSource(source);
+  const [mode, setMode] = useState<QuizMode>(set ? "exam" : "instant");
   const [timer, setTimer] = useState(0);
   const [view, setView] = useState<ExamView>("eclass");
 
@@ -38,8 +40,8 @@ export function JokboStart({ subjectId, count, source = "jokbo" }: { subjectId: 
   return (
     <section aria-labelledby={`${source}-start`} className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
       <h2 id={`${source}-start`} className="text-sm font-semibold">
-        {mock ? `${SOURCE_LABEL[source]} 풀기` : `${SOURCE_LABEL[source]}만 풀기`}{" "}
-        <span className="font-normal text-muted">— {count}문제{mock ? " · 모의시험(고정 순서)" : ""}</span>
+        {set ? `${SOURCE_LABEL[source]} 풀기` : `${SOURCE_LABEL[source]}만 풀기`}{" "}
+        <span className="font-normal text-muted">— {count}문제{mock ? " · 모의시험(고정 순서)" : set ? " · 모의시험(문제 순서 무작위)" : ""}</span>
       </h2>
       <div className="flex flex-col gap-1.5">
         <span className="text-xs font-medium text-muted">채점 방식</span>

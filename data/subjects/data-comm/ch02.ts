@@ -34,7 +34,7 @@ const star = { exam: true, examBasis: "printed-emphasis" } as const;
 /** ⭐ 13번(Shannon·두 한계)의 근거 문구 — s.36~40에는 강조 문구가 없다 */
 const SHANNON_BASIS = "⭐ 근거: s.33 인쇄 강조의 범위 확장(s.33은 PDF p.17, s.36~40에는 강조 문구 없음).";
 
-const T = {
+export const T = {
   role: "물리 계층 역할",
   analogDigital: "아날로그·디지털 데이터와 신호",
   sine: "주기 신호(단순/복합), 사인파 3요소, 주파수·주기",

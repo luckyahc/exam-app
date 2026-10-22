@@ -4,7 +4,7 @@ import { ProgressStats } from "@/components/progress/ProgressStats";
 import { JokboStart } from "@/components/quiz/JokboStart";
 import { subjectMeta } from "@/lib/chapterMeta";
 import { FUNCTION_SUBJECTS } from "@/lib/dsFunctions";
-import { mockSetOf } from "@/lib/quiz/jokbo";
+import { hintSetOf, mockSetOf } from "@/lib/quiz/jokbo";
 import { getSubject, starLabel } from "@/lib/subjects";
 
 export default async function SubjectHomePage({ params }: PageProps<"/s/[subject]">) {
@@ -23,6 +23,8 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
   // 족보관련1·2 모의시험 세트(id "-mock1-NNN"·"-mock2-NNN", data/subjects/algorithm/mockExams.ts)
   const mock1 = allIds.filter((id) => mockSetOf({ id }) === 1).length;
   const mock2 = allIds.filter((id) => mockSetOf({ id }) === 2).length;
+  // 힌트관련1~3 모의시험 세트(id "-hint1-NNN"~"-hint3-NNN", data/subjects/data-comm/hintExams.ts)
+  const hints = ([1, 2, 3] as const).map((n) => allIds.filter((id) => hintSetOf({ id }) === n).length);
   const link = "rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium hover:border-primary";
 
   return (
@@ -80,6 +82,8 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
       {/* 족보관련1·2 = 족보 수준 모의시험 세트 — 고정 순서로 한 번에 풀고 결과(점수·틀린 문항)를 본다 */}
       {mock1 > 0 && <JokboStart subjectId={subject.id} count={mock1} source="mock1" />}
       {mock2 > 0 && <JokboStart subjectId={subject.id} count={mock2} source="mock2" />}
+      {/* 힌트관련1~3 = 시험 힌트(문항 수·5지선다·모두 고르시오·계산·표)대로 만든 모의시험 세트 — 실제 시험처럼 문제 순서를 섞는다 */}
+      {hints.map((n, i) => n > 0 && <JokboStart key={i} subjectId={subject.id} count={n} source={`hint${(i + 1) as 1 | 2 | 3}`} />)}
       {/* 단답형 보강 문항(id "-short-NNN")이 있는 과목만 — 전 챕터 단답형을 한 번에 */}
       {/* 족보관련2(시험 힌트 출제 유형 생성 문항)가 있는 과목만 */}
       {related2 > 0 && <JokboStart subjectId={subject.id} count={related2} source="related2" />}

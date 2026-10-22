@@ -8,7 +8,7 @@ import type { Question } from "@/types/question";
 const base = { subject: "data-comm", chapter: "ch01" } as const;
 const plain = { exam: false } as const;
 
-const T = {
+export const T = {
   definition: "데이터·데이터 통신 정의, 4가지 특성(전달·정확성·적시성·지터)",
   component: "5가지 구성 요소, 프로토콜 정의",
   representation: "데이터 표현(유니코드 32비트, ASCII 7비트·128자, 확장 ASCII 8비트, 픽셀)",
@@ -25,7 +25,7 @@ const T = {
   tcpip: "TCP/IP 5계층 순서, 계층적 구조, 장비별 관여 계층",
   object: "계층별 동일 객체(메시지·세그먼트·데이터그램·프레임·비트)",
   role: "계층별 역할과 헤더(H2/T2, H3, H4)",
-  osi: "OSI 모델(ISO vs OSI, 1970년대 후반), 7계층",
+  osi: "OSI 모델(ISO vs OSI), 7계층",
   tcpipOsi: "TCP/IP vs OSI 대응(응용 = 응용+표현+세션)",
 } as const;
 
@@ -887,34 +887,6 @@ const questions: Question[] = [
     answer: false,
     falseReason: "반대다. ISO가 기구(International Organization for Standardization)이고, OSI(Open Systems Interconnection)가 모델이다.",
     explanation: "s.42 (p.21): ISO is the organization. OSI is the model.",
-  },
-  {
-    ...base,
-    ...plain,
-    id: "data-comm-ch01-osi-003",
-    topic: T.osi,
-    type: "mcq",
-    difficulty: 1,
-    slideRef: "Ch01 s.42",
-    prompt: "OSI(Open Systems Interconnection) 모델이 **처음 소개된 시기**는?",
-    choices: ["1970년대 후반", "1947년", "1990년대 초반", "2000년대 초반"],
-    answerIndex: 0,
-    explanation:
-      "s.42 (p.21): It was first introduced in the late 1970s. 1947년은 OSI 모델이 아니라 ISO(국제표준화기구)가 설립된 해다.",
-  },
-  {
-    ...base,
-    ...plain,
-    id: "data-comm-ch01-osi-004",
-    topic: T.osi,
-    type: "blank",
-    difficulty: 1,
-    slideRef: "Ch01 s.42",
-    prompt: "빈칸에 알맞은 연도를 숫자로 쓰시오.",
-    text: "국제표준화기구(ISO, International Organization for Standardization)는 {{0}}년에 설립되었다.",
-    blanks: [{ accept: ["1947", "1947년"] }],
-    explanation:
-      "s.42 (p.21): Established in 1947, the International Organization for Standardization (ISO)… 1970년대 후반은 OSI 모델이 처음 소개된 시기다.",
   },
 
   // ───────────────────────────── 18. TCP/IP vs OSI (s.43-44)

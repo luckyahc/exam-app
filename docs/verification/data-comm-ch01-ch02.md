@@ -13,24 +13,24 @@
 
 | 구분 | 문항 수 |
 |---|---|
-| 전체 | 58 |
-| 신규 문항 일치 | 38 |
+| 전체 | 56 |
+| 신규 문항 일치 | 36 |
 | 신규 문항 수정 | 20 |
 | 그림 근거 | 28 |
 | ⭐ | 0 |
 
-유형별: mcq 16 · blank 12 · ox 10 · match 7 · multi 5 · classify 4 · graph 2 · order 2
+유형별: mcq 15 · blank 11 · ox 10 · match 7 · multi 5 · classify 4 · graph 2 · order 2
 
 ## 출제 보류·처리 방침
 
 - 메시 토폴로지 링크 수: 슬라이드에 공식이 없어(s.9 (p.5) 그림의 "n = 5, 10 links"만 있음) 공식 문제는 내지 않고 사실만 OX로 냈다(`topology-003`) — `dc-source-analysis.md` 확인 필요 3.
 - s.37 (p.19) 그림 위의 파란 글자 `H2`는 사용자가 입력한 텍스트 주석이라 출제 근거로 쓰지 않았다(확인 필요 10). 같은 그림의 `110` 칸(물리 계층에 붙은 헤더처럼 보이는 칸)은 본문에 설명이 없어 출제하지 않았다.
 - s.19 (p.10) 이질적 네트워크(WAN·LAN 혼합) 그림은 라우터·모뎀·점대점 WAN이 여러 곳에 섞여 있어 정답이 하나로 정해지는 문장을 만들기 어려워 출제하지 않았다.
-- s.42 (p.21)의 "1947년"(ISO 설립)과 "1970년대 후반"(OSI 소개)은 혼동하기 쉬워 따로 냈다(`osi-003`·`osi-004`). 서로를 오답 보기와 해설에서 구분해 준다.
+- s.42 (p.21)의 연도(ISO 설립 1947년, OSI 소개 1970년대 후반)를 묻던 `osi-003`·`osi-004`는 2026-10-22 사용자 요청으로 삭제했다(연도 문제 출제 안 함).
 - 네트워크 계층 객체는 s.36 (p.18)에서 "datagram", s.39 (p.20) 그림에서 단위 이름 "Packet"이다. 두 표기가 한 문제의 보기에 함께 나오지 않게 했다(`object-001` 짝짓기는 datagram, `role-004` 객관식은 Packet이고 보기에 datagram 없음).
 - coverage-matrix가 graph를 권장한 "연결 유형(s.7)"과 "WAN(s.15~17)"은 Sprint 9 그림 12종에 해당 SVG가 없어 graph 대신 mcq·ox·match·blank로 냈다.
 
-## Ch01 (source/data-communication/DC-1-Introduction.pdf) — 58문항
+## Ch01 (source/data-communication/DC-1-Introduction.pdf) — 56문항
 
 | # | id | 유형 | slideRef | ⭐ | 근거 | 대조 결과 | 수정 내용 |
 |---|---|---|---|---|---|---|---|
@@ -87,11 +87,9 @@
 | 51 | `data-comm-ch01-role-004` | mcq | s.39 (p.20) | — | 그림: s.39 그림 | 신규·수정 | 문제 문장이 화면에 없는 슬라이드 그림을 가리켜(“s.N 그림에서” 등) 필요한 정보를 문장에 넣어 그림 없이 풀 수 있게 고침[2차] |
 | 52 | `data-comm-ch01-osi-001` | order | s.43 (p.22) | — | 그림: s.43 그림 | 신규·일치 |  |
 | 53 | `data-comm-ch01-osi-002` | ox | s.42 (p.21) | — | 인쇄 | 신규·일치 |  |
-| 54 | `data-comm-ch01-osi-003` | mcq | s.42 (p.21) | — | 인쇄 | 신규·일치 |  |
-| 55 | `data-comm-ch01-osi-004` | blank | s.42 (p.21) | — | 인쇄 | 신규·일치 |  |
-| 56 | `data-comm-ch01-tcpip-osi-001` | blank | s.43~44 (p.22) | — | 인쇄 s.43 + s.44 그림 | 신규·일치 |  |
-| 57 | `data-comm-ch01-tcpip-osi-002` | classify | s.44 (p.22) | — | 그림: s.44 그림 | 신규·일치 |  |
-| 58 | `data-comm-ch01-tcpip-osi-003` | mcq | s.44 (p.22) | — | 그림: s.44 그림 설명 | 신규·수정 | 문제 문장이 화면에 없는 슬라이드 그림을 가리켜(“s.N 그림에서” 등) 필요한 정보를 문장에 넣어 그림 없이 풀 수 있게 고침[2차] |
+| 54 | `data-comm-ch01-tcpip-osi-001` | blank | s.43~44 (p.22) | — | 인쇄 s.43 + s.44 그림 | 신규·일치 |  |
+| 55 | `data-comm-ch01-tcpip-osi-002` | classify | s.44 (p.22) | — | 그림: s.44 그림 | 신규·일치 |  |
+| 56 | `data-comm-ch01-tcpip-osi-003` | mcq | s.44 (p.22) | — | 그림: s.44 그림 설명 | 신규·수정 | 문제 문장이 화면에 없는 슬라이드 그림을 가리켜(“s.N 그림에서” 등) 필요한 정보를 문장에 넣어 그림 없이 풀 수 있게 고침[2차] |
 
 ## Ch02 (source/data-communication/DC-2-PhyLayer.pdf) — 118문항
 

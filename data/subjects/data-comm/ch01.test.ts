@@ -25,7 +25,7 @@ const TARGETS: Record<string, number> = {
   "TCP/IP 5계층 순서, 계층적 구조, 장비별 관여 계층": 4,
   "계층별 동일 객체(메시지·세그먼트·데이터그램·프레임·비트)": 3,
   "계층별 역할과 헤더(H2/T2, H3, H4)": 4,
-  "OSI 모델(ISO vs OSI, 1970년대 후반), 7계층": 3,
+  "OSI 모델(ISO vs OSI), 7계층": 2,
   "TCP/IP vs OSI 대응(응용 = 응용+표현+세션)": 3,
 };
 const SLIDES = 44;
@@ -33,10 +33,10 @@ const page = (slide: number) => Math.ceil(slide / 2);
 const count = (pred: (q: Question) => boolean) => ch01.filter(pred).length;
 
 describe("데이터 통신 Ch01 — 문항 수·소주제", () => {
-  it("57문항 이상, 소주제 18개가 모두 목표 이상", () => {
-    expect(ch01.length).toBeGreaterThanOrEqual(57);
+  it("56문항 이상, 소주제 18개가 모두 목표 이상", () => {
+    expect(ch01.length).toBeGreaterThanOrEqual(56);
     expect(Object.keys(TARGETS)).toHaveLength(18);
-    expect(Object.values(TARGETS).reduce((a, b) => a + b, 0)).toBe(57);
+    expect(Object.values(TARGETS).reduce((a, b) => a + b, 0)).toBe(56);
     for (const [topic, target] of Object.entries(TARGETS)) expect(count((q) => q.topic === topic), topic).toBeGreaterThanOrEqual(target);
     // 목록 밖의 소주제 이름이 없다
     expect(ch01.filter((q) => !(q.topic in TARGETS)).map((q) => q.id)).toEqual([]);
