@@ -4,20 +4,20 @@ import { gradeQuestion, isAllOrNothing } from "@/lib/qtypes/registry";
 import { filterQuestions } from "@/lib/quiz/session";
 import { hintSetOf, matchesSource, relatedBadge } from "@/lib/quiz/jokbo";
 import { nextPow2, nyquistBitRate, nyquistLevels, shannonCapacity } from "@/lib/sim/data-comm/capacity";
-import { decibel } from "@/lib/sim/data-comm/decibel";
+import { decibel, snr, snrDb } from "@/lib/sim/data-comm/decibel";
 import { baudRate, bitsPerSignalElement } from "@/lib/sim/data-comm/digital";
-import { amBandwidth, askPskBandwidth, fmBandwidth } from "@/lib/sim/data-comm/modulation";
+import { amBandwidth, askPskBandwidth, fmBandwidth, fskBandwidth, pmBandwidth } from "@/lib/sim/data-comm/modulation";
 import { fdmBandwidth, tdmLinkRate, tdmSlotDuration } from "@/lib/sim/data-comm/multiplexing";
 import { pcmBitRate, samplingRate } from "@/lib/sim/data-comm/pcm";
-import { bandwidthDelayProduct, propagationTime, transmissionTime } from "@/lib/sim/data-comm/performance";
+import { bandwidthDelayProduct, latency, propagationTime, throughput, transmissionTime } from "@/lib/sim/data-comm/performance";
 import { peakFromRms, phaseFromCycles, wavelength } from "@/lib/sim/data-comm/signal";
 import type { Question } from "@/types/question";
 import { T as T1 } from "./ch01";
 import { T as T2 } from "./ch02";
 import dataComm from "./index";
-import { HINT1, HINT2, HINT3, HINT_SETS } from "./hintExams";
+import { HINT1, HINT_SETS } from "./hintExams";
 
-// 힌트관련1~3 모의시험(docs/dc-exam-hint.md): 세트 구성이 시험 힌트대로인지, 계산 정답이 lib/sim/data-comm 값과 같은지 확인한다.
+// 힌트관련1~5 모의시험(docs/dc-exam-hint.md): 세트 구성이 시험 힌트대로인지, 계산 정답이 lib/sim/data-comm 값과 같은지 확인한다.
 
 const page = (slide: number) => Math.ceil(slide / 2);
 const all = HINT_SETS.flat();
@@ -36,7 +36,7 @@ const calcAnswer = (id: string) => {
 };
 
 describe("힌트관련 세트 구성 — 시험 힌트(23~26문제, 30점, 선택형 5지선다·모두 고르시오 2~4개, 주관식)", () => {
-  it.each([HINT1, HINT2, HINT3].map((s, i) => [i + 1, s] as const))("힌트관련%i: 25문항, id 번호 001~025 순서", (n, set) => {
+  it.each(HINT_SETS.map((s, i) => [i + 1, s] as const))("힌트관련%i: 25문항, id 번호 001~025 순서", (n, set) => {
     expect(set).toHaveLength(25);
     set.forEach((x, i) => {
       expect(x.id).toMatch(new RegExp(`^data-comm-${x.chapter}-hint${n}-${String(i + 1).padStart(3, "0")}$`));
@@ -82,9 +82,15 @@ describe("힌트관련 세트 구성 — 시험 힌트(23~26문제, 30점, 선�
     for (const set of HINT_SETS) expect(set.filter((x) => x.difficulty === 3).length).toBeGreaterThanOrEqual(10);
   });
 
-  it("세트마다 표 문항이 있거나 계산 문항이 있다(문제에 표·그림 포함 가능, 계산은 공학용 계산기 없이)", () => {
-    expect(all.filter((x) => x.prompt.includes("```text")).map((x) => x.id)).toHaveLength(3);
-    for (const set of HINT_SETS) expect(set.some((x) => x.type === "calc")).toBe(true);
+  it("세트마다 표 문항과 계산 문항이 있다(문제에 표·그림 포함 가능, 계산은 공학용 계산기 없이)", () => {
+    for (const set of HINT_SETS) {
+      expect(set.some((x) => x.prompt.includes("```text"))).toBe(true);
+      expect(set.some((x) => x.type === "calc")).toBe(true);
+    }
+  });
+
+  it("힌트관련4·5(더 헷갈리게)는 어려움이 20문항 이상", () => {
+    for (const set of HINT_SETS.slice(3)) expect(set.filter((x) => x.difficulty === 3).length).toBeGreaterThanOrEqual(20);
   });
 
   it("세 세트를 합치면 Ch01 18개·Ch02 27개 소주제가 모두 나온다(범위 전체에서 골고루)", () => {
@@ -125,13 +131,13 @@ describe("힌트관련 세트 구성 — 시험 힌트(23~26문제, 30점, 선�
 });
 
 describe("힌트관련 분류 — 과목 데이터·퀴즈 필터", () => {
-  it("챕터 로더 맨 뒤에 붙고(Ch01 24 · Ch02 51), 분류 hint1~3으로 세트마다 25문항이 골라진다", async () => {
+  it("챕터 로더 맨 뒤에 붙고(Ch01 40 · Ch02 85), 분류 hint1~5로 세트마다 25문항이 골라진다", async () => {
     const [ch01, ch02] = await Promise.all(dataComm.chapters.map((c) => c.load()));
-    expect(ch01.filter((x) => hintSetOf(x))).toHaveLength(24);
-    expect(ch02.filter((x) => hintSetOf(x))).toHaveLength(51);
-    expect(ch01.slice(-24).every((x) => hintSetOf(x))).toBe(true);
+    expect(ch01.filter((x) => hintSetOf(x))).toHaveLength(40);
+    expect(ch02.filter((x) => hintSetOf(x))).toHaveLength(85);
+    expect(ch01.slice(-40).every((x) => hintSetOf(x))).toBe(true);
     const qs = [...ch01, ...ch02];
-    for (const n of [1, 2, 3] as const) {
+    for (const n of [1, 2, 3, 4, 5] as const) {
       expect(qs.filter((x) => matchesSource(x, `hint${n}`))).toHaveLength(25);
       expect(relatedBadge(qs.find((x) => hintSetOf(x) === n)!)).toBe(`힌트관련${n}`);
     }
@@ -219,5 +225,57 @@ describe("계산 정답 재계산(lib/sim/data-comm)", () => {
     expect(tdmLinkRate(3, 1)).toBe(3);
     expect(tdmSlotDuration(1, 3)).toBeCloseTo(0.333, 3);
     expect(picked("ch02-hint3-024")).toBe("3 kbps, 약 0.33 ms");
+  });
+
+  it("힌트관련4", () => {
+    expect(peakFromRms(220)).toBeCloseTo(311.1, 1);
+    expect(311 / Math.SQRT2).toBeCloseTo(219.9, 1);
+    expect(picked("ch02-hint4-010")).toBe("약 220 V");
+    expect(calcAnswer("ch02-hint4-011")).toBeCloseTo(150, 9);
+    expect(2e8 * 2e-6).toBe(400);
+    expect(wavelength(1 / 2e-6, 2e8)).toBeCloseTo(400, 9);
+    expect(picked("ch02-hint4-012")).toBe("400 m");
+    expect(decibel(1, 1000)).toBeCloseTo(-30, 9);
+    expect(picked("ch02-hint4-015")).toBe("−30 dB");
+    expect(snrDb(snr(5e-3, 50e-9))).toBeCloseTo(50, 9);
+    expect(calcAnswer("ch02-hint4-017")).toBeCloseTo(50, 9);
+    expect(nyquistBitRate(20e3, 64)).toBe(240e3);
+    expect(nyquistBitRate(20e3, 128)).toBe(280e3);
+    expect(picked("ch02-hint4-019")).toBe("240 kbps");
+    expect(shannonCapacity(3000, 63)).toBe(18e3);
+    expect(3000 * Math.log2(63)).toBeCloseTo(17_932, 0);
+    expect(picked("ch02-hint4-020")).toBe("18 kbps");
+    expect(calcAnswer("ch02-hint4-022")).toBeCloseTo(32, 9);
+    expect(propagationTime(12_000e3, 2.4e8)).toBeCloseTo(0.05, 12);
+    expect(bandwidthDelayProduct(1e6, 8e-3) / 8).toBeCloseTo(1000, 9);
+    expect(picked("ch02-hint4-023")).toBe("1,000바이트");
+    expect(1000 * 3).toBe(3000);
+    expect(picked("ch02-hint4-025")).toBe("3,000 bps");
+  });
+
+  it("힌트관련5", () => {
+    expect(wavelength(30e9) * 1e3).toBeCloseTo(10, 9);
+    expect(picked("ch02-hint5-011")).toBe("10 mm");
+    expect([nyquistBitRate(4000, 4), nyquistBitRate(4000, 8)]).toEqual([16e3, 24e3]);
+    expect(picked("ch02-hint5-012")).toBe("16 kbps → 24 kbps");
+    expect(decibel(4, 1)).toBeCloseTo(6.02, 2);
+    expect(picked("ch02-hint5-013")).toBe("약 +6 dB");
+    expect(shannonCapacity(1e6, calcAnswer("ch02-hint5-015"))).toBe(10e6);
+    expect(calcAnswer("ch02-hint5-015")).toBe(1023);
+    expect(nyquistBitRate(5000, 256)).toBe(80e3);
+    expect(picked("ch02-hint5-016")).toBe("256");
+    expect(throughput(12_000, 10_000, 60)).toBe(2e6);
+    expect(picked("ch02-hint5-017")).toBe("처리량 2 Mbps, 대역폭의 약 1/5");
+    expect(latency({ propagation: 0.01, transmission: 0.4, queuing: 5e-3, processing: 1e-3 })).toBeCloseTo(0.416, 12);
+    expect(calcAnswer("ch02-hint5-018")).toBeCloseTo(416, 6);
+    expect(calcAnswer("ch02-hint5-021")).toBe(12);
+    expect(pcmBitRate(samplingRate(4000), 12)).toBe(96e3);
+    expect(fskBandwidth(baudRate(4000, 1), 0, 2000)).toBe(8000);
+    expect(picked("ch02-hint5-022")).toBe("8 kHz");
+    expect(pmBandwidth(10, 1)).toBe(40);
+    expect(fmBandwidth(10)).toBe(100);
+    expect(picked("ch02-hint5-023")).toBe("40 kHz");
+    expect(fdmBandwidth(8, 107.5, 20)).toBe(1000);
+    expect(picked("ch02-hint5-024")).toBe("107.5 kHz");
   });
 });

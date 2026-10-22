@@ -1,13 +1,16 @@
 import { nyquistLevels, shannonCapacity } from "@/lib/sim/data-comm/capacity";
+import { snr, snrDb } from "@/lib/sim/data-comm/decibel";
 import { bitLength, textBitRate } from "@/lib/sim/data-comm/digital";
 import { tdmSlotDuration } from "@/lib/sim/data-comm/multiplexing";
-import { bandwidthDelayProduct, throughput } from "@/lib/sim/data-comm/performance";
-import { bandwidth, wavelength } from "@/lib/sim/data-comm/signal";
+import { samplingRate } from "@/lib/sim/data-comm/pcm";
+import { bandwidthDelayProduct, latency, propagationTime, throughput, transmissionTime } from "@/lib/sim/data-comm/performance";
+import { bandwidth, phaseFromCycles, wavelength } from "@/lib/sim/data-comm/signal";
 import type { Question } from "@/types/question";
 import { T as T1 } from "./ch01";
 import { T as T2 } from "./ch02";
 
-// 힌트관련1~3 모의시험(2026-10-22): 교수님 시험 힌트(docs/dc-exam-hint.md)대로 세트마다 25문항(23~26문항)을 새로 만든다.
+// 힌트관련1~5 모의시험(2026-10-22): 교수님 시험 힌트(docs/dc-exam-hint.md)대로 세트마다 25문항(23~26문항)을 새로 만든다.
+// 4·5는 더 헷갈리게: 뒤바뀐 짝·단위 변환·비슷한 공식·한 단계만 틀린 오답, 난이도는 거의 어려움(3).
 // 세트 구성: 선택형 21(5지선다 mcq 16 + '모두 고르시오' multi 5 — 정답 2~4개, 부분 점수 없음) + 주관식 4(계산 calc·빈칸 blank)
 //   = 배점(선택형 1점, 주관식 2~3점)으로 30점. 장별 Ch01 8 · Ch02 17(슬라이드 44 : 101), 난이도는 중간(2)·어려움(3)만.
 // id = data-comm-{chapter}-hint{세트}-{세트 안 번호}. 실제 시험처럼 문제 순서·보기 순서를 섞어 낸다(문제 화면에는 번호가 없다).
@@ -1256,10 +1259,837 @@ export const HINT3: Question[] = [
   },
 ];
 
-/** 세트 순서대로 3세트(75문항) */
-export const HINT_SETS = [HINT1, HINT2, HINT3] as const;
+/** 힌트관련4 — 25문항(Ch01 8 · Ch02 17). 1~3보다 헷갈리게: 뒤바뀐 짝, 단위 변환, 비슷한 공식, 한 단계만 틀린 오답 */
+export const HINT4: Question[] = [
+  // ───────────────────────────── Ch01
+  {
+    ...H("ch01"),
+    id: "data-comm-ch01-hint4-001",
+    topic: T1.definition,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch01 s.2-3",
+    prompt: "데이터(data)와 데이터 통신(data communications)의 정의로 옳은 것은?",
+    choices: [
+      "데이터는 만들고 쓰는 쪽이 합의한 어떤 형태로든 표현된 정보이고, 데이터 통신은 두 장치 사이에서 전송 매체를 통해 데이터를 교환하는 것이다",
+      "데이터는 반드시 이진수로 표현된 정보이고, 데이터 통신은 두 장치 사이에서 전송 매체를 통해 데이터를 교환하는 것이다",
+      "데이터는 만들고 쓰는 쪽이 합의한 어떤 형태로든 표현된 정보이고, 데이터 통신은 전송 매체 없이 두 장치가 데이터를 교환하는 것이다",
+      "데이터는 데이터 통신을 지배하는 규칙의 집합이고, 데이터 통신은 두 장치 사이에서 전송 매체를 통해 데이터를 교환하는 것이다",
+      "데이터는 만들고 쓰는 쪽이 합의한 어떤 형태로든 표현된 정보이고, 데이터 통신은 통신할 수 있는 장치들의 상호 연결이다",
+    ],
+    answerIndex: 0,
+    explanation:
+      "s.2 (p.1): data = information presented in whatever form is agreed upon by the parties creating and using the data. Data communications = the exchange of data between two devices via some form of transmission medium. 함정: 오답은 한 군데씩만 바꿨다 — '이진수로만', '매체 없이', 규칙의 집합(프로토콜, s.3), 장치들의 상호 연결(네트워크, s.6).",
+  },
+  {
+    ...H("ch01"),
+    id: "data-comm-ch01-hint4-002",
+    topic: T1.component,
+    type: "multi",
+    difficulty: 3,
+    slideRef: "Ch01 s.3-4",
+    prompt: "데이터 통신의 구성 요소에 대한 설명으로 옳은 것을 모두 고르시오.",
+    choices: [
+      "구성 요소는 메시지·송신자·수신자·전송 매체·프로토콜 5가지다",
+      "프로토콜은 통신하는 장치들 사이의 합의를 나타낸다",
+      "송신자와 수신자는 하나로 묶이지 않고 각각 따로 구성 요소에 들어간다",
+      "전송 매체는 데이터 통신을 지배하는 규칙의 집합이다",
+      "메시지는 구성 요소가 아니라 데이터 표현 형태의 하나다",
+    ],
+    answerIndexes: [0, 1, 2],
+    explanation:
+      "s.3 (p.2): Five components = Message, Sender, Receiver, Transmission medium, Protocol — 송신자·수신자는 따로 센다. A protocol is a set of rules that govern data communications, represents an agreement between the communicating devices. 규칙의 집합은 전송 매체가 아니라 프로토콜이고, 메시지는 5구성 요소의 하나다(데이터 표현 형태는 텍스트·숫자·이미지·오디오·비디오, s.4).",
+  },
+  {
+    ...H("ch01"),
+    id: "data-comm-ch01-hint4-003",
+    topic: T1.representation,
+    type: "mcq",
+    difficulty: 2,
+    slideRef: "Ch01 s.4",
+    prompt: "문자 코드에 대한 설명으로 옳은 것은?",
+    choices: [
+      "ASCII는 7비트이고 유니코드의 처음 128자이며, 확장 ASCII는 8비트다",
+      "ASCII는 8비트이고 확장 ASCII는 7비트다",
+      "유니코드는 한 기호를 16비트로 나타낸다",
+      "ASCII는 유니코드의 마지막 128자다",
+      "확장 ASCII는 유니코드의 처음 256자를 7비트로 나타낸다",
+    ],
+    answerIndex: 0,
+    explanation:
+      "s.4 (p.2): Unicode uses 32 bits. ASCII constitutes the first 128 characters (using 7 bits) in Unicode. Extended ASCII is an 8-bit code. 함정: ASCII·확장 ASCII의 비트 수를 바꾸거나, 유니코드를 16비트로 기억하기 쉽다.",
+  },
+  {
+    ...H("ch01"),
+    id: "data-comm-ch01-hint4-004",
+    topic: T1.connection,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch01 s.5-7",
+    prompt: "**항상 양쪽 방향으로** 데이터가 흐르는 데이터 흐름과, **링크 하나에 셋 이상의 장치**가 붙는 연결 유형을 바르게 짝지은 것은?",
+    choices: ["전이중 – 다중점", "반이중 – 다중점", "전이중 – 점대점", "반이중 – 점대점", "단방향 – 다중점"],
+    answerIndex: 0,
+    explanation:
+      "s.5 (p.3): Full-duplex = Direction of data all the time(항상 양방향). 반이중은 양쪽이 보내지만 시각마다 한 방향이다. s.7 (p.4): 링크 하나를 셋 이상이 공유하면 Multipoint, 두 장치만이면 Point-to-point. 함정: '양쪽 다 보낼 수 있다'만 보고 반이중을 고르기 쉽다.",
+  },
+  {
+    ...H("ch01"),
+    id: "data-comm-ch01-hint4-005",
+    topic: T1.wan,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch01 s.13-15",
+    prompt: `다음은 LAN과 WAN을 비교한 표다. 내용이 **틀린** 행은?\n${table(
+      "구분          LAN                              WAN",
+      "(가) 크기      보통 크기가 제한된다             도시·국가·전 세계에 걸칠 수 있다",
+      "(나) 연결 대상 스위치·라우터 같은 연결 장치     호스트",
+      "(다) 소유      그것을 쓰는 조직이 소유          통신 회사가 운영, 조직이 임대",
+      "(라) 공통점    통신할 수 있는 장치의 상호 연결  통신할 수 있는 장치의 상호 연결",
+    )}`,
+    choices: ["(나) 연결 대상", "(가) 크기", "(다) 소유", "(라) 공통점", "틀린 행이 없다"],
+    answerIndex: 0,
+    explanation:
+      "s.15 (p.8): A LAN interconnects hosts. A WAN interconnects connecting devices such as switches, routers, or modems — (나)는 LAN과 WAN이 뒤바뀌었다. 크기·소유 행은 그대로 맞고, 'A WAN is also a interconnection of devices capable of communication'이라 (라)도 맞다.",
+  },
+  {
+    ...H("ch01"),
+    id: "data-comm-ch01-hint4-006",
+    topic: T1.access,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch01 s.22-25",
+    prompt: "인터넷 접속에 대한 설명으로 옳은 것은?",
+    choices: [
+      "DSL은 전화선을 음성과 데이터에 동시에 쓸 수 있고, 다이얼업보다 빠르다",
+      "다이얼업 서비스에서는 모뎀이 음성을 데이터로 바꿔 전화선에 싣는다",
+      "사용자와 ISP 사이의 물리 연결은 보통 교환 WAN으로 이루어진다",
+      "여러 캠퍼스를 가진 대학은 인터네트워크를 만들어 인터넷에 연결할 수 없다",
+      "대기업이 직접 연결할 때는 지역 ISP에서 저속 LAN을 임대한다",
+    ],
+    answerIndex: 0,
+    explanation:
+      "s.23 (p.12): Dial-up service (slow) — A modem converts data to voice(데이터 → 음성, 방향 주의). DSL service (fast) — 음성과 데이터를 동시에. s.22 (p.11): 물리 연결은 보통 점대점 WAN. s.25 (p.13): 대학은 인터네트워크를 만들어 연결할 수 있고, 대기업은 통신사에서 고속 WAN을 임대해 지역 ISP에 연결한다.",
+  },
+  {
+    ...H("ch01"),
+    id: "data-comm-ch01-hint4-007",
+    topic: T1.tcpip,
+    type: "multi",
+    difficulty: 3,
+    slideRef: "Ch01 s.32-39",
+    prompt: "TCP/IP 프로토콜 스위트에 대한 설명으로 옳은 것을 모두 고르시오.",
+    choices: [
+      "각 상위 계층 프로토콜은 하나 이상의 하위 계층 프로토콜이 제공하는 서비스로 지원된다",
+      "링크 계층 스위치는 데이터 링크·물리 계층에만 관여한다",
+      "네트워크 계층은 출발지 호스트와 목적지 호스트 사이에 논리적 연결을 만들어 패킷을 전달한다",
+      "라우터는 전송 계층까지 관여한다",
+      "데이터 링크 계층은 패킷을 출발지 호스트에서 목적지 호스트까지 전달한다",
+    ],
+    answerIndexes: [0, 1, 2],
+    explanation:
+      "s.32 (p.16): Each upper-level protocol is supported by the services provided by one or more lower-level protocols. s.34 (p.17): 스위치 2계층, 라우터 3계층(네트워크까지). s.39 (p.20): 네트워크 계층 = 호스트→호스트 패킷 전달, (logical) connection을 만든다. s.38 (p.19): 데이터 링크는 노드→다음 노드의 프레임 이동이다.",
+  },
+  {
+    ...H("ch01"),
+    id: "data-comm-ch01-hint4-008",
+    topic: T1.role,
+    type: "blank",
+    difficulty: 3,
+    slideRef: "Ch01 s.38-40",
+    prompt: "빈칸에 알맞은 헤더·트레일러 표기를 쓰시오.",
+    text: "데이터 링크 계층의 프레임에는 헤더 {{0}}와 트레일러 {{1}}가 붙고, 전송 계층의 세그먼트에는 헤더 {{2}}가 붙는다.",
+    blanks: [{ accept: ["H2", "h2"] }, { accept: ["T2", "t2"] }, { accept: ["H4", "h4"] }],
+    explanation:
+      "s.38 (p.19): Frame = H2 | Data | T2. s.39 (p.20): Packet = H3 | Data. s.40 (p.20): Segment = H4 | Data. 함정: 네트워크 계층의 H3과 전송 계층의 H4를 바꾸기 쉽고, 트레일러는 데이터 링크 계층에만 있다.",
+  },
 
-/** 챕터 문항 뒤에 붙일 힌트관련 문항(세트 1 → 2 → 3, 세트 안 번호 순) */
+  // ───────────────────────────── Ch02
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint4-009",
+    topic: T2.analogDigital,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch02 s.4-7",
+    prompt: "아날로그·디지털에 대한 설명으로 **옳지 않은** 것은?",
+    choices: [
+      "데이터 통신에서는 주로 주기 디지털 신호와 비주기 아날로그 신호를 쓴다",
+      "데이터와 신호는 각각 아날로그일 수도, 디지털일 수도 있다",
+      "아날로그 데이터는 연속적인 값을 가진다",
+      "디지털 신호는 제한된 수의 값만 가질 수 있다",
+      "복합 주기 아날로그 신호는 여러 사인파로 이루어진다",
+    ],
+    answerIndex: 0,
+    explanation:
+      "s.7 (p.4): we commonly use periodic analog signals and nonperiodic digital signals — 주기·비주기가 뒤바뀌었다. s.4~5 (p.2~3): Data can be analog or digital, Signals can be analog or digital, 아날로그 데이터는 연속, 디지털 신호는 제한된 값. s.7: 복합 신호는 여러 사인파.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint4-010",
+    topic: T2.sine,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch02 s.8",
+    prompt: "최대 진폭(peak amplitude)이 **311 V**인 사인파 전압의 실효값(effective value)은 약 몇 V인가?",
+    choices: ["약 220 V", "약 440 V", "약 155 V", "약 311 V", "약 180 V"],
+    answerIndex: 0,
+    explanation:
+      "s.8 (p.4): The peak value is equal to 2½ × average (or effective) value → 실효값 = 311 / √2 ≈ 220 V(슬라이드의 310 V ↔ 220 V). 함정: 최대 진폭을 구할 때처럼 √2를 곱하면 약 440 V, 2로 나누면 약 155 V, √3으로 나누면 약 180 V다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint4-011",
+    topic: T2.phase,
+    type: "calc",
+    difficulty: 3,
+    slideRef: "Ch02 s.11",
+    prompt: "위상이 **5π/6 rad**인 사인파는 시각 0을 기준으로 몇 **도(°)** 어긋나 있는가?",
+    answer: phaseFromCycles(5 / 12).deg,
+    tolerance: 0.5,
+    unit: "°",
+    steps: ["360° = 2π rad → π rad = 180°", "5π/6 × 180°/π = 150°", "(= 5/12 주기)"],
+    explanation:
+      "s.11 (p.6): 360° = 2π rad이므로 π rad = 180°. 5π/6 rad = 5/6 × 180° = 150°. 함정: 2π를 180°로 잘못 놓으면 75°, 5/6 주기로 보면 300°가 된다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint4-012",
+    topic: T2.wavelength,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch02 s.8-13",
+    prompt: "주기가 **2 μs**인 신호가 전파 속도 **2 × 10⁸ m/s**인 매체를 지난다. 이 신호의 파장은?",
+    choices: ["400 m", "600 m", "100 m", "0.01 m", "4 m"],
+    answerIndex: 0,
+    explanation:
+      "s.13 (p.7): 파장 = 전파 속도 × 주기(λ = cT) = 2 × 10⁸ × 2 × 10⁻⁶ = 400 m. 함정: 빛의 속도 3 × 10⁸을 쓰면 600 m, 주기로 나누면 엉뚱한 값이 나온다. 주파수(500 kHz)로 바꿔 λ = c / f로 풀어도 400 m다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint4-013",
+    topic: T2.bandwidth,
+    type: "multi",
+    difficulty: 3,
+    slideRef: "Ch02 s.14-22",
+    prompt: "시간·주파수 영역과 대역폭에 대한 설명으로 옳은 것을 모두 고르시오.",
+    choices: [
+      "주파수 영역은 여러 사인파를 다룰 때 시간 영역보다 간결하고 유용하다",
+      "진폭·주파수가 서로 다른 사인파 3개는 주파수 영역에서 스파이크 3개로 나타난다",
+      "디지털 신호는 주기적이든 비주기적이든 복합 아날로그 신호다",
+      "대역폭이 같은 두 복합 신호는 최고 주파수도 같다",
+      "디지털 신호의 대역폭은 0이다",
+    ],
+    answerIndexes: [0, 1, 2],
+    explanation:
+      "s.15 (p.8): The frequency domain is more compact and useful when we are dealing with more than one sine wave — 사인파 3개는 스파이크 3개. s.22 (p.11): A digital signal (periodic or nonperiodic) is a composite analog signal with an infinite bandwidth. s.17 (p.9): 대역폭은 차이라 1~5 kHz와 11~15 kHz처럼 최고 주파수가 달라도 같을 수 있다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint4-014",
+    topic: T2.wireless,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch02 s.99-101",
+    prompt: "전파(radio wave)와 마이크로파(microwave)를 나누는 기준에 대한 설명으로 옳은 것은?",
+    choices: [
+      "주파수 경계가 명확하지 않아, 파동의 행동(전방향·단방향)이 더 나은 분류 기준이다",
+      "1 GHz를 경계로 명확히 나뉘므로 주파수만으로 분류한다",
+      "전파는 단방향성이고 마이크로파는 전방향성이다",
+      "마이크로파는 벽을 잘 통과해 AM 라디오에 쓰인다",
+      "적외선은 1~300 GHz의 전자기파로 마이크로파와 같은 대역이다",
+    ],
+    answerIndex: 0,
+    explanation:
+      "s.99 (p.50): No clear-cut demarcation between radio waves and microwaves. Behavior of the waves is a better criterion for classification. 전파는 대부분 전방향, 벽을 통과(AM 라디오). s.100 (p.50): 마이크로파(1~300 GHz)는 단방향. s.101 (p.51): 적외선은 300 GHz~400 THz. 함정: 슬라이드에 3 kHz~1 GHz·1~300 GHz 숫자가 있지만 '명확한 경계는 없다'고 한다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint4-015",
+    topic: T2.impairment,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch02 s.25-27",
+    prompt: "신호가 매체를 지나는 동안 전력이 처음의 **1/1000**로 줄었다. 감쇠는 몇 dB인가?",
+    choices: ["−30 dB", "−60 dB", "−3 dB", "+30 dB", "−20 dB"],
+    answerIndex: 0,
+    explanation:
+      "s.26 (p.13): dB = 10 log₁₀(P2 / P1) = 10 log₁₀ 10⁻³ = −30 dB. 함정: 전력비에 20 log를 쓰면 −60 dB, 손실인데 부호를 +로 쓰면 +30 dB, 1/1000을 1/2(−3 dB)이나 1/100(−20 dB)과 헷갈리면 틀린다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint4-016",
+    topic: T2.noise,
+    type: "multi",
+    difficulty: 3,
+    slideRef: "Ch02 s.25-29",
+    prompt: "전송 장애와 그 원인의 짝으로 옳은 것을 모두 고르시오.",
+    choices: [
+      "열 잡음 – 전자의 무작위 운동",
+      "유도 잡음 – 안테나처럼 작용하는 모터·가전제품",
+      "누화 – 안테나처럼 작용하는 전선끼리",
+      "충격 잡음 – 전력선·번개의 갑작스러운 스파이크",
+      "왜곡 – 신호가 매체의 저항을 이기느라 에너지를 잃음",
+    ],
+    answerIndexes: [0, 1, 2, 3],
+    explanation:
+      "s.29 (p.15): Thermal(random motion of electrons), Induced(motors and appliances acting as antennas), Crosstalk(between wires acting as antennas), Impulse(sudden spike from power line or lightning) — 4개 모두 맞다. s.25 (p.13): 에너지를 잃는 것은 감쇠이고, s.28 (p.14): 왜곡은 모양이 바뀌는 것(성분마다 지연이 다름)이다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint4-017",
+    topic: T2.snr,
+    type: "calc",
+    difficulty: 3,
+    slideRef: "Ch02 s.30",
+    prompt: "평균 신호 전력이 **5 mW**, 평균 잡음 전력이 **50 nW**이다. **SNR_dB**는 몇 dB인가?",
+    answer: snrDb(snr(5e-3, 50e-9)),
+    tolerance: 0.1,
+    unit: "dB",
+    steps: ["SNR = 5 × 10⁻³ / 50 × 10⁻⁹ = 10⁵", "SNR_dB = 10 log₁₀ 10⁵ = 50 dB"],
+    explanation:
+      "s.30 (p.15): SNR = 평균 신호 전력 / 평균 잡음 전력 = 5 mW / 50 nW = 100,000, SNR_dB = 10 log₁₀ SNR = 50 dB. 함정: nW를 μW로 착각하면 SNR = 100(20 dB), SNR 값(100000)을 그대로 답하면 틀린다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint4-018",
+    topic: T2.nyquist,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch02 s.33-36",
+    prompt: "잡음 없는 채널과 잡음 있는 채널의 이론 최대 데이터율 공식을 바르게 짝지은 것은? (B: 대역폭, L: 신호 레벨 수)",
+    choices: [
+      "잡음 없음: 2B log₂ L / 잡음 있음: B log₂(1 + SNR)",
+      "잡음 없음: B log₂(1 + SNR) / 잡음 있음: 2B log₂ L",
+      "잡음 없음: B log₂ L / 잡음 있음: 2B log₂(1 + SNR)",
+      "잡음 없음: 2B log₂ L / 잡음 있음: B log₂ SNR",
+      "잡음 없음: 2B × L / 잡음 있음: B log₂(1 + SNR)",
+    ],
+    answerIndex: 0,
+    explanation:
+      "s.33 (p.17): Nyquist는 잡음 없는 채널, Shannon은 잡음 있는 채널. s.34 (p.17): BitRate = 2 × B × log₂ L. s.36 (p.18): C = B × log₂(1 + SNR). 함정: 2를 붙일 공식, 1을 더할 공식, log를 씌울 대상이 하나씩 바뀐 오답이다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint4-019",
+    topic: T2.nyquist,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch02 s.35",
+    prompt:
+      "대역폭 **20 kHz**인 잡음 없는 채널로 **265 kbps**를 보내려면 약 98.7레벨이 필요하다. 2의 거듭제곱이 아니므로 레벨을 **64개**로 줄여 쓰기로 했다. 이때의 비트율은?",
+    choices: ["240 kbps", "280 kbps", "265 kbps", "256 kbps", "120 kbps"],
+    answerIndex: 0,
+    explanation:
+      "s.35 (p.18) Example 2.6: If we have 128 levels, the bit rate is 280 kbps. If we have 64 levels, the bit rate is 240 kbps — 2 × 20,000 × log₂ 64 = 240 kbps. 함정: 레벨을 늘리는 쪽(128레벨 → 280 kbps)과 헷갈리거나, 2를 빼면 120 kbps다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint4-020",
+    topic: T2.shannon,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch02 s.36",
+    prompt: "대역폭이 **3000 Hz**이고 **SNR = 63**인 채널의 Shannon 용량은?",
+    choices: ["18 kbps", "약 17.9 kbps", "36 kbps", "189 kbps", "6 kbps"],
+    answerIndex: 0,
+    explanation:
+      "s.36 (p.18): C = B log₂(1 + SNR) = 3000 × log₂ 64 = 3000 × 6 = 18 kbps. 함정: 1을 더하지 않으면 log₂ 63 ≈ 5.98이라 약 17.9 kbps — 답과 아주 가깝지만 틀리다. Nyquist처럼 2를 곱하면 36 kbps, log 없이 곱하면 189 kbps다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint4-021",
+    topic: T2.perf,
+    type: "multi",
+    difficulty: 3,
+    slideRef: "Ch02 s.41-46",
+    prompt: "성능 지표에 대한 설명으로 옳은 것을 모두 고르시오.",
+    choices: [
+      "bps 단위 대역폭은 링크의 잠재적 측정값이고, 처리량은 실제 측정값이다",
+      "큐잉 시간은 중간·끝 장치가 처리하기 전에 메시지를 붙잡아 두는 시간이다",
+      "혼잡이 없으면 처리량이 대역폭보다 커질 수 있다",
+      "전파 시간은 메시지 크기에 비례한다",
+      "전송 시간은 송신자와 수신자 사이의 거리에 비례한다",
+    ],
+    answerIndexes: [0, 1],
+    explanation:
+      "s.44 (p.22): Bandwidth is a potential measurement, throughput is an actual measurement — T always less than B. s.46 (p.23): Queuing time = time needed for each intermediate or end device to hold the message before it can be processed. 전파 시간 = 거리 / 전파 속도(크기와 무관), 전송 시간 = 메시지 크기 / 대역폭(거리와 무관) — 둘을 뒤바꾼 보기가 함정이다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint4-022",
+    topic: T2.delay,
+    type: "calc",
+    difficulty: 3,
+    slideRef: "Ch02 s.46-47",
+    prompt:
+      "**4 kbyte**(4,000바이트) 메시지를 대역폭 **1 Gbps** 네트워크로 **12,000 km** 떨어진 곳에 보낸다(전파 속도 2.4 × 10⁸ m/s). 이 메시지의 **전송 시간(transmission time)**은 몇 **μs**인가?",
+    answer: transmissionTime(4000 * 8, 1e9) * 1e6,
+    tolerance: 0,
+    unit: "μs",
+    steps: ["전송 시간 = 메시지 크기 / 대역폭", "= 32,000비트 / 10⁹ bps = 3.2 × 10⁻⁵ s", "= 32 μs (거리·전파 속도는 쓰지 않는다)"],
+    explanation:
+      "s.46 (p.23): Transmission time = Message size / Bandwidth = 32,000 / 10⁹ = 32 μs. 거리와 전파 속도는 전파 시간(50 ms)에만 쓰인다 — 문제에 함께 준 값에 끌려가면 틀린다. 함정: 바이트를 비트로 바꾸지 않으면 4 μs다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint4-023",
+    topic: T2.bdp,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch02 s.48-51",
+    prompt: "대역폭 **1 Mbps**, 지연 **8 ms**인 링크를 가득 채우는 데이터는 몇 **바이트**인가?",
+    choices: ["1,000바이트", "8,000바이트", "125바이트", "8바이트", "64,000바이트"],
+    answerIndex: 0,
+    explanation:
+      "s.48 (p.24): 대역폭-지연 곱 = 10⁶ bps × 8 × 10⁻³ s = 8,000비트 = 1,000바이트. 함정: 비트 값(8,000)을 바이트로 답하거나, 8로 두 번 나누면 125, 8을 곱하면 64,000이다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint4-024",
+    topic: T2.pcm,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch02 s.59-66",
+    prompt: "PCM과 델타 변조(DM)에 대한 설명으로 옳은 것은?",
+    choices: [
+      "PCM은 표본마다 신호 진폭의 값을 찾고, DM은 이전 표본으로부터의 변화를 찾는다",
+      "PCM은 이전 표본으로부터의 변화를 찾고, DM은 표본마다 신호 진폭의 값을 찾는다",
+      "DM은 PCM보다 매우 복잡한 기법이다",
+      "PCM의 양자화 단계에서 아날로그 신호를 T초마다 표본화한다",
+      "DM 변조기에는 저역 통과 필터가 들어 있다",
+    ],
+    answerIndex: 0,
+    explanation:
+      "s.63 (p.32): PCM — a very complex technique, finds the value of the signal amplitude for each sample. DM — relatively simple, finds the change from the previous sample. s.59 (p.30): T초마다 표본화하는 것은 양자화가 아니라 표본화 단계다. s.66 (p.33): 저역 통과 필터는 DM 복조기에 있다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint4-025",
+    topic: T2.d2a,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch02 s.68",
+    prompt: "디지털 데이터를 아날로그 신호로 보낸다. 보오율이 **1,000 baud**이고 신호 요소 하나가 **3비트**를 실어 나를 때 비트율은?",
+    choices: ["3,000 bps", "333 bps", "1,000 bps", "8,000 bps", "9,000 bps"],
+    answerIndex: 0,
+    explanation:
+      "s.68 (p.34): S = N × 1/r → N = S × r = 1,000 × 3 = 3,000 bps. 함정: 비트율에서 보오율을 구할 때처럼 나누면 333 bps, 레벨 수 2³ = 8을 곱하면 8,000 bps다.",
+  },
+];
+
+/** 힌트관련5 — 25문항(Ch01 8 · Ch02 17). 힌트관련4와 같은 방식으로 헷갈리게 */
+export const HINT5: Question[] = [
+  // ───────────────────────────── Ch01
+  {
+    ...H("ch01"),
+    id: "data-comm-ch01-hint5-001",
+    topic: T1.definition,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch01 s.2-6",
+    prompt:
+      "실시간 영상 통화에서 패킷이 빠짐없이, 내용도 정확하게 도착했지만 **한참 늦게** 도착해 이미 지나간 장면이 되어 쓸 수 없었다. 데이터 통신의 4가지 특성 중 **나빠진 것**은?",
+    choices: ["적시성(Timeliness)", "지터(Jitter)", "전달(Delivery)", "정확성(Accuracy)", "성능(Performance)"],
+    answerIndex: 0,
+    explanation:
+      "s.2 (p.1): 4가지 특성 = Delivery·Accuracy·Timeliness·Jitter. (보충) 적시성은 제때(늦지 않게) 전달되는 성질이다 — 모든 패킷이 '늦은' 것이 문제다. 지터는 도착 시간의 '변동'(간격이 들쭉날쭉)이다. 성능은 4특성이 아니라 네트워크 기준(s.6)이다.",
+  },
+  {
+    ...H("ch01"),
+    id: "data-comm-ch01-hint5-002",
+    topic: T1.network,
+    type: "mcq",
+    difficulty: 2,
+    slideRef: "Ch01 s.6",
+    prompt: "다음 중 **연결 장치(connecting device)로만** 묶인 것은?",
+    choices: ["라우터·스위치·모뎀", "라우터·워크스테이션·모뎀", "스위치·휴대전화·라우터", "모뎀·보안 시스템·스위치", "데스크톱·노트북·라우터"],
+    answerIndex: 0,
+    explanation:
+      "s.6 (p.3): connecting device = a router, a switch, or a modem. 호스트 = large computer, desktop, laptop, workstation, cellular phone, security system. 함정: 오답마다 호스트가 하나씩 섞여 있다.",
+  },
+  {
+    ...H("ch01"),
+    id: "data-comm-ch01-hint5-003",
+    topic: T1.topology,
+    type: "multi",
+    difficulty: 3,
+    slideRef: "Ch01 s.7-12",
+    prompt: "물리 토폴로지에 대한 설명으로 옳은 것을 모두 고르시오.",
+    choices: [
+      "스타 토폴로지는 각 스테이션이 중앙의 스위치 또는 허브에 연결된다",
+      "완전 연결 메시 토폴로지에서 스테이션 5개는 링크 10개로 연결된다",
+      "점대점은 물리 토폴로지 4종 중 하나다",
+      "링 토폴로지는 케이블 하나에 탭과 드롭 라인으로 연결된다",
+      "버스 토폴로지는 스테이션마다 리피터를 둔다",
+    ],
+    answerIndexes: [0, 1],
+    explanation:
+      "s.10 (p.5): 스타 = Switch or Hub. s.9 (p.5): Fully connected mesh, n = 5, 10 links. s.8 (p.4): 토폴로지 = Mesh·Star·Bus·Ring — 점대점은 연결 유형(s.7). s.11~12 (p.6): 탭·드롭 라인은 버스, 리피터는 링 — 두 문장은 버스와 링이 서로 바뀌었다.",
+  },
+  {
+    ...H("ch01"),
+    id: "data-comm-ch01-hint5-004",
+    topic: T1.lan,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch01 s.13-14",
+    prompt: "LAN의 주소와 구성에 대한 설명으로 옳은 것은?",
+    choices: [
+      "LAN의 각 호스트는 LAN 안에서 그 호스트를 유일하게 정하는 주소(예: IP 주소)를 가진다",
+      "호스트가 보내는 패킷에는 출발지 주소만 담기고 목적지 주소는 스위치가 붙인다",
+      "LAN은 호스트를 연결하지 않고 라우터만 연결한다",
+      "집의 PC 두 대와 프린터만으로는 LAN이 될 수 없다",
+      "오늘날 LAN은 공용 케이블에 탭으로 호스트를 연결한다",
+    ],
+    answerIndex: 0,
+    explanation:
+      "s.13 (p.7): Each host in a LAN has an identifier, an address, that uniquely defines the host in the LAN(예: IP address). 패킷은 출발지와 목적지 주소를 모두 담는다. A LAN can be as simple as two PCs and a printer in someone's home office. s.14 (p.7): 공용 케이블은 과거, 오늘날은 스위치.",
+  },
+  {
+    ...H("ch01"),
+    id: "data-comm-ch01-hint5-005",
+    topic: T1.wan,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch01 s.14-21",
+    prompt: "**점대점 WAN(point-to-point WAN)**에 대한 설명으로 옳은 것은?",
+    choices: [
+      "연결 장치 둘을 매체로 잇고, 양 끝이 각각 다른 네트워크로 이어진다",
+      "여러 스위치가 연결되어 여러 끝을 잇는다",
+      "호스트 둘을 공용 케이블로 잇는다",
+      "많은 네트워크가 서로 연결되어 트래픽을 교환하는 장소다",
+      "통신 회사가 아니라 쓰는 조직이 직접 만들어 소유하는 것이 보통이다",
+    ],
+    answerIndex: 0,
+    explanation:
+      "s.16 (p.8): Point-to-point WAN = 연결 장치(A connecting device) 둘을 매체로 잇고 양쪽이 To another network. s.17 (p.9): 여러 스위치는 교환 WAN. s.14 (p.7): 공용 케이블은 과거 LAN. s.21 (p.11): 트래픽 교환 장소는 피어링 포인트. s.15 (p.8): WAN은 보통 통신 회사가 운영하고 조직이 임대한다.",
+  },
+  {
+    ...H("ch01"),
+    id: "data-comm-ch01-hint5-006",
+    topic: T1.internet,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch01 s.20-21",
+    prompt: "오늘날 인터넷의 구조에 대한 설명으로 옳은 것은?",
+    choices: [
+      "고객 네트워크는 제공자 네트워크에 연결되고, 제공자 네트워크는 백본에 연결된다",
+      "백본이 고객 네트워크에 연결되고, 고객 네트워크가 제공자 네트워크에 연결된다",
+      "고객 네트워크끼리 피어링 포인트에서 직접 연결된다",
+      "피어링 포인트는 백본 하나의 내부에만 있는 장치다",
+      "Internet은 internet(둘 이상의 네트워크)의 한 예가 아니다",
+    ],
+    answerIndex: 0,
+    explanation:
+      "s.21 (p.11): 고객 네트워크(Customer network)는 제공자 네트워크(Provider network)에 매달리고, 제공자 네트워크가 백본(Backbones)에 연결된다. Peering point = A place where many networks interconnect to exchange traffic. s.20 (p.10): The Internet, the most notable internet.",
+  },
+  {
+    ...H("ch01"),
+    id: "data-comm-ch01-hint5-007",
+    topic: T1.object,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch01 s.36",
+    prompt: `다음은 TCP/IP 계층과 양쪽의 동일 객체(identical object)를 짝지은 표다. **틀린** 짝은?\n${table(
+      "계층         동일 객체",
+      "응용         메시지(message)",
+      "전송         데이터그램(datagram)",
+      "네트워크     데이터그램(datagram)",
+      "데이터 링크  프레임(frame)",
+      "물리         비트(bits)",
+    )}`,
+    choices: ["전송 – 데이터그램", "응용 – 메시지", "네트워크 – 데이터그램", "데이터 링크 – 프레임", "물리 – 비트"],
+    answerIndex: 0,
+    explanation:
+      "s.36 (p.18): Transport = segment or user datagram(사용자 데이터그램), Network = datagram. 함정: 표에 데이터그램이 두 번 나와 네트워크 행을 의심하기 쉽지만, 틀린 것은 '사용자'가 빠진 전송 계층이다.",
+  },
+  {
+    ...H("ch01"),
+    id: "data-comm-ch01-hint5-008",
+    topic: T1.osi,
+    type: "blank",
+    difficulty: 3,
+    slideRef: "Ch01 s.42",
+    prompt: "빈칸에 알맞은 약어를 영문 대문자로 쓰시오.",
+    text: "네트워크 통신의 모든 면을 다루는 표준은 기구인 국제표준화기구({{0}})가 만든 모델인 개방형 시스템 상호 연결({{1}}) 모델이다.",
+    blanks: [{ accept: ["ISO", "iso"] }, { accept: ["OSI", "osi"] }],
+    explanation:
+      "s.42 (p.21): An ISO standard that covers all aspects of network communications is the Open Systems Interconnection (OSI) model. ISO is the organization. OSI is the model. 함정: 두 약어의 글자가 같아 순서를 바꾸기 쉽다.",
+  },
+
+  // ───────────────────────────── Ch02
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint5-009",
+    topic: T2.sine,
+    type: "mcq",
+    difficulty: 2,
+    slideRef: "Ch02 s.8-13",
+    prompt: "주파수가 **0**이고 주기가 **무한대**인 주기 신호로 볼 수 있는 것은?",
+    choices: ["배터리의 일정한 전압", "220 V 가정용 전원", "빨간빛", "사람 목소리", "전화선의 음성 신호"],
+    answerIndex: 0,
+    explanation:
+      "s.10 (p.5) Example 2.1: The voltage of a battery is constant — periodic with frequency of 0 and period of infinity. 가정용 전원(s.8)·빛(s.13)·목소리(s.61)는 모두 0이 아닌 주파수를 가진다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint5-010",
+    topic: T2.sine,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch02 s.8-12",
+    prompt: `다음 표의 세 사인파에 대한 설명으로 옳은 것은?\n${table(
+      "신호   최대 진폭   주파수   위상",
+      "A      5 V         10 Hz    0°",
+      "B      5 V         20 Hz    0°",
+      "C      10 V        10 Hz    90°",
+    )}`,
+    choices: [
+      "A와 B는 진폭·위상이 같고 주파수만 달라, B의 주기는 A의 절반이다",
+      "A와 B는 주파수만 달라, B의 주기는 A의 2배다",
+      "A와 C는 주파수만 다르다",
+      "C는 A보다 1/2 주기 어긋나 있다",
+      "A와 C는 주기가 서로 다르다",
+    ],
+    answerIndex: 0,
+    explanation:
+      "s.8 (p.4): T = 1/f — A는 0.1 s, B는 0.05 s(절반). s.9~10 (p.5): 진폭만 다른 신호, 주파수만 다른 신호. A와 C는 진폭과 위상이 다르고 주파수(주기)는 같다. s.11 (p.6): 90°는 1/4 주기다(1/2 주기는 180°).",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint5-011",
+    topic: T2.wavelength,
+    type: "mcq",
+    difficulty: 2,
+    slideRef: "Ch02 s.13",
+    prompt: "공기 중에서 주파수가 **30 GHz**인 마이크로파의 파장은? (c = 3 × 10⁸ m/s)",
+    choices: ["10 mm", "1 mm", "0.1 mm", "100 mm", "9 mm"],
+    answerIndex: 0,
+    explanation:
+      "s.13 (p.7): λ = c / f = (3 × 10⁸) / (3 × 10¹⁰) = 10⁻² m = 10 mm. 함정: 적외선 예(300 GHz → 1 mm, s.101)를 외워 답하면 1 mm — 주파수가 1/10이면 파장은 10배다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint5-012",
+    topic: T2.nyquist,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch02 s.19-34",
+    prompt: "대역폭 **4 kHz**인 잡음 없는 채널에서 신호 레벨을 **4개에서 8개로** 늘렸다. Nyquist 최대 비트율은 어떻게 바뀌는가?",
+    choices: ["16 kbps → 24 kbps", "16 kbps → 32 kbps", "32 kbps → 64 kbps", "8 kbps → 12 kbps", "16 kbps → 48 kbps"],
+    answerIndex: 0,
+    explanation:
+      "s.34 (p.17): BitRate = 2B log₂ L — 4레벨: 2 × 4000 × 2 = 16 kbps, 8레벨: 2 × 4000 × 3 = 24 kbps. 레벨이 2배여도 비트율은 2배가 아니라 log₂ L이 1 늘어난 만큼(1.5배)만 는다. 함정: 레벨 수에 비례한다고 보면 32 kbps다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint5-013",
+    topic: T2.impairment,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch02 s.26-27",
+    prompt: "증폭기를 지나며 신호 전력이 **4배**가 되었다. 이득(gain)은 약 몇 dB인가?",
+    choices: ["약 +6 dB", "약 +12 dB", "약 +4 dB", "약 +0.6 dB", "약 −6 dB"],
+    answerIndex: 0,
+    explanation:
+      "s.27 (p.14): 10 log₁₀(P2/P1) — 4배 = 2배 × 2배라 3 dB + 3 dB ≈ 6 dB(10 log₁₀ 4 ≈ 6.02). s.26 (p.13): 절반이 −3 dB. 함정: 20 log를 쓰면 약 12 dB, 10을 곱하지 않으면 약 0.6, 증폭인데 음수를 붙이면 틀린다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint5-014",
+    topic: T2.snr,
+    type: "multi",
+    difficulty: 3,
+    slideRef: "Ch02 s.30-32",
+    prompt: "SNR과 SNR_dB에 대한 설명으로 옳은 것을 모두 고르시오.",
+    choices: [
+      "SNR이 높다는 것은 잡음에 비해 신호가 강하다는 뜻이다",
+      "평균 전력을 쓰는 것은 신호·잡음 전력이 시간에 따라 바뀔 수 있기 때문이다",
+      "SNR_dB가 10 dB 늘면 SNR은 10배가 된다",
+      "SNR이 2배가 되면 SNR_dB도 2배가 된다",
+      "SNR_dB는 음수가 될 수 없다",
+    ],
+    answerIndexes: [0, 1, 2],
+    explanation:
+      "s.30 (p.15): SNR = 평균 신호 전력 / 평균 잡음 전력, We consider the average … because they may change with time. SNR_dB = 10 log₁₀ SNR이라 +10 dB = 10배, SNR 2배는 약 +3 dB(2배 아님). s.32 (p.16): 높은 SNR = 잡음에 비해 신호가 강함. (보충) 잡음이 신호보다 세면(SNR < 1) SNR_dB는 음수다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint5-015",
+    topic: T2.shannon,
+    type: "calc",
+    difficulty: 3,
+    slideRef: "Ch02 s.36",
+    prompt: "대역폭이 **1 MHz**인 잡음 있는 채널의 Shannon 용량이 **10 Mbps**가 되려면 SNR(비율)은 최소 얼마여야 하는가?",
+    answer: 2 ** (10e6 / 1e6) - 1,
+    tolerance: 0,
+    steps: ["C = B log₂(1 + SNR) → 10 × 10⁶ = 10⁶ × log₂(1 + SNR)", "log₂(1 + SNR) = 10 → 1 + SNR = 2¹⁰ = 1024", "SNR = 1023"],
+    explanation:
+      "s.36 (p.18): C = B log₂(1 + SNR)를 거꾸로 풀면 1 + SNR = 2^(C/B) = 2¹⁰ = 1024 → SNR = 1023. 함정: 1을 빼지 않으면 1024, dB로 바꿔 답하면(약 30 dB) 틀린다 — 비율을 묻는다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint5-016",
+    topic: T2.nyquist,
+    type: "mcq",
+    difficulty: 2,
+    slideRef: "Ch02 s.34",
+    prompt: "대역폭 **5 kHz**인 잡음 없는 채널의 Nyquist 비트율이 **80 kbps**가 되려면 신호 레벨은 몇 개여야 하는가?",
+    choices: ["256", "8", "16", "128", "512"],
+    answerIndex: 0,
+    explanation:
+      "s.34 (p.17): 80,000 = 2 × 5,000 × log₂ L → log₂ L = 8 → L = 2⁸ = 256. 함정: log₂ L 값(8)을 레벨 수로 답하거나, 2를 빼서 log₂ L = 16으로 보면 틀린다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint5-017",
+    topic: T2.perf,
+    type: "mcq",
+    difficulty: 2,
+    slideRef: "Ch02 s.44-45",
+    prompt:
+      "대역폭 **10 Mbps**인 네트워크가 분당 평균 **12,000 프레임**을 통과시키고, 프레임 하나는 평균 **10,000비트**다. 처리량과 대역폭의 관계로 옳은 것은?",
+    choices: ["처리량 2 Mbps, 대역폭의 약 1/5", "처리량 2 Mbps, 대역폭의 5배", "처리량 120 Mbps, 대역폭의 12배", "처리량 0.2 Mbps, 대역폭의 1/50", "처리량 20 Mbps, 대역폭의 2배"],
+    answerIndex: 0,
+    explanation:
+      "s.45 (p.23): Throughput = (12,000 × 10,000) / 60 = 2 Mbps — almost one-fifth of the bandwidth. s.44 (p.22): 처리량은 항상 대역폭보다 작으므로 대역폭보다 큰 값은 바로 지울 수 있다. 함정: 60으로 나누지 않으면 120 Mbps다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint5-018",
+    topic: T2.delay,
+    type: "calc",
+    difficulty: 3,
+    slideRef: "Ch02 s.46",
+    prompt:
+      "**500 kbyte**(5 × 10⁵바이트) 메시지를 대역폭 **10 Mbps**, 거리 **2,000 km**, 전파 속도 **2 × 10⁸ m/s**인 링크로 보낸다. 큐잉 시간이 **5 ms**, 처리 시간이 **1 ms**일 때 전체 지연(latency)은 몇 **ms**인가?",
+    answer:
+      latency({ propagation: propagationTime(2_000e3, 2e8), transmission: transmissionTime(5e5 * 8, 10e6), queuing: 5e-3, processing: 1e-3 }) * 1e3,
+    tolerance: 0,
+    relTolerance: 0.001,
+    unit: "ms",
+    steps: ["전파 시간 = 2 × 10⁶ m / 2 × 10⁸ m/s = 10 ms", "전송 시간 = 4 × 10⁶비트 / 10⁷ bps = 0.4 s = 400 ms", "지연 = 10 + 400 + 5 + 1 = 416 ms"],
+    explanation:
+      "s.46 (p.23): Latency = propagation time + transmission time + queuing time + processing time = 10 + 400 + 5 + 1 = 416 ms. 함정: 바이트를 비트로 바꾸지 않으면 전송 시간이 50 ms라 66 ms, 큐잉·처리 시간을 빼면 410 ms다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint5-019",
+    topic: T2.bdp,
+    type: "multi",
+    difficulty: 3,
+    slideRef: "Ch02 s.44-52",
+    prompt: "지터(jitter)에 대한 설명으로 옳은 것을 모두 고르시오.",
+    choices: [
+      "패킷 지연이 20·45·40 ms로 제각각이고, 받는 응용이 실시간 오디오면 지터가 문제가 된다",
+      "지터는 지연과 관련된 성능 문제다",
+      "모든 패킷의 지연이 똑같이 100 ms이면 실시간 비디오도 지터를 겪는다",
+      "대역폭-지연 곱이 크면 언제나 지터가 생긴다",
+      "처리량이 대역폭과 같을 때 생기는 문제를 지터라 한다",
+    ],
+    answerIndexes: [0, 1],
+    explanation:
+      "s.52 (p.26): Jitter = variation in the packet arrival time, a performance issue related to delay — 지연이 서로 다르고 응용이 시간에 민감할 때(오디오·비디오) 문제가 된다(20·45·40 ms 예). 지연이 모두 같으면 변동이 없어 지터가 아니다. 대역폭-지연 곱(s.48)은 링크를 채우는 비트 수이고, 처리량은 대역폭보다 항상 작다(s.44).",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint5-020",
+    topic: T2.d2d,
+    type: "multi",
+    difficulty: 3,
+    slideRef: "Ch02 s.54-57",
+    prompt: "디지털→디지털 변환에 대한 설명으로 옳은 것을 모두 고르시오.",
+    choices: [
+      "라인 코딩은 비트열을 디지털 신호로 바꾸는 과정이다",
+      "블록 코딩의 3단계는 분할 → 치환 → 결합이다",
+      "mB/nB 인코딩에서 n은 m보다 크다",
+      "블록 코딩은 라인 코딩의 성능을 높이는 중복(redundancy)을 준다",
+      "스크램블링은 항상 필요하다",
+    ],
+    answerIndexes: [0, 1, 2, 3],
+    explanation:
+      "s.54 (p.27): Line coding is always needed — converts a sequence of bits to a digital signal. Block coding and scrambling may or may not be needed. s.56 (p.28): Block coding gives us the redundancy and improves the performance of line coding, changes m bits into n bits where n > m, 3 steps: division, substitution, combination.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint5-021",
+    topic: T2.pcm,
+    type: "calc",
+    difficulty: 3,
+    slideRef: "Ch02 s.59-61",
+    prompt: "최고 주파수가 **4 kHz**인 음성을 Nyquist 최소 표본화율로 PCM 디지털화했더니 비트율이 **96 kbps**였다. 표본 하나에 몇 비트를 썼는가?",
+    answer: 96e3 / samplingRate(4000),
+    tolerance: 0,
+    unit: "비트",
+    steps: ["표본화율 = 2 × 4000 = 8000 표본/s", "표본당 비트 = 96,000 / 8000 = 12비트"],
+    explanation:
+      "s.61 (p.31): 표본화율 = 최고 주파수 × 2 = 8000 표본/s, 비트율 = 표본화율 × 표본당 비트 → 96,000 / 8000 = 12비트. 함정: 2배를 빼먹으면 24비트, 예제의 8비트(64 kbps)를 외워 답하면 틀린다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint5-022",
+    topic: T2.keying,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch02 s.68-71",
+    prompt: "비트율 **4 kbps**인 데이터를 BFSK로 보낸다. 신호 요소 하나가 1비트(r = 1), **d = 0**, **Δf = 2 kHz**일 때 필요한 대역폭은?",
+    choices: ["8 kHz", "6 kHz", "4 kHz", "12 kHz", "10 kHz"],
+    answerIndex: 0,
+    explanation:
+      "s.71 (p.36): BFSK 대역폭 B = (1 + d)S + 2Δf = 1 × 4000 + 2 × 2000 = 8 kHz. 함정: 2Δf 대신 Δf를 더하면 6 kHz, BASK 공식((1 + d)S)을 쓰면 4 kHz, d = 1을 넣으면 12 kHz다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint5-023",
+    topic: T2.a2a,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch02 s.78-80",
+    prompt: "대역폭이 **10 kHz**인 오디오 신호를 **β = 1**인 **PM**으로 변조할 때 필요한 대역폭은?",
+    choices: ["40 kHz", "100 kHz", "20 kHz", "30 kHz", "80 kHz"],
+    answerIndex: 0,
+    explanation:
+      "s.80 (p.40): B_PM = 2(1 + β)B = 2 × 2 × 10 = 40 kHz. 함정: FM에서 흔히 쓰는 β = 4로 계산하면 100 kHz(s.79), AM처럼 2B로 계산하거나 2(1 + β)에서 1이나 2를 빠뜨리면 20 kHz다 — 문제에 준 β를 쓴다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint5-024",
+    topic: T2.fdm,
+    type: "mcq",
+    difficulty: 3,
+    slideRef: "Ch02 s.87",
+    prompt:
+      "대역폭 **1,000 kHz**인 링크를 FDM으로 채널 **8개**에 똑같이 나눈다. 채널 사이마다 **20 kHz**의 보호 대역이 필요할 때, 채널 하나가 쓸 수 있는 최대 대역폭은?",
+    choices: ["107.5 kHz", "105 kHz", "125 kHz", "110 kHz", "102.5 kHz"],
+    answerIndex: 0,
+    explanation:
+      "s.87 (p.44): 채널 n개에는 보호 대역이 n − 1개 → 8 × x + 7 × 20 = 1,000 → x = 860 / 8 = 107.5 kHz. 함정: 보호 대역을 8개로 세면 105 kHz, 보호 대역을 무시하면 125 kHz다.",
+  },
+  {
+    ...H("ch02"),
+    id: "data-comm-ch02-hint5-025",
+    topic: T2.media,
+    type: "multi",
+    difficulty: 3,
+    slideRef: "Ch02 s.93-97",
+    prompt: "유도 매체에 대한 설명으로 옳은 것을 모두 고르시오.",
+    choices: [
+      "꼬임쌍선에서 한 선은 수신자에게 신호를 보내고, 다른 선은 접지 기준으로만 쓰인다",
+      "게이지(gauge)는 선 굵기의 척도로, 굵기와 반비례한다",
+      "광섬유와 동축 케이블의 조합이 케이블 TV에 쓰인다",
+      "동축 케이블은 오늘날 다중화 전화망의 주력 매체다",
+      "UTP는 금속 차폐가 있는 꼬임쌍선이다",
+    ],
+    answerIndexes: [0, 1, 2],
+    explanation:
+      "s.93 (p.47): One of the wires is used to carry signals to the receiver, and the other is used only as a ground reference. s.94 (p.47): Gauge is a measure of the thickness of the wire (inversely), UTP = Unshielded(비차폐). s.95 (p.48): 동축은 다중화 전화망에 'was' used — 오늘날은 광섬유로 바뀌었다. s.97 (p.49): A combination of optical fiber and coaxial cable is used in cable TV.",
+  },
+];
+
+/** 세트 순서대로 5세트(125문항) */
+export const HINT_SETS = [HINT1, HINT2, HINT3, HINT4, HINT5] as const;
+
+/** 챕터 문항 뒤에 붙일 힌트관련 문항(세트 1 → 5, 세트 안 번호 순) */
 export function hintQuestions(chapter: Ch): Question[] {
   return HINT_SETS.flat().filter((q) => q.chapter === chapter);
 }
