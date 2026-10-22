@@ -1,4 +1,4 @@
-import { nyquistLevels, shannonCapacity } from "@/lib/sim/data-comm/capacity";
+import { nyquistLevels } from "@/lib/sim/data-comm/capacity";
 import { snr, snrDb } from "@/lib/sim/data-comm/decibel";
 import { bitLength, textBitRate } from "@/lib/sim/data-comm/digital";
 import { tdmSlotDuration } from "@/lib/sim/data-comm/multiplexing";
@@ -217,14 +217,13 @@ export const HINT1: Question[] = [
     difficulty: 3,
     slideRef: "Ch02 s.20-21",
     prompt:
-      "초당 **50쪽**의 문서를 내려받는다. 한 쪽은 평균 30줄, 한 줄은 60자이고, 한 문자에 8비트가 필요하다. 이때의 **비트 길이(1비트에 걸리는 시간)**는 몇 μs인가? (소수 둘째 자리까지)",
-    answer: bitLength(textBitRate(50, 30, 60, 8)) * 1e6,
-    tolerance: 0.01,
-    relTolerance: 0.005,
+      "초당 **50쪽**의 문서를 내려받는다. 한 쪽은 평균 50줄, 한 줄은 100자이고, 한 문자에 8비트가 필요하다. 이때의 **비트 길이(1비트에 걸리는 시간)**는 몇 μs인가?",
+    answer: bitLength(textBitRate(50, 50, 100, 8)) * 1e6,
+    tolerance: 0,
     unit: "μs",
-    steps: ["비트율 = 50 × 30 × 60 × 8 = 720,000 bps", "비트 길이 = 1 / 720,000 s ≈ 1.39 × 10⁻⁶ s", "≈ 1.39 μs"],
+    steps: ["비트율 = 50 × 50 × 100 × 8 = 2,000,000 bps = 2 Mbps", "비트 길이 = 1 / (2 × 10⁶) s = 0.5 × 10⁻⁶ s", "= 0.5 μs"],
     explanation:
-      "s.20 (p.10) Example 2.3: 비트율 = 쪽/초 × 줄 × 문자 × 비트 = 50 × 30 × 60 × 8 = 720,000 bps. s.21 (p.11) Example 2.4: bit length = 1 / bit rate = 1 / 720,000 ≈ 1.39 μs. 함정: 비트율(720 kbps)에서 멈추거나, 8비트를 곱하지 않으면(90,000 bps → 11.11 μs) 틀린다.",
+      "s.20 (p.10) Example 2.3: 비트율 = 쪽/초 × 줄 × 문자 × 비트 = 50 × 50 × 100 × 8 = 2 Mbps. s.21 (p.11) Example 2.4: bit length = 1 / bit rate = 1 / (2 × 10⁶) = 0.5 μs. 함정: 비트율(2 Mbps)에서 멈추거나, 8비트를 곱하지 않으면(250,000 bps → 4 μs) 틀린다.",
   },
   {
     ...H("ch02"),
@@ -596,11 +595,11 @@ export const HINT2: Question[] = [
     type: "mcq",
     difficulty: 3,
     slideRef: "Ch02 s.8",
-    prompt: "실효값(effective value)이 **110 V**인 사인파 전압의 최대 진폭(peak amplitude)은 약 몇 V인가?",
-    choices: ["약 156 V", "약 78 V", "약 220 V", "약 110 V", "약 191 V"],
+    prompt: "실효값(effective value)이 **100 V**인 사인파 전압의 최대 진폭(peak amplitude)은 약 몇 V인가? (√2 ≈ 1.41)",
+    choices: ["약 141 V", "약 71 V", "약 200 V", "약 100 V", "약 173 V"],
     answerIndex: 0,
     explanation:
-      "s.8 (p.4): The peak value is equal to 2½ × average (or effective) value — 220 V 전원의 최대 진폭이 약 310 V인 것과 같다. 110 × √2 ≈ 155.6 V. 함정: √2로 나누면 약 78 V, 2를 곱하면 220 V, √3을 곱하면 약 191 V다.",
+      "s.8 (p.4): The peak value is equal to 2½ × average (or effective) value — 220 V 전원의 최대 진폭이 약 310 V인 것과 같다. 100 × √2 ≈ 141 V. 함정: √2로 나누면 약 71 V, 2를 곱하면 200 V, √3을 곱하면 약 173 V다.",
   },
   {
     ...H("ch02"),
@@ -675,14 +674,13 @@ export const HINT2: Question[] = [
     type: "calc",
     difficulty: 3,
     slideRef: "Ch02 s.30-36",
-    prompt: "대역폭이 **4 kHz**이고 **SNR_dB = 30 dB**인 잡음 있는 채널의 Shannon 용량은 약 몇 kbps인가? (소수 첫째 자리까지)",
-    answer: shannonCapacity(4000, 10 ** (30 / 10)) / 1000,
-    tolerance: 0.1,
-    relTolerance: 0.005,
+    prompt: "대역폭이 **4 kHz**이고 **SNR_dB = 30 dB**인 잡음 있는 채널의 Shannon 용량은 약 몇 kbps인가? (log₂ 1001 ≈ 10으로 계산한다)",
+    answer: (4000 * 10) / 1000,
+    tolerance: 0.2,
     unit: "kbps",
-    steps: ["SNR_dB = 30 → SNR = 10³ = 1000", "C = B log₂(1 + SNR) = 4000 × log₂ 1001", "≈ 4000 × 9.967 ≈ 39,869 bps ≈ 39.9 kbps"],
+    steps: ["SNR_dB = 30 → SNR = 10³ = 1000", "C = B log₂(1 + SNR) = 4000 × log₂ 1001", "≈ 4000 × 10 = 40,000 bps = 40 kbps"],
     explanation:
-      "s.30 (p.15): SNR_dB = 10 log₁₀ SNR → 30 dB는 SNR = 1000. s.36 (p.18): C = B log₂(1 + SNR) = 4000 × log₂ 1001 ≈ 39.9 kbps. 함정: dB 값 30을 그대로 넣으면 4000 × log₂ 31 ≈ 19.8 kbps가 된다 — Shannon 공식에는 비율(SNR)을 넣는다.",
+      "s.30 (p.15): SNR_dB = 10 log₁₀ SNR → 30 dB는 SNR = 1000. s.36 (p.18): C = B log₂(1 + SNR) = 4000 × log₂ 1001 ≈ 4000 × 10 = 40 kbps(정확히는 약 39.87 kbps라 39.9도 정답으로 받는다). 함정: dB 값 30을 그대로 넣으면 4000 × log₂ 31 ≈ 4000 × 5 = 20 kbps가 된다 — Shannon 공식에는 비율(SNR)을 넣는다.",
   },
   {
     ...H("ch02"),

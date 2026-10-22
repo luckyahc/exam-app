@@ -119,6 +119,13 @@ describe("힌트관련 세트 구성 — 시험 힌트(23~26문제, 30점, 선�
     expect(bad).toEqual([]);
   });
 
+  it("계산은 공학용 계산기 없이: 주관식 정답은 정수이거나 소수 첫째 자리까지", () => {
+    for (const x of all) {
+      if (x.type !== "calc") continue;
+      expect(Math.abs(x.answer * 10 - Math.round(x.answer * 10)), x.id).toBeLessThan(1e-6);
+    }
+  });
+
   it("빈칸은 칸마다 한국어와 영어(또는 숫자) 표기를 함께 받는다", () => {
     for (const x of all) {
       if (x.type !== "blank") continue;
@@ -161,7 +168,7 @@ describe("계산 정답 재계산(lib/sim/data-comm)", () => {
     expect(picked("ch02-hint1-010")).toBe("135°, 3π/4 rad");
     expect(wavelength(4e6, 2e8)).toBe(50);
     expect(picked("ch02-hint1-011")).toBe("50 m");
-    expect(calcAnswer("ch02-hint1-013")).toBeCloseTo(1.3889, 3);
+    expect(calcAnswer("ch02-hint1-013")).toBeCloseTo(0.5, 12);
     expect(decibel(0.5 * 10 * 0.5, 1)).toBeCloseTo(3.98, 2);
     expect(picked("ch02-hint1-015")).toBe("약 +4 dB");
     expect(calcAnswer("ch02-hint1-017")).toBeCloseTo(10, 9);
@@ -182,13 +189,15 @@ describe("계산 정답 재계산(lib/sim/data-comm)", () => {
   });
 
   it("힌트관련2", () => {
-    expect(peakFromRms(110)).toBeCloseTo(155.56, 2);
-    expect(picked("ch02-hint2-010")).toBe("약 156 V");
+    expect(peakFromRms(100)).toBeCloseTo(141.4, 1);
+    expect(picked("ch02-hint2-010")).toBe("약 141 V");
     expect(1 / 0.25e-3).toBe(4000);
     expect(calcAnswer("ch02-hint2-012")).toBe(800);
     expect(bitsPerSignalElement(16)).toBe(4);
     expect(picked("ch02-hint2-013")).toBe("4비트");
-    expect(calcAnswer("ch02-hint2-015")).toBeCloseTo(39.869, 2);
+    expect(calcAnswer("ch02-hint2-015")).toBe(40);
+    // 정확한 값(약 39.87 kbps)도 허용 오차 안
+    expect(Math.abs(shannonCapacity(4000, 1000) / 1000 - 40)).toBeLessThanOrEqual(0.2);
     expect(bandwidthDelayProduct(10e6, 2e-3)).toBeCloseTo(20_000, 6);
     expect(picked("ch02-hint2-016")).toBe("20,000비트");
     const latency = propagationTime(4.8e6, 2.4e8) + transmissionTime(8e6, 100e6);
