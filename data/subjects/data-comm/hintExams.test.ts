@@ -41,7 +41,7 @@ describe("힌트관련 세트 구성 — 시험 힌트(23~26문제, 30점, 선�
     const count = (t: Question["type"]) => set.filter((x) => x.type === t).length;
     expect(count("mcq")).toBe(16);
     expect(count("multi")).toBe(5);
-    // 주관식은 단답형(용어·값 쓰기) — 계산 문제(calc)로 채우지 않는다(2026-10-23)
+    // 주관식은 용어 단답형(설명을 보고 용어 쓰기) — 계산 문제(calc)로 채우지 않는다(2026-10-23)
     expect(count("blank")).toBe(4);
     expect(count("calc")).toBe(0);
     // 배점: 선택형 1점 × 21 + 주관식(2~3점) 4문항 = 30점이 되는 배점이 있다(2·2·2·3)
@@ -110,11 +110,14 @@ describe("힌트관련 세트 구성 — 시험 힌트(23~26문제, 30점, 선�
     expect(bad).toEqual([]);
   });
 
-  it("빈칸은 지문의 {{n}} 자리마다 한 번씩, 칸 수와 같다", () => {
+  it("주관식은 용어 단답형: '다음 설명에 해당하는 용어를 쓰시오' + 설명 → 칸 하나, 설명에 정답 용어가 없다", () => {
     for (const x of all) {
       if (x.type !== "blank") continue;
-      const slots = [...x.text.matchAll(/\{\{(\d+)\}\}/g)].map((m) => Number(m[1]));
-      expect(slots, x.id).toEqual(x.blanks.map((_, i) => i));
+      expect(x.prompt, x.id).toBe("다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).");
+      expect(x.text, x.id).toMatch(/^[^{}]+ → \{\{0\}\}$/);
+      expect(x.blanks, x.id).toHaveLength(1);
+      const def = x.text.toLowerCase();
+      expect(x.blanks[0].accept.filter((a) => a.length >= 2 && def.includes(a.toLowerCase())), x.id).toEqual([]);
     }
   });
 

@@ -4,7 +4,7 @@ import { T as T2 } from "./ch02";
 
 // 힌트관련1~5 모의시험(2026-10-22): 교수님 시험 힌트(docs/dc-exam-hint.md)대로 세트마다 25문항(23~26문항)을 새로 만든다.
 // 4·5는 더 헷갈리게: 뒤바뀐 짝·단위 변환·비슷한 공식·한 단계만 틀린 오답, 난이도는 거의 어려움(3).
-// 세트 구성: 선택형 21(5지선다 mcq 16 + '모두 고르시오' multi 5 — 정답 2~4개, 부분 점수 없음) + 주관식 4(단답형 blank — 용어·값을 직접 쓴다)
+// 세트 구성: 선택형 21(5지선다 mcq 16 + '모두 고르시오' multi 5 — 정답 2~4개, 부분 점수 없음) + 주관식 4(용어 단답형 blank — 설명을 보고 용어를 쓴다, OS shortAnswer.ts와 같은 모양)
 //   = 배점(선택형 1점, 주관식 2~3점)으로 30점. 장별 Ch01 8 · Ch02 17(슬라이드 44 : 101), 난이도는 중간(2)·어려움(3)만.
 // id = data-comm-{chapter}-hint{세트}-{세트 안 번호}. 실제 시험처럼 문제 순서·보기 순서를 섞어 낸다(문제 화면에는 번호가 없다).
 // 주관식을 계산 문제(calc)로 채우지 않는다(2026-10-23 사용자 요청) — 계산은 세트당 계산형 객관식 3문항이고, hintExams.test.ts가 lib/sim/data-comm으로 다시 계산한다.
@@ -126,15 +126,12 @@ export const HINT1: Question[] = [
     topic: T1.object,
     type: "blank",
     difficulty: 3,
-    slideRef: "Ch01 s.36",
-    prompt: "빈칸에 알맞은 용어를 쓰시오.",
-    text: "TCP/IP 스위트에서 양쪽의 동일 객체는 전송 계층이 세그먼트(segment) 또는 {{0}}, 네트워크 계층이 {{1}}, 데이터 링크 계층이 프레임(frame)이다.",
-    blanks: [
-      { accept: ["사용자 데이터그램", "사용자데이터그램", "user datagram", "User datagram", "User Datagram"] },
-      { accept: ["데이터그램", "datagram", "Datagram"] },
-    ],
+    slideRef: "Ch01 s.36-38",
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "TCP/IP 스위트에서 데이터 링크 계층이 양쪽에서 똑같이 다루는 동일 객체(identical object)로, 한 노드에서 다음 노드로 옮겨지는 단위 → {{0}}",
+    blanks: [{ accept: ["프레임", "frame"] }],
     explanation:
-      "s.36 (p.18): Application = messages, Transport = segment or user datagram, Network = datagram, Data link = frame, Physical = bits. 함정: 전송 계층은 '사용자' 데이터그램, 네트워크 계층은 그냥 데이터그램이다.",
+      "s.36 (p.18): Data link 계층의 identical objects = frame(응용 messages, 전송 segment or user datagram, 네트워크 datagram, 물리 bits). s.38 (p.19): The data link layer is responsible for moving frames from a node to the next. 헷갈리기 쉬운 답: 데이터그램은 네트워크 계층, 세그먼트는 전송 계층의 동일 객체다.",
   },
 
   // ───────────────────────────── Ch02
@@ -221,14 +218,11 @@ export const HINT1: Question[] = [
     type: "blank",
     difficulty: 3,
     slideRef: "Ch02 s.21",
-    prompt: "빈칸에 알맞은 용어를 쓰시오.",
-    text: "디지털 신호에서 1비트가 전송 매체 위에서 차지하는 거리를 {{0}}라 하고, 그 값은 1 ÷ {{1}}로 구한다. 아날로그 신호에서 한 주기가 차지하는 거리인 파장과 비교된다.",
-    blanks: [
-      { accept: ["비트 길이", "비트길이", "bit length"] },
-      { accept: ["비트율", "비트 전송률", "비트레이트", "bit rate", "bitrate"] },
-    ],
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "디지털 신호에서 1비트가 전송 매체 위에서 차지하는 거리로, 1 ÷ 비트율로 구한다 → {{0}}",
+    blanks: [{ accept: ["비트 길이", "비트길이", "bit length"] }],
     explanation:
-      "s.21 (p.11): Bit length — The distance 1 bit occupies on the transmission medium, bit length = 1 / bit rate. Cf. Wavelength for an analog signal — The distance 1 cycle occupies. 함정: 분모는 보오율(baud rate)이 아니라 비트율이고, '비트 길이'와 '파장'을 바꿔 쓰면 틀린다.",
+      "s.21 (p.11): Bit length — The distance 1 bit occupies on the transmission medium, bit length = 1 / bit rate. 헷갈리기 쉬운 답: 파장(wavelength)은 아날로그 신호에서 한 주기(1 cycle)가 차지하는 거리다.",
   },
   {
     ...H("ch02"),
@@ -293,15 +287,12 @@ export const HINT1: Question[] = [
     topic: T2.snr,
     type: "blank",
     difficulty: 3,
-    slideRef: "Ch02 s.30-31",
-    prompt: "빈칸에 알맞은 말을 쓰시오.",
-    text: "평균 신호 전력 ÷ 평균 잡음 전력을 {{0}}(SNR)라 한다. 잡음이 전혀 없는 채널에서는 SNR과 SNR_dB가 모두 {{1}}가 된다.",
-    blanks: [
-      { accept: ["신호 대 잡음비", "신호대잡음비", "신호 대 잡음 비", "신호 대 잡음비율", "signal-to-noise ratio", "signal to noise ratio"] },
-      { accept: ["무한대", "무한", "∞", "infinity", "infinite"] },
-    ],
+    slideRef: "Ch02 s.30",
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "평균 신호 전력을 평균 잡음 전력으로 나눈 비 → {{0}}",
+    blanks: [{ accept: ["SNR", "신호 대 잡음비", "신호대잡음비", "신호 대 잡음 비", "signal-to-noise ratio", "signal to noise ratio"] }],
     explanation:
-      "s.30 (p.15): SNR = (average signal power) / (average noise power), SNR_dB = 10 log₁₀ SNR. s.31 (p.16) Extreme Case: 잡음 없는 채널은 잡음 전력이 0이므로 SNR = ∞, SNR_dB = ∞. 함정: 잡음이 0이라고 SNR도 0이라 쓰면 틀린다 — 분모가 0이 되어 무한대다.",
+      "s.30 (p.15): SNR = (average signal power) / (average noise power), SNR_dB = 10 log₁₀ SNR. 헷갈리기 쉬운 답: SNR_dB는 이 비를 데시벨로 나타낸 값이고, 감쇠(dB)는 한 신호의 두 지점 전력을 비교한다.",
   },
   {
     ...H("ch02"),
@@ -338,14 +329,11 @@ export const HINT1: Question[] = [
     type: "blank",
     difficulty: 2,
     slideRef: "Ch02 s.41-44",
-    prompt: "빈칸에 알맞은 성능 지표를 쓰시오.",
-    text: "링크의 이론 최대 전송률(theoretical maximum bit rate)은 {{0}}, 실제로 데이터를 보낼 수 있는 유효 전송률(actual effective bit rate)은 {{1}}이다.",
-    blanks: [
-      { accept: ["대역폭", "bandwidth"] },
-      { accept: ["처리량", "스루풋", "throughput"] },
-    ],
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "네트워크를 통해 실제로 데이터를 얼마나 빨리 보낼 수 있는지를 나타내는 성능 지표(실제 유효 전송률) → {{0}}",
+    blanks: [{ accept: ["처리량", "스루풋", "throughput"] }],
     explanation:
-      "s.41 (p.21): Bandwidth — Theoretical maximum bit rate(이론 최대 전송률), Throughput — Actual effective bit rate(실제 유효 전송률). s.44 (p.22): Bandwidth is a potential measurement of a link, throughput is an actual measurement. 함정: 두 값을 바꿔 쓰기 쉽다 — 처리량은 대역폭보다 클 수 없다.",
+      "s.41 (p.21): Throughput — Actual effective bit rate(실제 유효 전송률). s.44 (p.22): A throughput is a measure how fast we can actually send data through a network. 헷갈리기 쉬운 답: 대역폭(bandwidth)은 이론 최대 전송률로, 링크의 잠재적인 값이다.",
   },
   {
     ...H("ch02"),
@@ -574,15 +562,12 @@ export const HINT2: Question[] = [
     topic: T1.osi,
     type: "blank",
     difficulty: 3,
-    slideRef: "Ch01 s.43",
-    prompt: "빈칸에 알맞은 OSI 계층 이름을 쓰시오.",
-    text: "OSI 모델에서 4계층은 전송(Transport) 계층, 5계층은 {{0}} 계층, 6계층은 {{1}} 계층이다.",
-    blanks: [
-      { accept: ["세션", "session", "Session", "세션 계층"] },
-      { accept: ["표현", "presentation", "Presentation", "표현 계층"] },
-    ],
+    slideRef: "Ch01 s.42",
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "ISO가 만든 표준으로, 네트워크 통신의 모든 면을 다루는 7계층 모델 → {{0}}",
+    blanks: [{ accept: ["OSI", "OSI 모델", "OSI model", "개방형 시스템 상호 연결", "개방형 시스템 상호연결", "Open Systems Interconnection"] }],
     explanation:
-      "s.43 (p.22): Layer 1 Physical, 2 Data link, 3 Network, 4 Transport, 5 Session, 6 Presentation, 7 Application. 함정: 세션(5)과 표현(6)의 순서를 바꾸기 쉽다.",
+      "s.42 (p.21): An ISO standard that covers all aspects of network communications is the Open Systems Interconnection (OSI) model. ISO is the organization, OSI is the model. 헷갈리기 쉬운 답: ISO는 모델이 아니라 그 모델을 만든 기구다.",
   },
 
   // ───────────────────────────── Ch02
@@ -650,14 +635,11 @@ export const HINT2: Question[] = [
     type: "blank",
     difficulty: 2,
     slideRef: "Ch02 s.17",
-    prompt: "빈칸에 알맞은 말을 쓰시오.",
-    text: "복합 신호에 들어 있는 주파수의 범위를 그 신호의 {{0}}이라 하며, 신호에 들어 있는 가장 높은 주파수와 가장 낮은 주파수의 {{1}}로 구한다.",
-    blanks: [
-      { accept: ["대역폭", "bandwidth"] },
-      { accept: ["차", "차이", "difference", "뺀 값", "빼기"] },
-    ],
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "복합 신호에 들어 있는 주파수의 범위로, 가장 높은 주파수와 가장 낮은 주파수의 차로 구한다 → {{0}}",
+    blanks: [{ accept: ["대역폭", "bandwidth"] }],
     explanation:
-      "s.17 (p.9): Bandwidth — The range of frequencies contained in a composite signal. The bandwidth is the difference between the highest and the lowest frequencies(예: 1000~5000 Hz → 4000 Hz). 함정: 최고 주파수 자체나 두 주파수의 합·평균이 아니라 차다.",
+      "s.17 (p.9): Bandwidth — The range of frequencies contained in a composite signal, the difference between the highest and the lowest frequencies(예: 1000~5000 Hz → 4000 Hz). 헷갈리기 쉬운 답: 주파수(frequency)는 사인파 하나가 1초에 반복하는 주기 수다.",
   },
   {
     ...H("ch02"),
@@ -703,15 +685,12 @@ export const HINT2: Question[] = [
     topic: T2.shannon,
     type: "blank",
     difficulty: 3,
-    slideRef: "Ch02 s.34-36",
-    prompt: "빈칸에 알맞은 공식 이름(사람 이름)을 쓰시오.",
-    text: "잡음 없는 채널의 최대 비트율은 {{0}} 공식(비트율 = 2 × 대역폭 × log₂ L)으로, 잡음 있는 채널의 이론 최고 데이터율은 {{1}} 용량(C = B × log₂(1 + SNR))으로 구한다.",
-    blanks: [
-      { accept: ["Nyquist", "나이퀴스트", "나이키스트"] },
-      { accept: ["Shannon", "섀넌", "샤논", "새넌"] },
-    ],
+    slideRef: "Ch02 s.36",
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "잡음 있는 채널의 이론 최고 데이터율로, C = B × log₂(1 + SNR)로 구한다 → {{0}}",
+    blanks: [{ accept: ["섀넌 용량", "샤논 용량", "섀넌용량", "Shannon capacity", "Shannon", "섀넌", "샤논"] }],
     explanation:
-      "s.34 (p.17): Noiseless Channel — Nyquist Bit Rate = 2 × Bandwidth × log₂ L. s.36 (p.18): Noisy Channel — Shannon capacity, C = B × log₂(1 + SNR). 함정: 레벨 수 L이 들어가는 쪽이 Nyquist, SNR이 들어가는 쪽이 Shannon이다 — 순서를 바꿔 쓰면 틀린다.",
+      "s.36 (p.18): Noisy Channel — Shannon capacity, C = B × log₂(1 + SNR), C is the capacity of the channel in bits per second. 헷갈리기 쉬운 답: Nyquist 비트율은 잡음 없는 채널의 최대 비트율(2 × B × log₂ L)이다.",
   },
   {
     ...H("ch02"),
@@ -835,14 +814,11 @@ export const HINT2: Question[] = [
     type: "blank",
     difficulty: 3,
     slideRef: "Ch02 s.89",
-    prompt: "빈칸에 알맞은 용어를 쓰시오.",
-    text: "{{0}}는 전송률이 낮은 여러 채널을 전송률이 높은 하나로 합치는 디지털 다중화 기법이다. 여기서 채널 하나는 다중화 단위인 {{1}}에 해당한다.",
-    blanks: [
-      { accept: ["TDM", "시분할 다중화", "시분할다중화", "time-division multiplexing", "time division multiplexing"] },
-      { accept: ["타임 슬롯", "타임슬롯", "시간 슬롯", "슬롯", "time slot", "timeslot", "slot"] },
-    ],
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "전송률이 낮은 여러 채널을 전송률이 높은 하나로 합치는 디지털 다중화 기법 → {{0}}",
+    blanks: [{ accept: ["TDM", "시분할 다중화", "시분할다중화", "시분할 다중화 방식", "time-division multiplexing", "time division multiplexing"] }],
     explanation:
-      "s.89 (p.45): TDM is a digital multiplexing technique for combining several low-rate channels into one high-rate one. Channel = time slot = multiplexing unit. 함정: FDM·WDM은 아날로그 다중화이고, 디지털 다중화는 TDM이다.",
+      "s.89 (p.45): TDM is a digital multiplexing technique for combining several low-rate channels into one high-rate one. Channel = time slot = multiplexing unit. 헷갈리기 쉬운 답: FDM·WDM은 아날로그 다중화 기법이다.",
   },
   {
     ...H("ch02"),
@@ -1014,13 +990,13 @@ export const HINT3: Question[] = [
     id: "data-comm-ch01-hint3-008",
     topic: T1.tcpipOsi,
     type: "blank",
-    difficulty: 2,
-    slideRef: "Ch01 s.33-43",
-    prompt: "빈칸에 알맞은 숫자를 쓰시오.",
-    text: "TCP/IP 프로토콜 스위트는 {{0}}개 계층으로, OSI 모델은 {{1}}개 계층으로 이루어진다.",
-    blanks: [{ accept: ["5", "5개", "다섯"] }, { accept: ["7", "7개", "일곱"] }],
+    difficulty: 3,
+    slideRef: "Ch01 s.43",
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "OSI 모델의 세 계층(5~7계층)을 하나로 합친 것으로 보는, TCP/IP 프로토콜 스위트의 맨 위 계층 → {{0}}",
+    blanks: [{ accept: ["응용 계층", "응용계층", "응용", "애플리케이션 계층", "application layer", "application"] }],
     explanation:
-      "s.33 (p.17): TCP/IP = Physical·Data link·Network·Transport·Application 5계층. s.43 (p.22): OSI = Layer 1~7. TCP/IP 응용 계층 하나가 OSI의 응용·표현·세션 셋에 대응해 계층 수가 2개 적다.",
+      "s.43 (p.22): The application layer in the suite is usually considered to be the combination of three layers in the OSI model(응용·표현·세션). 헷갈리기 쉬운 답: 전송 계층은 OSI와 TCP/IP 모두 4계층으로 하나씩 대응한다.",
   },
 
   // ───────────────────────────── Ch02
@@ -1050,14 +1026,11 @@ export const HINT3: Question[] = [
     type: "blank",
     difficulty: 2,
     slideRef: "Ch02 s.13",
-    prompt: "빈칸에 알맞은 용어를 쓰시오.",
-    text: "단순 신호가 한 번 진동(1 cycle)하는 동안 이동할 수 있는 거리를 {{0}}이라 한다. 그 값은 전파 속도 × {{1}}, 또는 전파 속도 ÷ 주파수로 구한다.",
-    blanks: [
-      { accept: ["파장", "wavelength", "λ", "람다"] },
-      { accept: ["주기", "period", "T"] },
-    ],
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "단순 신호가 한 주기 동안 이동할 수 있는 거리로, 전파 속도 × 주기(또는 전파 속도 ÷ 주파수)로 구한다 → {{0}}",
+    blanks: [{ accept: ["파장", "wavelength", "λ", "람다"] }],
     explanation:
-      "s.13 (p.7): Wavelength — The distance a simple signal can travel in one period. Wavelength = propagation speed × period = propagation speed / frequency(λ = c / f = c × T). 함정: 주기와 주파수를 바꿔 '전파 속도 × 주파수'로 쓰면 틀린다(T = 1 / f).",
+      "s.13 (p.7): Wavelength — The distance a simple signal can travel in one period, λ = c / f = c × T. 헷갈리기 쉬운 답: 비트 길이(bit length)는 디지털 신호에서 1비트가 차지하는 거리다.",
   },
   {
     ...H("ch02"),
@@ -1145,18 +1118,15 @@ export const HINT3: Question[] = [
   {
     ...H("ch02"),
     id: "data-comm-ch02-hint3-016",
-    topic: T2.shannon,
+    topic: T2.nyquist,
     type: "blank",
     difficulty: 3,
-    slideRef: "Ch02 s.39",
-    prompt: "빈칸에 알맞은 공식 이름을 쓰시오.",
-    text: "실제로는 두 공식을 함께 쓴다. {{0}} 용량은 데이터율의 상한(upper limit)을 주고, {{1}} 공식은 그 아래에서 고른 비트율에 필요한 신호 레벨 수를 알려 준다.",
-    blanks: [
-      { accept: ["Shannon", "섀넌", "샤논", "새넌"] },
-      { accept: ["Nyquist", "나이퀴스트", "나이키스트"] },
-    ],
+    slideRef: "Ch02 s.34",
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "잡음 없는 채널의 이론 최대 비트율로, 2 × 대역폭 × log₂ L(L: 신호 레벨 수)로 구한다 → {{0}}",
+    blanks: [{ accept: ["나이퀴스트 비트율", "나이키스트 비트율", "Nyquist 비트율", "Nyquist bit rate", "Nyquist", "나이퀴스트", "나이키스트"] }],
     explanation:
-      "s.39 (p.20) Using Both Limits: The Shannon capacity gives us the upper limit; the Nyquist formula tells us how many signal levels we need. 함정: 레벨 수를 구하는 쪽은 L이 들어 있는 Nyquist 공식이다.",
+      "s.34 (p.17): Noiseless Channel — Nyquist Bit Rate = 2 × Bandwidth × log₂ L. s.39 (p.20): Shannon 용량이 상한을 주면, Nyquist 공식으로 필요한 신호 레벨 수를 구한다. 헷갈리기 쉬운 답: Shannon 용량은 잡음 있는 채널의 상한이고 레벨 수 L 대신 SNR이 들어간다.",
   },
   {
     ...H("ch02"),
@@ -1185,14 +1155,11 @@ export const HINT3: Question[] = [
     type: "blank",
     difficulty: 2,
     slideRef: "Ch02 s.48-51",
-    prompt: "빈칸에 알맞은 용어를 쓰시오.",
-    text: "링크를 가득 채울 수 있는 비트 수는 {{0}}이다. 링크를 파이프로 생각하면 파이프의 단면은 대역폭, 파이프의 길이는 {{1}}을 나타낸다.",
-    blanks: [
-      { accept: ["대역폭-지연 곱", "대역폭 지연 곱", "대역폭지연곱", "대역폭-지연곱", "bandwidth-delay product", "bandwidth delay product", "BDP"] },
-      { accept: ["지연", "지연 시간", "delay", "latency"] },
-    ],
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "링크를 가득 채울 수 있는 비트 수로, 링크를 파이프로 보면 파이프의 부피에 해당한다 → {{0}}",
+    blanks: [{ accept: ["대역폭-지연 곱", "대역폭 지연 곱", "대역폭지연곱", "대역폭-지연곱", "bandwidth-delay product", "bandwidth delay product", "BDP"] }],
     explanation:
-      "s.48 (p.24): The bandwidth-delay product defines the number of bits that can fill the link. s.51 (p.26) Example 2.12: The cross section of the pipe represents the bandwidth, the length of the pipe represents the delay, the volume defines the bandwidth-delay product. 함정: 단면과 길이를 바꾸면 틀린다.",
+      "s.48 (p.24): The bandwidth-delay product defines the number of bits that can fill the link. s.51 (p.26) Example 2.12: 파이프의 단면 = 대역폭, 길이 = 지연, 부피 = 대역폭-지연 곱. 헷갈리기 쉬운 답: 처리량(throughput)은 실제로 보내는 속도(bps)다.",
   },
   {
     ...H("ch02"),
@@ -1453,12 +1420,12 @@ export const HINT4: Question[] = [
     topic: T1.role,
     type: "blank",
     difficulty: 3,
-    slideRef: "Ch01 s.38-40",
-    prompt: "빈칸에 알맞은 헤더·트레일러 표기를 쓰시오.",
-    text: "데이터 링크 계층의 프레임에는 헤더 {{0}}와 트레일러 {{1}}가 붙고, 전송 계층의 세그먼트에는 헤더 {{2}}가 붙는다.",
-    blanks: [{ accept: ["H2", "h2"] }, { accept: ["T2", "t2"] }, { accept: ["H4", "h4"] }],
+    slideRef: "Ch01 s.38",
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "프레임을 한 노드에서 다음 노드로 옮기는 일을 맡는 TCP/IP 계층(헤더 H2와 트레일러 T2를 붙인다) → {{0}}",
+    blanks: [{ accept: ["데이터 링크 계층", "데이터링크 계층", "데이터 링크", "데이터링크", "data link layer", "data-link layer", "data link"] }],
     explanation:
-      "s.38 (p.19): Frame = H2 | Data | T2. s.39 (p.20): Packet = H3 | Data. s.40 (p.20): Segment = H4 | Data. 함정: 네트워크 계층의 H3과 전송 계층의 H4를 바꾸기 쉽고, 트레일러는 데이터 링크 계층에만 있다.",
+      "s.38 (p.19): The data link layer is responsible for moving frames from a node to the next. s.39 (p.20): 네트워크 계층은 출발지 호스트에서 목적지 호스트까지 패킷을 전달한다. 헷갈리기 쉬운 답: 노드 → 다음 노드는 데이터 링크 계층, 출발지 → 목적지는 네트워크 계층이다.",
   },
 
   // ───────────────────────────── Ch02
@@ -1507,14 +1474,11 @@ export const HINT4: Question[] = [
     type: "blank",
     difficulty: 3,
     slideRef: "Ch02 s.11",
-    prompt: "빈칸에 알맞은 말을 쓰시오.",
-    text: "시각 0을 기준으로 파형이 어디에 놓여 있는지를 나타내는 것을 {{0}}이라 한다. 각도로 나타낼 때 360°는 {{1}} rad이다.",
-    blanks: [
-      { accept: ["위상", "위상 편이", "위상편이", "phase", "phase shift"] },
-      { accept: ["2π", "2파이", "2pi", "2 pi"] },
-    ],
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "시각 0을 기준으로 파형이 어디에 놓여 있는지를 나타내는 값으로, 도(°)나 라디안(rad)으로 나타낸다 → {{0}}",
+    blanks: [{ accept: ["위상", "위상 편이", "위상편이", "phase", "phase shift"] }],
     explanation:
-      "s.11 (p.6): Phase (or phase shift) describes the position of the waveform relative to time 0. 360° = 2π rad. 함정: 360°를 π rad로 쓰면 틀린다 — π rad는 180°다. 주파수(초당 주기 수)나 진폭과도 헷갈리지 않는다.",
+      "s.11 (p.6): Phase (or phase shift) describes the position of the waveform relative to time 0. 360° = 2π rad. 헷갈리기 쉬운 답: 주파수는 1초에 반복하는 주기 수, 진폭(최대 진폭)은 신호 세기의 최댓값이다.",
   },
   {
     ...H("ch02"),
@@ -1612,14 +1576,11 @@ export const HINT4: Question[] = [
     type: "blank",
     difficulty: 3,
     slideRef: "Ch02 s.30",
-    prompt: "빈칸에 알맞은 말을 쓰시오.",
-    text: "SNR은 평균 신호 전력 ÷ 평균 {{0}} 전력이다. 순간값이 아니라 평균 전력을 쓰는 까닭은 두 전력이 {{1}}에 따라 바뀔 수 있기 때문이다.",
-    blanks: [
-      { accept: ["잡음", "노이즈", "noise"] },
-      { accept: ["시간", "time"] },
-    ],
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "SNR을 데시벨로 나타낸 값으로, 10 log₁₀ SNR로 구한다 → {{0}}",
+    blanks: [{ accept: ["SNR_dB", "SNRdB", "SNR dB", "SNR_db", "데시벨 SNR"] }],
     explanation:
-      "s.30 (p.15): SNR = (average signal power) / (average noise power). We consider the average signal power and the average noise power because they may change with time. 함정: 분모는 잡음 전력이다 — 신호 전력을 분모에 두면 1보다 작은 엉뚱한 값이 된다.",
+      "s.30 (p.15): SNR = (average signal power) / (average noise power), SNR_dB = 10 log₁₀ SNR. 헷갈리기 쉬운 답: SNR은 데시벨로 바꾸기 전의 비(비율)이고, 20 log를 쓰지 않는다.",
   },
   {
     ...H("ch02"),
@@ -1692,14 +1653,11 @@ export const HINT4: Question[] = [
     type: "blank",
     difficulty: 3,
     slideRef: "Ch02 s.46",
-    prompt: "빈칸에 알맞은 지연 요소를 쓰시오.",
-    text: "지연(latency)의 4요소 가운데 메시지 크기 ÷ 대역폭으로 구하는 것은 {{0}} 시간이고, 거리 ÷ 전파 속도로 구하는 것은 {{1}} 시간이다.",
-    blanks: [
-      { accept: ["전송", "전송 시간", "transmission", "transmission time"] },
-      { accept: ["전파", "전파 시간", "propagation", "propagation time"] },
-    ],
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "지연(latency)의 4요소 가운데 하나로, 메시지 크기 ÷ 대역폭으로 구하는 시간 → {{0}}",
+    blanks: [{ accept: ["전송 시간", "전송시간", "transmission time", "전송"] }],
     explanation:
-      "s.46 (p.23): Latency = propagation time + transmission time + queuing time + processing time. Propagation time = Distance / Propagation speed, Transmission time = Message size / Bandwidth. 함정: '전송'과 '전파'는 한 글자 차이라 뒤바꾸기 쉽다 — 대역폭이 들어가는 쪽이 전송 시간이다.",
+      "s.46 (p.23): Latency = propagation time + transmission time + queuing time + processing time. Transmission time = Message size / Bandwidth. 헷갈리기 쉬운 답: 전파 시간(propagation time)은 거리 ÷ 전파 속도다 — 대역폭이 들어가는 쪽이 전송 시간이다.",
   },
   {
     ...H("ch02"),
@@ -1881,11 +1839,11 @@ export const HINT5: Question[] = [
     type: "blank",
     difficulty: 3,
     slideRef: "Ch01 s.42",
-    prompt: "빈칸에 알맞은 약어를 영문 대문자로 쓰시오.",
-    text: "네트워크 통신의 모든 면을 다루는 표준은 기구인 국제표준화기구({{0}})가 만든 모델인 개방형 시스템 상호 연결({{1}}) 모델이다.",
-    blanks: [{ accept: ["ISO", "iso"] }, { accept: ["OSI", "osi"] }],
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "국제 표준에 대한 세계적인 합의를 위한 다국적 기구로, OSI 모델을 만든 기구 → {{0}}",
+    blanks: [{ accept: ["ISO", "국제표준화기구", "국제 표준화 기구", "국제표준화 기구", "International Organization for Standardization"] }],
     explanation:
-      "s.42 (p.21): An ISO standard that covers all aspects of network communications is the Open Systems Interconnection (OSI) model. ISO is the organization. OSI is the model. 함정: 두 약어의 글자가 같아 순서를 바꾸기 쉽다.",
+      "s.42 (p.21): The International Organization for Standardization (ISO) is a multinational body dedicated to worldwide agreement on international standards. ISO is the organization, OSI is the model. 헷갈리기 쉬운 답: OSI는 기구가 아니라 모델이다.",
   },
 
   // ───────────────────────────── Ch02
@@ -1993,15 +1951,15 @@ export const HINT5: Question[] = [
   {
     ...H("ch02"),
     id: "data-comm-ch02-hint5-015",
-    topic: T2.shannon,
+    topic: T2.impairment,
     type: "blank",
     difficulty: 3,
-    slideRef: "Ch02 s.37",
-    prompt: "빈칸에 알맞은 값을 쓰시오.",
-    text: "잡음이 너무 강해 신호가 희미하고 SNR이 거의 0인 채널이 있다. 이 채널의 Shannon 용량 C는 대역폭과 관계없이 {{0}} bps다.",
-    blanks: [{ accept: ["0", "영", "0bps", "0 bps"] }],
+    slideRef: "Ch02 s.24-25",
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "신호가 매체를 지나는 동안 매체의 저항을 이기느라 에너지를 잃어 약해지는 전송 장애 → {{0}}",
+    blanks: [{ accept: ["감쇠", "attenuation"] }],
     explanation:
-      "s.37 (p.19) Example 2.7: SNR이 거의 0이면 C = B log₂(1 + 0) = B × 0 = 0 — the capacity of this channel is zero regardless of the bandwidth. 함정: 대역폭이 크면 용량이 남는다고 생각하기 쉽지만, log₂ 1 = 0이라 대역폭과 관계없이 0이다.",
+      "s.24 (p.12): Three causes of impairment are attenuation, distortion, and noise. s.25 (p.13): Attenuation means a loss of energy — a signal loses some of its energy in overcoming the resistance of the medium. 헷갈리기 쉬운 답: 왜곡(distortion)은 신호의 모양이 바뀌는 것, 잡음(noise)은 원하지 않는 신호가 섞이는 것이다.",
   },
   {
     ...H("ch02"),
@@ -2043,11 +2001,11 @@ export const HINT5: Question[] = [
     type: "blank",
     difficulty: 3,
     slideRef: "Ch02 s.46",
-    prompt: "빈칸에 알맞은 지연 요소를 쓰시오.",
-    text: "지연(latency)은 출발지가 첫 비트를 보낸 때부터 메시지 전체가 목적지에 완전히 도착할 때까지의 시간이다. 그 4요소 가운데, 중간 장치나 종단 장치가 메시지를 처리하기 전에 붙잡아 두는 시간은 {{0}} 시간이다.",
-    blanks: [{ accept: ["큐잉", "큐잉 시간", "대기", "대기 시간", "queuing", "queueing", "queuing time", "queueing time"] }],
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "지연(latency)의 4요소 가운데 하나로, 중간 장치나 종단 장치가 메시지를 처리하기 전까지 붙잡아 두는 데 걸리는 시간 → {{0}}",
+    blanks: [{ accept: ["큐잉 시간", "큐잉시간", "대기 시간", "큐잉", "queuing time", "queueing time", "queuing"] }],
     explanation:
-      "s.46 (p.23): Latency = propagation time + transmission time + queuing time + processing time. Queuing time — Time needed for each intermediate or end device to hold the message before it can be processed. 함정: '처리하기 전에 붙잡아 두는' 시간이므로 처리 시간(processing time)이 아니라 큐잉 시간이다.",
+      "s.46 (p.23): Queuing time — Time needed for each intermediate or end device to hold the message before it can be processed. 헷갈리기 쉬운 답: '처리하기 전'에 붙잡아 두는 시간이므로 처리 시간(processing time)이 아니다.",
   },
   {
     ...H("ch02"),
@@ -2093,15 +2051,12 @@ export const HINT5: Question[] = [
     topic: T2.pcm,
     type: "blank",
     difficulty: 3,
-    slideRef: "Ch02 s.59-61",
-    prompt: "빈칸에 알맞은 말을 쓰시오.",
-    text: "PCM 부호기는 표본화(sampling) → {{0}} → 부호화(encoding)의 3과정을 거친다. Nyquist 정리에 따르면 표본화율은 신호에 들어 있는 최고 주파수의 최소 {{1}}배여야 한다.",
-    blanks: [
-      { accept: ["양자화", "quantizing", "quantization", "quantize"] },
-      { accept: ["2", "두", "2배", "두 배"] },
-    ],
+    slideRef: "Ch02 s.59",
+    prompt: "다음 설명에 해당하는 용어를 쓰시오(한국어 또는 영어).",
+    text: "PCM 부호기의 두 번째 과정으로, 표본화한 신호의 각 표본을 하나의 펄스로 보아 정해진 값으로 나타내는 과정 → {{0}}",
+    blanks: [{ accept: ["양자화", "quantizing", "quantization"] }],
     explanation:
-      "s.59 (p.30): A PCM encoder has 3 processes — Sampling, Quantizing, Encoding. s.61 (p.31): According to the Nyquist theorem, the sampling rate must be at least 2 times the highest frequency contained in the signal. 함정: 대역폭의 2배가 아니라 최고 주파수의 2배이고, 양자화는 표본화한 값에 하는 것이라 표본화보다 먼저 오지 않는다.",
+      "s.59 (p.30): A PCM encoder has 3 processes — Sampling, Quantizing(every sample is considered as a pulse), Encoding(the quantized values are encoded as streams of bits). 헷갈리기 쉬운 답: 표본화(sampling)는 첫 번째, 부호화(encoding)는 세 번째 과정이다.",
   },
   {
     ...H("ch02"),
