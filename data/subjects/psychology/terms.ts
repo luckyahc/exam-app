@@ -18,6 +18,20 @@ export interface ChapterSource {
   scholars: readonly string[];
 }
 
+/**
+ * 출제 범위 밖(2026-10-24 — 교재 축약판에 없는 부분). 문항은 지우지 않고 숨긴다(index.ts의 단원 outOfScope, 문항 outOfScope).
+ * 커버리지 검사는 이 소제목·용어·학자를 빼고 한다. "all" = 단원 전체.
+ */
+export const EXCLUDED: Partial<Record<ChapterKey, "all" | { section: string; headings: readonly string[]; terms: readonly string[] }>> = {
+  c02: { section: "6. 행동유전학과 진화심리학", headings: ["행동유전학과 진화심리학"], terms: ["쌍생아 연구", "입양 연구", "유전율", "후성유전학", "기질", "진화심리학"] },
+  c03: {
+    section: "3. 향정신성 약물",
+    headings: ["약물의 기본 개념", "약물의 분류", "약물 사용의 영향 요인"],
+    terms: ["내성", "금단", "물질사용장애", "생물학적", "심리적", "사회문화적"],
+  },
+  c04: "all",
+};
+
 export const SOURCE: Record<ChapterKey, ChapterSource> = {
   c01: {
     pages: [2, 5],

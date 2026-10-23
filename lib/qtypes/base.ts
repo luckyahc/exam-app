@@ -69,6 +69,16 @@ export interface BaseQ<T extends string = string> {
   sourceRef?: { lecture: string; page: number; label: string };
   /** 지문 아래 그림(족보 원본 스캔에서 자른 그래프 등, Sprint 21). 표·배열·코드는 그림 대신 글자로 옮긴다 */
   figure?: QuestionFigure;
+  /**
+   * 출제 범위 밖(2026-10-24, 심리학개론 — 교재에 없는 절). 데이터는 남기고 과목 로더가 걸러 내 목록·출제·통계에서 빠진다.
+   * 다시 켜려면 이 필드를 지운다
+   */
+  outOfScope?: true;
+}
+
+/** 출제 범위 안의 문항만(outOfScope 제외) */
+export function inScope<Q extends { outOfScope?: true }>(qs: readonly Q[]): Q[] {
+  return qs.filter((q) => !q.outOfScope);
 }
 
 /** `public/jokbo/<과목>/<문항id>.png` — 가로 1200px 이하·300KB 이하(data/subjects/figures.test.ts), 다크 모드에서도 흰 카드 위에 보인다 */
