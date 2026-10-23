@@ -1,21 +1,13 @@
-import { nyquistLevels } from "@/lib/sim/data-comm/capacity";
-import { snr, snrDb } from "@/lib/sim/data-comm/decibel";
-import { bitLength, textBitRate } from "@/lib/sim/data-comm/digital";
-import { tdmSlotDuration } from "@/lib/sim/data-comm/multiplexing";
-import { samplingRate } from "@/lib/sim/data-comm/pcm";
-import { bandwidthDelayProduct, latency, propagationTime, throughput, transmissionTime } from "@/lib/sim/data-comm/performance";
-import { bandwidth, phaseFromCycles, wavelength } from "@/lib/sim/data-comm/signal";
 import type { Question } from "@/types/question";
 import { T as T1 } from "./ch01";
 import { T as T2 } from "./ch02";
 
 // 힌트관련1~5 모의시험(2026-10-22): 교수님 시험 힌트(docs/dc-exam-hint.md)대로 세트마다 25문항(23~26문항)을 새로 만든다.
 // 4·5는 더 헷갈리게: 뒤바뀐 짝·단위 변환·비슷한 공식·한 단계만 틀린 오답, 난이도는 거의 어려움(3).
-// 세트 구성: 선택형 21(5지선다 mcq 16 + '모두 고르시오' multi 5 — 정답 2~4개, 부분 점수 없음) + 주관식 4(계산 calc·빈칸 blank)
+// 세트 구성: 선택형 21(5지선다 mcq 16 + '모두 고르시오' multi 5 — 정답 2~4개, 부분 점수 없음) + 주관식 4(단답형 blank — 용어·값을 직접 쓴다)
 //   = 배점(선택형 1점, 주관식 2~3점)으로 30점. 장별 Ch01 8 · Ch02 17(슬라이드 44 : 101), 난이도는 중간(2)·어려움(3)만.
 // id = data-comm-{chapter}-hint{세트}-{세트 안 번호}. 실제 시험처럼 문제 순서·보기 순서를 섞어 낸다(문제 화면에는 번호가 없다).
-// 계산 정답은 lib/sim/data-comm 함수로 구하고, 계산형 객관식은 hintExams.test.ts가 같은 함수로 다시 계산한다.
-// 계산 비중은 세트당 약 6문항(주관식 계산 3 + 계산형 객관식 3) — 나머지 객관식은 같은 소주제의 개념 문항(2026-10-23 줄임).
+// 주관식을 계산 문제(calc)로 채우지 않는다(2026-10-23 사용자 요청) — 계산은 세트당 계산형 객관식 3문항이고, hintExams.test.ts가 lib/sim/data-comm으로 다시 계산한다.
 // 해설은 "s.번호 (p.쪽):"으로 시작한다(PDF 쪽 = ⌈슬라이드 ÷ 2⌉). 슬라이드에 없는 내용은 "(보충)".
 
 type Ch = "ch01" | "ch02";
@@ -226,17 +218,17 @@ export const HINT1: Question[] = [
     ...H("ch02"),
     id: "data-comm-ch02-hint1-013",
     topic: T2.digital,
-    type: "calc",
+    type: "blank",
     difficulty: 3,
-    slideRef: "Ch02 s.20-21",
-    prompt:
-      "초당 **50쪽**의 문서를 내려받는다. 한 쪽은 평균 50줄, 한 줄은 100자이고, 한 문자에 8비트가 필요하다. 이때의 **비트 길이(1비트에 걸리는 시간)**는 몇 μs인가?",
-    answer: bitLength(textBitRate(50, 50, 100, 8)) * 1e6,
-    tolerance: 0,
-    unit: "μs",
-    steps: ["비트율 = 50 × 50 × 100 × 8 = 2,000,000 bps = 2 Mbps", "비트 길이 = 1 / (2 × 10⁶) s = 0.5 × 10⁻⁶ s", "= 0.5 μs"],
+    slideRef: "Ch02 s.21",
+    prompt: "빈칸에 알맞은 용어를 쓰시오.",
+    text: "디지털 신호에서 1비트가 전송 매체 위에서 차지하는 거리를 {{0}}라 하고, 그 값은 1 ÷ {{1}}로 구한다. 아날로그 신호에서 한 주기가 차지하는 거리인 파장과 비교된다.",
+    blanks: [
+      { accept: ["비트 길이", "비트길이", "bit length"] },
+      { accept: ["비트율", "비트 전송률", "비트레이트", "bit rate", "bitrate"] },
+    ],
     explanation:
-      "s.20 (p.10) Example 2.3: 비트율 = 쪽/초 × 줄 × 문자 × 비트 = 50 × 50 × 100 × 8 = 2 Mbps. s.21 (p.11) Example 2.4: bit length = 1 / bit rate = 1 / (2 × 10⁶) = 0.5 μs. 함정: 비트율(2 Mbps)에서 멈추거나, 8비트를 곱하지 않으면(250,000 bps → 4 μs) 틀린다.",
+      "s.21 (p.11): Bit length — The distance 1 bit occupies on the transmission medium, bit length = 1 / bit rate. Cf. Wavelength for an analog signal — The distance 1 cycle occupies. 함정: 분모는 보오율(baud rate)이 아니라 비트율이고, '비트 길이'와 '파장'을 바꿔 쓰면 틀린다.",
   },
   {
     ...H("ch02"),
@@ -299,16 +291,17 @@ export const HINT1: Question[] = [
     ...H("ch02"),
     id: "data-comm-ch02-hint1-017",
     topic: T2.snr,
-    type: "calc",
+    type: "blank",
     difficulty: 3,
-    slideRef: "Ch02 s.30",
-    prompt: "평균 신호 전력이 **10 mW**이고 **SNR_dB = 30 dB**인 채널이 있다. 평균 잡음 전력은 몇 **μW**인가?",
-    answer: (10e-3 / 10 ** (30 / 10)) * 1e6,
-    tolerance: 0,
-    unit: "μW",
-    steps: ["SNR_dB = 10 log₁₀ SNR = 30 → SNR = 10³ = 1000", "잡음 전력 = 신호 전력 / SNR = 10 mW / 1000", "= 0.01 mW = 10 μW"],
+    slideRef: "Ch02 s.30-31",
+    prompt: "빈칸에 알맞은 말을 쓰시오.",
+    text: "평균 신호 전력 ÷ 평균 잡음 전력을 {{0}}(SNR)라 한다. 잡음이 전혀 없는 채널에서는 SNR과 SNR_dB가 모두 {{1}}가 된다.",
+    blanks: [
+      { accept: ["신호 대 잡음비", "신호대잡음비", "신호 대 잡음 비", "신호 대 잡음비율", "signal-to-noise ratio", "signal to noise ratio"] },
+      { accept: ["무한대", "무한", "∞", "infinity", "infinite"] },
+    ],
     explanation:
-      "s.30 (p.15): SNR = 평균 신호 전력 / 평균 잡음 전력, SNR_dB = 10 log₁₀ SNR. 30 dB → SNR = 1000 → 잡음 = 10 mW / 1000 = 10 μW. 함정: 30을 그대로 비율로 나누거나(≈ 333 μW), mW 단위로 답하면(0.01) 틀린다.",
+      "s.30 (p.15): SNR = (average signal power) / (average noise power), SNR_dB = 10 log₁₀ SNR. s.31 (p.16) Extreme Case: 잡음 없는 채널은 잡음 전력이 0이므로 SNR = ∞, SNR_dB = ∞. 함정: 잡음이 0이라고 SNR도 0이라 쓰면 틀린다 — 분모가 0이 되어 무한대다.",
   },
   {
     ...H("ch02"),
@@ -342,17 +335,17 @@ export const HINT1: Question[] = [
     ...H("ch02"),
     id: "data-comm-ch02-hint1-020",
     topic: T2.perf,
-    type: "calc",
+    type: "blank",
     difficulty: 2,
-    slideRef: "Ch02 s.44-45",
-    prompt:
-      "대역폭이 20 Mbps인 네트워크가 분당 평균 **30,000 프레임**만 통과시키고, 프레임 하나는 평균 **10,000비트**를 담는다. 이 네트워크의 **처리량(throughput)**은 몇 Mbps인가?",
-    answer: throughput(30_000, 10_000, 60) / 1e6,
-    tolerance: 0,
-    unit: "Mbps",
-    steps: ["처리량 = (30,000 × 10,000) / 60 s", "= 5,000,000 bps = 5 Mbps"],
+    slideRef: "Ch02 s.41-44",
+    prompt: "빈칸에 알맞은 성능 지표를 쓰시오.",
+    text: "링크의 이론 최대 전송률(theoretical maximum bit rate)은 {{0}}, 실제로 데이터를 보낼 수 있는 유효 전송률(actual effective bit rate)은 {{1}}이다.",
+    blanks: [
+      { accept: ["대역폭", "bandwidth"] },
+      { accept: ["처리량", "스루풋", "throughput"] },
+    ],
     explanation:
-      "s.45 (p.23): 처리량 = (분당 프레임 × 프레임당 비트) / 60 = 30,000 × 10,000 / 60 = 5 Mbps — 대역폭 20 Mbps의 1/4이다. s.44 (p.22): 처리량은 실제로 보내는 속도로 항상 대역폭보다 작다. 함정: 60으로 나누지 않으면 300 Mbps가 되어 대역폭보다 커진다.",
+      "s.41 (p.21): Bandwidth — Theoretical maximum bit rate(이론 최대 전송률), Throughput — Actual effective bit rate(실제 유효 전송률). s.44 (p.22): Bandwidth is a potential measurement of a link, throughput is an actual measurement. 함정: 두 값을 바꿔 쓰기 쉽다 — 처리량은 대역폭보다 클 수 없다.",
   },
   {
     ...H("ch02"),
@@ -654,16 +647,17 @@ export const HINT2: Question[] = [
     ...H("ch02"),
     id: "data-comm-ch02-hint2-012",
     topic: T2.bandwidth,
-    type: "calc",
+    type: "blank",
     difficulty: 2,
-    slideRef: "Ch02 s.15-17",
-    prompt: "어떤 주기 복합 신호를 분해했더니 주파수가 **100, 300, 500, 700, 900 Hz**인 사인파 5개였다. 이 신호의 **대역폭**은 몇 Hz인가?",
-    answer: bandwidth(900, 100),
-    tolerance: 0,
-    unit: "Hz",
-    steps: ["최고 주파수 900 Hz, 최저 주파수 100 Hz", "대역폭 = 900 − 100 = 800 Hz"],
+    slideRef: "Ch02 s.17",
+    prompt: "빈칸에 알맞은 말을 쓰시오.",
+    text: "복합 신호에 들어 있는 주파수의 범위를 그 신호의 {{0}}이라 하며, 신호에 들어 있는 가장 높은 주파수와 가장 낮은 주파수의 {{1}}로 구한다.",
+    blanks: [
+      { accept: ["대역폭", "bandwidth"] },
+      { accept: ["차", "차이", "difference", "뺀 값", "빼기"] },
+    ],
     explanation:
-      "s.17 (p.9): The bandwidth of a composite signal is the difference between the highest and the lowest frequencies contained in that signal → 900 − 100 = 800 Hz. 함정: 성분 사이 간격(200 Hz)이나 최고 주파수(900 Hz)를 답하면 틀린다.",
+      "s.17 (p.9): Bandwidth — The range of frequencies contained in a composite signal. The bandwidth is the difference between the highest and the lowest frequencies(예: 1000~5000 Hz → 4000 Hz). 함정: 최고 주파수 자체나 두 주파수의 합·평균이 아니라 차다.",
   },
   {
     ...H("ch02"),
@@ -707,16 +701,17 @@ export const HINT2: Question[] = [
     ...H("ch02"),
     id: "data-comm-ch02-hint2-015",
     topic: T2.shannon,
-    type: "calc",
+    type: "blank",
     difficulty: 3,
-    slideRef: "Ch02 s.30-36",
-    prompt: "대역폭이 **4 kHz**이고 **SNR_dB = 30 dB**인 잡음 있는 채널의 Shannon 용량은 약 몇 kbps인가? (log₂ 1001 ≈ 10으로 계산한다)",
-    answer: (4000 * 10) / 1000,
-    tolerance: 0.2,
-    unit: "kbps",
-    steps: ["SNR_dB = 30 → SNR = 10³ = 1000", "C = B log₂(1 + SNR) = 4000 × log₂ 1001", "≈ 4000 × 10 = 40,000 bps = 40 kbps"],
+    slideRef: "Ch02 s.34-36",
+    prompt: "빈칸에 알맞은 공식 이름(사람 이름)을 쓰시오.",
+    text: "잡음 없는 채널의 최대 비트율은 {{0}} 공식(비트율 = 2 × 대역폭 × log₂ L)으로, 잡음 있는 채널의 이론 최고 데이터율은 {{1}} 용량(C = B × log₂(1 + SNR))으로 구한다.",
+    blanks: [
+      { accept: ["Nyquist", "나이퀴스트", "나이키스트"] },
+      { accept: ["Shannon", "섀넌", "샤논", "새넌"] },
+    ],
     explanation:
-      "s.30 (p.15): SNR_dB = 10 log₁₀ SNR → 30 dB는 SNR = 1000. s.36 (p.18): C = B log₂(1 + SNR) = 4000 × log₂ 1001 ≈ 4000 × 10 = 40 kbps(정확히는 약 39.87 kbps라 39.9도 정답으로 받는다). 함정: dB 값 30을 그대로 넣으면 4000 × log₂ 31 ≈ 4000 × 5 = 20 kbps가 된다 — Shannon 공식에는 비율(SNR)을 넣는다.",
+      "s.34 (p.17): Noiseless Channel — Nyquist Bit Rate = 2 × Bandwidth × log₂ L. s.36 (p.18): Noisy Channel — Shannon capacity, C = B × log₂(1 + SNR). 함정: 레벨 수 L이 들어가는 쪽이 Nyquist, SNR이 들어가는 쪽이 Shannon이다 — 순서를 바꿔 쓰면 틀린다.",
   },
   {
     ...H("ch02"),
@@ -837,16 +832,17 @@ export const HINT2: Question[] = [
     ...H("ch02"),
     id: "data-comm-ch02-hint2-023",
     topic: T2.tdm,
-    type: "calc",
+    type: "blank",
     difficulty: 3,
-    slideRef: "Ch02 s.89-90",
-    prompt: "동기식 TDM에서 입력 연결 **5개**의 데이터 단위(unit) 지속 시간이 각각 **1 ms**일 때, 출력 링크에서 단위 하나(슬롯)의 지속 시간은 몇 **μs**인가?",
-    answer: tdmSlotDuration(1e-3, 5) * 1e6,
-    tolerance: 0,
-    unit: "μs",
-    steps: ["동기식 TDM: 링크 데이터율은 n배, 단위 지속 시간은 n배 짧다", "1 ms / 5 = 0.2 ms", "= 200 μs"],
+    slideRef: "Ch02 s.89",
+    prompt: "빈칸에 알맞은 용어를 쓰시오.",
+    text: "{{0}}는 전송률이 낮은 여러 채널을 전송률이 높은 하나로 합치는 디지털 다중화 기법이다. 여기서 채널 하나는 다중화 단위인 {{1}}에 해당한다.",
+    blanks: [
+      { accept: ["TDM", "시분할 다중화", "시분할다중화", "time-division multiplexing", "time division multiplexing"] },
+      { accept: ["타임 슬롯", "타임슬롯", "시간 슬롯", "슬롯", "time slot", "timeslot", "slot"] },
+    ],
     explanation:
-      "s.90 (p.45): In synchronous TDM, the data rate of the link is n times faster, and the unit duration is n times shorter → 1 ms / 5 = 0.2 ms = 200 μs. 함정: n배 길게 계산하면 5 ms, ms 단위로 답하면 0.2다.",
+      "s.89 (p.45): TDM is a digital multiplexing technique for combining several low-rate channels into one high-rate one. Channel = time slot = multiplexing unit. 함정: FDM·WDM은 아날로그 다중화이고, 디지털 다중화는 TDM이다.",
   },
   {
     ...H("ch02"),
@@ -1051,17 +1047,17 @@ export const HINT3: Question[] = [
     ...H("ch02"),
     id: "data-comm-ch02-hint3-010",
     topic: T2.wavelength,
-    type: "calc",
+    type: "blank",
     difficulty: 2,
     slideRef: "Ch02 s.13",
-    prompt: "공기 중에서 주파수가 **6 × 10¹⁴ Hz**인 빛의 파장은 몇 **μm**인가? (빛의 속도 c = 3 × 10⁸ m/s)",
-    answer: wavelength(6e14) * 1e6,
-    tolerance: 0,
-    relTolerance: 0.001,
-    unit: "μm",
-    steps: ["λ = c / f = (3 × 10⁸) / (6 × 10¹⁴)", "= 0.5 × 10⁻⁶ m", "= 0.5 μm"],
+    prompt: "빈칸에 알맞은 용어를 쓰시오.",
+    text: "단순 신호가 한 번 진동(1 cycle)하는 동안 이동할 수 있는 거리를 {{0}}이라 한다. 그 값은 전파 속도 × {{1}}, 또는 전파 속도 ÷ 주파수로 구한다.",
+    blanks: [
+      { accept: ["파장", "wavelength", "λ", "람다"] },
+      { accept: ["주기", "period", "T"] },
+    ],
     explanation:
-      "s.13 (p.7): λ = c / f — 빨간빛(4 × 10¹⁴ Hz)은 0.75 μm이고, 6 × 10¹⁴ Hz면 (3 × 10⁸) / (6 × 10¹⁴) = 0.5 × 10⁻⁶ m = 0.5 μm. 함정: m 단위 그대로(5 × 10⁻⁷) 답하거나 f / c로 계산하면 틀린다.",
+      "s.13 (p.7): Wavelength — The distance a simple signal can travel in one period. Wavelength = propagation speed × period = propagation speed / frequency(λ = c / f = c × T). 함정: 주기와 주파수를 바꿔 '전파 속도 × 주파수'로 쓰면 틀린다(T = 1 / f).",
   },
   {
     ...H("ch02"),
@@ -1150,17 +1146,17 @@ export const HINT3: Question[] = [
     ...H("ch02"),
     id: "data-comm-ch02-hint3-016",
     topic: T2.shannon,
-    type: "calc",
+    type: "blank",
     difficulty: 3,
-    slideRef: "Ch02 s.34-40",
-    prompt:
-      "대역폭이 **500 kHz**이고 **SNR = 1023**인 채널이 있다. Shannon 용량으로 상한을 구한 뒤, 성능을 위해 그보다 낮은 **4 Mbps**를 골랐다. Nyquist 공식으로 구한 필요한 신호 레벨 수(L)는?",
-    answer: nyquistLevels(4e6, 500e3).levels,
-    tolerance: 0,
-    unit: "레벨",
-    steps: ["C = 500 × 10³ × log₂(1 + 1023) = 500 × 10³ × 10 = 5 Mbps (상한)", "4 Mbps = 2 × 500 kHz × log₂ L → log₂ L = 4", "L = 2⁴ = 16"],
+    slideRef: "Ch02 s.39",
+    prompt: "빈칸에 알맞은 공식 이름을 쓰시오.",
+    text: "실제로는 두 공식을 함께 쓴다. {{0}} 용량은 데이터율의 상한(upper limit)을 주고, {{1}} 공식은 그 아래에서 고른 비트율에 필요한 신호 레벨 수를 알려 준다.",
+    blanks: [
+      { accept: ["Shannon", "섀넌", "샤논", "새넌"] },
+      { accept: ["Nyquist", "나이퀴스트", "나이키스트"] },
+    ],
     explanation:
-      "s.39~40 (p.20): Shannon은 상한, Nyquist는 레벨 수를 정한다. C = 500 kHz × log₂ 1024 = 5 Mbps. 4 Mbps = 2 × 500 kHz × log₂ L → log₂ L = 4 → L = 16. 함정: log₂ L 값(4)을 답하거나, 상한 5 Mbps로 계산하면(log₂ L = 5 → 32) 틀린다.",
+      "s.39 (p.20) Using Both Limits: The Shannon capacity gives us the upper limit; the Nyquist formula tells us how many signal levels we need. 함정: 레벨 수를 구하는 쪽은 L이 들어 있는 Nyquist 공식이다.",
   },
   {
     ...H("ch02"),
@@ -1186,16 +1182,17 @@ export const HINT3: Question[] = [
     ...H("ch02"),
     id: "data-comm-ch02-hint3-018",
     topic: T2.bdp,
-    type: "calc",
+    type: "blank",
     difficulty: 2,
     slideRef: "Ch02 s.48-51",
-    prompt: "대역폭이 **100 Mbps**이고 지연이 **25 ms**인 링크를 가득 채우는 비트 수(대역폭-지연 곱)는 몇 비트인가?",
-    answer: bandwidthDelayProduct(100e6, 25e-3),
-    tolerance: 0,
-    unit: "비트",
-    steps: ["대역폭-지연 곱 = 100 × 10⁶ bps × 25 × 10⁻³ s", "= 2.5 × 10⁶ 비트 = 2,500,000비트"],
+    prompt: "빈칸에 알맞은 용어를 쓰시오.",
+    text: "링크를 가득 채울 수 있는 비트 수는 {{0}}이다. 링크를 파이프로 생각하면 파이프의 단면은 대역폭, 파이프의 길이는 {{1}}을 나타낸다.",
+    blanks: [
+      { accept: ["대역폭-지연 곱", "대역폭 지연 곱", "대역폭지연곱", "대역폭-지연곱", "bandwidth-delay product", "bandwidth delay product", "BDP"] },
+      { accept: ["지연", "지연 시간", "delay", "latency"] },
+    ],
     explanation:
-      "s.48 (p.24): 대역폭-지연 곱 = 링크를 채울 수 있는 비트 수 = 10⁸ × 0.025 = 2,500,000비트. 함정: ms를 s로 바꾸지 않으면 2.5 × 10⁹, 나누면 4 × 10⁹가 된다.",
+      "s.48 (p.24): The bandwidth-delay product defines the number of bits that can fill the link. s.51 (p.26) Example 2.12: The cross section of the pipe represents the bandwidth, the length of the pipe represents the delay, the volume defines the bandwidth-delay product. 함정: 단면과 길이를 바꾸면 틀린다.",
   },
   {
     ...H("ch02"),
@@ -1507,16 +1504,17 @@ export const HINT4: Question[] = [
     ...H("ch02"),
     id: "data-comm-ch02-hint4-011",
     topic: T2.phase,
-    type: "calc",
+    type: "blank",
     difficulty: 3,
     slideRef: "Ch02 s.11",
-    prompt: "위상이 **5π/6 rad**인 사인파는 시각 0을 기준으로 몇 **도(°)** 어긋나 있는가?",
-    answer: phaseFromCycles(5 / 12).deg,
-    tolerance: 0.5,
-    unit: "°",
-    steps: ["360° = 2π rad → π rad = 180°", "5π/6 × 180°/π = 150°", "(= 5/12 주기)"],
+    prompt: "빈칸에 알맞은 말을 쓰시오.",
+    text: "시각 0을 기준으로 파형이 어디에 놓여 있는지를 나타내는 것을 {{0}}이라 한다. 각도로 나타낼 때 360°는 {{1}} rad이다.",
+    blanks: [
+      { accept: ["위상", "위상 편이", "위상편이", "phase", "phase shift"] },
+      { accept: ["2π", "2파이", "2pi", "2 pi"] },
+    ],
     explanation:
-      "s.11 (p.6): 360° = 2π rad이므로 π rad = 180°. 5π/6 rad = 5/6 × 180° = 150°. 함정: 2π를 180°로 잘못 놓으면 75°, 5/6 주기로 보면 300°가 된다.",
+      "s.11 (p.6): Phase (or phase shift) describes the position of the waveform relative to time 0. 360° = 2π rad. 함정: 360°를 π rad로 쓰면 틀린다 — π rad는 180°다. 주파수(초당 주기 수)나 진폭과도 헷갈리지 않는다.",
   },
   {
     ...H("ch02"),
@@ -1611,16 +1609,17 @@ export const HINT4: Question[] = [
     ...H("ch02"),
     id: "data-comm-ch02-hint4-017",
     topic: T2.snr,
-    type: "calc",
+    type: "blank",
     difficulty: 3,
     slideRef: "Ch02 s.30",
-    prompt: "평균 신호 전력이 **5 mW**, 평균 잡음 전력이 **50 nW**이다. **SNR_dB**는 몇 dB인가?",
-    answer: snrDb(snr(5e-3, 50e-9)),
-    tolerance: 0.1,
-    unit: "dB",
-    steps: ["SNR = 5 × 10⁻³ / 50 × 10⁻⁹ = 10⁵", "SNR_dB = 10 log₁₀ 10⁵ = 50 dB"],
+    prompt: "빈칸에 알맞은 말을 쓰시오.",
+    text: "SNR은 평균 신호 전력 ÷ 평균 {{0}} 전력이다. 순간값이 아니라 평균 전력을 쓰는 까닭은 두 전력이 {{1}}에 따라 바뀔 수 있기 때문이다.",
+    blanks: [
+      { accept: ["잡음", "노이즈", "noise"] },
+      { accept: ["시간", "time"] },
+    ],
     explanation:
-      "s.30 (p.15): SNR = 평균 신호 전력 / 평균 잡음 전력 = 5 mW / 50 nW = 100,000, SNR_dB = 10 log₁₀ SNR = 50 dB. 함정: nW를 μW로 착각하면 SNR = 100(20 dB), SNR 값(100000)을 그대로 답하면 틀린다.",
+      "s.30 (p.15): SNR = (average signal power) / (average noise power). We consider the average signal power and the average noise power because they may change with time. 함정: 분모는 잡음 전력이다 — 신호 전력을 분모에 두면 1보다 작은 엉뚱한 값이 된다.",
   },
   {
     ...H("ch02"),
@@ -1690,17 +1689,17 @@ export const HINT4: Question[] = [
     ...H("ch02"),
     id: "data-comm-ch02-hint4-022",
     topic: T2.delay,
-    type: "calc",
+    type: "blank",
     difficulty: 3,
-    slideRef: "Ch02 s.46-47",
-    prompt:
-      "**4 kbyte**(4,000바이트) 메시지를 대역폭 **1 Gbps** 네트워크로 **12,000 km** 떨어진 곳에 보낸다(전파 속도 2.4 × 10⁸ m/s). 이 메시지의 **전송 시간(transmission time)**은 몇 **μs**인가?",
-    answer: transmissionTime(4000 * 8, 1e9) * 1e6,
-    tolerance: 0,
-    unit: "μs",
-    steps: ["전송 시간 = 메시지 크기 / 대역폭", "= 32,000비트 / 10⁹ bps = 3.2 × 10⁻⁵ s", "= 32 μs (거리·전파 속도는 쓰지 않는다)"],
+    slideRef: "Ch02 s.46",
+    prompt: "빈칸에 알맞은 지연 요소를 쓰시오.",
+    text: "지연(latency)의 4요소 가운데 메시지 크기 ÷ 대역폭으로 구하는 것은 {{0}} 시간이고, 거리 ÷ 전파 속도로 구하는 것은 {{1}} 시간이다.",
+    blanks: [
+      { accept: ["전송", "전송 시간", "transmission", "transmission time"] },
+      { accept: ["전파", "전파 시간", "propagation", "propagation time"] },
+    ],
     explanation:
-      "s.46 (p.23): Transmission time = Message size / Bandwidth = 32,000 / 10⁹ = 32 μs. 거리와 전파 속도는 전파 시간(50 ms)에만 쓰인다 — 문제에 함께 준 값에 끌려가면 틀린다. 함정: 바이트를 비트로 바꾸지 않으면 4 μs다.",
+      "s.46 (p.23): Latency = propagation time + transmission time + queuing time + processing time. Propagation time = Distance / Propagation speed, Transmission time = Message size / Bandwidth. 함정: '전송'과 '전파'는 한 글자 차이라 뒤바꾸기 쉽다 — 대역폭이 들어가는 쪽이 전송 시간이다.",
   },
   {
     ...H("ch02"),
@@ -1995,15 +1994,14 @@ export const HINT5: Question[] = [
     ...H("ch02"),
     id: "data-comm-ch02-hint5-015",
     topic: T2.shannon,
-    type: "calc",
+    type: "blank",
     difficulty: 3,
-    slideRef: "Ch02 s.36",
-    prompt: "대역폭이 **1 MHz**인 잡음 있는 채널의 Shannon 용량이 **10 Mbps**가 되려면 SNR(비율)은 최소 얼마여야 하는가?",
-    answer: 2 ** (10e6 / 1e6) - 1,
-    tolerance: 0,
-    steps: ["C = B log₂(1 + SNR) → 10 × 10⁶ = 10⁶ × log₂(1 + SNR)", "log₂(1 + SNR) = 10 → 1 + SNR = 2¹⁰ = 1024", "SNR = 1023"],
+    slideRef: "Ch02 s.37",
+    prompt: "빈칸에 알맞은 값을 쓰시오.",
+    text: "잡음이 너무 강해 신호가 희미하고 SNR이 거의 0인 채널이 있다. 이 채널의 Shannon 용량 C는 대역폭과 관계없이 {{0}} bps다.",
+    blanks: [{ accept: ["0", "영", "0bps", "0 bps"] }],
     explanation:
-      "s.36 (p.18): C = B log₂(1 + SNR)를 거꾸로 풀면 1 + SNR = 2^(C/B) = 2¹⁰ = 1024 → SNR = 1023. 함정: 1을 빼지 않으면 1024, dB로 바꿔 답하면(약 30 dB) 틀린다 — 비율을 묻는다.",
+      "s.37 (p.19) Example 2.7: SNR이 거의 0이면 C = B log₂(1 + 0) = B × 0 = 0 — the capacity of this channel is zero regardless of the bandwidth. 함정: 대역폭이 크면 용량이 남는다고 생각하기 쉽지만, log₂ 1 = 0이라 대역폭과 관계없이 0이다.",
   },
   {
     ...H("ch02"),
@@ -2042,19 +2040,14 @@ export const HINT5: Question[] = [
     ...H("ch02"),
     id: "data-comm-ch02-hint5-018",
     topic: T2.delay,
-    type: "calc",
+    type: "blank",
     difficulty: 3,
     slideRef: "Ch02 s.46",
-    prompt:
-      "**500 kbyte**(5 × 10⁵바이트) 메시지를 대역폭 **10 Mbps**, 거리 **2,000 km**, 전파 속도 **2 × 10⁸ m/s**인 링크로 보낸다. 큐잉 시간이 **5 ms**, 처리 시간이 **1 ms**일 때 전체 지연(latency)은 몇 **ms**인가?",
-    answer:
-      latency({ propagation: propagationTime(2_000e3, 2e8), transmission: transmissionTime(5e5 * 8, 10e6), queuing: 5e-3, processing: 1e-3 }) * 1e3,
-    tolerance: 0,
-    relTolerance: 0.001,
-    unit: "ms",
-    steps: ["전파 시간 = 2 × 10⁶ m / 2 × 10⁸ m/s = 10 ms", "전송 시간 = 4 × 10⁶비트 / 10⁷ bps = 0.4 s = 400 ms", "지연 = 10 + 400 + 5 + 1 = 416 ms"],
+    prompt: "빈칸에 알맞은 지연 요소를 쓰시오.",
+    text: "지연(latency)은 출발지가 첫 비트를 보낸 때부터 메시지 전체가 목적지에 완전히 도착할 때까지의 시간이다. 그 4요소 가운데, 중간 장치나 종단 장치가 메시지를 처리하기 전에 붙잡아 두는 시간은 {{0}} 시간이다.",
+    blanks: [{ accept: ["큐잉", "큐잉 시간", "대기", "대기 시간", "queuing", "queueing", "queuing time", "queueing time"] }],
     explanation:
-      "s.46 (p.23): Latency = propagation time + transmission time + queuing time + processing time = 10 + 400 + 5 + 1 = 416 ms. 함정: 바이트를 비트로 바꾸지 않으면 전송 시간이 50 ms라 66 ms, 큐잉·처리 시간을 빼면 410 ms다.",
+      "s.46 (p.23): Latency = propagation time + transmission time + queuing time + processing time. Queuing time — Time needed for each intermediate or end device to hold the message before it can be processed. 함정: '처리하기 전에 붙잡아 두는' 시간이므로 처리 시간(processing time)이 아니라 큐잉 시간이다.",
   },
   {
     ...H("ch02"),
@@ -2098,16 +2091,17 @@ export const HINT5: Question[] = [
     ...H("ch02"),
     id: "data-comm-ch02-hint5-021",
     topic: T2.pcm,
-    type: "calc",
+    type: "blank",
     difficulty: 3,
     slideRef: "Ch02 s.59-61",
-    prompt: "최고 주파수가 **4 kHz**인 음성을 Nyquist 최소 표본화율로 PCM 디지털화했더니 비트율이 **96 kbps**였다. 표본 하나에 몇 비트를 썼는가?",
-    answer: 96e3 / samplingRate(4000),
-    tolerance: 0,
-    unit: "비트",
-    steps: ["표본화율 = 2 × 4000 = 8000 표본/s", "표본당 비트 = 96,000 / 8000 = 12비트"],
+    prompt: "빈칸에 알맞은 말을 쓰시오.",
+    text: "PCM 부호기는 표본화(sampling) → {{0}} → 부호화(encoding)의 3과정을 거친다. Nyquist 정리에 따르면 표본화율은 신호에 들어 있는 최고 주파수의 최소 {{1}}배여야 한다.",
+    blanks: [
+      { accept: ["양자화", "quantizing", "quantization", "quantize"] },
+      { accept: ["2", "두", "2배", "두 배"] },
+    ],
     explanation:
-      "s.61 (p.31): 표본화율 = 최고 주파수 × 2 = 8000 표본/s, 비트율 = 표본화율 × 표본당 비트 → 96,000 / 8000 = 12비트. 함정: 2배를 빼먹으면 24비트, 예제의 8비트(64 kbps)를 외워 답하면 틀린다.",
+      "s.59 (p.30): A PCM encoder has 3 processes — Sampling, Quantizing, Encoding. s.61 (p.31): According to the Nyquist theorem, the sampling rate must be at least 2 times the highest frequency contained in the signal. 함정: 대역폭의 2배가 아니라 최고 주파수의 2배이고, 양자화는 표본화한 값에 하는 것이라 표본화보다 먼저 오지 않는다.",
   },
   {
     ...H("ch02"),

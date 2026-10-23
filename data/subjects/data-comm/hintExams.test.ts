@@ -4,12 +4,11 @@ import { gradeQuestion, isAllOrNothing } from "@/lib/qtypes/registry";
 import { filterQuestions } from "@/lib/quiz/session";
 import { hintSetOf, matchesSource, relatedBadge } from "@/lib/quiz/jokbo";
 import { nextPow2, nyquistBitRate, nyquistLevels, shannonCapacity } from "@/lib/sim/data-comm/capacity";
-import { decibel, snr, snrDb } from "@/lib/sim/data-comm/decibel";
+import { decibel } from "@/lib/sim/data-comm/decibel";
 import { baudRate } from "@/lib/sim/data-comm/digital";
 import { askPskBandwidth, fmBandwidth } from "@/lib/sim/data-comm/modulation";
 import { fdmBandwidth, tdmLinkRate, tdmSlotDuration } from "@/lib/sim/data-comm/multiplexing";
-import { pcmBitRate, samplingRate } from "@/lib/sim/data-comm/pcm";
-import { bandwidthDelayProduct, latency, propagationTime, throughput, transmissionTime } from "@/lib/sim/data-comm/performance";
+import { bandwidthDelayProduct, propagationTime, throughput, transmissionTime } from "@/lib/sim/data-comm/performance";
 import type { Question } from "@/types/question";
 import { T as T1 } from "./ch01";
 import { T as T2 } from "./ch02";
@@ -28,11 +27,6 @@ const picked = (id: string) => {
   if (x.type !== "mcq") throw new Error(`${id}는 mcq가 아님`);
   return x.choices[x.answerIndex];
 };
-const calcAnswer = (id: string) => {
-  const x = q(id);
-  if (x.type !== "calc") throw new Error(`${id}는 calc가 아님`);
-  return x.answer;
-};
 
 describe("힌트관련 세트 구성 — 시험 힌트(23~26문제, 30점, 선택형 5지선다·모두 고르시오 2~4개, 주관식)", () => {
   it.each(HINT_SETS.map((s, i) => [i + 1, s] as const))("힌트관련%i: 25문항, id 번호 001~025 순서", (n, set) => {
@@ -47,8 +41,9 @@ describe("힌트관련 세트 구성 — 시험 힌트(23~26문제, 30점, 선�
     const count = (t: Question["type"]) => set.filter((x) => x.type === t).length;
     expect(count("mcq")).toBe(16);
     expect(count("multi")).toBe(5);
-    const subjective = set.filter((x) => x.type === "calc" || x.type === "blank");
-    expect(subjective).toHaveLength(4);
+    // 주관식은 단답형(용어·값 쓰기) — 계산 문제(calc)로 채우지 않는다(2026-10-23)
+    expect(count("blank")).toBe(4);
+    expect(count("calc")).toBe(0);
     // 배점: 선택형 1점 × 21 + 주관식(2~3점) 4문항 = 30점이 되는 배점이 있다(2·2·2·3)
     expect(21 + 2 * 3 + 3).toBe(30);
     expect(set.filter((x) => x.chapter === "ch01")).toHaveLength(8);
@@ -81,11 +76,8 @@ describe("힌트관련 세트 구성 — 시험 힌트(23~26문제, 30점, 선�
     for (const set of HINT_SETS) expect(set.filter((x) => x.difficulty === 3).length).toBeGreaterThanOrEqual(10);
   });
 
-  it("세트마다 표 문항과 계산 문항이 있다(문제에 표·그림 포함 가능, 계산은 공학용 계산기 없이)", () => {
-    for (const set of HINT_SETS) {
-      expect(set.some((x) => x.prompt.includes("```text"))).toBe(true);
-      expect(set.some((x) => x.type === "calc")).toBe(true);
-    }
+  it("세트마다 표 문항이 있다(문제에 표·그림 포함 가능)", () => {
+    for (const set of HINT_SETS) expect(set.some((x) => x.prompt.includes("```text"))).toBe(true);
   });
 
   it("힌트관련4·5(더 헷갈리게)는 어려움이 20문항 이상", () => {
@@ -118,10 +110,11 @@ describe("힌트관련 세트 구성 — 시험 힌트(23~26문제, 30점, 선�
     expect(bad).toEqual([]);
   });
 
-  it("계산은 공학용 계산기 없이: 주관식 정답은 정수이거나 소수 첫째 자리까지", () => {
+  it("빈칸은 지문의 {{n}} 자리마다 한 번씩, 칸 수와 같다", () => {
     for (const x of all) {
-      if (x.type !== "calc") continue;
-      expect(Math.abs(x.answer * 10 - Math.round(x.answer * 10)), x.id).toBeLessThan(1e-6);
+      if (x.type !== "blank") continue;
+      const slots = [...x.text.matchAll(/\{\{(\d+)\}\}/g)].map((m) => Number(m[1]));
+      expect(slots, x.id).toEqual(x.blanks.map((_, i) => i));
     }
   });
 
@@ -160,10 +153,8 @@ describe("힌트관련 분류 — 과목 데이터·퀴즈 필터", () => {
   });
 });
 
-describe("계산 정답 재계산(lib/sim/data-comm)", () => {
+describe("계산형 객관식 정답 재계산(lib/sim/data-comm)", () => {
   it("힌트관련1", () => {
-    expect(calcAnswer("ch02-hint1-013")).toBeCloseTo(0.5, 12);
-    expect(calcAnswer("ch02-hint1-017")).toBeCloseTo(10, 9);
     const { levels } = nyquistLevels(150e3, 10e3);
     expect(levels).toBeCloseTo(181.02, 1);
     expect(picked("ch02-hint1-018")).toBe(String(nextPow2(levels)));
@@ -171,53 +162,37 @@ describe("계산 정답 재계산(lib/sim/data-comm)", () => {
     expect(shannonCapacity(2e6, 255)).toBe(16e6);
     expect(nyquistLevels(12e6, 2e6).levels).toBe(8);
     expect(picked("ch02-hint1-019")).toBe("16 Mbps, 8레벨");
-    expect(calcAnswer("ch02-hint1-020")).toBe(5);
     expect(fdmBandwidth(6, 50, 5)).toBe(325);
     expect(picked("ch02-hint1-023")).toBe("325 kHz");
   });
 
   it("힌트관련2", () => {
-    expect(1 / 0.25e-3).toBe(4000);
-    expect(calcAnswer("ch02-hint2-012")).toBe(800);
-    expect(calcAnswer("ch02-hint2-015")).toBe(40);
-    // 정확한 값(약 39.87 kbps)도 허용 오차 안
-    expect(Math.abs(shannonCapacity(4000, 1000) / 1000 - 40)).toBeLessThanOrEqual(0.2);
     expect(bandwidthDelayProduct(10e6, 2e-3)).toBeCloseTo(20_000, 6);
     expect(picked("ch02-hint2-016")).toBe("20,000비트");
     expect(askPskBandwidth(baudRate(6000, 1), 0.5)).toBe(9000);
     expect(picked("ch02-hint2-021")).toBe("9 kHz");
     expect(fmBandwidth(15)).toBe(150);
     expect(picked("ch02-hint2-022")).toBe("150 kHz");
-    expect(calcAnswer("ch02-hint2-023")).toBeCloseTo(200, 9);
   });
 
   it("힌트관련3", () => {
-    expect(calcAnswer("ch02-hint3-010")).toBeCloseTo(0.5, 12);
     expect(nyquistBitRate(3000, 4)).toBe(12_000);
     expect(picked("ch02-hint3-014")).toMatch(/^12,000 bps, /);
     expect(shannonCapacity(3000, 3162)).toBeCloseTo(34_881, 0);
-    expect(shannonCapacity(500e3, 1023)).toBe(5e6);
-    expect(calcAnswer("ch02-hint3-016")).toBe(16);
     expect(transmissionTime(5e6 * 8, 1e6)).toBe(40);
     expect(propagationTime(12_000e3, 2.4e8)).toBeCloseTo(0.05, 12);
     expect(picked("ch02-hint3-017")).toMatch(/^전송 시간 40 s, 전파 시간 50 ms/);
-    expect(calcAnswer("ch02-hint3-018")).toBeCloseTo(2.5e6, 3);
     expect(tdmLinkRate(3, 1)).toBe(3);
     expect(tdmSlotDuration(1, 3)).toBeCloseTo(0.333, 3);
     expect(picked("ch02-hint3-024")).toBe("3 kbps, 약 0.33 ms");
   });
 
   it("힌트관련4", () => {
-    expect(calcAnswer("ch02-hint4-011")).toBeCloseTo(150, 9);
     expect(decibel(1, 1000)).toBeCloseTo(-30, 9);
     expect(picked("ch02-hint4-015")).toBe("−30 dB");
-    expect(snrDb(snr(5e-3, 50e-9))).toBeCloseTo(50, 9);
-    expect(calcAnswer("ch02-hint4-017")).toBeCloseTo(50, 9);
     expect(shannonCapacity(3000, 63)).toBe(18e3);
     expect(3000 * Math.log2(63)).toBeCloseTo(17_932, 0);
     expect(picked("ch02-hint4-020")).toBe("18 kbps");
-    expect(calcAnswer("ch02-hint4-022")).toBeCloseTo(32, 9);
-    expect(propagationTime(12_000e3, 2.4e8)).toBeCloseTo(0.05, 12);
     expect(bandwidthDelayProduct(1e6, 8e-3) / 8).toBeCloseTo(1000, 9);
     expect(picked("ch02-hint4-023")).toBe("1,000바이트");
   });
@@ -225,14 +200,8 @@ describe("계산 정답 재계산(lib/sim/data-comm)", () => {
   it("힌트관련5", () => {
     expect(decibel(4, 1)).toBeCloseTo(6.02, 2);
     expect(picked("ch02-hint5-013")).toBe("약 +6 dB");
-    expect(shannonCapacity(1e6, calcAnswer("ch02-hint5-015"))).toBe(10e6);
-    expect(calcAnswer("ch02-hint5-015")).toBe(1023);
     expect(throughput(12_000, 10_000, 60)).toBe(2e6);
     expect(picked("ch02-hint5-017")).toBe("처리량 2 Mbps, 대역폭의 약 1/5");
-    expect(latency({ propagation: 0.01, transmission: 0.4, queuing: 5e-3, processing: 1e-3 })).toBeCloseTo(0.416, 12);
-    expect(calcAnswer("ch02-hint5-018")).toBeCloseTo(416, 6);
-    expect(calcAnswer("ch02-hint5-021")).toBe(12);
-    expect(pcmBitRate(samplingRate(4000), 12)).toBe(96e3);
     expect(fdmBandwidth(8, 107.5, 20)).toBe(1000);
     expect(picked("ch02-hint5-024")).toBe("107.5 kHz");
   });
