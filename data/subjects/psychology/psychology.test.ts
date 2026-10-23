@@ -17,7 +17,7 @@ import { type ChapterKey, SOURCE } from "./terms";
 
 const ROOT = path.resolve(import.meta.dirname, "../../..");
 const SELECT = new Set(["mcq", "multi", "ox", "match", "order"]);
-const COUNTS: Record<ChapterKey, number> = { c01: 26, c02: 28, c03: 22, c04: 22, c05: 24, c06: 28, c07: 26, c08: 24 };
+const COUNTS: Record<ChapterKey, number> = { c01: 26, c02: 28, c03: 37, c04: 22, c05: 24, c06: 28, c07: 26, c08: 24 };
 const kind = (q: Question) => q.id.split("-")[2];
 type Any = Question & {
   choices?: string[];
@@ -41,14 +41,14 @@ describe("심리학개론 CHAPTER 01~08 (요약 노트 PDF)", async () => {
   const all = Object.values(byCh).flat();
   const chs = Object.keys(SOURCE) as ChapterKey[];
 
-  it("단원 8개 = PDF 목차 순서(c01~c08), 장별 문항 수 26·28·22·22·24·28·26·24 = 약 200", () => {
+  it("단원 8개 = PDF 목차 순서(c01~c08), 장별 문항 수 26·28·37·22·24·28·26·24 = 215(c03에 교재 보충 15)", () => {
     expect(psychology.chapters.map((c) => c.id)).toEqual(chs);
     expect(Object.fromEntries(chs.map((ch) => [ch, byCh[ch].length]))).toEqual(COUNTS);
-    expect(all.length).toBe(200);
+    expect(all.length).toBe(215);
     for (const c of psychology.chapters) expect(c.minQuestions).toBe(COUNTS[c.id as ChapterKey]);
   });
 
-  it("유형 비율 객관식 50% · 단답형 30% · 서술형 20%(장마다 ±3%p, 전체 100·60·40)", () => {
+  it("유형 비율 객관식 50% · 단답형 30% · 서술형 20%(장마다 ±3%p, 전체 108·64·43)", () => {
     for (const ch of chs) {
       const qs = byCh[ch];
       const n = qs.length;
@@ -56,11 +56,11 @@ describe("심리학개론 CHAPTER 01~08 (요약 노트 PDF)", async () => {
       const shortN = qs.filter((q) => q.type === "blank").length;
       const essay = qs.filter((q) => q.type === "essay").length;
       expect(sel + shortN + essay, ch).toBe(n);
-      expect(sel / n, ch).toBe(0.5);
+      expect(Math.abs(sel / n - 0.5), ch).toBeLessThan(0.03);
       expect(Math.abs(shortN / n - 0.3), ch).toBeLessThan(0.03);
       expect(Math.abs(essay / n - 0.2), ch).toBeLessThan(0.03);
     }
-    expect([all.filter((q) => SELECT.has(q.type)).length, all.filter((q) => q.type === "blank").length, all.filter((q) => q.type === "essay").length]).toEqual([100, 60, 40]);
+    expect([all.filter((q) => SELECT.has(q.type)).length, all.filter((q) => q.type === "blank").length, all.filter((q) => q.type === "essay").length]).toEqual([108, 64, 43]);
   });
 
   it("id = psychology-c0N-{case|compare|link|order|short|essay}-NNN, 객관식은 사례 > 비교 > 학자·이론·실험 연결 > 순서", () => {
@@ -113,12 +113,15 @@ describe("심리학개론 CHAPTER 01~08 (요약 노트 PDF)", async () => {
     }
   });
 
-  it("해설 = 정답 이유 + 오답이 틀린 이유 + 같은 장의 관련 개념 + 끝에 '근거: PDF p.X'(PDF 밖 내용은 '+ 보충'), 쪽은 그 장의 범위 안", () => {
-    const bad = all.filter((q) => !/^정답: [^\n]+ 오답: [^\n]+ 연결: [^\n]+\n근거: PDF p\.\d+(-\d+)?( \+ 보충)?$/.test(q.explanation));
+  it("해설 = 정답 이유 + 오답이 틀린 이유 + 같은 장의 관련 개념 + 끝에 '근거: PDF p.X'(교재 보충 절은 '근거: 교재 p.X', PDF 밖 내용은 '+ 보충'), 쪽은 그 장의 범위 안", () => {
+    const bad = all.filter((q) => !/^정답: [^\n]+ 오답: [^\n]+ 연결: [^\n]+\n근거: (PDF|교재) p\.\d+(-\d+)?( \+ 보충)?$/.test(q.explanation));
     expect(bad.map((q) => q.id)).toEqual([]);
     for (const q of all) {
-      const [, a, b] = q.explanation.match(/근거: PDF p\.(\d+)(?:-(\d+))?/)!;
-      const [lo, hi] = SOURCE[q.chapter as ChapterKey].pages;
+      const [, src, a, b] = q.explanation.match(/근거: (PDF|교재) p\.(\d+)(?:-(\d+))?/)!;
+      const s = SOURCE[q.chapter as ChapterKey];
+      const range = src === "PDF" ? s.pages : s.textbook;
+      expect(range, `${q.id} 교재 보충 절이 없는 장`).toBeDefined();
+      const [lo, hi] = range!;
       for (const p of [a, b ?? a].map(Number)) expect(p >= lo && p <= hi, `${q.id} p.${p}`).toBe(true);
       expect(q.slideRef, q.id).toMatch(new RegExp(`^Ch${q.chapter.slice(1)} p\\.`));
     }
@@ -177,7 +180,7 @@ describe("심리학개론 CHAPTER 01~08 (요약 노트 PDF)", async () => {
       "| 장 | 제목 | 객관식 | 단답형 | 서술형 | 계 | 표 / 2문항 미만 | 소제목 | 용어·학자 | 누락 | 근거에 보충 |",
       "|---|---|---|---|---|---|---|---|---|---|---|",
       ...summary,
-      `| 계 | | 100 | 60 | 40 | ${all.length} | | | | ${missing.length} | ${supplement} |`,
+      `| 계 | | 108 | 64 | 43 | ${all.length} | | | | ${missing.length} | ${supplement} |`,
       "",
       ...sections,
     ].join("\n");
@@ -198,7 +201,7 @@ describe("심리학개론 CHAPTER 01~08 (요약 노트 PDF)", async () => {
     expect(ids.some((id) => OLD.includes(id))).toBe(false);
     // 단원·과목 통계, 정답률 요약, 생성 문제 집계 어디에도 들어가지 않는다
     const line = subjectStats(rec, metas);
-    expect([line.total, line.solved, line.attempts, line.correct, line.openWrong]).toEqual([200, 0, 0, 0, 0]);
+    expect([line.total, line.solved, line.attempts, line.correct, line.openWrong]).toEqual([215, 0, 0, 0, 0]);
     expect(chapterStats(rec, metas[0]).line.solved).toBe(0);
     expect(summarize(rec, ids)).toMatchObject({ attempts: 0, correct: 0, openWrong: 0 });
     expect(generatedAttempts(rec, new Set(ids))).toEqual({ attempts: 0, correct: 0 });
