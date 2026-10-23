@@ -62,9 +62,8 @@ describe("과목 레지스트리", () => {
     (_, s) => {
       const dir = path.join(ROOT, s.sourceDir);
       expect(existsSync(dir)).toBe(true);
-      // 심리학개론은 교재 PDF 대신 사진 전사본(docs/psychology/source-*.md)이 근거다
-      const ext = s.sourceDir.startsWith("docs/") ? ".md" : ".pdf";
-      expect(readdirSync(dir).some((f) => f.toLowerCase().endsWith(ext))).toBe(true);
+      // 심리학개론은 docs/psychology/의 요약 노트 PDF(2026-10-23부터, 커밋하지 않음)가 근거다
+      expect(readdirSync(dir).some((f) => f.toLowerCase().endsWith(".pdf"))).toBe(true);
     },
   );
 

@@ -16,9 +16,9 @@ import { gradeQuestion, type Question } from "./registry";
 
 const essay = QTYPE_FIXTURES.find((q) => q.type === "essay") as EssayQ;
 const short: BlankQ = {
-  id: "psychology-ch01-demo-short-001",
+  id: "psychology-c01-demo-short-001",
   subject: "psychology",
-  chapter: "ch01",
+  chapter: "c01",
   topic: "실험",
   type: "blank",
   exam: false,
@@ -60,8 +60,8 @@ describe("서술형 essay (자기 채점)", () => {
     const r = gradeQuestion(essay, "답");
     let rec = recordAttempt(empty(), essay.id, r, "2026-10-16T00:00:00Z");
     rec = recordAttempt(rec, essay.id, r, "2026-10-16T00:01:00Z");
-    rec = recordAttempt(rec, "psychology-ch01-x-001", { correct: true, score: 1 }, "2026-10-16T00:02:00Z");
-    rec = recordAttempt(rec, "psychology-ch01-y-001", { correct: false, score: 0 }, "2026-10-16T00:03:00Z");
+    rec = recordAttempt(rec, "psychology-c01-x-001", { correct: true, score: 1 }, "2026-10-16T00:02:00Z");
+    rec = recordAttempt(rec, "psychology-c01-y-001", { correct: false, score: 0 }, "2026-10-16T00:03:00Z");
     expect(rec.progress[essay.id]).toEqual({ attempts: 2, correctCount: 0, lastScore: null, lastAt: "2026-10-16T00:01:00Z", selfCheck: true });
     expect(rec.wrong[essay.id]).toBeUndefined();
     expect(summarize(rec)).toEqual({ attempts: 2, correct: 1, rate: 0.5, openWrong: 1 });
@@ -69,7 +69,7 @@ describe("서술형 essay (자기 채점)", () => {
 
   it("통계: 진행률(푼 문제)에는 들어가고 정답률·오답 수에서는 빠지며, 풀이 상태는 '제출함'(⭐ 제외는 lib/stats.test.ts)", () => {
     const rec = recordAttempt(empty(), essay.id, gradeQuestion(essay, "답"), "2026-10-16T00:00:00Z");
-    const line = statLine(rec, [essay.id, "psychology-ch01-z-001"], []);
+    const line = statLine(rec, [essay.id, "psychology-c01-z-001"], []);
     expect([line.solved, line.attempts, line.correct, line.rate, line.openWrong]).toEqual([1, 0, 0, null, 0]);
     expect(questionStatus(rec, essay.id)).toBe("submitted");
   });

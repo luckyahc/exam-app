@@ -106,12 +106,15 @@ export function sumLines(lines: readonly StatLine[]): StatLine {
   return { ...s, rate: s.attempts ? s.correct / s.attempts : null };
 }
 
-/** 문제 데이터 밖의 기록(생성기로 새로 만든 문제) 풀이 횟수 — 대시보드에 따로 보여 준다 */
+/**
+ * 문제 데이터 밖의 기록(생성기로 새로 만든 문제, id에 '-gen-') 풀이 횟수 — 대시보드에 따로 보여 준다.
+ * 삭제된 정적 문제의 옛 기록(예: 심리학개론 2026-10-23 재작성 전 psychology-ch01-…)은 생성 문제가 아니므로 세지 않는다.
+ */
 export function generatedAttempts(rec: SubjectRecords | undefined, knownIds: ReadonlySet<string>) {
   let attempts = 0;
   let correct = 0;
   for (const [id, p] of Object.entries(rec?.progress ?? {})) {
-    if (knownIds.has(id) || p.selfCheck) continue;
+    if (knownIds.has(id) || p.selfCheck || !id.includes("-gen-")) continue;
     attempts += p.attempts;
     correct += p.correctCount;
   }

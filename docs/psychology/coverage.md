@@ -1,334 +1,563 @@
-# 용어 커버리지 — 심리학개론 1~7장
+# 커버리지 — 심리학개론 CHAPTER 01~08 (요약 노트 PDF)
 
-원천자료의 "기억해야 할 용어"(교재 표기)가 문제·보기·순서 항목·짝·단답 인정 답안·모범답안·채점 포인트에 나온 문항. 해설만 언급한 것은 세지 않는다.
+원천자료 `docs/psychology/summary-notes.pdf`(로컬 전용) 하단 쪽 번호 2~28. 용어 표기는 교재 판(`term-map.md`). 소제목은 문항 topic으로, 굵은 용어·학자 이름은 문제·보기·순서 항목·짝·단답 인정 답안·모범답안·채점 포인트에 나온 문항으로 센다(해설만 언급한 것은 세지 않는다).
 이 문서는 `data/subjects/psychology/psychology.test.ts`가 문항 데이터와 같은지 검사한다(다시 만들기: `UPDATE_PSY_COVERAGE=1 npx vitest run data/subjects/psychology`).
 
 ## 요약
 
-근거가 보충뿐 = 근거 줄이 "교재 용어 + 보충(표준 정의)"(용어 박스의 용어를 부록 정의로 판단한 문항).
+| 장 | 제목 | 객관식 | 단답형 | 서술형 | 계 | 표 / 2문항 미만 | 소제목 | 용어·학자 | 누락 | 근거에 보충 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| c01 | Ch01. 심리학의 역사와 과학적 사고 | 13 | 8 | 5 | 26 | 4 / 0 | 17 | 69 | 0 | 0 |
+| c02 | Ch02. 마음의 생물학 | 14 | 8 | 6 | 28 | 5 / 0 | 13 | 52 | 0 | 0 |
+| c03 | Ch03. 의식과 이중 처리과정 | 11 | 7 | 4 | 22 | 4 / 0 | 11 | 21 | 0 | 0 |
+| c04 | Ch04. 본성, 양육, 인간의 다양성 | 11 | 7 | 4 | 22 | 1 / 0 | 14 | 26 | 0 | 0 |
+| c05 | Ch05. 전 생애 발달 | 12 | 7 | 5 | 24 | 6 / 0 | 14 | 46 | 0 | 0 |
+| c06 | Ch06. 감각과 지각 | 14 | 8 | 6 | 28 | 4 / 0 | 17 | 46 | 0 | 3 |
+| c07 | Ch07. 학습 | 13 | 8 | 5 | 26 | 5 / 0 | 14 | 35 | 0 | 1 |
+| c08 | Ch08. 기억 | 12 | 7 | 5 | 24 | 3 / 0 | 17 | 53 | 0 | 1 |
+| 계 | | 100 | 60 | 40 | 200 | | | | 0 | 5 |
 
-| 범위 | 용어 | 누락 | 전체 문항 | 근거에 보충이 들어간 문항 | 근거가 보충뿐 |
-|---|---|---|---|---|---|
-| 1~3장 | 141 | 0 | 120 | 95 | 52 |
-| 4~7장 | 170 | 0 | 170 | 118 | 81 |
+## c01 — 소제목 (PDF p.2~5)
 
-## 용어별 — 1~3장
+| 소제목 | 문항 수 | 문항(id 앞의 psychology- 생략) |
+|---|---|---|
+| 심리학의 정의 | 1 | c01-essay-005 |
+| 과학적 심리학의 탄생 | 1 | c01-link-001 |
+| 학파의 흐름 (표) | 2 | c01-link-002, c01-order-001 |
+| 본성과 양육 | 1 | c01-link-003 |
+| 생물심리사회적 접근 | 1 | c01-essay-002 |
+| 분석 수준별 관점 (표) | 2 | c01-case-001, c01-case-002 |
+| 심리학의 하위 분야 | 1 | c01-compare-004 |
+| 과학이 필요한 이유 | 1 | c01-case-003 |
+| 과학적 태도 | 1 | c01-short-006 |
+| 이론·가설·반복연구 | 1 | c01-short-002 |
+| 기술적 방법 (표) | 2 | c01-compare-001, c01-short-001 |
+| 상관연구 | 2 | c01-case-004, c01-short-004 |
+| 실험법 | 3 | c01-case-005, c01-short-003, c01-short-007 |
+| 연구 방법 비교 (표) | 2 | c01-compare-002, c01-essay-001 |
+| 기술 통계 | 2 | c01-compare-003, c01-short-005 |
+| 추론 통계 | 1 | c01-essay-003 |
+| 연구 윤리 | 2 | c01-short-008, c01-essay-004 |
 
-| 장 | 용어 박스 | 용어 | 문항 수 | 문항(앞 4개, id 앞의 psychology- 생략) |
-|---|---|---|---|---|
-| ch01 | 연구 전략 | 가설 | 3 | ch01-define-001, ch01-short-004, ch01-essay-006 |
-| ch01 | 연구 전략 | 가짜약 효과 | 4 | ch01-case-005, ch01-case-006, ch01-short-002, ch01-essay-002 |
-| ch01 | 연구 전략 | 고지된 동의 | 4 | ch01-case-008, ch01-define-003, ch01-order-002, ch01-essay-005 |
-| ch01 | 연구 전략 | 독립변인 | 6 | ch01-compare-001, ch01-compare-003, ch01-define-002, ch01-order-001 … |
-| ch01 | 연구 전략 | 무선표본 | 5 | ch01-case-004, ch01-compare-002, ch01-order-001, ch01-short-007 … |
-| ch01 | 연구 전략 | 무선할당 | 10 | ch01-case-004, ch01-case-006, ch01-compare-001, ch01-compare-002 … |
-| ch01 | 연구 전략 | 반복연구 | 5 | ch01-case-002, ch01-case-008, ch01-define-001, ch01-short-005 … |
-| ch01 | 연구 전략 | 변인 | 13 | ch01-case-003, ch01-case-005, ch01-case-007, ch01-compare-001 … |
-| ch01 | 연구 전략 | 사례연구 | 3 | ch01-case-001, ch01-case-002, ch01-essay-001 |
-| ch01 | 연구 전략 | 사전등록 | 3 | ch01-case-004, ch01-case-008, ch01-short-004 |
-| ch01 | 연구 전략 | 사회조사 | 5 | ch01-case-001, ch01-case-002, ch01-compare-002, ch01-short-007 … |
-| ch01 | 연구 전략 | 산포도 | 1 | ch01-short-006 |
-| ch01 | 연구 전략 | 상관 | 11 | ch01-case-001, ch01-case-003, ch01-case-005, ch01-case-006 … |
-| ch01 | 연구 전략 | 상관계수 | 2 | ch01-case-003, ch01-case-007 |
-| ch01 | 연구 전략 | 실험 | 16 | ch01-case-001, ch01-case-002, ch01-case-004, ch01-case-008 … |
-| ch01 | 연구 전략 | 실험집단 | 4 | ch01-compare-002, ch01-compare-003, ch01-order-001, ch01-essay-007 |
-| ch01 | 연구 전략 | 실험 후 설명 | 5 | ch01-case-004, ch01-case-008, ch01-define-003, ch01-order-002 … |
-| ch01 | 연구 전략 | 이론 | 1 | ch01-define-001 |
-| ch01 | 연구 전략 | 이중은폐 절차 | 2 | ch01-case-004, ch01-case-008 |
-| ch01 | 연구 전략 | 자연관찰 | 3 | ch01-case-001, ch01-case-002, ch01-essay-001 |
-| ch01 | 연구 전략 | 전집 | 4 | ch01-compare-002, ch01-order-001, ch01-short-007, ch01-essay-007 |
-| ch01 | 연구 전략 | 조작적 정의 | 1 | ch01-define-001 |
-| ch01 | 연구 전략 | 종속변인 | 4 | ch01-compare-003, ch01-define-002, ch01-order-001, ch01-essay-002 |
-| ch01 | 연구 전략 | 착각상관 | 4 | ch01-case-005, ch01-case-006, ch01-case-007, ch01-essay-006 |
-| ch01 | 연구 전략 | 통제집단 | 6 | ch01-compare-002, ch01-compare-003, ch01-define-002, ch01-order-001 … |
-| ch01 | 연구 전략 | 평균으로의 회귀 | 3 | ch01-case-005, ch01-case-006, ch01-case-007 |
-| ch01 | 연구 전략 | 혼입변인 | 4 | ch01-case-005, ch01-case-007, ch01-define-002, ch01-essay-002 |
-| ch01 | 연구 전략 | 후견 편향 | 5 | ch01-case-005, ch01-case-006, ch01-case-007, ch01-short-003 … |
-| ch01 | 통계적 추리 | 범위 | 2 | ch01-define-004, ch01-short-009 |
-| ch01 | 통계적 추리 | 정상곡선 | 2 | ch01-define-004, ch01-short-008 |
-| ch01 | 통계적 추리 | 중앙값 | 2 | ch01-compare-005, ch01-define-004 |
-| ch01 | 통계적 추리 | 최빈값 | 2 | ch01-compare-005, ch01-define-004 |
-| ch01 | 통계적 추리 | 통계적 유의도 | 1 | ch01-compare-004 |
-| ch01 | 통계적 추리 | 평균 | 7 | ch01-case-005, ch01-case-006, ch01-case-007, ch01-compare-005 … |
-| ch01 | 통계적 추리 | 표준편차 | 1 | ch01-define-004 |
-| ch02 | 신경계와 내분비계 | 간뉴런 | 4 | ch02-case-003, ch02-compare-003, ch02-order-001, ch02-essay-003 |
-| ch02 | 신경계와 내분비계 | 감각뉴런 | 4 | ch02-case-003, ch02-compare-003, ch02-order-001, ch02-essay-003 |
-| ch02 | 신경계와 내분비계 | 교감신경계 | 4 | ch02-case-003, ch02-case-004, ch02-compare-002, ch02-essay-004 |
-| ch02 | 신경계와 내분비계 | 교세포 | 2 | ch02-define-001, ch02-short-004 |
-| ch02 | 신경계와 내분비계 | 뉴런 | 12 | ch02-case-002, ch02-case-003, ch02-compare-002, ch02-compare-003 … |
-| ch02 | 신경계와 내분비계 | 말초신경계 | 1 | ch02-compare-002 |
-| ch02 | 신경계와 내분비계 | 반사 | 2 | ch02-order-001, ch02-essay-003 |
-| ch02 | 신경계와 내분비계 | 부교감신경계 | 4 | ch02-case-003, ch02-case-004, ch02-compare-002, ch02-essay-004 |
-| ch02 | 신경계와 내분비계 | 불응기 | 3 | ch02-case-005, ch02-define-002, ch02-short-002 |
-| ch02 | 신경계와 내분비계 | 생물심리학 | 1 | ch02-define-004 |
-| ch02 | 신경계와 내분비계 | 세포체 | 2 | ch02-define-001, ch02-order-002 |
-| ch02 | 신경계와 내분비계 | 수상돌기 | 2 | ch02-define-001, ch02-order-002 |
-| ch02 | 신경계와 내분비계 | 수초 | 2 | ch02-define-001, ch02-short-004 |
-| ch02 | 신경계와 내분비계 | 시냅스 | 3 | ch02-order-002, ch02-order-003, ch02-short-003 |
-| ch02 | 신경계와 내분비계 | 신경 | 20 | ch02-case-001, ch02-case-002, ch02-case-003, ch02-case-004 … |
-| ch02 | 신경계와 내분비계 | 신경가소성 | 2 | ch02-case-005, ch02-define-004 |
-| ch02 | 신경계와 내분비계 | 신경계 | 5 | ch02-case-003, ch02-case-004, ch02-compare-002, ch02-compare-003 … |
-| ch02 | 신경계와 내분비계 | 신경전달물질 | 8 | ch02-case-001, ch02-case-002, ch02-compare-001, ch02-order-003 … |
-| ch02 | 신경계와 내분비계 | 실무율 반응 | 2 | ch02-case-005, ch02-define-002 |
-| ch02 | 신경계와 내분비계 | 엔도르핀 | 3 | ch02-case-002, ch02-compare-001, ch02-essay-002 |
-| ch02 | 신경계와 내분비계 | 역치 | 3 | ch02-case-005, ch02-define-002, ch02-order-003 |
-| ch02 | 신경계와 내분비계 | 운동뉴런 | 4 | ch02-case-003, ch02-compare-003, ch02-order-001, ch02-essay-003 |
-| ch02 | 신경계와 내분비계 | 자율신경계 | 2 | ch02-compare-002, ch02-essay-004 |
-| ch02 | 신경계와 내분비계 | 재흡수 | 4 | ch02-case-005, ch02-define-002, ch02-order-003, ch02-short-003 |
-| ch02 | 신경계와 내분비계 | 중추신경계 | 3 | ch02-case-004, ch02-compare-002, ch02-compare-003 |
-| ch02 | 신경계와 내분비계 | 체신경계 | 2 | ch02-case-004, ch02-compare-002 |
-| ch02 | 신경계와 내분비계 | 축색 | 4 | ch02-compare-003, ch02-define-001, ch02-order-002, ch02-order-003 |
-| ch02 | 신경계와 내분비계 | 활동전위 | 3 | ch02-define-002, ch02-order-003, ch02-short-002 |
-| ch02 | 발견도구, 오래된 두뇌 구조, 변연계 | 기능성 자기공명 영상법 | 1 | ch02-compare-004 |
-| ch02 | 발견도구, 오래된 두뇌 구조, 변연계 | 뇌간 | 4 | ch02-case-006, ch02-short-005, ch02-short-006, ch02-short-007 |
-| ch02 | 발견도구, 오래된 두뇌 구조, 변연계 | 뇌자도 | 1 | ch02-compare-004 |
-| ch02 | 발견도구, 오래된 두뇌 구조, 변연계 | 뇌전도 | 1 | ch02-compare-004 |
-| ch02 | 발견도구, 오래된 두뇌 구조, 변연계 | 망상체 | 3 | ch02-case-007, ch02-define-003, ch02-short-005 |
-| ch02 | 발견도구, 오래된 두뇌 구조, 변연계 | 변연계 | 2 | ch02-short-008, ch02-short-011 |
-| ch02 | 발견도구, 오래된 두뇌 구조, 변연계 | 소뇌 | 2 | ch02-case-006, ch02-case-007 |
-| ch02 | 발견도구, 오래된 두뇌 구조, 변연계 | 손상법 | 2 | ch02-compare-004, ch02-essay-006 |
-| ch02 | 발견도구, 오래된 두뇌 구조, 변연계 | 시상 | 6 | ch02-case-003, ch02-case-006, ch02-case-007, ch02-define-003 … |
-| ch02 | 발견도구, 오래된 두뇌 구조, 변연계 | 시상하부 | 2 | ch02-case-007, ch02-short-008 |
-| ch02 | 발견도구, 오래된 두뇌 구조, 변연계 | 양전자 방출 단층촬영법 | 1 | ch02-compare-004 |
-| ch02 | 발견도구, 오래된 두뇌 구조, 변연계 | 연수 | 2 | ch02-case-006, ch02-short-006 |
-| ch02 | 발견도구, 오래된 두뇌 구조, 변연계 | 자기공명 영상법 | 1 | ch02-compare-004 |
-| ch02 | 발견도구, 오래된 두뇌 구조, 변연계 | 편도체 | 3 | ch02-case-006, ch02-case-007, ch02-short-011 |
-| ch02 | 발견도구, 오래된 두뇌 구조, 변연계 | 해마 | 2 | ch02-case-006, ch02-case-007 |
-| ch02 | 대뇌피질 | 뇌량 | 1 | ch02-define-003 |
-| ch02 | 대뇌피질 | 대뇌피질 | 3 | ch02-case-003, ch02-short-007, ch02-essay-005 |
-| ch02 | 대뇌피질 | 두정엽 | 3 | ch02-case-008, ch02-short-009, ch02-essay-005 |
-| ch02 | 대뇌피질 | 분할뇌 | 1 | ch02-define-003 |
-| ch02 | 대뇌피질 | 연합영역 | 3 | ch02-define-003, ch02-essay-005, ch02-essay-006 |
-| ch02 | 대뇌피질 | 운동피질 | 2 | ch02-case-003, ch02-essay-005 |
-| ch02 | 대뇌피질 | 전두엽 | 2 | ch02-case-008, ch02-essay-005 |
-| ch02 | 대뇌피질 | 체감각피질 | 2 | ch02-short-009, ch02-essay-005 |
-| ch02 | 대뇌피질 | 측두엽 | 2 | ch02-case-008, ch02-essay-005 |
-| ch02 | 대뇌피질 | 후두엽 | 2 | ch02-case-008, ch02-essay-005 |
-| ch02 | 의식의 기본 개념 | 계열처리 | 3 | ch02-compare-005, ch02-compare-007, ch02-essay-007 |
-| ch02 | 의식의 기본 개념 | 변화맹 | 3 | ch02-case-009, ch02-compare-007, ch02-essay-008 |
-| ch02 | 의식의 기본 개념 | 병렬처리 | 3 | ch02-case-009, ch02-compare-005, ch02-essay-007 |
-| ch02 | 의식의 기본 개념 | 부주의적 맹시 | 3 | ch02-case-009, ch02-compare-007, ch02-essay-008 |
-| ch02 | 의식의 기본 개념 | 선택주의 | 4 | ch02-case-009, ch02-compare-007, ch02-essay-007, ch02-essay-008 |
-| ch02 | 의식의 기본 개념 | 의식 | 5 | ch02-compare-005, ch02-compare-006, ch02-essay-007, ch02-essay-008 … |
-| ch02 | 의식의 기본 개념 | 이중 처리과정 | 3 | ch02-case-009, ch02-compare-005, ch02-essay-007 |
-| ch02 | 의식의 기본 개념 | 인지신경과학 | 1 | ch02-define-004 |
-| ch02 | 수면과 꿈 | 꿈 | 2 | ch02-compare-006, ch02-essay-009 |
-| ch02 | 수면과 꿈 | 델타파 | 3 | ch02-case-010, ch02-define-005, ch02-short-010 |
-| ch02 | 수면과 꿈 | 수면 | 4 | ch02-case-010, ch02-compare-001, ch02-define-005, ch02-short-010 |
-| ch02 | 수면과 꿈 | 알파파 | 2 | ch02-case-010, ch02-define-005 |
-| ch02 | 수면과 꿈 | 일주기 리듬 | 2 | ch02-case-010, ch02-define-005 |
-| ch02 | 수면과 꿈 | 잠재내용 | 2 | ch02-compare-006, ch02-essay-009 |
-| ch02 | 수면과 꿈 | 표출내용 | 3 | ch02-case-010, ch02-compare-006, ch02-essay-009 |
-| ch02 | 수면과 꿈 | REM 반동 | 1 | ch02-case-010 |
-| ch02 | 수면과 꿈 | REM 수면 | 2 | ch02-case-010, ch02-define-005 |
-| ch03 | 발달의 주요 논제·출생 이전·신생아 | 발달심리학 | 1 | ch03-compare-003 |
-| ch03 | 발달의 주요 논제·출생 이전·신생아 | 배아 | 1 | ch03-order-003 |
-| ch03 | 발달의 주요 논제·출생 이전·신생아 | 습관화 | 4 | ch03-case-001, ch03-case-006, ch03-case-007, ch03-case-008 |
-| ch03 | 발달의 주요 논제·출생 이전·신생아 | 접합자 | 2 | ch03-case-006, ch03-order-003 |
-| ch03 | 발달의 주요 논제·출생 이전·신생아 | 종단연구 | 2 | ch03-compare-003, ch03-essay-005 |
-| ch03 | 발달의 주요 논제·출생 이전·신생아 | 태아 | 2 | ch03-case-006, ch03-order-003 |
-| ch03 | 발달의 주요 논제·출생 이전·신생아 | 태아 알코올 증후군 | 1 | ch03-case-006 |
-| ch03 | 발달의 주요 논제·출생 이전·신생아 | 테라토겐 | 2 | ch03-case-006, ch03-short-010 |
-| ch03 | 발달의 주요 논제·출생 이전·신생아 | 횡단연구 | 2 | ch03-compare-003, ch03-essay-005 |
-| ch03 | 유아기와 아동기 | 각인 | 2 | ch03-case-007, ch03-case-008 |
-| ch03 | 유아기와 아동기 | 감각운동 단계 | 5 | ch03-case-002, ch03-compare-001, ch03-order-001, ch03-short-001 … |
-| ch03 | 유아기와 아동기 | 결정적 시기 | 1 | ch03-case-008 |
-| ch03 | 유아기와 아동기 | 구체적 조작단계 | 5 | ch03-case-002, ch03-compare-001, ch03-order-001, ch03-short-002 … |
-| ch03 | 유아기와 아동기 | 기본 신뢰감 | 2 | ch03-short-008, ch03-essay-006 |
-| ch03 | 유아기와 아동기 | 낯가림 | 2 | ch03-compare-001, ch03-short-009 |
-| ch03 | 유아기와 아동기 | 대상영속성 | 5 | ch03-case-001, ch03-case-002, ch03-case-007, ch03-compare-001 … |
-| ch03 | 유아기와 아동기 | 도약대 | 1 | ch03-define-004 |
-| ch03 | 유아기와 아동기 | 동화 | 4 | ch03-case-007, ch03-case-009, ch03-compare-002, ch03-define-004 |
-| ch03 | 유아기와 아동기 | 마음 이론 | 4 | ch03-case-001, ch03-case-002, ch03-define-004, ch03-short-007 |
-| ch03 | 유아기와 아동기 | 보존 | 7 | ch03-case-001, ch03-case-002, ch03-case-009, ch03-compare-001 … |
-| ch03 | 유아기와 아동기 | 성숙 | 4 | ch03-case-007, ch03-compare-001, ch03-define-004, ch03-essay-007 |
-| ch03 | 유아기와 아동기 | 스키마 | 1 | ch03-define-004 |
-| ch03 | 유아기와 아동기 | 애착 | 2 | ch03-case-008, ch03-essay-006 |
-| ch03 | 유아기와 아동기 | 인지 | 6 | ch03-case-006, ch03-compare-003, ch03-order-001, ch03-essay-003 … |
-| ch03 | 유아기와 아동기 | 자기개념 | 2 | ch03-compare-006, ch03-essay-006 |
-| ch03 | 유아기와 아동기 | 자기중심성 | 5 | ch03-case-001, ch03-case-002, ch03-case-009, ch03-compare-001 … |
-| ch03 | 유아기와 아동기 | 전조작 단계 | 4 | ch03-case-002, ch03-compare-001, ch03-order-001, ch03-essay-001 |
-| ch03 | 유아기와 아동기 | 조절 | 2 | ch03-case-009, ch03-compare-002 |
-| ch03 | 유아기와 아동기 | 형식적 조작단계 | 4 | ch03-case-002, ch03-case-003, ch03-compare-001, ch03-order-001 |
-| ch03 | 청소년기 | 사회적 정체성 | 1 | ch03-compare-006 |
-| ch03 | 청소년기 | 정체성 | 6 | ch03-case-004, ch03-case-005, ch03-compare-006, ch03-define-001 … |
-| ch03 | 청소년기 | 청소년기 | 5 | ch03-compare-004, ch03-define-001, ch03-define-003, ch03-essay-002 … |
-| ch03 | 청소년기 | 친밀감 | 5 | ch03-case-005, ch03-compare-006, ch03-define-001, ch03-order-002 … |
-| ch03 | 성인기 | 사회적 시계 | 1 | ch03-short-006 |
-| ch03 | 성인기 | 신경인지장애 | 2 | ch03-case-006, ch03-essay-008 |
-| ch03 | 성인기 | 알츠하이머병 | 1 | ch03-essay-008 |
+## c01 — 굵은 용어·학자
 
-## 용어별 — 4~7장
+| 구분 | 용어 | 문항 수 | 문항(앞 4개) |
+|---|---|---|---|
+| 용어 | 행동과 정신 과정에 관한 과학 | 1 | c01-essay-005 |
+| 용어 | 빌헬름 분트 | 1 | c01-link-001 |
+| 용어 | 티치너 | 2 | c01-link-001, c01-link-002 |
+| 용어 | 구조주의 | 4 | c01-link-001, c01-link-002, c01-link-003, c01-order-001 |
+| 용어 | 윌리엄 제임스 | 1 | c01-link-001 |
+| 용어 | 기능주의 | 3 | c01-link-001, c01-link-002, c01-order-001 |
+| 용어 | 메리 칼킨스 | 1 | c01-link-001 |
+| 용어 | 마거릿 워시번 | 1 | c01-link-001 |
+| 용어 | 상호작용 | 3 | c01-link-003, c01-order-001, c01-essay-002 |
+| 용어 | 자연선택 | 1 | c01-link-003 |
+| 용어 | 생물학적 영향 | 1 | c01-essay-002 |
+| 용어 | 심리적 영향 | 1 | c01-essay-002 |
+| 용어 | 사회문화적 영향 | 1 | c01-essay-002 |
+| 용어 | 기초 연구 | 1 | c01-essay-005 |
+| 용어 | 응용 연구 | 1 | c01-essay-005 |
+| 용어 | 상담심리학 | 1 | c01-compare-004 |
+| 용어 | 임상심리학 | 1 | c01-compare-004 |
+| 용어 | 정신과 의사 | 1 | c01-compare-004 |
+| 용어 | 긍정심리학 | 1 | c01-compare-004 |
+| 용어 | 지역사회심리학 | 1 | c01-compare-004 |
+| 용어 | 후견 편향 | 1 | c01-case-003 |
+| 용어 | 과신 | 1 | c01-case-003 |
+| 용어 | 무선 사건에서 패턴 지각 | 1 | c01-case-003 |
+| 용어 | 호기심 | 1 | c01-short-006 |
+| 용어 | 회의주의 | 1 | c01-short-006 |
+| 용어 | 겸손 | 1 | c01-short-006 |
+| 용어 | 이론 | 1 | c01-short-002 |
+| 용어 | 가설 | 1 | c01-short-002 |
+| 용어 | 조작적 정의 | 2 | c01-case-005, c01-short-002 |
+| 용어 | 반복연구 | 1 | c01-short-002 |
+| 용어 | 사전등록 | 2 | c01-case-005, c01-short-002 |
+| 용어 | 개방 과학 | 1 | c01-short-002 |
+| 용어 | 질문 문구 | 1 | c01-compare-001 |
+| 용어 | 틀만들기 효과 | 1 | c01-case-004 |
+| 용어 | 무선표본 | 1 | c01-case-005 |
+| 용어 | 상관 | 5 | c01-case-003, c01-case-004, c01-compare-002, c01-short-004 … |
+| 용어 | 상관계수 | 1 | c01-essay-001 |
+| 용어 | 착각상관 | 3 | c01-case-003, c01-case-004, c01-short-004 |
+| 용어 | 평균으로의 회귀 | 2 | c01-case-003, c01-case-004 |
+| 용어 | 독립변인 | 1 | c01-essay-001 |
+| 용어 | 종속변인 | 1 | c01-essay-001 |
+| 용어 | 실험집단 | 1 | c01-essay-001 |
+| 용어 | 통제집단 | 1 | c01-essay-001 |
+| 용어 | 무선할당 | 2 | c01-case-005, c01-essay-001 |
+| 용어 | 혼입변인 | 1 | c01-case-004 |
+| 용어 | 이중은폐 절차 | 2 | c01-case-005, c01-short-007 |
+| 용어 | 가짜약 효과 | 2 | c01-case-004, c01-short-003 |
+| 용어 | 최빈값 | 1 | c01-compare-003 |
+| 용어 | 평균 | 5 | c01-case-003, c01-case-004, c01-compare-003, c01-short-005 … |
+| 용어 | 중앙값 | 1 | c01-compare-003 |
+| 용어 | 범위 | 1 | c01-compare-003 |
+| 용어 | 표준편차 | 2 | c01-compare-003, c01-short-005 |
+| 용어 | 정상곡선 | 1 | c01-short-005 |
+| 용어 | 통계적으로 유의 | 2 | c01-essay-001, c01-essay-003 |
+| 용어 | 고지된 동의 | 1 | c01-essay-004 |
+| 용어 | 비밀 유지 | 1 | c01-essay-004 |
+| 용어 | 실험 후 설명 | 2 | c01-short-008, c01-essay-004 |
+| 용어 | 대체·감소·개선 | 1 | c01-essay-004 |
+| 학자 | 분트 | 2 | c01-link-001, c01-link-002 |
+| 학자 | 티치너 | 2 | c01-link-001, c01-link-002 |
+| 학자 | 제임스 | 2 | c01-link-001, c01-link-002 |
+| 학자 | 칼킨스 | 1 | c01-link-001 |
+| 학자 | 워시번 | 1 | c01-link-001 |
+| 학자 | 왓슨 | 1 | c01-link-002 |
+| 학자 | 스키너 | 1 | c01-link-002 |
+| 학자 | 프로이트 | 1 | c01-link-002 |
+| 학자 | 로저스 | 1 | c01-link-002 |
+| 학자 | 매슬로 | 1 | c01-link-002 |
+| 학자 | 다윈 | 1 | c01-link-003 |
 
-| 장 | 용어 박스 | 용어 | 문항 수 | 문항(앞 4개, id 앞의 psychology- 생략) |
-|---|---|---|---|---|
-| ch04 | 감각과 지각의 기본 개념 | 감각 | 20 | ch04-case-001, ch04-case-002, ch04-case-003, ch04-case-004 … |
-| ch04 | 감각과 지각의 기본 개념 | 감각수용기 | 6 | ch04-case-003, ch04-case-006, ch04-compare-004, ch04-compare-006 … |
-| ch04 | 감각과 지각의 기본 개념 | 감각 순응 | 8 | ch04-case-001, ch04-case-002, ch04-case-003, ch04-case-004 … |
-| ch04 | 감각과 지각의 기본 개념 | 베버의 법칙 | 4 | ch04-case-003, ch04-compare-003, ch04-order-003, ch04-essay-003 |
-| ch04 | 감각과 지각의 기본 개념 | 변환 | 5 | ch04-case-001, ch04-compare-006, ch04-order-001, ch04-order-002 … |
-| ch04 | 감각과 지각의 기본 개념 | 상향처리 | 3 | ch04-case-001, ch04-case-006, ch04-essay-002 |
-| ch04 | 감각과 지각의 기본 개념 | 신호탐지 이론 | 3 | ch04-case-001, ch04-define-002, ch04-define-003 |
-| ch04 | 감각과 지각의 기본 개념 | 역치하 | 3 | ch04-case-002, ch04-compare-003, ch04-essay-005 |
-| ch04 | 감각과 지각의 기본 개념 | 절대 역치 | 7 | ch04-case-002, ch04-case-003, ch04-case-005, ch04-compare-003 … |
-| ch04 | 감각과 지각의 기본 개념 | 점화 | 1 | ch04-essay-005 |
-| ch04 | 감각과 지각의 기본 개념 | 정신물리학 | 1 | ch04-define-003 |
-| ch04 | 감각과 지각의 기본 개념 | 지각 | 24 | ch04-case-003, ch04-case-004, ch04-case-005, ch04-case-006 … |
-| ch04 | 감각과 지각의 기본 개념 | 지각갖춤새 | 3 | ch04-case-004, ch04-case-005, ch04-short-004 |
-| ch04 | 감각과 지각의 기본 개념 | 차이 역치 | 4 | ch04-case-002, ch04-compare-003, ch04-short-002, ch04-essay-003 |
-| ch04 | 감각과 지각의 기본 개념 | 하향처리 | 5 | ch04-case-001, ch04-case-006, ch04-compare-004, ch04-essay-001 … |
-| ch04 | 시각: 감각처리와 지각처리 | 간상체 | 3 | ch04-case-007, ch04-order-001, ch04-essay-004 |
-| ch04 | 시각: 감각처리와 지각처리 | 강도 | 4 | ch04-case-002, ch04-define-001, ch04-define-002, ch04-define-003 |
-| ch04 | 시각: 감각처리와 지각처리 | 게슈탈트 | 1 | ch04-essay-007 |
-| ch04 | 시각: 감각처리와 지각처리 | 깊이 지각 | 5 | ch04-case-006, ch04-case-008, ch04-compare-005, ch04-short-009 … |
-| ch04 | 시각: 감각처리와 지각처리 | 단안 단서 | 3 | ch04-case-008, ch04-compare-005, ch04-essay-006 |
-| ch04 | 시각: 감각처리와 지각처리 | 망막 | 13 | ch04-case-005, ch04-case-006, ch04-case-008, ch04-compare-001 … |
-| ch04 | 시각: 감각처리와 지각처리 | 망막 부등 | 5 | ch04-case-005, ch04-case-008, ch04-compare-005, ch04-define-001 … |
-| ch04 | 시각: 감각처리와 지각처리 | 맹점 | 2 | ch04-case-007, ch04-short-006 |
-| ch04 | 시각: 감각처리와 지각처리 | 병렬처리 | 2 | ch04-case-009, ch04-essay-004 |
-| ch04 | 시각: 감각처리와 지각처리 | 색상 | 1 | ch04-define-001 |
-| ch04 | 시각: 감각처리와 지각처리 | 시각 절벽 | 1 | ch04-short-009 |
-| ch04 | 시각: 감각처리와 지각처리 | 시신경 | 3 | ch04-order-001, ch04-short-006, ch04-essay-004 |
-| ch04 | 시각: 감각처리와 지각처리 | 양안 단서 | 3 | ch04-case-008, ch04-compare-005, ch04-essay-006 |
-| ch04 | 시각: 감각처리와 지각처리 | 원추체 | 5 | ch04-case-007, ch04-compare-002, ch04-order-001, ch04-short-005 … |
-| ch04 | 시각: 감각처리와 지각처리 | 자질 탐지기 | 3 | ch04-order-001, ch04-short-007, ch04-essay-004 |
-| ch04 | 시각: 감각처리와 지각처리 | 전경-배경 | 2 | ch04-case-009, ch04-essay-007 |
-| ch04 | 시각: 감각처리와 지각처리 | 조절 | 1 | ch04-compare-001 |
-| ch04 | 시각: 감각처리와 지각처리 | 중심와 | 4 | ch04-case-007, ch04-compare-002, ch04-short-005, ch04-essay-004 |
-| ch04 | 시각: 감각처리와 지각처리 | 지각 항등성 | 3 | ch04-case-004, ch04-case-009, ch04-short-008 |
-| ch04 | 시각: 감각처리와 지각처리 | 집단화 | 1 | ch04-essay-007 |
-| ch04 | 시각: 감각처리와 지각처리 | 파이 현상 | 2 | ch04-case-008, ch04-case-009 |
-| ch04 | 시각: 감각처리와 지각처리 | 파장 | 1 | ch04-define-001 |
-| ch04 | 시각 이외의 감각 | 감각 상호작용 | 4 | ch04-case-004, ch04-case-009, ch04-define-004, ch04-short-010 |
-| ch04 | 시각 이외의 감각 | 체화 인지 | 2 | ch04-define-003, ch04-define-004 |
-| ch04 | 시각 이외의 감각 | 초감각지각 | 2 | ch04-define-004, ch04-essay-008 |
-| ch04 | 시각 이외의 감각 | 초심리학 | 3 | ch04-define-003, ch04-define-004, ch04-essay-008 |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 고차 조건형성 | 3 | ch05-case-008, ch05-define-001, ch05-short-006 |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 무조건반응 | 2 | ch05-case-009, ch05-essay-008 |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 무조건자극 | 4 | ch05-case-009, ch05-compare-002, ch05-essay-004, ch05-essay-008 |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 반응행동 | 1 | ch05-define-002 |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 변별 | 4 | ch05-compare-002, ch05-short-007, ch05-essay-002, ch05-essay-004 |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 소거 | 9 | ch05-compare-001, ch05-compare-003, ch05-compare-005, ch05-order-001 … |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 연합학습 | 1 | ch05-essay-004 |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 인지학습 | 1 | ch05-define-003 |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 일반화 | 4 | ch05-case-008, ch05-compare-005, ch05-essay-004, ch05-essay-008 |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 자극 | 13 | ch05-case-009, ch05-compare-002, ch05-compare-005, ch05-compare-006 … |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 자발적 회복 | 5 | ch05-case-008, ch05-define-001, ch05-order-001, ch05-short-005 … |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 조건반응 | 3 | ch05-case-009, ch05-order-001, ch05-essay-008 |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 조건자극 | 6 | ch05-case-009, ch05-compare-002, ch05-compare-005, ch05-short-006 … |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 조작행동 | 1 | ch05-define-002 |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 중성자극 | 5 | ch05-case-009, ch05-compare-002, ch05-order-001, ch05-essay-004 … |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 파블로프식 조건형성 | 2 | ch05-compare-001, ch05-essay-004 |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 학습 | 10 | ch05-compare-002, ch05-compare-005, ch05-define-001, ch05-define-003 … |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 행동주의 | 1 | ch05-define-001 |
-| ch05 | 학습의 기본 개념과 파블로프식 조건형성 | 획득 | 5 | ch05-compare-002, ch05-compare-003, ch05-order-001, ch05-essay-004 … |
-| ch05 | 조작적 조건형성 | 강화 | 24 | ch05-case-001, ch05-case-002, ch05-case-003, ch05-case-004 … |
-| ch05 | 조작적 조건형성 | 강화계획 | 7 | ch05-case-003, ch05-case-004, ch05-case-005, ch05-case-006 … |
-| ch05 | 조작적 조건형성 | 고정간격 계획 | 5 | ch05-case-003, ch05-case-004, ch05-case-005, ch05-case-006 … |
-| ch05 | 조작적 조건형성 | 고정비율 계획 | 4 | ch05-case-003, ch05-case-004, ch05-case-006, ch05-essay-001 |
-| ch05 | 조작적 조건형성 | 변동간격 계획 | 5 | ch05-case-003, ch05-case-004, ch05-case-005, ch05-case-006 … |
-| ch05 | 조작적 조건형성 | 변동비율 계획 | 7 | ch05-case-003, ch05-case-004, ch05-case-005, ch05-case-006 … |
-| ch05 | 조작적 조건형성 | 부분(간헐적) 강화계획 | 2 | ch05-compare-003, ch05-essay-005 |
-| ch05 | 조작적 조건형성 | 부적 강화 | 5 | ch05-case-001, ch05-case-002, ch05-case-007, ch05-compare-006 … |
-| ch05 | 조작적 조건형성 | 연속 강화계획 | 3 | ch05-case-005, ch05-compare-003, ch05-essay-005 |
-| ch05 | 조작적 조건형성 | 일차 강화물 | 3 | ch05-compare-004, ch05-short-008, ch05-essay-007 |
-| ch05 | 조작적 조건형성 | 정적 강화 | 5 | ch05-case-001, ch05-case-002, ch05-case-007, ch05-short-001 … |
-| ch05 | 조작적 조건형성 | 조건 강화물 | 5 | ch05-compare-004, ch05-define-002, ch05-short-008, ch05-essay-005 … |
-| ch05 | 조작적 조건형성 | 조성 | 3 | ch05-case-008, ch05-order-003, ch05-short-004 |
-| ch05 | 조작적 조건형성 | 조작실 | 2 | ch05-define-002, ch05-order-003 |
-| ch05 | 조작적 조건형성 | 조작적 조건형성 | 5 | ch05-compare-001, ch05-define-003, ch05-short-004, ch05-short-005 … |
-| ch05 | 조작적 조건형성 | 처벌 | 9 | ch05-case-001, ch05-case-002, ch05-case-007, ch05-compare-002 … |
-| ch05 | 조작적 조건형성 | 효과의 법칙 | 1 | ch05-define-001 |
-| ch05 | 관찰학습 | 거울뉴런 | 2 | ch05-define-004, ch05-essay-006 |
-| ch05 | 관찰학습 | 관찰학습 | 3 | ch05-define-003, ch05-short-009, ch05-essay-006 |
-| ch05 | 관찰학습 | 모델링 | 4 | ch05-case-008, ch05-define-003, ch05-short-009, ch05-essay-006 |
-| ch05 | 관찰학습 | 친사회적 행동 | 1 | ch05-essay-006 |
-| ch06 | 기억 연구와 부호화 | 간격두기 효과 | 5 | ch06-case-008, ch06-define-003, ch06-short-005, ch06-essay-003 … |
-| ch06 | 기억 연구와 부호화 | 감각기억 | 5 | ch06-compare-003, ch06-compare-007, ch06-order-001, ch06-short-003 … |
-| ch06 | 기억 연구와 부호화 | 검증 효과 | 4 | ch06-case-010, ch06-define-003, ch06-essay-003, ch06-essay-009 |
-| ch06 | 기억 연구와 부호화 | 기억 | 40 | ch06-case-001, ch06-case-002, ch06-case-003, ch06-case-004 … |
-| ch06 | 기억 연구와 부호화 | 기억술 | 1 | ch06-short-007 |
-| ch06 | 기억 연구와 부호화 | 깊은 처리 | 5 | ch06-case-001, ch06-case-002, ch06-compare-001, ch06-short-001 … |
-| ch06 | 기억 연구와 부호화 | 단기기억 | 5 | ch06-compare-003, ch06-define-002, ch06-order-001, ch06-short-002 … |
-| ch06 | 기억 연구와 부호화 | 반향기억 | 2 | ch06-case-006, ch06-compare-007 |
-| ch06 | 기억 연구와 부호화 | 병렬처리 | 1 | ch06-compare-004 |
-| ch06 | 기억 연구와 부호화 | 부호화 | 13 | ch06-case-004, ch06-case-008, ch06-compare-002, ch06-compare-003 … |
-| ch06 | 기억 연구와 부호화 | 암묵기억 | 5 | ch06-case-006, ch06-case-007, ch06-compare-005, ch06-essay-005 … |
-| ch06 | 기억 연구와 부호화 | 얕은 처리 | 4 | ch06-case-001, ch06-case-002, ch06-compare-001, ch06-essay-002 |
-| ch06 | 기억 연구와 부호화 | 영상기억 | 1 | ch06-compare-007 |
-| ch06 | 기억 연구와 부호화 | 외현기억 | 7 | ch06-case-007, ch06-compare-002, ch06-compare-005, ch06-define-001 … |
-| ch06 | 기억 연구와 부호화 | 인출 | 12 | ch06-compare-003, ch06-compare-006, ch06-define-003, ch06-define-004 … |
-| ch06 | 기억 연구와 부호화 | 자동처리 | 4 | ch06-case-002, ch06-compare-002, ch06-short-010, ch06-essay-006 |
-| ch06 | 기억 연구와 부호화 | 작업기억 | 2 | ch06-define-002, ch06-short-002 |
-| ch06 | 기억 연구와 부호화 | 장기기억 | 8 | ch06-compare-003, ch06-compare-004, ch06-compare-007, ch06-define-002 … |
-| ch06 | 기억 연구와 부호화 | 재인 | 2 | ch06-compare-006, ch06-essay-003 |
-| ch06 | 기억 연구와 부호화 | 재학습 | 1 | ch06-compare-006 |
-| ch06 | 기억 연구와 부호화 | 저장 | 8 | ch06-compare-003, ch06-define-001, ch06-define-004, ch06-order-001 … |
-| ch06 | 기억 연구와 부호화 | 청크 만들기 | 2 | ch06-case-009, ch06-short-004 |
-| ch06 | 기억 연구와 부호화 | 통제처리 | 2 | ch06-compare-002, ch06-essay-006 |
-| ch06 | 기억 연구와 부호화 | 회상 | 6 | ch06-case-008, ch06-compare-005, ch06-compare-006, ch06-essay-004 … |
-| ch06 | 기억 저장과 인출 | 계열위치 효과 | 4 | ch06-case-008, ch06-case-009, ch06-case-010, ch06-define-003 |
-| ch06 | 기억 저장과 인출 | 기분부합 기억 | 2 | ch06-case-009, ch06-short-008 |
-| ch06 | 기억 저장과 인출 | 기억 응고화 | 2 | ch06-short-011, ch06-essay-003 |
-| ch06 | 기억 저장과 인출 | 부호화 명세성 원리 | 3 | ch06-case-004, ch06-case-008, ch06-essay-003 |
-| ch06 | 기억 저장과 인출 | 섬광기억 | 6 | ch06-case-005, ch06-case-007, ch06-case-010, ch06-define-005 … |
-| ch06 | 기억 저장과 인출 | 의미기억 | 5 | ch06-case-006, ch06-case-007, ch06-compare-002, ch06-essay-006 … |
-| ch06 | 기억 저장과 인출 | 일화기억 | 4 | ch06-case-006, ch06-compare-002, ch06-essay-006, ch06-essay-008 |
-| ch06 | 기억 저장과 인출 | 점화 | 1 | ch06-compare-005 |
-| ch06 | 기억 저장과 인출 | 해마 | 2 | ch06-define-001, ch06-essay-005 |
-| ch06 | 망각, 기억 구성, 기억 증진법 | 순행간섭 | 5 | ch06-case-003, ch06-case-004, ch06-define-005, ch06-essay-003 … |
-| ch06 | 망각, 기억 구성, 기억 증진법 | 역행간섭 | 6 | ch06-case-003, ch06-case-004, ch06-case-005, ch06-case-008 … |
-| ch06 | 망각, 기억 구성, 기억 증진법 | 역행성 기억상실증 | 5 | ch06-case-004, ch06-case-005, ch06-define-005, ch06-short-009 … |
-| ch06 | 망각, 기억 구성, 기억 증진법 | 오정보 효과 | 4 | ch06-case-009, ch06-case-010, ch06-define-003, ch06-essay-007 |
-| ch06 | 망각, 기억 구성, 기억 증진법 | 재응고화 | 3 | ch06-define-004, ch06-essay-007, ch06-essay-008 |
-| ch06 | 망각, 기억 구성, 기억 증진법 | 진행성 기억상실증 | 3 | ch06-case-003, ch06-case-005, ch06-essay-005 |
-| ch06 | 망각, 기억 구성, 기억 증진법 | 출처 기억상실 | 3 | ch06-case-003, ch06-define-005, ch06-essay-007 |
-| ch07 | 사고 | 가용성 발견법 | 3 | ch07-case-001, ch07-case-002, ch07-essay-003 |
-| ch07 | 사고 | 개념 | 4 | ch07-define-005, ch07-order-002, ch07-short-010, ch07-essay-001 |
-| ch07 | 사고 | 고착 | 3 | ch07-case-003, ch07-case-007, ch07-compare-001 |
-| ch07 | 사고 | 과신 | 3 | ch07-case-003, ch07-short-003, ch07-essay-005 |
-| ch07 | 사고 | 넛지 | 2 | ch07-case-006, ch07-case-007 |
-| ch07 | 사고 | 대표성 발견법 | 3 | ch07-case-001, ch07-case-002, ch07-case-007 |
-| ch07 | 사고 | 마음갖춤새 | 1 | ch07-case-006 |
-| ch07 | 사고 | 메타인지 | 2 | ch07-case-006, ch07-define-004 |
-| ch07 | 사고 | 발견법 | 4 | ch07-case-001, ch07-case-002, ch07-case-007, ch07-essay-003 |
-| ch07 | 사고 | 수렴적 사고 | 2 | ch07-compare-002, ch07-essay-006 |
-| ch07 | 사고 | 신념 집착 | 7 | ch07-case-001, ch07-case-004, ch07-case-007, ch07-compare-001 … |
-| ch07 | 사고 | 알고리듬 | 6 | ch07-case-001, ch07-case-004, ch07-case-005, ch07-compare-001 … |
-| ch07 | 사고 | 원형 | 1 | ch07-short-010 |
-| ch07 | 사고 | 인지 | 4 | ch07-case-006, ch07-define-001, ch07-define-004, ch07-essay-006 |
-| ch07 | 사고 | 직관 | 2 | ch07-case-003, ch07-case-005 |
-| ch07 | 사고 | 창의성 | 3 | ch07-compare-006, ch07-define-002, ch07-essay-006 |
-| ch07 | 사고 | 통찰 | 5 | ch07-case-002, ch07-case-005, ch07-case-006, ch07-compare-001 … |
-| ch07 | 사고 | 틀만들기 | 2 | ch07-case-002, ch07-case-004 |
-| ch07 | 사고 | 확산적 사고 | 2 | ch07-compare-002, ch07-essay-006 |
-| ch07 | 사고 | 확증 편향 | 4 | ch07-case-003, ch07-case-004, ch07-case-005, ch07-essay-005 |
-| ch07 | 언어와 사고 | 두 단어 단계 | 5 | ch07-case-009, ch07-compare-007, ch07-order-001, ch07-short-004 … |
-| ch07 | 언어와 사고 | 문법 | 1 | ch07-define-003 |
-| ch07 | 언어와 사고 | 베르니케 영역 | 3 | ch07-case-008, ch07-short-011, ch07-essay-007 |
-| ch07 | 언어와 사고 | 브로카 영역 | 2 | ch07-case-008, ch07-essay-007 |
-| ch07 | 언어와 사고 | 실어증 | 1 | ch07-essay-007 |
-| ch07 | 언어와 사고 | 언어 | 14 | ch07-case-009, ch07-compare-003, ch07-compare-007, ch07-define-002 … |
-| ch07 | 언어와 사고 | 언어결정론 | 2 | ch07-compare-003, ch07-essay-008 |
-| ch07 | 언어와 사고 | 언어상대성 | 2 | ch07-compare-003, ch07-essay-008 |
-| ch07 | 언어와 사고 | 옹알이 단계 | 3 | ch07-case-009, ch07-compare-007, ch07-short-005 |
-| ch07 | 언어와 사고 | 음소 | 1 | ch07-define-003 |
-| ch07 | 언어와 사고 | 전보식 말 | 5 | ch07-compare-007, ch07-define-003, ch07-order-001, ch07-short-004 … |
-| ch07 | 언어와 사고 | 한 단어 단계 | 4 | ch07-case-009, ch07-compare-007, ch07-order-001, ch07-essay-004 |
-| ch07 | 언어와 사고 | 형태소 | 1 | ch07-define-003 |
-| ch07 | 지능이란 무엇인가? | 일반지능 | 5 | ch07-compare-006, ch07-define-001, ch07-define-002, ch07-short-007 … |
-| ch07 | 지능이란 무엇인가? | 정서지능 | 3 | ch07-define-001, ch07-short-006, ch07-essay-001 |
-| ch07 | 지능이란 무엇인가? | 지능 | 11 | ch07-compare-006, ch07-define-001, ch07-define-002, ch07-define-005 … |
-| ch07 | 지능이란 무엇인가? | 현자 증후군 | 2 | ch07-define-001, ch07-essay-001 |
-| ch07 | 지능의 평가와 역동성 | 성취검사 | 3 | ch07-compare-004, ch07-define-005, ch07-essay-009 |
-| ch07 | 지능의 평가와 역동성 | 스탠퍼드-비네 지능검사 | 2 | ch07-define-005, ch07-order-002 |
-| ch07 | 지능의 평가와 역동성 | 신뢰도 | 3 | ch07-case-010, ch07-compare-005, ch07-essay-009 |
-| ch07 | 지능의 평가와 역동성 | 예측타당도 | 4 | ch07-case-010, ch07-short-008, ch07-essay-002, ch07-essay-009 |
-| ch07 | 지능의 평가와 역동성 | 웩슬러 성인용 지능검사 | 1 | ch07-define-005 |
-| ch07 | 지능의 평가와 역동성 | 적성검사 | 4 | ch07-compare-004, ch07-define-005, ch07-essay-002, ch07-essay-009 |
-| ch07 | 지능의 평가와 역동성 | 정상곡선 | 1 | ch07-essay-009 |
-| ch07 | 지능의 평가와 역동성 | 정신연령 | 2 | ch07-define-005, ch07-order-002 |
-| ch07 | 지능의 평가와 역동성 | 지능검사 | 5 | ch07-define-005, ch07-order-002, ch07-short-009, ch07-essay-006 … |
-| ch07 | 지능의 평가와 역동성 | 지능지수 | 1 | ch07-order-002 |
-| ch07 | 지능의 평가와 역동성 | 타당도 | 5 | ch07-case-010, ch07-compare-005, ch07-short-008, ch07-essay-002 … |
-| ch07 | 지능의 평가와 역동성 | 표준화 | 2 | ch07-short-009, ch07-essay-009 |
+## c02 — 소제목 (PDF p.6~9)
+
+| 소제목 | 문항 수 | 문항(id 앞의 psychology- 생략) |
+|---|---|---|
+| 뉴런의 구조 (표) | 2 | c02-order-001, c02-short-001 |
+| 활동전위 | 2 | c02-order-002, c02-essay-003 |
+| 시냅스와 신경전달물질 (표) | 4 | c02-case-001, c02-case-002, c02-short-003, c02-essay-004 |
+| 신경계의 구분 | 3 | c02-compare-001, c02-short-004, c02-essay-002 |
+| 내분비계 | 1 | c02-link-003 |
+| 뇌를 연구하는 도구 (표) | 2 | c02-compare-002, c02-short-002 |
+| 뇌간과 오래된 구조 (표) | 2 | c02-case-003, c02-short-005 |
+| 변연계 | 2 | c02-case-004, c02-short-006 |
+| 대뇌피질 (표) | 2 | c02-compare-003, c02-essay-006 |
+| 언어와 뇌 | 1 | c02-compare-004 |
+| 신경가소성 | 1 | c02-short-007 |
+| 분할뇌와 편재화 | 3 | c02-case-005, c02-link-001, c02-essay-001 |
+| 행동유전학과 진화심리학 | 3 | c02-link-002, c02-short-008, c02-essay-005 |
+
+## c02 — 굵은 용어·학자
+
+| 구분 | 용어 | 문항 수 | 문항(앞 4개) |
+|---|---|---|---|
+| 용어 | 활동전위 | 3 | c02-order-002, c02-essay-003, c02-essay-004 |
+| 용어 | 탈분극 | 2 | c02-case-002, c02-order-002 |
+| 용어 | 불응기 | 2 | c02-order-002, c02-essay-003 |
+| 용어 | 역치 | 2 | c02-order-002, c02-essay-003 |
+| 용어 | 실무율 | 1 | c02-essay-003 |
+| 용어 | 시냅스 | 1 | c02-essay-004 |
+| 용어 | 재흡수 | 2 | c02-case-002, c02-essay-004 |
+| 용어 | 효능제 | 2 | c02-case-002, c02-essay-004 |
+| 용어 | 길항제 | 2 | c02-case-002, c02-essay-004 |
+| 용어 | 중추신경계 | 1 | c02-compare-001 |
+| 용어 | 말초신경계 | 2 | c02-compare-001, c02-essay-002 |
+| 용어 | 체신경계 | 1 | c02-compare-001 |
+| 용어 | 자율신경계 | 2 | c02-compare-001, c02-essay-002 |
+| 용어 | 교감신경계 | 2 | c02-compare-001, c02-essay-002 |
+| 용어 | 부교감신경계 | 2 | c02-compare-001, c02-essay-002 |
+| 용어 | 감각뉴런 | 1 | c02-short-004 |
+| 용어 | 운동뉴런 | 1 | c02-short-004 |
+| 용어 | 간뉴런 | 1 | c02-short-004 |
+| 용어 | 반사 | 1 | c02-short-004 |
+| 용어 | 뇌하수체 | 2 | c02-case-004, c02-link-003 |
+| 용어 | 부신 | 2 | c02-link-003, c02-essay-002 |
+| 용어 | 편도체 | 3 | c02-case-004, c02-link-003, c02-short-006 |
+| 용어 | 시상하부 | 2 | c02-case-004, c02-link-003 |
+| 용어 | 보상 중추 | 1 | c02-case-004 |
+| 용어 | 해마 | 2 | c02-case-003, c02-case-004 |
+| 용어 | 운동피질 | 2 | c02-compare-003, c02-compare-004 |
+| 용어 | 체감각피질 | 1 | c02-compare-003 |
+| 용어 | 연합영역 | 1 | c02-essay-006 |
+| 용어 | 피니어스 게이지 | 2 | c02-link-001, c02-essay-006 |
+| 용어 | 브로카 영역 | 1 | c02-compare-004 |
+| 용어 | 표현성 실어증 | 1 | c02-compare-004 |
+| 용어 | 베르니케 영역 | 1 | c02-compare-004 |
+| 용어 | 수용성 실어증 | 1 | c02-compare-004 |
+| 용어 | 신경가소성 | 1 | c02-short-007 |
+| 용어 | 신경생성 | 1 | c02-short-007 |
+| 용어 | 뇌량 | 3 | c02-case-005, c02-link-001, c02-essay-001 |
+| 용어 | 분할뇌 | 4 | c02-case-005, c02-link-001, c02-link-002, c02-essay-001 |
+| 용어 | 스페리와 가자니가 | 1 | c02-link-001 |
+| 용어 | 좌반구 | 4 | c02-case-005, c02-compare-004, c02-link-001, c02-essay-001 |
+| 용어 | 우반구 | 2 | c02-case-005, c02-essay-001 |
+| 용어 | 해석자 | 2 | c02-case-005, c02-essay-001 |
+| 용어 | 쌍생아 연구 | 2 | c02-link-002, c02-essay-005 |
+| 용어 | 입양 연구 | 2 | c02-link-002, c02-essay-005 |
+| 용어 | 유전율 | 2 | c02-short-008, c02-essay-005 |
+| 용어 | 후성유전학 | 2 | c02-link-002, c02-essay-005 |
+| 용어 | 기질 | 1 | c02-essay-005 |
+| 용어 | 진화심리학 | 1 | c02-link-002 |
+| 학자 | 피니어스 게이지 | 2 | c02-link-001, c02-essay-006 |
+| 학자 | 브로카 | 2 | c02-compare-004, c02-link-001 |
+| 학자 | 베르니케 | 2 | c02-compare-004, c02-link-001 |
+| 학자 | 스페리 | 1 | c02-link-001 |
+| 학자 | 가자니가 | 1 | c02-link-001 |
+
+## c03 — 소제목 (PDF p.10~12)
+
+| 소제목 | 문항 수 | 문항(id 앞의 psychology- 생략) |
+|---|---|---|
+| 의식의 정의 | 1 | c03-short-007 |
+| 이중 처리과정 | 2 | c03-compare-002, c03-short-003 |
+| 선택주의 | 4 | c03-case-001, c03-case-002, c03-short-004, c03-essay-004 |
+| 생물학적 리듬 | 2 | c03-link-002, c03-short-005 |
+| 수면 단계 (표) | 3 | c03-compare-001, c03-order-001, c03-short-001 |
+| 잠을 자는 이유 | 1 | c03-essay-001 |
+| 수면 장애 (표) | 2 | c03-case-003, c03-case-005 |
+| 꿈 이론 (표) | 3 | c03-compare-003, c03-link-001, c03-short-002 |
+| 약물의 기본 개념 | 1 | c03-short-006 |
+| 약물의 분류 (표) | 2 | c03-case-004, c03-essay-003 |
+| 약물 사용의 영향 요인 | 1 | c03-essay-002 |
+
+## c03 — 굵은 용어·학자
+
+| 구분 | 용어 | 문항 수 | 문항(앞 4개) |
+|---|---|---|---|
+| 용어 | 자신과 환경에 대한 주관적 자각 | 1 | c03-short-007 |
+| 용어 | 의식적 처리 | 2 | c03-compare-002, c03-essay-004 |
+| 용어 | 무의식적 처리 | 1 | c03-compare-002 |
+| 용어 | 맹시 | 6 | c03-case-001, c03-case-002, c03-compare-002, c03-short-003 … |
+| 용어 | 병렬처리 | 1 | c03-compare-002 |
+| 용어 | 계열처리 | 2 | c03-case-002, c03-compare-002 |
+| 용어 | 선택주의 | 1 | c03-essay-004 |
+| 용어 | 칵테일파티 효과 | 2 | c03-case-001, c03-case-002 |
+| 용어 | 부주의적 맹시 | 3 | c03-case-001, c03-case-002, c03-essay-004 |
+| 용어 | 변화맹 | 3 | c03-case-001, c03-case-002, c03-short-004 |
+| 용어 | 일주기 리듬 | 1 | c03-short-005 |
+| 용어 | 시교차상핵 | 1 | c03-link-002 |
+| 용어 | 멜라토닌 | 1 | c03-link-002 |
+| 용어 | REM 반동 | 2 | c03-case-001, c03-short-002 |
+| 용어 | 내성 | 1 | c03-essay-002 |
+| 용어 | 금단 | 2 | c03-short-006, c03-essay-002 |
+| 용어 | 물질사용장애 | 1 | c03-essay-002 |
+| 용어 | 생물학적 | 1 | c03-essay-002 |
+| 용어 | 심리적 | 2 | c03-short-006, c03-essay-002 |
+| 용어 | 사회문화적 | 1 | c03-essay-002 |
+| 학자 | 프로이트 | 2 | c03-compare-003, c03-link-001 |
+
+## c04 — 소제목 (PDF p.13~15)
+
+| 소제목 | 문항 수 | 문항(id 앞의 psychology- 생략) |
+|---|---|---|
+| 유전의 기본 단위 | 2 | c04-short-002, c04-short-006 |
+| 쌍생아와 입양 연구 | 2 | c04-compare-002, c04-essay-001 |
+| 유전율 | 1 | c04-case-002 |
+| 유전자-환경 상호작용 | 2 | c04-case-003, c04-short-003 |
+| 자연선택과 적응 | 1 | c04-short-004 |
+| 성에 대한 진화적 설명 | 1 | c04-essay-002 |
+| 진화심리학 비판 | 1 | c04-link-002 |
+| 문화의 영향 | 1 | c04-short-005 |
+| 개인주의와 집단주의 (표) | 3 | c04-case-001, c04-compare-001, c04-short-001 |
+| 양육 방식과 또래 | 1 | c04-essay-003 |
+| 성과 성별 | 2 | c04-compare-003, c04-essay-004 |
+| 성차의 예 | 1 | c04-case-004 |
+| 성별 발달의 영향 요인 | 2 | c04-case-005, c04-short-007 |
+| 성과 성적 지향 | 2 | c04-link-001, c04-order-001 |
+
+## c04 — 굵은 용어·학자
+
+| 구분 | 용어 | 문항 수 | 문항(앞 4개) |
+|---|---|---|---|
+| 용어 | 염색체 | 1 | c04-short-002 |
+| 용어 | 유전자 | 9 | c04-case-003, c04-compare-002, c04-link-002, c04-short-002 … |
+| 용어 | 게놈 | 1 | c04-short-002 |
+| 용어 | 다중 유전자 | 3 | c04-case-003, c04-link-002, c04-short-006 |
+| 용어 | 일란성 쌍생아 | 2 | c04-compare-002, c04-essay-001 |
+| 용어 | 이란성 쌍생아 | 2 | c04-compare-002, c04-essay-001 |
+| 용어 | 공유 가정환경 | 2 | c04-case-003, c04-essay-001 |
+| 용어 | 유전율 | 1 | c04-case-002 |
+| 용어 | 후성유전학 | 4 | c04-case-003, c04-case-005, c04-link-002, c04-short-003 |
+| 용어 | 자연선택 | 3 | c04-link-002, c04-short-004, c04-essay-002 |
+| 용어 | 돌연변이 | 3 | c04-case-003, c04-link-002, c04-short-004 |
+| 용어 | 사후 설명 | 2 | c04-link-002, c04-essay-002 |
+| 용어 | 문화 | 7 | c04-case-001, c04-compare-003, c04-short-001, c04-short-005 … |
+| 용어 | 규범 | 2 | c04-case-004, c04-short-005 |
+| 용어 | 개인적 공간 | 1 | c04-short-005 |
+| 용어 | 또래 | 1 | c04-essay-003 |
+| 용어 | 성(sex) | 2 | c04-compare-003, c04-essay-004 |
+| 용어 | 성별(gender) | 1 | c04-essay-004 |
+| 용어 | 생물학적 | 1 | c04-essay-004 |
+| 용어 | 사회적 학습 이론 | 2 | c04-case-005, c04-short-007 |
+| 용어 | 성별 도식 이론 | 1 | c04-case-005 |
+| 용어 | 성역할 | 3 | c04-case-004, c04-case-005, c04-compare-003 |
+| 용어 | 성 정체성 | 3 | c04-case-005, c04-compare-003, c04-essay-004 |
+| 용어 | 성 반응 주기 | 3 | c04-compare-003, c04-link-001, c04-order-001 |
+| 용어 | 성적 지향 | 1 | c04-compare-003 |
+| 학자 | 마스터스와 존슨 | 2 | c04-link-001, c04-order-001 |
+
+## c05 — 소제목 (PDF p.16~18)
+
+| 소제목 | 문항 수 | 문항(id 앞의 psychology- 생략) |
+|---|---|---|
+| 발달심리학의 쟁점 (표) | 2 | c05-compare-003, c05-compare-004 |
+| 태내 발달 | 1 | c05-short-002 |
+| 신생아의 능력 | 1 | c05-short-003 |
+| 뇌와 운동 발달 | 1 | c05-short-007 |
+| 피아제의 인지발달 이론 (표) | 3 | c05-case-001, c05-order-001, c05-short-001 |
+| 비고츠키와 마음 이론 | 3 | c05-case-005, c05-short-004, c05-essay-002 |
+| 애착 (표) | 3 | c05-case-002, c05-link-001, c05-short-005 |
+| 양육 방식 (표) | 2 | c05-case-003, c05-essay-001 |
+| 청소년기 신체 발달 | 1 | c05-essay-003 |
+| 콜버그의 도덕 발달 (표) | 2 | c05-case-004, c05-link-002 |
+| 에릭슨의 심리사회적 발달 (표) | 2 | c05-compare-001, c05-short-006 |
+| 성인기 신체 변화 | 1 | c05-essay-004 |
+| 인지 변화 | 1 | c05-compare-002 |
+| 사회적 발달과 행복 | 1 | c05-essay-005 |
+
+## c05 — 굵은 용어·학자
+
+| 구분 | 용어 | 문항 수 | 문항(앞 4개) |
+|---|---|---|---|
+| 용어 | 접합자 | 1 | c05-short-002 |
+| 용어 | 배아 | 1 | c05-short-002 |
+| 용어 | 태아 | 1 | c05-short-002 |
+| 용어 | 테라토겐 | 1 | c05-short-002 |
+| 용어 | 태아 알코올 증후군 | 1 | c05-short-002 |
+| 용어 | 반사 | 1 | c05-short-003 |
+| 용어 | 먹이 찾기 반사 | 1 | c05-short-003 |
+| 용어 | 습관화 | 2 | c05-case-005, c05-short-003 |
+| 용어 | 가지치기 | 1 | c05-short-007 |
+| 용어 | 유아기 기억상실 | 1 | c05-short-007 |
+| 용어 | 스키마 | 1 | c05-essay-002 |
+| 용어 | 동화 | 3 | c05-case-005, c05-compare-003, c05-essay-002 |
+| 용어 | 조절 | 3 | c05-compare-003, c05-essay-002, c05-essay-003 |
+| 용어 | 대상영속성 | 3 | c05-case-001, c05-order-001, c05-short-001 |
+| 용어 | 보존 | 2 | c05-case-001, c05-order-001 |
+| 용어 | 자기중심성 | 1 | c05-case-001 |
+| 용어 | 비고츠키 | 2 | c05-link-002, c05-essay-002 |
+| 용어 | 근접발달영역 | 2 | c05-case-005, c05-essay-002 |
+| 용어 | 도약대 | 2 | c05-case-005, c05-essay-002 |
+| 용어 | 마음 이론 | 1 | c05-short-004 |
+| 용어 | 자폐 스펙트럼 장애 | 1 | c05-short-004 |
+| 용어 | 애착 | 2 | c05-case-002, c05-link-001 |
+| 용어 | 할로의 원숭이 실험 | 1 | c05-link-001 |
+| 용어 | 접촉 위안 | 1 | c05-link-001 |
+| 용어 | 각인 | 4 | c05-case-002, c05-case-005, c05-link-001, c05-short-005 |
+| 용어 | 에인스워스의 낯선 상황 실험 | 1 | c05-link-001 |
+| 용어 | 기본 신뢰감 | 2 | c05-case-002, c05-link-001 |
+| 용어 | 사춘기 | 1 | c05-essay-003 |
+| 용어 | 초경 | 1 | c05-essay-003 |
+| 용어 | 정자 사출 | 1 | c05-essay-003 |
+| 용어 | 하이트 | 1 | c05-link-002 |
+| 용어 | 성인 진입기 | 1 | c05-compare-001 |
+| 용어 | 폐경 | 1 | c05-essay-004 |
+| 용어 | 횡단연구 | 2 | c05-compare-002, c05-compare-003 |
+| 용어 | 종단연구 | 2 | c05-compare-002, c05-compare-003 |
+| 용어 | 신경인지장애 | 1 | c05-essay-004 |
+| 용어 | 사랑과 일 | 1 | c05-essay-005 |
+| 학자 | 피아제 | 4 | c05-case-001, c05-link-002, c05-order-001, c05-essay-002 |
+| 학자 | 비고츠키 | 2 | c05-link-002, c05-essay-002 |
+| 학자 | 할로 | 1 | c05-link-001 |
+| 학자 | 로렌츠 | 2 | c05-link-001, c05-short-005 |
+| 학자 | 에인스워스 | 2 | c05-link-001, c05-link-002 |
+| 학자 | 에릭슨 | 4 | c05-compare-001, c05-link-001, c05-link-002, c05-short-006 |
+| 학자 | 콜버그 | 2 | c05-case-004, c05-link-002 |
+| 학자 | 하이트 | 1 | c05-link-002 |
+| 학자 | 프로이트 | 1 | c05-essay-005 |
+
+## c06 — 소제목 (PDF p.19~22)
+
+| 소제목 | 문항 수 | 문항(id 앞의 psychology- 생략) |
+|---|---|---|
+| 두 방향의 처리 | 2 | c06-compare-002, c06-short-008 |
+| 역치 (표) | 3 | c06-case-003, c06-short-001, c06-essay-001 |
+| 감각 순응과 지각갖춤새 | 2 | c06-case-001, c06-essay-003 |
+| 빛과 눈의 구조 (표) | 2 | c06-order-001, c06-short-002 |
+| 간상체와 원추체 (표) | 2 | c06-compare-001, c06-short-003 |
+| 시각 정보 처리 | 1 | c06-link-002 |
+| 색채 시각 이론 | 2 | c06-link-001, c06-essay-002 |
+| 게슈탈트 원리 | 1 | c06-short-004 |
+| 깊이 지각 (표) | 2 | c06-case-002, c06-link-003 |
+| 지각 항등성 | 2 | c06-case-005, c06-essay-006 |
+| 지각 경험과 적응 | 1 | c06-short-005 |
+| 소리와 귀의 구조 | 2 | c06-compare-004, c06-order-002 |
+| 음고 지각 이론 | 1 | c06-compare-003 |
+| 촉각과 통증 | 2 | c06-case-004, c06-essay-005 |
+| 미각과 후각 | 1 | c06-short-007 |
+| 신체 위치와 균형 | 1 | c06-short-006 |
+| 초감각지각 | 1 | c06-essay-004 |
+
+## c06 — 굵은 용어·학자
+
+| 구분 | 용어 | 문항 수 | 문항(앞 4개) |
+|---|---|---|---|
+| 용어 | 감각 | 9 | c06-case-001, c06-compare-002, c06-compare-004, c06-short-006 … |
+| 용어 | 지각 | 11 | c06-case-001, c06-case-005, c06-compare-002, c06-compare-003 … |
+| 용어 | 상향처리 | 1 | c06-compare-002 |
+| 용어 | 하향처리 | 3 | c06-case-001, c06-compare-002, c06-essay-003 |
+| 용어 | 변환 | 3 | c06-case-001, c06-compare-002, c06-short-008 |
+| 용어 | 감각 순응 | 2 | c06-case-001, c06-compare-002 |
+| 용어 | 지각갖춤새 | 2 | c06-case-001, c06-essay-003 |
+| 용어 | 파장 | 1 | c06-order-001 |
+| 용어 | 진폭 | 1 | c06-order-001 |
+| 용어 | 자질 탐지기 | 1 | c06-link-002 |
+| 용어 | 병렬처리 | 2 | c06-compare-002, c06-link-002 |
+| 용어 | 영-헬름홀츠 삼원색 이론 | 2 | c06-link-001, c06-essay-002 |
+| 용어 | 헤링의 대립 과정 이론 | 3 | c06-case-004, c06-link-001, c06-essay-002 |
+| 용어 | 잔상 | 2 | c06-link-001, c06-essay-002 |
+| 용어 | 게슈탈트 | 1 | c06-short-004 |
+| 용어 | 전경-배경 | 1 | c06-short-004 |
+| 용어 | 집단화 원리 | 1 | c06-short-004 |
+| 용어 | 시각 절벽 실험 | 1 | c06-link-003 |
+| 용어 | 파이 현상 | 2 | c06-case-005, c06-link-003 |
+| 용어 | 모양 항등성 | 1 | c06-case-005 |
+| 용어 | 크기 항등성 | 3 | c06-case-005, c06-link-003, c06-essay-006 |
+| 용어 | 밝기 항등성 | 1 | c06-case-005 |
+| 용어 | 색 항등성 | 1 | c06-case-005 |
+| 용어 | 달 착시 | 1 | c06-essay-006 |
+| 용어 | 에임즈 방 | 2 | c06-link-003, c06-essay-006 |
+| 용어 | 결정적 시기 | 1 | c06-short-005 |
+| 용어 | 지각 적응 | 2 | c06-case-001, c06-short-005 |
+| 용어 | 주파수 | 2 | c06-case-004, c06-compare-003 |
+| 용어 | 달팽이관 | 4 | c06-compare-003, c06-compare-004, c06-order-002, c06-short-008 |
+| 용어 | 전도성 청력 손실 | 1 | c06-compare-004 |
+| 용어 | 감각신경성 청력 손실 | 1 | c06-compare-004 |
+| 용어 | 인공와우 | 1 | c06-compare-004 |
+| 용어 | 장소 이론 | 2 | c06-case-004, c06-compare-003 |
+| 용어 | 주파수 이론 | 2 | c06-case-004, c06-compare-003 |
+| 용어 | 관문 통제 이론 | 2 | c06-case-004, c06-essay-005 |
+| 용어 | 환상지 감각 | 1 | c06-essay-005 |
+| 용어 | 감칠맛 | 1 | c06-short-007 |
+| 용어 | 감각 상호작용 | 1 | c06-short-007 |
+| 용어 | 운동 감각 | 1 | c06-short-006 |
+| 용어 | 전정 감각 | 1 | c06-short-006 |
+| 용어 | 초감각지각 | 1 | c06-essay-004 |
+| 학자 | 베버 | 1 | c06-case-003 |
+| 학자 | 허블과 비젤 | 1 | c06-link-002 |
+| 학자 | 영-헬름홀츠 | 2 | c06-link-001, c06-essay-002 |
+| 학자 | 헤링 | 3 | c06-case-004, c06-link-001, c06-essay-002 |
+| 학자 | 깁슨과 워크 | 1 | c06-link-003 |
+
+## c07 — 소제목 (PDF p.23~25)
+
+| 소제목 | 문항 수 | 문항(id 앞의 psychology- 생략) |
+|---|---|---|
+| 학습의 기본 개념 | 1 | c07-short-003 |
+| 파블로프의 실험 (표) | 2 | c07-case-001, c07-short-001 |
+| 조건형성의 과정 (표) | 3 | c07-case-005, c07-compare-003, c07-order-001 |
+| 파블로프식 조건형성의 확장 | 3 | c07-link-002, c07-link-003, c07-essay-004 |
+| 조작적 조건형성의 기본 원리 | 2 | c07-link-001, c07-short-002 |
+| 강화와 처벌 (표) | 2 | c07-case-002, c07-case-003 |
+| 강화물의 종류 | 1 | c07-compare-004 |
+| 강화계획 (표) | 3 | c07-case-004, c07-compare-002, c07-short-008 |
+| 처벌의 문제점 | 1 | c07-essay-001 |
+| 인지와 생물학의 영향 | 3 | c07-short-004, c07-short-005, c07-essay-005 |
+| 파블로프식 조건형성과 조작적 조건형성 비교 (표) | 2 | c07-compare-001, c07-essay-002 |
+| 반두라의 연구 | 1 | c07-short-006 |
+| 거울뉴런과 모방 | 1 | c07-short-007 |
+| 친사회적·반사회적 모델의 영향 | 1 | c07-essay-003 |
+
+## c07 — 굵은 용어·학자
+
+| 구분 | 용어 | 문항 수 | 문항(앞 4개) |
+|---|---|---|---|
+| 용어 | 학습 | 10 | c07-link-001, c07-link-002, c07-link-003, c07-short-001 … |
+| 용어 | 연합학습 | 1 | c07-short-003 |
+| 용어 | 인지학습 | 1 | c07-short-003 |
+| 용어 | 어린 앨버트 | 2 | c07-link-002, c07-link-003 |
+| 용어 | 레스콜라와 와그너 | 2 | c07-link-002, c07-essay-004 |
+| 용어 | 미각 혐오 | 2 | c07-link-002, c07-essay-004 |
+| 용어 | 준비된 | 2 | c07-link-002, c07-essay-004 |
+| 용어 | 효과의 법칙 | 2 | c07-link-001, c07-link-002 |
+| 용어 | 조작실 | 1 | c07-link-001 |
+| 용어 | 조성 | 2 | c07-link-001, c07-short-002 |
+| 용어 | 일차 강화물 | 1 | c07-compare-004 |
+| 용어 | 조건 강화물 | 1 | c07-compare-004 |
+| 용어 | 즉시 강화 | 1 | c07-essay-005 |
+| 용어 | 부분(간헐적) 강화계획 | 1 | c07-short-008 |
+| 용어 | 잠재 학습 | 3 | c07-link-001, c07-link-002, c07-short-005 |
+| 용어 | 인지도 | 3 | c07-link-001, c07-link-002, c07-short-005 |
+| 용어 | 내재 동기 | 1 | c07-essay-005 |
+| 용어 | 외재 동기 | 1 | c07-essay-005 |
+| 용어 | 본능 표류 | 1 | c07-short-004 |
+| 용어 | 관찰학습 | 3 | c07-link-003, c07-short-006, c07-essay-003 |
+| 용어 | 모델링 | 2 | c07-short-006, c07-essay-003 |
+| 용어 | 보보 인형 실험 | 1 | c07-link-001 |
+| 용어 | 대리 강화 | 1 | c07-short-006 |
+| 용어 | 대리 처벌 | 2 | c07-case-003, c07-short-006 |
+| 용어 | 거울뉴런 | 1 | c07-short-007 |
+| 용어 | 친사회적 행동 | 1 | c07-essay-003 |
+| 용어 | 둔감화 | 1 | c07-essay-003 |
+| 학자 | 파블로프 | 5 | c07-compare-001, c07-link-001, c07-order-001, c07-short-001 … |
+| 학자 | 왓슨 | 2 | c07-link-002, c07-link-003 |
+| 학자 | 레스콜라와 와그너 | 2 | c07-link-002, c07-essay-004 |
+| 학자 | 가르시아 | 2 | c07-link-002, c07-essay-004 |
+| 학자 | 손다이크 | 2 | c07-link-001, c07-link-002 |
+| 학자 | 스키너 | 1 | c07-link-001 |
+| 학자 | 톨만 | 3 | c07-link-001, c07-link-002, c07-short-005 |
+| 학자 | 반두라 | 1 | c07-link-001 |
+
+## c08 — 소제목 (PDF p.26~28)
+
+| 소제목 | 문항 수 | 문항(id 앞의 psychology- 생략) |
+|---|---|---|
+| 기억의 측정 | 1 | c08-compare-004 |
+| 기억의 처리 과정 | 1 | c08-order-001 |
+| 앳킨슨-쉬프린 모형 (표) | 2 | c08-compare-002, c08-link-001 |
+| 외현기억과 암묵기억 (표) | 2 | c08-compare-001, c08-essay-004 |
+| 자동처리와 통제처리 | 1 | c08-short-007 |
+| 효과적인 부호화 전략 | 1 | c08-case-004 |
+| 계열위치 효과 | 1 | c08-short-002 |
+| 뇌 속의 기억 | 2 | c08-link-002, c08-short-004 |
+| 시냅스 변화 | 1 | c08-short-003 |
+| 인출 | 2 | c08-case-003, c08-essay-005 |
+| 망각의 원인 (표) | 4 | c08-case-001, c08-case-002, c08-short-001, c08-essay-002 |
+| 기억상실증 | 1 | c08-compare-003 |
+| 기억의 재구성 | 1 | c08-short-005 |
+| 오정보 효과 | 1 | c08-case-005 |
+| 출처 기억상실 | 1 | c08-short-006 |
+| 아동 증언과 억압된 기억 논쟁 | 1 | c08-essay-003 |
+| 기억력 향상 방법 | 1 | c08-essay-001 |
+
+## c08 — 굵은 용어·학자
+
+| 구분 | 용어 | 문항 수 | 문항(앞 4개) |
+|---|---|---|---|
+| 용어 | 회상 | 3 | c08-case-003, c08-compare-004, c08-short-002 |
+| 용어 | 재인 | 1 | c08-compare-004 |
+| 용어 | 재학습 | 1 | c08-compare-004 |
+| 용어 | 에빙하우스 | 1 | c08-link-001 |
+| 용어 | 망각 곡선 | 1 | c08-link-001 |
+| 용어 | 부호화 | 7 | c08-case-001, c08-case-002, c08-case-004, c08-order-001 … |
+| 용어 | 저장 | 5 | c08-case-001, c08-case-002, c08-order-001, c08-short-005 … |
+| 용어 | 인출 | 8 | c08-case-002, c08-compare-004, c08-order-001, c08-short-005 … |
+| 용어 | 작업기억 | 1 | c08-link-001 |
+| 용어 | 자동처리 | 1 | c08-short-007 |
+| 용어 | 통제처리 | 1 | c08-short-007 |
+| 용어 | 시연 | 4 | c08-case-004, c08-compare-002, c08-compare-004, c08-short-007 |
+| 용어 | 청크 만들기 | 2 | c08-case-004, c08-essay-001 |
+| 용어 | 기억술 | 2 | c08-case-004, c08-essay-001 |
+| 용어 | 위계적 조직화 | 2 | c08-case-004, c08-essay-001 |
+| 용어 | 간격두기 효과 | 2 | c08-case-004, c08-essay-001 |
+| 용어 | 인출 연습 | 2 | c08-compare-004, c08-essay-001 |
+| 용어 | 처리 수준 이론 | 1 | c08-essay-001 |
+| 용어 | 얕은 처리 | 1 | c08-essay-001 |
+| 용어 | 깊은 처리 | 1 | c08-essay-001 |
+| 용어 | 자기 참조 효과 | 2 | c08-case-003, c08-essay-001 |
+| 용어 | 초두 효과 | 1 | c08-short-002 |
+| 용어 | 최신 효과 | 1 | c08-short-002 |
+| 용어 | 해마 | 3 | c08-link-001, c08-link-002, c08-essay-004 |
+| 용어 | 소뇌 | 2 | c08-link-002, c08-essay-004 |
+| 용어 | 기저핵 | 2 | c08-link-002, c08-essay-004 |
+| 용어 | 편도체 | 2 | c08-link-002, c08-short-004 |
+| 용어 | 섬광기억 | 2 | c08-case-005, c08-short-004 |
+| 용어 | 응고화 | 3 | c08-short-005, c08-essay-001, c08-essay-004 |
+| 용어 | 장기 강화 | 1 | c08-short-003 |
+| 용어 | 인출 단서 | 2 | c08-essay-001, c08-essay-005 |
+| 용어 | 점화 | 1 | c08-case-003 |
+| 용어 | 부호화 명세성 원리 | 1 | c08-essay-005 |
+| 용어 | 맥락 의존 기억 | 2 | c08-case-003, c08-essay-005 |
+| 용어 | 상태 의존 기억 | 2 | c08-case-003, c08-essay-005 |
+| 용어 | 기분부합 기억 | 2 | c08-case-003, c08-essay-005 |
+| 용어 | 진행성 기억상실증 | 2 | c08-compare-003, c08-essay-004 |
+| 용어 | H.M. | 2 | c08-link-001, c08-essay-004 |
+| 용어 | 역행성 기억상실증 | 1 | c08-compare-003 |
+| 용어 | 재구성 | 2 | c08-short-005, c08-essay-003 |
+| 용어 | 재응고화 | 1 | c08-short-005 |
+| 용어 | 로프터스와 파머 | 1 | c08-link-001 |
+| 용어 | 오정보 효과 | 2 | c08-case-005, c08-link-001 |
+| 용어 | 상상 팽창 | 2 | c08-case-005, c08-essay-003 |
+| 용어 | 출처 기억상실 | 3 | c08-case-005, c08-compare-003, c08-short-006 |
+| 용어 | 출처 오귀인 | 1 | c08-short-006 |
+| 용어 | 기시감 | 2 | c08-case-005, c08-short-006 |
+| 학자 | 에빙하우스 | 1 | c08-link-001 |
+| 학자 | 앳킨슨-쉬프린 | 2 | c08-compare-002, c08-link-001 |
+| 학자 | 배들리 | 1 | c08-link-001 |
+| 학자 | H.M. | 2 | c08-link-001, c08-essay-004 |
+| 학자 | 로프터스와 파머 | 1 | c08-link-001 |
+| 학자 | 프로이트 | 1 | c08-essay-003 |
