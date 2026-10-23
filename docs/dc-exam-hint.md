@@ -47,3 +47,4 @@
 ## 4. 함께 정리한 것
 
 - **연도 문제 삭제**(2026-10-22 사용자 요청): `data-comm-ch01-osi-003`(OSI 소개 시기 1970년대 후반), `data-comm-ch01-osi-004`(ISO 설립 1947년). Ch01 최소 문항 수 57 → 56, OSI 소주제 목표 3 → 2(`docs/coverage-matrix.md`, `docs/verification/data-comm-ch01-ch02.md`). 힌트관련 세트에도 연도 문제는 없다(`hintExams.test.ts`가 확인).
+- **단답형 모음**(2026-10-23 사용자 요청): 힌트관련 세트와 별도로, 설명을 보고 용어를 쓰는 문제 102개(Ch01 33 · Ch02 69, `data/subjects/data-comm/shortAnswer.ts`, id `data-comm-chNN-short-NNN`)를 만들었다. 과목 홈 "단답형 모음 풀기"와 챕터 시작·문제 목록의 분류 "단답형 모음"으로 푼다(분류 `short`, OS와 같은 분류). 연도·사람 이름·강의 속 예시(Maria·Ann, Sky Research)·지엽적인 것(픽셀, 게이지, PAM, 슬라이드에 정의가 없는 처리 시간)은 넣지 않았다. 검사: `shortAnswer.test.ts`(설명에 정답이 없음, 인정 답안·대표 오답 채점, 해설 쪽 표기).

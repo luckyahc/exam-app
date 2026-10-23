@@ -12,9 +12,9 @@ export type SourceFilter = "all" | "jokbo" | "general" | "example" | "related" |
  *   basedOn이 있어 "족보관련"·"일반"에도 들어가고, 이 분류로 풀면 세트 순서 그대로 낸다(filterQuestions).
  * "hint1"~"hint5" = 힌트관련1~5: 교수님 시험 힌트(문항 수·5지선다·'모두 고르시오' 2~4개·계산·표)대로 만든 모의시험 세트
  *   (id "-hint1-NNN"~"-hint5-NNN" — data/subjects/data-comm/hintExams.ts, 2026-10-22, 4·5는 더 헷갈리게). 실제 시험처럼 문제 순서를 섞어 낸다. "일반"에도 들어간다.
- * "short" = 단답형 문항(id가 "-short-NNN"으로 끝남 — OS data/subjects/os/shortAnswer.ts, 심리학 short()) — "일반"에도 들어간다
+ * "short" = 단답형 모음: 용어 단답형 문항(id가 "-short-NNN"으로 끝남 — OS·데이터 통신 data/subjects/{os,data-comm}/shortAnswer.ts, 심리학 short()) — "일반"에도 들어간다
  */
-export const SOURCE_LABEL: Record<SourceFilter, string> = { all: "전체", jokbo: "족보", general: "일반", example: "강의 예제", related: "족보관련", related2: "족보관련2", mock1: "족보관련1", mock2: "족보관련2", hint1: "힌트관련1", hint2: "힌트관련2", hint3: "힌트관련3", hint4: "힌트관련4", hint5: "힌트관련5", short: "단답형" };
+export const SOURCE_LABEL: Record<SourceFilter, string> = { all: "전체", jokbo: "족보", general: "일반", example: "강의 예제", related: "족보관련", related2: "족보관련2", mock1: "족보관련1", mock2: "족보관련2", hint1: "힌트관련1", hint2: "힌트관련2", hint3: "힌트관련3", hint4: "힌트관련4", hint5: "힌트관련5", short: "단답형 모음" };
 
 interface SourceLike {
   id?: string;

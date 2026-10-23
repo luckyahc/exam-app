@@ -1,6 +1,6 @@
 # 운영체제 단답형 — 핵심 용어
 
-2026-10-21 다시 만듦. 앱의 "단답형만 풀기"와 챕터·문제 목록의 분류 "단답형"에 나오는 문항이다. 데이터: `data/subjects/os/shortAnswer.ts`, 검사: `shortAnswer.test.ts`·`verification.test.ts`.
+2026-10-21 다시 만듦. 앱의 "단답형 모음 풀기"와 챕터·문제 목록의 분류 "단답형 모음"에 나오는 문항이다. 데이터: `data/subjects/os/shortAnswer.ts`, 검사: `shortAnswer.test.ts`·`verification.test.ts`.
 
 ## 규칙
 

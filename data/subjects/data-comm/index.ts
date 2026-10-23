@@ -2,7 +2,7 @@ import type { Question } from "@/types/question";
 import type { SubjectDef } from "../types";
 
 // 챕터 구성·문항 목표 근거: docs/dc-source-analysis.md, docs/coverage-matrix.md
-// 힌트관련1~3 모의시험(hintExams.ts, 2026-10-22 — docs/dc-exam-hint.md)은 각 챕터 맨 뒤에 붙인다.
+// 단답형 모음(shortAnswer.ts, 2026-10-23)과 힌트관련1~5 모의시험(hintExams.ts, 2026-10-22 — docs/dc-exam-hint.md)은 각 챕터 문항 뒤에 이 순서로 붙인다.
 const dataComm = {
   id: "data-comm",
   name: "데이터 통신",
@@ -19,14 +19,14 @@ const dataComm = {
       title: "Ch01. 개요",
       shortTitle: "개요",
       minQuestions: 56,
-      load: (): Promise<Question[]> => Promise.all([import("./ch01"), import("./hintExams")]).then(([m, h]) => [...m.default, ...h.hintQuestions("ch01")]),
+      load: (): Promise<Question[]> => Promise.all([import("./ch01"), import("./shortAnswer"), import("./hintExams")]).then(([m, s, h]) => [...m.default, ...s.shortQuestions("ch01"), ...h.hintQuestions("ch01")]),
     },
     {
       id: "ch02",
       title: "Ch02. 물리 계층",
       shortTitle: "물리 계층",
       minQuestions: 106,
-      load: (): Promise<Question[]> => Promise.all([import("./ch02"), import("./hintExams")]).then(([m, h]) => [...m.default, ...h.hintQuestions("ch02")]),
+      load: (): Promise<Question[]> => Promise.all([import("./ch02"), import("./shortAnswer"), import("./hintExams")]).then(([m, s, h]) => [...m.default, ...s.shortQuestions("ch02"), ...h.hintQuestions("ch02")]),
     },
   ],
 } as const satisfies SubjectDef;
