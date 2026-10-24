@@ -20,7 +20,7 @@ import { type ChapterKey, EXCLUDED, SOURCE } from "./terms";
 
 const ROOT = path.resolve(import.meta.dirname, "../../..");
 const SELECT = new Set(["mcq", "multi", "ox", "match", "order"]);
-const COUNTS: Record<ChapterKey, number> = { c01: 26, c02: 28, c03: 37, c04: 22, c05: 26, c06: 30, c07: 27, c08: 25 };
+const COUNTS: Record<ChapterKey, number> = { c01: 26, c02: 28, c03: 37, c04: 22, c05: 30, c06: 30, c07: 27, c08: 26 };
 const kind = (q: Question) => q.id.split("-")[2];
 type Any = Question & {
   choices?: string[];
@@ -70,7 +70,7 @@ describe("심리학개론 CHAPTER 01~08 (요약 노트 PDF)", async () => {
       expect(live[ch]!.map((q) => q.id)).toEqual(byCh[ch].filter((q) => !q.outOfScope).map((q) => q.id));
       expect(psychology.chapters.find((c) => c.id === ch)!.minQuestions, ch).toBe(live[ch]!.length);
     }
-    expect(Object.values(live).flat().length).toBe(221 - 38);
+    expect(Object.values(live).flat().length).toBe(226 - 38);
   });
 
   it("숨긴 문항도 공통·유형별 검증을 통과한다(다시 켤 수 있게 — 전역 무결성 테스트는 범위 안만 본다)", () => {
@@ -83,12 +83,13 @@ describe("심리학개론 CHAPTER 01~08 (요약 노트 PDF)", async () => {
   it("단원 8개(숨긴 c04 포함) = PDF 목차 순서(c01~c08), 장별 문항 수 26·28·37·22·24·28·26·24 = 215(c03에 교재 보충 15)", () => {
     expect(ALL_CHAPTERS.map((c) => c.id)).toEqual(chs);
     expect(Object.fromEntries(chs.map((ch) => [ch, byCh[ch].length]))).toEqual(COUNTS);
-    expect(all.length).toBe(221);
+    expect(all.length).toBe(226);
   });
 
   it("유형 비율 객관식 50% · 단답형 30% · 서술형 20%(장마다 ±3%p, 전체 108·64·43)", () => {
     for (const ch of chs) {
-      const qs = byCh[ch];
+      // 주석 메모 보충 문항(근거 'PDF p.X 메모')은 사용자 지시로 객관식 위주라 비율 검사에서 뺀다
+      const qs = byCh[ch].filter((q) => !/ 메모( \+ 보충)?$/.test(q.explanation));
       const n = qs.length;
       const sel = qs.filter((q) => SELECT.has(q.type)).length;
       const shortN = qs.filter((q) => q.type === "blank").length;
@@ -98,7 +99,7 @@ describe("심리학개론 CHAPTER 01~08 (요약 노트 PDF)", async () => {
       expect(Math.abs(shortN / n - 0.3), ch).toBeLessThan(0.03);
       expect(Math.abs(essay / n - 0.2), ch).toBeLessThan(0.03);
     }
-    expect([all.filter((q) => SELECT.has(q.type)).length, all.filter((q) => q.type === "blank").length, all.filter((q) => q.type === "essay").length]).toEqual([112, 66, 43]);
+    expect([all.filter((q) => SELECT.has(q.type)).length - 5, all.filter((q) => q.type === "blank").length, all.filter((q) => q.type === "essay").length]).toEqual([112, 66, 43]);
   });
 
   it("id = psychology-c0N-{case|compare|link|order|short|essay}-NNN, 객관식은 사례 > 비교 > 학자·이론·실험 연결 > 순서", () => {
@@ -258,7 +259,7 @@ describe("심리학개론 CHAPTER 01~08 (요약 노트 PDF)", async () => {
     expect(ids.some((id) => OLD.includes(id))).toBe(false);
     // 단원·과목 통계, 정답률 요약, 생성 문제 집계 어디에도 들어가지 않는다
     const line = subjectStats(rec, metas);
-    expect([line.total, line.solved, line.attempts, line.correct, line.openWrong]).toEqual([183, 0, 0, 0, 0]);
+    expect([line.total, line.solved, line.attempts, line.correct, line.openWrong]).toEqual([188, 0, 0, 0, 0]);
     expect(chapterStats(rec, metas[0]).line.solved).toBe(0);
     expect(summarize(rec, ids)).toMatchObject({ attempts: 0, correct: 0, openWrong: 0 });
     expect(generatedAttempts(rec, new Set(ids))).toEqual({ attempts: 0, correct: 0 });
