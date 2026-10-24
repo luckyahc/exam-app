@@ -30,6 +30,15 @@ export const EXCLUDED: Partial<Record<ChapterKey, "all" | { section: string; hea
     terms: ["내성", "금단", "물질사용장애", "생물학적", "심리적", "사회문화적"],
   },
   c04: "all",
+  // 2026-10-24 사용자 주석(교재 판 PDF의 파란 사선) — docs/psychology/annotations.md
+  c06: {
+    section: "4. 청각 · 5. 기타 감각(감각 상호작용·초감각지각은 범위 안)",
+    headings: ["소리와 귀의 구조", "음고 지각 이론", "촉각과 통증", "신체 위치와 균형"],
+    terms: ["주파수", "달팽이관", "전도성 청력 손실", "감각신경성 청력 손실", "인공와우", "장소 이론", "주파수 이론", "관문 통제 이론", "환상지 감각", "운동 감각", "전정 감각"],
+  },
+  c07: { section: "3. 조작적 조건형성 — 인지와 생물학의 영향", headings: ["인지와 생물학의 영향"], terms: ["잠재 학습", "인지도", "내재 동기", "외재 동기", "본능 표류", "톨만"] },
+  // 망각 원인 표의 한 행만 범위 밖 — 소제목은 범위 안, 해당 보기·서술은 범위 안 내용으로 바꿨다
+  c08: { section: "5. 망각 — 망각 원인 표의 동기적 망각(프로이트의 억압) 행", headings: [], terms: ["프로이트"] },
 };
 
 export const SOURCE: Record<ChapterKey, ChapterSource> = {
