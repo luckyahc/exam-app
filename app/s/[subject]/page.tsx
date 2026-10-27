@@ -18,9 +18,10 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
 
   const chapters = await subjectMeta(subject);
   const allIds = chapters.flatMap((c) => c.ids);
-  // 지금 준비하는 시험(CURRENT_EXAM)을 맨 위에, 나머지는 최근 시험부터. 지난 시험은 지금 시험에 문제가 생기면 접어 둔다
+  // 진행률은 지금 준비하는 시험 범위만 센다
+  const currentIds = chapters.filter((c) => c.exam === CURRENT_EXAM).flatMap((c) => c.ids);
+  // 지금 준비하는 시험(CURRENT_EXAM)을 맨 위에, 나머지는 최근 시험부터. 지난 시험은 항상 접어 두고 진행률을 숨긴다
   const exams = [...EXAMS].sort((a, b) => (a.id === CURRENT_EXAM ? -1 : b.id === CURRENT_EXAM ? 1 : EXAMS.indexOf(b) - EXAMS.indexOf(a)));
-  const currentReady = chapters.some((c) => c.exam === CURRENT_EXAM && c.ids.length > 0);
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-4 py-8 sm:px-6">
@@ -29,10 +30,10 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
           <span aria-hidden className="inline-block size-3 rounded-full bg-subject" />
           {subject.name}
         </h1>
-        {allIds.length > 0 ? (
-          <ProgressStats subjectId={subject.id} ids={allIds} />
+        {currentIds.length > 0 ? (
+          <ProgressStats subjectId={subject.id} ids={currentIds} />
         ) : (
-          <p className="text-sm text-muted">문제 준비 중입니다. 문제가 추가되면 챕터를 풀 수 있어요.</p>
+          allIds.length === 0 && <p className="text-sm text-muted">문제 준비 중입니다. 문제가 추가되면 챕터를 풀 수 있어요.</p>
         )}
       </div>
 
@@ -60,7 +61,7 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
         const own = chapters.filter((c) => c.exam === exam.id);
         const current = exam.id === CURRENT_EXAM;
         return (
-          <details key={exam.id} open={current || !currentReady} className="group rounded-2xl border border-border p-4 sm:p-5">
+          <details key={exam.id} open={current} className="group rounded-2xl border border-border p-4 sm:p-5">
             <summary className="flex cursor-pointer list-none flex-wrap items-center gap-2 text-lg font-bold">
               <span aria-hidden className="text-sm text-muted transition-transform group-open:rotate-90">
                 ▶
@@ -73,7 +74,7 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
             </summary>
             <div className="mt-6 flex flex-col gap-8">
               {own.length > 0 ? (
-                <ExamBody subject={subject} exam={exam.id} chapters={own} />
+                <ExamBody subject={subject} exam={exam.id} chapters={own} progress={current} />
               ) : (
                 <p className="text-sm text-muted">이 시험 범위의 챕터가 아직 없습니다. 강의자료가 추가되면 여기에 챕터와 문제가 생깁니다.</p>
               )}
@@ -85,8 +86,8 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
   );
 }
 
-/** 한 시험 범위의 분류별 풀기·모의시험 상자와 챕터 카드. 과목 전체 퀴즈 링크는 모두 `exam=`으로 이 시험 챕터만 고른다 */
-function ExamBody({ subject, exam, chapters }: { subject: SubjectDef; exam: string; chapters: ChapterMeta[] }) {
+/** 한 시험 범위의 분류별 풀기·모의시험 상자와 챕터 카드. 과목 전체 퀴즈 링크는 모두 `exam=`으로 이 시험 챕터만 고른다. `progress`가 거짓(지난 시험)이면 진행률을 숨긴다 */
+function ExamBody({ subject, exam, chapters, progress }: { subject: SubjectDef; exam: string; chapters: ChapterMeta[]; progress: boolean }) {
   const allIds = chapters.flatMap((c) => c.ids);
   const stars = chapters.reduce((n, c) => n + c.starIds.length, 0);
   const jokbo = chapters.reduce((n, c) => n + c.jokboIds.length, 0);
@@ -103,7 +104,7 @@ function ExamBody({ subject, exam, chapters }: { subject: SubjectDef; exam: stri
 
   return (
     <>
-      {allIds.length > 0 && <ProgressStats subjectId={subject.id} ids={allIds} />}
+      {progress && allIds.length > 0 && <ProgressStats subjectId={subject.id} ids={allIds} />}
       {(stars > 0 || related > 0 || examples > 0) && (
         <div className="flex flex-wrap gap-3">
           {stars > 0 && (
@@ -177,7 +178,7 @@ function ExamBody({ subject, exam, chapters }: { subject: SubjectDef; exam: stri
                   "문제 준비 중"
                 )}
               </span>
-              {ready && <ProgressStats subjectId={subject.id} ids={c.ids} />}
+              {progress && ready && <ProgressStats subjectId={subject.id} ids={c.ids} />}
             </>
           );
           return ready ? (
