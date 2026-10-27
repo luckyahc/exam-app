@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ProgressStats } from "@/components/progress/ProgressStats";
+import { EXAMS } from "@/data/subjects/exams";
 import { SUBJECTS } from "@/data/subjects/registry";
 import { subjectMeta } from "@/lib/chapterMeta";
 import { starLabel, subjectStyle } from "@/lib/subjects";
@@ -12,6 +13,8 @@ export default async function HomePage() {
         subject,
         ids: chapters.flatMap((c) => c.ids),
         stars: chapters.reduce((n, c) => n + c.starIds.length, 0),
+        // 시험(data/subjects/exams.ts)별 문제 수 — 최근 시험부터
+        exams: [...EXAMS].reverse().map((e) => ({ ...e, count: chapters.filter((c) => c.exam === e.id).reduce((n, c) => n + c.ids.length, 0) })),
       };
     }),
   );
@@ -39,7 +42,7 @@ export default async function HomePage() {
       </div>
 
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {subjects.map(({ subject, ids, stars }) => {
+        {subjects.map(({ subject, ids, stars, exams }) => {
           const ready = ids.length > 0;
           const className = "flex flex-col gap-2 rounded-xl border border-border border-l-4 border-l-subject bg-surface p-5";
           const body = (
@@ -59,6 +62,7 @@ export default async function HomePage() {
                   "문제 준비 중"
                 )}
               </span>
+              <span className="text-xs text-muted">{exams.map((e) => `${e.shortName} ${e.count > 0 ? `${e.count}문제` : "준비 중"}`).join(" · ")}</span>
               {ready && <ProgressStats subjectId={subject.id} ids={ids} />}
             </>
           );

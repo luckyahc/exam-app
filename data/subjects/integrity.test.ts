@@ -7,6 +7,7 @@ import { QTYPE_FIXTURES } from "@/lib/qtypes/fixtures";
 import { answerKey } from "@/lib/qtypes/answerKey";
 import { coreFor, gradeQuestion, isQType } from "@/lib/qtypes/registry";
 import type { Question } from "@/types/question";
+import { EXAMS } from "./exams";
 import { SUBJECTS } from "./registry";
 
 // 전 과목 데이터 무결성. 과목이 레지스트리에 추가되면 자동으로 검사 대상이 된다.
@@ -53,6 +54,11 @@ describe("과목 레지스트리", () => {
       }
     },
   );
+
+  it("모든 챕터가 등록된 시험 범위(data/subjects/exams.ts)에 속한다", () => {
+    const exams = EXAMS.map((e) => e.id as string);
+    for (const s of SUBJECTS) for (const c of s.chapters) expect(exams, `${s.id}/${c.id}`).toContain(c.exam);
+  });
 
   // 강의 PDF는 저작권 때문에 저장소에 커밋하지 않는다(.gitignore). 로컬에 source/가 있을 때만 검사하고,
   // 새로 클론한 환경·CI에서는 건너뛴다.

@@ -16,6 +16,7 @@ const dataComm = {
   chapters: [
     {
       id: "ch01",
+      exam: "2-2-mid",
       title: "Ch01. 개요",
       shortTitle: "개요",
       minQuestions: 56,
@@ -23,6 +24,7 @@ const dataComm = {
     },
     {
       id: "ch02",
+      exam: "2-2-mid",
       title: "Ch02. 물리 계층",
       shortTitle: "물리 계층",
       minQuestions: 106,

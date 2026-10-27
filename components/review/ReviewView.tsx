@@ -36,7 +36,7 @@ export function ReviewView() {
     let cancelled = false;
     const ids = subjectsKey.split(",");
     Promise.all([
-      Promise.all(ids.map(loadSubject)),
+      Promise.all(ids.map((id) => loadSubject(id))),
       Promise.all(ids.map(async (id) => [id, (await getSubject(id)?.loadGenerators?.()) ?? {}] as const)),
     ]).then(([lists, gens]) => {
       if (cancelled) return;

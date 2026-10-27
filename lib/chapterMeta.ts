@@ -1,3 +1,4 @@
+import type { ExamId } from "@/data/subjects/exams";
 import type { ChapterDef, SubjectDef } from "@/data/subjects/types";
 import { coreFor, type QType, QTYPES } from "@/lib/qtypes/registry";
 import { isExample, isJokbo, isJokboRelated, isJokboRelated2, isShortAnswer } from "@/lib/quiz/jokbo";
@@ -7,6 +8,8 @@ import { matchesStar } from "@/lib/quiz/starBasis";
 export interface ChapterMeta {
   subjectId: string;
   chapterId: string;
+  /** 시험 범위(data/subjects/exams.ts) */
+  exam: ExamId;
   title: string;
   shortTitle: string;
   ids: string[];
@@ -48,6 +51,7 @@ export async function chapterMeta(subject: SubjectDef, chapter: ChapterDef): Pro
   return {
     subjectId: subject.id,
     chapterId: chapter.id,
+    exam: chapter.exam,
     title: chapter.title,
     shortTitle: chapter.shortTitle,
     ids: qs.map((q) => q.id),

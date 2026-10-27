@@ -15,14 +15,14 @@ type PsyChapter = Omit<ChapterDef, "load"> & { outOfScope?: true; loadAll: () =>
 
 /** 숨긴 것까지 모든 단원·문항(테스트와 범위를 다시 켤 때 쓴다) */
 export const ALL_CHAPTERS: readonly PsyChapter[] = [
-  { id: "c01", title: "Ch01. 심리학의 역사와 과학적 사고", shortTitle: "역사와 과학적 사고", minQuestions: 26, loadAll: () => import("./c01").then((m) => m.default) },
-  { id: "c02", title: "Ch02. 마음의 생물학", shortTitle: "마음의 생물학", minQuestions: 25, loadAll: () => import("./c02").then((m) => m.default) },
-  { id: "c03", title: "Ch03. 의식과 이중 처리과정", shortTitle: "의식과 이중 처리과정", minQuestions: 33, loadAll: () => import("./c03").then((m) => m.default) },
-  { id: "c04", title: "Ch04. 본성, 양육, 인간의 다양성", shortTitle: "본성·양육·다양성", minQuestions: 22, outOfScope: true, loadAll: () => import("./c04").then((m) => m.default) },
-  { id: "c05", title: "Ch05. 전 생애 발달", shortTitle: "전 생애 발달", minQuestions: 30, loadAll: () => import("./c05").then((m) => m.default) },
-  { id: "c06", title: "Ch06. 감각과 지각", shortTitle: "감각과 지각", minQuestions: 24, loadAll: () => import("./c06").then((m) => m.default) },
-  { id: "c07", title: "Ch07. 학습", shortTitle: "학습", minQuestions: 24, loadAll: () => import("./c07").then((m) => m.default) },
-  { id: "c08", title: "Ch08. 기억", shortTitle: "기억", minQuestions: 26, loadAll: () => import("./c08").then((m) => m.default) },
+  { id: "c01", exam: "2-2-mid", title: "Ch01. 심리학의 역사와 과학적 사고", shortTitle: "역사와 과학적 사고", minQuestions: 26, loadAll: () => import("./c01").then((m) => m.default) },
+  { id: "c02", exam: "2-2-mid", title: "Ch02. 마음의 생물학", shortTitle: "마음의 생물학", minQuestions: 25, loadAll: () => import("./c02").then((m) => m.default) },
+  { id: "c03", exam: "2-2-mid", title: "Ch03. 의식과 이중 처리과정", shortTitle: "의식과 이중 처리과정", minQuestions: 33, loadAll: () => import("./c03").then((m) => m.default) },
+  { id: "c04", exam: "2-2-mid", title: "Ch04. 본성, 양육, 인간의 다양성", shortTitle: "본성·양육·다양성", minQuestions: 22, outOfScope: true, loadAll: () => import("./c04").then((m) => m.default) },
+  { id: "c05", exam: "2-2-mid", title: "Ch05. 전 생애 발달", shortTitle: "전 생애 발달", minQuestions: 30, loadAll: () => import("./c05").then((m) => m.default) },
+  { id: "c06", exam: "2-2-mid", title: "Ch06. 감각과 지각", shortTitle: "감각과 지각", minQuestions: 24, loadAll: () => import("./c06").then((m) => m.default) },
+  { id: "c07", exam: "2-2-mid", title: "Ch07. 학습", shortTitle: "학습", minQuestions: 24, loadAll: () => import("./c07").then((m) => m.default) },
+  { id: "c08", exam: "2-2-mid", title: "Ch08. 기억", shortTitle: "기억", minQuestions: 26, loadAll: () => import("./c08").then((m) => m.default) },
 ];
 
 const psychology = {

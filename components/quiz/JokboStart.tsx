@@ -19,7 +19,7 @@ const MODES: { value: QuizMode; label: string; help: string }[] = [
  * 힌트관련1~5(source "hint1"~"hint5", 데이터 통신)도 기본 모드는 시험 모드지만, 실제 시험처럼 문제 순서를 섞는다.
  * 제한 시간이 끝나면 시험 모드는 자동 채점, 즉시 채점은 제출한 문제까지로 결과에 넘어간다(components/quiz/QuizRunner.tsx).
  */
-export function JokboStart({ subjectId, count, source = "jokbo" }: { subjectId: string; count: number; source?: "jokbo" | "related2" | "mock1" | "mock2" | `hint${HintSet}` | "short" }) {
+export function JokboStart({ subjectId, count, source = "jokbo", exam }: { subjectId: string; count: number; source?: "jokbo" | "related2" | "mock1" | "mock2" | `hint${HintSet}` | "short"; /** 시험 범위(data/subjects/exams.ts) — 그 시험 챕터에서만 고른다 */ exam?: string }) {
   const router = useRouter();
   const mock = isMockSource(source);
   const hint = isHintSource(source);
@@ -32,6 +32,7 @@ export function JokboStart({ subjectId, count, source = "jokbo" }: { subjectId: 
 
   const start = () => {
     const p = new URLSearchParams({ subject: subjectId, source, shuffle: mock ? "0" : "1", mode });
+    if (exam) p.set("exam", exam);
     if (timer) p.set("timer", String(timer * 60));
     if (mode === "exam" && view === "eclass") p.set("view", "eclass");
     router.push(`/quiz?${p.toString()}`);
@@ -42,8 +43,8 @@ export function JokboStart({ subjectId, count, source = "jokbo" }: { subjectId: 
     (on ? "border-primary bg-primary/10 font-semibold" : "border-border text-muted hover:text-foreground");
 
   return (
-    <section aria-labelledby={`${source}-start`} className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
-      <h2 id={`${source}-start`} className="text-sm font-semibold">
+    <section aria-labelledby={`${exam ?? ""}${source}-start`} className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
+      <h2 id={`${exam ?? ""}${source}-start`} className="text-sm font-semibold">
         {set || source === "short" ? `${SOURCE_LABEL[source]} 풀기` : `${SOURCE_LABEL[source]}만 풀기`}{" "}
         <span className="font-normal text-muted">— {count}문제{mock ? " · 모의시험(고정 순서)" : set ? " · 모의시험(문제 순서 무작위)" : ""}</span>
         {hint && (

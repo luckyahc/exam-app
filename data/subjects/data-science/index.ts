@@ -13,14 +13,14 @@ const dataScience = {
   // 시험처럼 복수 선택도 완전히 맞아야 1점(결정 6). 코드 유형은 유형 자체가 0/1
   allOrNothing: ["multi"],
   chapters: [
-    { id: "lec1", title: "Lec1. 인공지능과 빅데이터 · 파이썬 · Colab", shortTitle: "AI·파이썬·Colab", minQuestions: 20, load: () => import("./lec1").then((m) => m.default) },
-    { id: "lec2", title: "Lec2. 파이썬 기초", shortTitle: "파이썬 기초", minQuestions: 56, load: () => import("./lec2").then((m) => m.default) },
-    { id: "lec3", title: "Lec3. CSV 파일 · 엑셀 파일", shortTitle: "CSV·엑셀", minQuestions: 27, load: () => import("./lec3").then((m) => m.default) },
-    { id: "lec4", title: "Lec4. 셀레니움 · 웹 크롤링", shortTitle: "셀레니움", minQuestions: 32, load: () => import("./lec4").then((m) => m.default) },
-    { id: "lec5", title: "Lec5. 데이터베이스 · MySQL", shortTitle: "MySQL", minQuestions: 66, load: () => import("./lec5").then((m) => m.default) },
-    { id: "lec6", title: "Lec6. 넘파이 · 판다스", shortTitle: "넘파이·판다스", minQuestions: 78, load: () => import("./lec6").then((m) => m.default) },
+    { id: "lec1", exam: "2-2-mid", title: "Lec1. 인공지능과 빅데이터 · 파이썬 · Colab", shortTitle: "AI·파이썬·Colab", minQuestions: 20, load: () => import("./lec1").then((m) => m.default) },
+    { id: "lec2", exam: "2-2-mid", title: "Lec2. 파이썬 기초", shortTitle: "파이썬 기초", minQuestions: 56, load: () => import("./lec2").then((m) => m.default) },
+    { id: "lec3", exam: "2-2-mid", title: "Lec3. CSV 파일 · 엑셀 파일", shortTitle: "CSV·엑셀", minQuestions: 27, load: () => import("./lec3").then((m) => m.default) },
+    { id: "lec4", exam: "2-2-mid", title: "Lec4. 셀레니움 · 웹 크롤링", shortTitle: "셀레니움", minQuestions: 32, load: () => import("./lec4").then((m) => m.default) },
+    { id: "lec5", exam: "2-2-mid", title: "Lec5. 데이터베이스 · MySQL", shortTitle: "MySQL", minQuestions: 66, load: () => import("./lec5").then((m) => m.default) },
+    { id: "lec6", exam: "2-2-mid", title: "Lec6. 넘파이 · 판다스", shortTitle: "넘파이·판다스", minQuestions: 78, load: () => import("./lec6").then((m) => m.default) },
     // Lec7은 s.1~25(맷플롯립 기초·기온 CSV 준비)만(2026-10-17) — 맷플롯립 코드는 로컬 CPython으로 검증(lib/verify/matplotlib.test.ts)
-    { id: "lec7", title: "Lec7. 데이터 시각화 · 맷플롯립", shortTitle: "맷플롯립", minQuestions: 44, load: () => import("./lec7").then((m) => m.default) },
+    { id: "lec7", exam: "2-2-mid", title: "Lec7. 데이터 시각화 · 맷플롯립", shortTitle: "맷플롯립", minQuestions: 44, load: () => import("./lec7").then((m) => m.default) },
   ],
 } as const satisfies SubjectDef;
 

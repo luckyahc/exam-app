@@ -20,6 +20,7 @@ npm run test:os-regression  # OS 회귀 점검 — 먼저 `npm run build && npx 
 여러 과목(운영체제 `os`, 데이터 통신 `data-comm`, 데이터과학 `data-science`, 알고리즘 `algorithm`)을 한 앱에서 푼다. 설계: `docs/multi-subject-design.md`.
 
 - `app/` — 라우트: `/`(과목 선택), `/s/[subject]`(과목 홈), `/s/[subject]/chapter/[id]`, `/quiz`, `/result`, `/review?subject=`, `/stats?subject=`. 옛 `/chapter/[id]`는 `/s/os/chapter/[id]`로 리다이렉트
+- `data/subjects/exams.ts` — 시험 구분(2학년 2학기 중간고사 `2-2-mid` · 기말고사 `2-2-final`, 지금 준비하는 시험 `CURRENT_EXAM`). 챕터마다 `exam`을 적고, 과목 홈은 시험별로 나눠 보여 주며 과목 전체 퀴즈는 `?exam=`으로 그 시험 챕터만 고른다
 - `data/subjects/registry.ts` — **과목 등록 지점**. 새 과목 = `data/subjects/{과목}/` 폴더(`index.ts` + 챕터별 문제 파일) + 이 파일에 한 줄
 - `types/question.ts` — 문제 데이터 모델 공개 진입점 (`Question`, `BaseQ`, `QType`)
 - `lib/qtypes/` — **문제 유형 레지스트리(순수 로직)**: 10종 채점·검증(`registry.ts`가 등록 지점 1), 유형별 예시 문제 `fixtures.ts`

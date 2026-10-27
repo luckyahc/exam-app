@@ -10,10 +10,12 @@ export async function loadChapter(subjectId: string, chapterId: string): Promise
   return chapter ? chapter.load() : [];
 }
 
-export async function loadSubject(subjectId: string): Promise<Question[]> {
+/** 과목 전체 문제. `exam`을 주면 그 시험 범위(data/subjects/exams.ts) 챕터만 */
+export async function loadSubject(subjectId: string, exam?: string): Promise<Question[]> {
   const subject = SUBJECTS.find((s) => s.id === subjectId);
   if (!subject) return [];
-  return (await Promise.all(subject.chapters.map((c) => c.load()))).flat();
+  const chapters = exam ? subject.chapters.filter((c) => c.exam === exam) : subject.chapters;
+  return (await Promise.all(chapters.map((c) => c.load()))).flat();
 }
 
 /**

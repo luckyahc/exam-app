@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { getExam } from "@/data/subjects/exams";
 import { getChapter, getSubject } from "@/lib/subjects";
 import { isQType, type Question } from "@/lib/qtypes/registry";
 import { loadChapter, loadQuestions, loadSubject } from "@/lib/quiz/loadQuestions";
@@ -50,7 +51,9 @@ export function QuizEntry() {
       if (!subject || (chapterId && !chapter))
         return { kind: "empty", message: "과목 또는 챕터를 찾을 수 없습니다.", backHref: "/" } as State;
 
-      const pool = chapter ? await loadChapter(subjectId, chapter.id) : await loadSubject(subjectId);
+      // 과목 전체 퀴즈는 ?exam=(시험 범위)이 있으면 그 시험 챕터만
+      const exam = chapter ? undefined : getExam(params.get("exam"));
+      const pool = chapter ? await loadChapter(subjectId, chapter.id) : await loadSubject(subjectId, exam?.id);
       const types = (params.get("types") ?? "").split(",").filter(isQType);
       const statuses = (params.get("status") ?? "").split(",").filter(isStatus);
       const starBasis = parseStar(params.get("star"));
@@ -84,7 +87,7 @@ export function QuizEntry() {
         timerSec: Number(params.get("timer")) || null,
         view: params.get("view") === "eclass" ? "eclass" : "app",
         source,
-        label: `${subject.shortName}${chapter ? ` · ${chapter.id.toUpperCase()} ${chapter.shortTitle}` : " 전체"}${star}`,
+        label: `${subject.shortName}${chapter ? ` · ${chapter.id.toUpperCase()} ${chapter.shortTitle}` : exam ? ` ${exam.shortName} 전체` : " 전체"}${star}`,
         backHref,
       });
       saveSession(session);

@@ -8,6 +8,7 @@ import { chapterStats, generatedAttempts, statLine, subjectStats, sumLines } fro
 const meta: ChapterMeta = {
   subjectId: "os",
   chapterId: "ch08",
+  exam: "2-2-mid",
   title: "Ch08",
   shortTitle: "가상 메모리",
   ids: ["a", "b", "c", "d"],

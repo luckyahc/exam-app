@@ -1,10 +1,13 @@
 import type { GeneratorMap } from "@/lib/sim/_shared/types";
 import type { QType, Question } from "@/types/question";
+import type { ExamId } from "./exams";
 import type { GlossaryEntry } from "./glossary";
 
 export interface ChapterDef {
   /** 과목 안에서만 유일. 예: 'ch08' */
   id: string;
+  /** 어느 시험 범위인가(data/subjects/exams.ts). 예: '2-2-mid'(2학년 2학기 중간고사) */
+  exam: ExamId;
   /** 'Ch08. 가상 메모리' */
   title: string;
   /** '가상 메모리' */

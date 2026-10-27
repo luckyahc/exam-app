@@ -27,6 +27,7 @@ const os = {
   chapters: [
     {
       id: "ch02",
+      exam: "2-2-mid",
       title: "Ch02. 운영체제 개요",
       shortTitle: "운영체제 개요",
       minQuestions: 50,
@@ -34,6 +35,7 @@ const os = {
     },
     {
       id: "ch03",
+      exam: "2-2-mid",
       title: "Ch03. 프로세스 기술과 제어",
       shortTitle: "프로세스",
       minQuestions: 80,
@@ -41,6 +43,7 @@ const os = {
     },
     {
       id: "ch07",
+      exam: "2-2-mid",
       title: "Ch07. 메모리 관리",
       shortTitle: "메모리 관리",
       minQuestions: 80,
@@ -48,6 +51,7 @@ const os = {
     },
     {
       id: "ch08",
+      exam: "2-2-mid",
       title: "Ch08. 가상 메모리",
       shortTitle: "가상 메모리",
       minQuestions: 120,
@@ -56,6 +60,7 @@ const os = {
     {
       // 2026-10-12 시험 범위에 추가(docs/jokbo-plan.md). minQuestions = 소주제 목표 합계(⭐ 4 × 8 + 일반 13개 2~4, docs/progress/sprint-19.md §2)
       id: "ch09",
+      exam: "2-2-mid",
       title: "Ch09. 단일 프로세서 스케줄링",
       shortTitle: "스케줄링",
       minQuestions: 79,

@@ -14,11 +14,11 @@ const algorithm = {
   // ⭐ 근거(필기·인쇄 강조) 없음 — 족보 출현 횟수는 "족보 N회" 뱃지로 보인다
   examPoints: false,
   chapters: [
-    { id: "analysis", title: "알고리즘 분석 · 점근 표기", shortTitle: "점근 분석", minQuestions: 9, load: (): Promise<Question[]> => Promise.all([import("./analysis"), import("./patterns"), import("./mockExams")]).then(([m, p, x]) => [...m.default, ...p.analysisPatterns, ...x.mockQuestions("analysis")]) },
-    { id: "recurrence", title: "재귀 · 점화식 · 마스터 정리", shortTitle: "점화식", minQuestions: 11, load: (): Promise<Question[]> => Promise.all([import("./recurrence"), import("./patterns"), import("./mockExams")]).then(([m, p, x]) => [...m.default, ...p.recurrencePatterns, ...x.mockQuestions("recurrence")]) },
-    { id: "sorting", title: "정렬 · 힙 · 선형 시간 정렬", shortTitle: "정렬", minQuestions: 12, load: (): Promise<Question[]> => Promise.all([import("./sorting"), import("./patterns"), import("./mockExams")]).then(([m, p, x]) => [...m.default, ...p.sortingPatterns, ...x.mockQuestions("sorting")]) },
-    { id: "dc", title: "분할 정복 · 선택", shortTitle: "분할 정복", minQuestions: 6, load: (): Promise<Question[]> => Promise.all([import("./dc"), import("./mockExams")]).then(([m, x]) => [...m.default, ...x.mockQuestions("dc")]) },
-    { id: "dp", title: "동적 계획법", shortTitle: "동적 계획법", minQuestions: 15, load: (): Promise<Question[]> => Promise.all([import("./dp"), import("./mockExams")]).then(([m, x]) => [...m.default, ...x.mockQuestions("dp")]) },
+    { id: "analysis", exam: "2-2-mid", title: "알고리즘 분석 · 점근 표기", shortTitle: "점근 분석", minQuestions: 9, load: (): Promise<Question[]> => Promise.all([import("./analysis"), import("./patterns"), import("./mockExams")]).then(([m, p, x]) => [...m.default, ...p.analysisPatterns, ...x.mockQuestions("analysis")]) },
+    { id: "recurrence", exam: "2-2-mid", title: "재귀 · 점화식 · 마스터 정리", shortTitle: "점화식", minQuestions: 11, load: (): Promise<Question[]> => Promise.all([import("./recurrence"), import("./patterns"), import("./mockExams")]).then(([m, p, x]) => [...m.default, ...p.recurrencePatterns, ...x.mockQuestions("recurrence")]) },
+    { id: "sorting", exam: "2-2-mid", title: "정렬 · 힙 · 선형 시간 정렬", shortTitle: "정렬", minQuestions: 12, load: (): Promise<Question[]> => Promise.all([import("./sorting"), import("./patterns"), import("./mockExams")]).then(([m, p, x]) => [...m.default, ...p.sortingPatterns, ...x.mockQuestions("sorting")]) },
+    { id: "dc", exam: "2-2-mid", title: "분할 정복 · 선택", shortTitle: "분할 정복", minQuestions: 6, load: (): Promise<Question[]> => Promise.all([import("./dc"), import("./mockExams")]).then(([m, x]) => [...m.default, ...x.mockQuestions("dc")]) },
+    { id: "dp", exam: "2-2-mid", title: "동적 계획법", shortTitle: "동적 계획법", minQuestions: 15, load: (): Promise<Question[]> => Promise.all([import("./dp"), import("./mockExams")]).then(([m, x]) => [...m.default, ...x.mockQuestions("dp")]) },
   ],
 } as const satisfies SubjectDef;
 
