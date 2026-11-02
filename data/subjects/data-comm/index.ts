@@ -36,7 +36,7 @@ const dataComm = {
       exam: "2-2-final",
       title: "Ch03. 데이터 링크 계층",
       shortTitle: "데이터 링크 계층",
-      minQuestions: 42,
+      minQuestions: 47,
       load: (): Promise<Question[]> => import("./ch03").then((m) => m.default),
     },
   ],
