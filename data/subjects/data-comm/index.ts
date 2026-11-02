@@ -30,6 +30,15 @@ const dataComm = {
       minQuestions: 106,
       load: (): Promise<Question[]> => Promise.all([import("./ch02"), import("./shortAnswer"), import("./hintExams")]).then(([m, s, h]) => [...m.default, ...s.shortQuestions("ch02"), ...h.hintQuestions("ch02")]),
     },
+    {
+      // 기말(2026-11-03): docs/final/data-comm-format.md 형식, 계산은 lib/sim/data-comm/dataLink.ts
+      id: "ch03",
+      exam: "2-2-final",
+      title: "Ch03. 데이터 링크 계층",
+      shortTitle: "데이터 링크 계층",
+      minQuestions: 42,
+      load: (): Promise<Question[]> => import("./ch03").then((m) => m.default),
+    },
   ],
 } as const satisfies SubjectDef;
 

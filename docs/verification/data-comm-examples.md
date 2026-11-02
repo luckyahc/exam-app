@@ -51,3 +51,28 @@
 
 - 계산 예제 검증: 새 calc 4개(10 dB, 20 dB, L = 4, 112 kbps)를 `lib/sim/data-comm`(decibel, nyquistLevels)과 슬라이드 수치로 대조했고, 모두 슬라이드 값과 일치했다(불일치 0).
 - 112 kbps는 슬라이드 수치(4 kHz → 56 kbps)에 대역폭 비율 8/4를 곱해 확인했다. 비례 관계는 해설에 "(보충)"으로 적었다.
+
+## Ch03 데이터 링크 계층 (기말, 2026-11-03)
+
+원본: `source/data-communication/DC-3-DataLinkLayer.pdf`(50쪽, 슬라이드 100장). pdftotext로 한 번 추출, 그림 속 수치(CRC 나눗셈 s.35~36, FEC 표 s.43)만 p.18·p.22를 렌더링해 확인했다. 정답은 `lib/sim/data-comm/dataLink.ts`로 계산하고 `dataLink.test.ts`가 슬라이드 값과 대조한다(28개). 기존 문항과 중복 없음(Ch03 첫 출제). 위 표의 테스트(`examples.test.ts`)는 Ch01·Ch02 행만 세고, Ch03은 `ch03.test.ts`가 Example 3.1~3.12를 모두 확인한다.
+
+| 강의 | 페이지 | 예제 | 문항 ID |
+|---|---|---|---|
+| Ch03 | s.18~19 (p.9~10) | Example 3.1 000 수신(검출 안 되는 2비트 오류) | `data-comm-ch03-errors-003` |
+| Ch03 | s.20 (p.10) | Example 3.2 d(10101, 11110) = 3 | `data-comm-ch03-hamming-001` |
+| Ch03 | s.21 (p.11) | Table 3.1 dmin = 2 | `data-comm-ch03-hamming-002` |
+| Ch03 | s.22 (p.11) | Example 3.3 dmin 2, 101 전송 | `data-comm-ch03-hamming-004` |
+| Ch03 | s.23 (p.12) | Example 3.4 dmin 4 → 3개 검출 | `data-comm-ch03-hamming-003` |
+| Ch03 | s.25 (p.13) | Example 3.5 011 ⊕ 101 = 110 | `data-comm-ch03-parity-001` |
+| Ch03 | s.26 (p.13) | Example 3.6 선형 부호 dmin | `data-comm-ch03-parity-002` |
+| Ch03 | s.30~31 (p.15~16) | Example 3.7 패리티 다섯 경우 | `data-comm-ch03-parity-004` |
+| Ch03 | s.32 (p.16) | 1011000 순환 이동 | `data-comm-ch03-crc-001` |
+| Ch03 | s.35 (p.18) | CRC 부호기 1001 / 1011 → 110 | `data-comm-ch03-crc-002` |
+| Ch03 | s.36 (p.18) | CRC 복호기 1000110 → 011 | `data-comm-ch03-crc-003` |
+| Ch03 | s.41 (p.21) | 4비트 검사합 7·11·12·0·6 → 9 | `data-comm-ch03-checksum-001` |
+| Ch03 | s.43~45 (p.22~23) | FEC 01001 → 01011, dmin 3 | `data-comm-ch03-fec-002` |
+| Ch03 | s.67 (p.34) | Example 3.8 백오프 TB (K = 3 → 14 ms) | `data-comm-ch03-aloha-001` |
+| Ch03 | s.69 (p.35) | Example 3.9 취약 시간 2 ms | `data-comm-ch03-aloha-002` |
+| Ch03 | s.71~72 (p.36) | Example 3.10 순수 ALOHA 135 프레임 | `data-comm-ch03-aloha-003` |
+| Ch03 | s.75~76 (p.38) | Example 3.11 슬롯 ALOHA 151 프레임(슬라이드 0.0368·386은 오기) | `data-comm-ch03-aloha-004` |
+| Ch03 | s.87 (p.44) | Example 3.12 최소 프레임 512비트 | `data-comm-ch03-cdca-001` |
