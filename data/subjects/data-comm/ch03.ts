@@ -76,7 +76,7 @@ const TFR = frameTime(200, 200e3); // Example 3.9~3.11: 200비트, 200 kbps → 
 const stuffData = "0001111111001111101000";
 const stuffChoices = [bitStuff(stuffData), "0001111101100111110100", "000111111010011111001000", "0001111110110011111001000", "00011111011001111101000"];
 const crc = crcEncode("1001", "1011");
-const crcChoices = ["011", "000", "110", "101", "111"];
+const crcChoices = ["011", "000", "110", "101", "111"].map((x) => `신드롬 ${x}`);
 const fecGuess = nearestCodeword("01001", FEC_TABLE)!;
 const cs = checksum4([7, 11, 12, 0, 6]);
 const tp38 = propagationTime(600e3, 3e8);
@@ -440,7 +440,7 @@ const questions: Question[] = [
     slideRef: "Ch03 s.36",
     prompt: "제수 1011인 CRC 부호 C(7, 4)로 부호어 `1001110`을 보냈는데 전송 중 손상되어 `1000110`을 받았다. 수신 측의 **신드롬**은?",
     choices: crcChoices,
-    answerIndex: at(crcChoices, crcSyndrome("1000110", "1011")),
+    answerIndex: at(crcChoices, `신드롬 ${crcSyndrome("1000110", "1011")}`),
     explanation: `s.36 (p.18): 복호기는 받은 부호어 전체를 제수로 나눈다. 손상되지 않은 1001110 → 신드롬 ${crcSyndrome("1001110", "1011")}(Zero, Dataword accepted). 1000110 → 신드롬 ${crcSyndrome("1000110", "1011")}(Non-Zero, Dataword discarded). 110은 송신 측 나머지다.`,
   },
   {
@@ -523,8 +523,8 @@ const questions: Question[] = [
     difficulty: 2,
     slideRef: "Ch03 s.42",
     prompt: "패킷에서 오류 비트 **10개를 정정**하려면 최소 해밍 거리 dmin은 얼마여야 하는가?",
-    choices: ["10", "11", "20", "21", "22"],
-    answerIndex: at(["10", "11", "20", "21", "22"], String(dminToCorrect(10))),
+    choices: ["dmin = 10", "dmin = 11", "dmin = 20", "dmin = 21", "dmin = 22"],
+    answerIndex: at(["dmin = 10", "dmin = 11", "dmin = 20", "dmin = 21", "dmin = 22"], `dmin = ${dminToCorrect(10)}`),
     explanation: `s.42 (p.21): to correct t errors, we need to have dmin = 2t + 1 — if we want to correct 10 bits in a packet, we need to make the minimum Hamming distance ${dminToCorrect(10)}, which means a lot of redundant bits. 11은 검출 공식(dmin = s + 1)을 쓴 값이다.`,
   },
   {
