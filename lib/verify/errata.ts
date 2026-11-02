@@ -27,6 +27,7 @@ export const DS_ERRATA: readonly Erratum[] = [
   { code: "3-10", kind: "output-notation", note: "슬라이드 결과 첫 줄 '이름'은 [코드 3-4] 결과가 섞인 인쇄 오류 — 실제 출력은 ['Sheet1'] 한 줄", keywords: ["이름", "인쇄 오류"] },
   { code: "6-1", kind: "output-notation", note: "슬라이드 (2,3)·[1, 2, 3] — 실제 출력은 (2, 3)·[1 2 3]", keywords: ["(2, 3)", "[1 2 3]", "표기"] },
   { code: "6-4", kind: "platform", note: "Pyodide(wasm32)는 int32·itemsize 4·nbytes 24 — 슬라이드는 64비트 PC 기준 int64·8·48", keywords: ["int32", "int64", "플랫폼"] },
+  { code: "8-4", kind: "output-notation", note: "슬라이드 설명은 '다섯 행 중 세 행이 남음' — [코드 8-1]의 df로 실제 실행하면 0·1행 두 행", keywords: ["두 행", "2행"] },
   { code: "6-40", kind: "slide-order", note: "슬라이드 결과는 6-33(이새봄 키 +5) 이전 값 — 순서대로 실행하면 여자 평균 163.8·표준편차 5.449771", keywords: ["6-33", "163.8", "순서"] },
 ];
 

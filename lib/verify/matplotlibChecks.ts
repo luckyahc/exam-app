@@ -112,4 +112,8 @@ export const MPL_CHECKS: Record<string, MplCheck> = {
       null,
     ],
   },
+  "data-science-lec7b-line-002": {
+    code: lines("df2 = pd.DataFrame({'max_temp': [0.0] * 365})", "plt.plot(range(1,len(df2)+1), df2['max_temp'], label='최고기온', c='r')"),
+    value: "f'{int(ax.lines[0].get_xdata()[0])}, {int(ax.lines[0].get_xdata()[-1])}'",
+  },
 };

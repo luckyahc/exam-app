@@ -37,7 +37,7 @@ export interface DsFunction {
 export const DS_FUNCTIONS = FUNCTIONS as DsFunction[];
 /** 함수 정리 페이지(/s/[subject]/functions)가 있는 과목 */
 export const FUNCTION_SUBJECTS = ["data-science"] as const;
-export const DS_LECTURES = ["lec1", "lec2", "lec3", "lec4", "lec5", "lec6", "lec7"] as const;
+export const DS_LECTURES = ["lec1", "lec2", "lec3", "lec4", "lec5", "lec6", "lec7", "lec7b", "lec8"] as const;
 /** 관련 문항은 장 순서대로 앞에서 이만큼만 적는다(print처럼 거의 모든 문항에 나오는 함수) */
 export const RELATED_MAX = 20;
 

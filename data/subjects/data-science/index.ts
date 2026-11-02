@@ -21,6 +21,9 @@ const dataScience = {
     { id: "lec6", exam: "2-2-mid", title: "Lec6. 넘파이 · 판다스", shortTitle: "넘파이·판다스", minQuestions: 78, load: () => import("./lec6").then((m) => m.default) },
     // Lec7은 s.1~25(맷플롯립 기초·기온 CSV 준비)만(2026-10-17) — 맷플롯립 코드는 로컬 CPython으로 검증(lib/verify/matplotlib.test.ts)
     { id: "lec7", exam: "2-2-mid", title: "Lec7. 데이터 시각화 · 맷플롯립", shortTitle: "맷플롯립", minQuestions: 44, load: () => import("./lec7").then((m) => m.default) },
+    // 기말(2026-11-03): Lec7 s.26~59(맷플롯립 활용 후반·워드클라우드·네트워크X)와 Lec8 전체. s.21~25는 위 lec7(중간)에 이미 있다
+    { id: "lec7b", exam: "2-2-final", title: "Lec7 후반. 기온 데이터 · 워드클라우드 · 네트워크X", shortTitle: "시각화 활용", minQuestions: 22, load: () => import("./lec7b").then((m) => m.default) },
+    { id: "lec8", exam: "2-2-final", title: "Lec8. 데이터 전처리", shortTitle: "데이터 전처리", minQuestions: 28, load: () => import("./lec8").then((m) => m.default) },
   ],
 } as const satisfies SubjectDef;
 

@@ -15,7 +15,7 @@ import { MemorizeView } from "./MemorizeView";
 import { newSession, saveSession } from "@/lib/quiz/session";
 
 const TABS = ["", ...DS_LECTURES] as const;
-const tabLabel = (t: string) => (t ? t.replace("lec", "Lec") : "전체");
+const tabLabel = (t: string) => (t ? t.replace("lec", "Lec").replace(/b$/, " 후반") : "전체");
 
 /** 예시 코드(고정폭) + 준비 코드·실행 결과는 접었다 펴기 */
 function Example({ f }: { f: DsFunction }) {

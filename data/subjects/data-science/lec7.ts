@@ -1,7 +1,7 @@
 import type { Question } from "@/types/question";
 import type { VerifySpec } from "@/lib/qtypes/base";
 
-// Lec7 데이터 시각화(맷플롯립) — 근거: source/data-science/Lec7.pdf s.1~25만(2026-10-17). s.26(결측치 처리)부터는 출제하지 않는다.
+// Lec7 데이터 시각화(맷플롯립) — 근거: source/data-science/Lec7.pdf s.1~25만(2026-10-17). s.26(결측치 처리)부터는 기말 범위라 lec7b.ts에 있다.
 // ⭐ 없음(결정 3). 해설은 "s.번호:"로 시작한다. 슬라이드 코드의 굽은 따옴표(’ ‘)는 곧은 따옴표로 고쳐 옮겼다(quote-001만 슬라이드 그대로).
 // 앱 실행 엔진(Pyodide)에 맷플롯립이 없어 코드 문항은 verify: skip + local: "matplotlib" — 로컬 CPython(Agg)으로 그래프 객체·통계를 검사한다
 // (scripts/verify-matplotlib.py, lib/verify/matplotlib.test.ts, 코드 없는 문항의 검사 코드는 lib/verify/matplotlibChecks.ts).

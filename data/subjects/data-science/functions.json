@@ -1859,6 +1859,9 @@
     "relatedQuestionIds": [
       "data-science-lec6-csv-001",
       "data-science-lec6-csv-003"
+    ],
+    "alsoIn": [
+      "lec8"
     ]
   },
   {
@@ -1900,7 +1903,11 @@
     "relatedQuestionIds": [
       "data-science-lec6-view-002",
       "data-science-lec6-stat-002",
-      "data-science-lec6-stat-003"
+      "data-science-lec6-stat-003",
+      "data-science-lec8-check-001"
+    ],
+    "alsoIn": [
+      "lec8"
     ]
   },
   {
@@ -2073,7 +2080,12 @@
     "relatedQuestionIds": [
       "data-science-lec6-struct-001",
       "data-science-lec6-struct-003",
-      "data-science-lec6-struct-004"
+      "data-science-lec6-struct-004",
+      "data-science-lec7b-date-001",
+      "data-science-lec7b-date-002"
+    ],
+    "alsoIn": [
+      "lec7b"
     ]
   },
   {
@@ -2110,7 +2122,11 @@
     "exampleOutput": "    이름  성별  나이    키\n0  허준호  남자  30  183\n1  이가원  여자  24  162",
     "relatedQuestionIds": [
       "data-science-lec6-struct-001",
-      "data-science-lec6-struct-004"
+      "data-science-lec6-struct-004",
+      "data-science-lec8-gather-003"
+    ],
+    "alsoIn": [
+      "lec8"
     ]
   },
   {
@@ -2152,7 +2168,15 @@
       "data-science-lec6-group-001",
       "data-science-lec6-group-002",
       "data-science-lec6-group-003",
-      "data-science-lec6-group-004"
+      "data-science-lec6-group-004",
+      "data-science-lec8-fill-002",
+      "data-science-lec8-fill-005",
+      "data-science-lec8-scale-001",
+      "data-science-lec8-scale-002",
+      "data-science-lec8-scale-004"
+    ],
+    "alsoIn": [
+      "lec8"
     ]
   },
   {
@@ -2171,7 +2195,12 @@
       "data-science-lec6-stat-002",
       "data-science-lec6-group-001",
       "data-science-lec6-group-002",
-      "data-science-lec6-group-004"
+      "data-science-lec6-group-004",
+      "data-science-lec8-scale-001",
+      "data-science-lec8-scale-004"
+    ],
+    "alsoIn": [
+      "lec8"
     ]
   },
   {
@@ -2203,7 +2232,11 @@
     "relatedQuestionIds": [
       "data-science-lec6-group-001",
       "data-science-lec6-group-002",
-      "data-science-lec6-group-004"
+      "data-science-lec6-group-004",
+      "data-science-lec7b-rename-001"
+    ],
+    "alsoIn": [
+      "lec7b"
     ]
   },
   {
@@ -2585,6 +2618,441 @@
       "data-science-lec7-bar-001",
       "data-science-lec7-bar-002",
       "data-science-lec7-pie-003"
+    ]
+  },
+  {
+    "id": "lec7b-df-info",
+    "lecture": "lec7b",
+    "category": "pandas",
+    "name": "df.info",
+    "lang": "python",
+    "signature": "df.info()",
+    "description": "행 수, 열마다 결측치가 아닌 값의 개수(Non-Null Count)와 자료형을 보여 준다.",
+    "usage": "결측치가 있는지 간단히 확인할 때.",
+    "example": "df.info()",
+    "setup": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'일시': ['2023-02-28', '2023-03-01', '2023-03-02'], '최저기온': [-1.5, np.nan, 2.2]})",
+    "exampleOutput": null,
+    "relatedQuestionIds": [
+      "data-science-lec7b-missing-001"
+    ],
+    "alsoIn": [
+      "lec8"
+    ],
+    "noRun": "출력의 메모리 사용량·자료형 표기가 실행 환경(판다스 버전·32/64비트)마다 달라 예시 출력을 싣지 않는다"
+  },
+  {
+    "id": "lec7b-df-ffill",
+    "lecture": "lec7b",
+    "category": "pandas",
+    "name": "df.ffill",
+    "lang": "python",
+    "signature": "df.ffill()",
+    "description": "결측치를 바로 위 행의 값으로 채운 새 데이터프레임을 돌려준다.",
+    "usage": "시간 순서 데이터의 빈 값을 앞의 값으로 메울 때.",
+    "example": "df2 = df.ffill()\nprint(df2['최저기온'].tolist())",
+    "setup": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'일시': ['2023-02-28', '2023-03-01', '2023-03-02'], '최저기온': [-1.5, np.nan, 2.2]})",
+    "exampleOutput": "[-1.5, -1.5, 2.2]",
+    "relatedQuestionIds": [
+      "data-science-lec7b-missing-001",
+      "data-science-lec7b-missing-002",
+      "data-science-lec7b-rename-001",
+      "data-science-lec7b-date-001",
+      "data-science-lec8-fill-003"
+    ],
+    "alsoIn": [
+      "lec8"
+    ]
+  },
+  {
+    "id": "lec7b-pd-to-datetime",
+    "lecture": "lec7b",
+    "category": "pandas",
+    "name": "pd.to_datetime",
+    "lang": "python",
+    "signature": "pd.to_datetime(열, format='%Y-%m-%d')",
+    "description": "문자열·숫자 날짜를 날짜형(datetime64)으로 바꾼다.",
+    "usage": "월·일을 골라 추출하거나 날짜끼리 계산할 때.",
+    "example": "d = pd.to_datetime(df['일시'], format='%Y-%m-%d')\nprint(d.dt.month.tolist())",
+    "setup": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'일시': ['2023-02-28', '2023-03-01', '2023-03-02'], '최저기온': [-1.5, np.nan, 2.2]})",
+    "exampleOutput": "[2, 3, 3]",
+    "relatedQuestionIds": [
+      "data-science-lec7b-date-001",
+      "data-science-lec8-gather-004"
+    ],
+    "alsoIn": [
+      "lec8"
+    ]
+  },
+  {
+    "id": "lec7b-pd-datetimeindex",
+    "lecture": "lec7b",
+    "category": "pandas",
+    "name": "pd.DatetimeIndex",
+    "lang": "python",
+    "signature": "pd.DatetimeIndex(df.index).month",
+    "description": "날짜형 인덱스에서 연(year)·월(month)·일(day)을 꺼낸다.",
+    "usage": "3월처럼 특정 월의 행만 고를 때.",
+    "example": "df['일시'] = pd.to_datetime(df['일시'])\ndf3 = df.set_index('일시')\nprint(len(df3[pd.DatetimeIndex(df3.index).month == 3]))",
+    "setup": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'일시': ['2023-02-28', '2023-03-01', '2023-03-02'], '최저기온': [-1.5, np.nan, 2.2]})",
+    "exampleOutput": "2",
+    "relatedQuestionIds": [
+      "data-science-lec7b-date-001",
+      "data-science-lec7b-date-002"
+    ]
+  },
+  {
+    "id": "lec7b-plt-xlim",
+    "lecture": "lec7b",
+    "category": "맷플롯립",
+    "name": "plt.xlim",
+    "lang": "python",
+    "signature": "plt.xlim(최솟값, 최댓값)",
+    "description": "x축 범위를 정한다(y축은 plt.ylim).",
+    "usage": "그래프의 가로 범위를 데이터에 맞출 때.",
+    "example": "plt.plot(range(1, 32), [0] * 31)\nplt.xlim(1, 31)\nprint(tuple(float(v) for v in plt.gca().get_xlim()))",
+    "setup": "import matplotlib.pyplot as plt",
+    "localRun": "matplotlib",
+    "exampleOutput": "(1.0, 31.0)",
+    "relatedQuestionIds": [
+      "data-science-lec7b-line-003"
+    ]
+  },
+  {
+    "id": "lec7b-counter",
+    "lecture": "lec7b",
+    "category": "Python 기본",
+    "name": "Counter",
+    "lang": "python",
+    "signature": "Counter(리스트)",
+    "description": "리스트 항목마다 나온 횟수를 센 사전 비슷한 객체를 만든다. 없는 키는 0.",
+    "usage": "단어 빈도수를 셀 때(워드클라우드).",
+    "example": "from collections import Counter\nc = Counter(['국민', '헌법', '국민'])\nprint(c.most_common(1), c['법'])",
+    "exampleOutput": "[('국민', 2)] 0",
+    "relatedQuestionIds": [
+      "data-science-lec7b-wc-003",
+      "data-science-lec7b-wc-005"
+    ]
+  },
+  {
+    "id": "lec7b-re-sub",
+    "lecture": "lec7b",
+    "category": "Python 기본",
+    "name": "re.sub",
+    "lang": "python",
+    "signature": "re.sub(패턴, 바꿀 글자, 문자열)",
+    "description": "문자열에서 정규표현식에 일치하는 부분을 다른 글자로 치환한다.",
+    "usage": "한글·영문자·공백이 아닌 글자를 지울 때.",
+    "example": "import re\nprint(re.sub(r'[^가-힣a-zA-Z\\s]', '', '(약수터) 봄이 오는 길!'))",
+    "exampleOutput": "약수터 봄이 오는 길",
+    "pitfall": "'\\s'가 든 패턴은 r'…'(raw 문자열)로 써야 경고가 없다(보충)",
+    "relatedQuestionIds": [
+      "data-science-lec7b-token-002",
+      "data-science-lec7b-token-003"
+    ]
+  },
+  {
+    "id": "lec7b-series-apply",
+    "lecture": "lec7b",
+    "category": "pandas",
+    "name": "Series.apply",
+    "lang": "python",
+    "signature": "열.apply(함수)",
+    "description": "열의 값마다 함수를 적용한 결과를 돌려준다.",
+    "usage": "규칙의 항목 수처럼 값마다 계산할 때.",
+    "example": "s = pd.Series([frozenset({'지진'}), frozenset({'지진', '구호'})])\nprint(s.apply(lambda x: len(x)).tolist())",
+    "setup": "import pandas as pd",
+    "exampleOutput": "[1, 2]",
+    "relatedQuestionIds": [
+      "data-science-lec7b-assoc-003"
+    ]
+  },
+  {
+    "id": "lec7b-okt-nouns",
+    "lecture": "lec7b",
+    "category": "텍스트·네트워크",
+    "name": "okt.nouns",
+    "lang": "python",
+    "signature": "Okt().nouns(텍스트)",
+    "description": "KoNLPy 형태소 분석기로 텍스트에서 명사만 뽑은 리스트를 돌려준다(Hannanum().nouns도 같다).",
+    "usage": "한국어 텍스트의 단어 빈도를 셀 때.",
+    "example": "from konlpy.tag import Okt\nokt = Okt()\nnouns = okt.nouns(text)",
+    "noRun": "KoNLPy는 실행 엔진에 없다(Colab에서 !pip install konlpy)",
+    "exampleOutput": null,
+    "relatedQuestionIds": [
+      "data-science-lec7b-wc-001",
+      "data-science-lec7b-wc-003",
+      "data-science-lec7b-wc-004",
+      "data-science-lec7b-wc-005"
+    ]
+  },
+  {
+    "id": "lec7b-wordcloud",
+    "lecture": "lec7b",
+    "category": "텍스트·네트워크",
+    "name": "WordCloud.generate_from_frequencies",
+    "lang": "python",
+    "signature": "WordCloud(font_path=…).generate_from_frequencies(빈도)",
+    "description": "빈도수 사전(Counter)으로 워드클라우드를 만든다. to_file( )로 그림 파일에 저장.",
+    "usage": "자주 나온 단어를 크게 보여 줄 때.",
+    "example": "wc = WordCloud(font_path='…/NanumBarunGothic.ttf', width=400, height=400)\ngen = wc.generate_from_frequencies(c)\nplt.imshow(gen)",
+    "noRun": "wordcloud 패키지·나눔 폰트가 실행 엔진에 없다",
+    "exampleOutput": null,
+    "relatedQuestionIds": [
+      "data-science-lec7b-wc-001",
+      "data-science-lec7b-wc-003"
+    ]
+  },
+  {
+    "id": "lec7b-apriori",
+    "lecture": "lec7b",
+    "category": "텍스트·네트워크",
+    "name": "apriori",
+    "lang": "python",
+    "signature": "apriori(트랜잭션, min_support=…)",
+    "description": "apyori 라이브러리의 어프라이어리 알고리즘으로 조건(최소 지지도·신뢰도·향상도·규칙 크기)을 넘는 연관규칙만 계산한다.",
+    "usage": "함께 많이 나오는 단어 쌍을 찾을 때.",
+    "example": "from apyori import apriori\nresult = list(apriori(dataset, min_support=0.01))",
+    "noRun": "apyori는 실행 엔진에 없다(Colab에서 !pip install apyori)",
+    "exampleOutput": null,
+    "relatedQuestionIds": [
+      "data-science-lec7b-assoc-002",
+      "data-science-lec7b-assoc-003"
+    ]
+  },
+  {
+    "id": "lec7b-nx-pagerank",
+    "lecture": "lec7b",
+    "category": "텍스트·네트워크",
+    "name": "nx.pagerank",
+    "lang": "python",
+    "signature": "nx.pagerank(G)",
+    "description": "네트워크 그래프의 노드 순위(페이지랭크)를 노드별 사전으로 돌려준다.",
+    "usage": "중요한 단어 노드를 크게 그릴 때.",
+    "example": "G = nx.Graph()\nG.add_edges_from(df['items'])\npr = nx.pagerank(G)",
+    "noRun": "networkx는 실행 엔진에 없다",
+    "exampleOutput": null,
+    "relatedQuestionIds": [
+      "data-science-lec7b-net-001"
+    ]
+  },
+  {
+    "id": "lec8-pd-isna",
+    "lecture": "lec8",
+    "category": "pandas",
+    "name": "pd.isna",
+    "lang": "python",
+    "signature": "pd.isna(df)",
+    "description": "결측치는 True, 값이 있으면 False인 같은 모양의 표를 돌려준다(df.isnull( )도 같다).",
+    "usage": "sum( )과 함께 열별 결측치 개수를 셀 때.",
+    "example": "print(pd.isna(df).sum().tolist())",
+    "setup": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'A': [1, 2, np.nan, 4, 5], 'B': [6, 7, 8, np.nan, 10], 'C': [11, 12, 13, np.nan, np.nan]})",
+    "exampleOutput": "[1, 1, 2]",
+    "relatedQuestionIds": [
+      "data-science-lec8-missing-001",
+      "data-science-lec8-missing-002"
+    ]
+  },
+  {
+    "id": "lec8-df-dropna",
+    "lecture": "lec8",
+    "category": "pandas",
+    "name": "df.dropna",
+    "lang": "python",
+    "signature": "df.dropna()",
+    "description": "결측치가 하나라도 있는 행을 지운 새 데이터프레임을 돌려준다.",
+    "usage": "결측치가 적고 지워도 문제없을 때.",
+    "example": "print(len(df.dropna()))",
+    "setup": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'A': [1, 2, np.nan, 4, 5], 'B': [6, 7, 8, np.nan, 10], 'C': [11, 12, 13, np.nan, np.nan]})",
+    "exampleOutput": "2",
+    "pitfall": "[코드 8-1]의 df는 두 행만 남는다(슬라이드 설명의 '세 행'과 다름)",
+    "relatedQuestionIds": [
+      "data-science-lec8-drop-001",
+      "data-science-lec8-fill-001",
+      "data-science-lec8-check-002"
+    ]
+  },
+  {
+    "id": "lec8-df-fillna",
+    "lecture": "lec8",
+    "category": "pandas",
+    "name": "df.fillna",
+    "lang": "python",
+    "signature": "df.fillna(값) / df.fillna(value={열: 값})",
+    "description": "결측치를 준 값(숫자·문자열·평균·열별 사전)으로 대체한다.",
+    "usage": "데이터 양이 많지 않아 제거 대신 채울 때.",
+    "example": "print(df['C'].fillna(0).tolist())\nprint(df.fillna(df.mean())['B'].tolist())",
+    "setup": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'A': [1, 2, np.nan, 4, 5], 'B': [6, 7, 8, np.nan, 10], 'C': [11, 12, 13, np.nan, np.nan]})",
+    "exampleOutput": "[11.0, 12.0, 13.0, 0.0, 0.0]\n[6.0, 7.0, 8.0, 7.75, 10.0]",
+    "relatedQuestionIds": [
+      "data-science-lec8-fill-001",
+      "data-science-lec8-fill-002",
+      "data-science-lec8-fill-005",
+      "data-science-lec8-fill-006"
+    ]
+  },
+  {
+    "id": "lec8-df-bfill",
+    "lecture": "lec8",
+    "category": "pandas",
+    "name": "df.bfill",
+    "lang": "python",
+    "signature": "df.bfill()",
+    "description": "결측치를 바로 아래 행의 값으로 채운다. 마지막 행의 결측치는 남는다.",
+    "usage": "뒤의 값으로 빈 값을 메울 때.",
+    "example": "print(df.bfill()['C'].tolist())",
+    "setup": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'A': [1, 2, np.nan, 4, 5], 'B': [6, 7, 8, np.nan, 10], 'C': [11, 12, 13, np.nan, np.nan]})",
+    "exampleOutput": "[11.0, 12.0, 13.0, nan, nan]",
+    "relatedQuestionIds": [
+      "data-science-lec8-fill-003"
+    ]
+  },
+  {
+    "id": "lec8-series-quantile",
+    "lecture": "lec8",
+    "category": "pandas",
+    "name": "Series.quantile",
+    "lang": "python",
+    "signature": "열.quantile(q=0.75)",
+    "description": "사분위수(백분위수)를 계산한다. q=0.25는 1사분위수, 0.75는 3사분위수.",
+    "usage": "IQR로 이상치 상한값·하한값을 정할 때.",
+    "example": "s = pd.Series([1, 2, 3, 4, 5, 6, 7, 8, 30])\nprint(s.quantile(q=0.25), s.quantile(q=0.75))",
+    "setup": "import pandas as pd",
+    "exampleOutput": "3.0 7.0",
+    "relatedQuestionIds": [
+      "data-science-lec8-check-001",
+      "data-science-lec8-iqr-001",
+      "data-science-lec8-iqr-002",
+      "data-science-lec8-iqr-003"
+    ]
+  },
+  {
+    "id": "lec8-pd-concat",
+    "lecture": "lec8",
+    "category": "pandas",
+    "name": "pd.concat",
+    "lang": "python",
+    "signature": "pd.concat([df1, df2])",
+    "description": "데이터프레임을 위아래로 이어 붙인다. 인덱스는 원래 것이 그대로 남는다.",
+    "usage": "여러 파일의 데이터를 하나로 병합할 때(reset_index(drop=True)와 함께).",
+    "example": "a = pd.DataFrame({'x': [1, 2]})\nb = pd.DataFrame({'x': [3]})\nprint(pd.concat([a, b]).index.tolist())",
+    "setup": "import pandas as pd",
+    "exampleOutput": "[0, 1, 0]",
+    "relatedQuestionIds": [
+      "data-science-lec8-gather-003"
+    ]
+  },
+  {
+    "id": "lec8-pd-to-timedelta",
+    "lecture": "lec8",
+    "category": "pandas",
+    "name": "pd.to_timedelta",
+    "lang": "python",
+    "signature": "pd.to_timedelta(열, unit='h')",
+    "description": "숫자를 시간 간격으로 바꾼다. 날짜형에 더하면 측정시각이 된다.",
+    "usage": "날짜 열과 시간 열을 합칠 때.",
+    "example": "d = pd.to_datetime(pd.Series([20160101]), format='%Y%m%d') + pd.to_timedelta(pd.Series([3]), unit='h')\nprint(d.astype(str).tolist())",
+    "setup": "import pandas as pd",
+    "exampleOutput": "['2016-01-01 03:00:00']",
+    "relatedQuestionIds": [
+      "data-science-lec8-gather-004"
+    ]
+  },
+  {
+    "id": "lec8-df-copy",
+    "lecture": "lec8",
+    "category": "pandas",
+    "name": "df.copy",
+    "lang": "python",
+    "signature": "df.copy()",
+    "description": "같은 내용의 사본을 만든다. 사본을 바꿔도 원본에는 영향이 없다.",
+    "usage": "표준화·정규화 열을 원본과 따로 만들 때.",
+    "example": "df1 = df.copy()\ndf1['A'] = 0\nprint(df['A'].tolist()[:2])",
+    "setup": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'A': [1, 2, np.nan, 4, 5], 'B': [6, 7, 8, np.nan, 10], 'C': [11, 12, 13, np.nan, np.nan]})",
+    "exampleOutput": "[1.0, 2.0]",
+    "relatedQuestionIds": [
+      "data-science-lec8-scale-001",
+      "data-science-lec8-scale-002",
+      "data-science-lec8-scale-004"
+    ]
+  },
+  {
+    "id": "lec8-str-endswith",
+    "lecture": "lec8",
+    "category": "Python 기본",
+    "name": "str.endswith",
+    "lang": "python",
+    "signature": "문자열.endswith('.xlsx')",
+    "description": "문자열이 주어진 글자로 끝나면 True.",
+    "usage": "파일명 리스트에서 엑셀 파일만 고를 때.",
+    "example": "fs = ['a_2010.xlsx', 'memo.txt']\nprint([f for f in fs if f.endswith('.xlsx')])",
+    "exampleOutput": "['a_2010.xlsx']",
+    "relatedQuestionIds": [
+      "data-science-lec8-gather-002"
+    ]
+  },
+  {
+    "id": "lec8-os-listdir",
+    "lecture": "lec8",
+    "category": "파일(CSV·엑셀)",
+    "name": "os.listdir",
+    "lang": "python",
+    "signature": "os.listdir(경로)",
+    "description": "경로에 있는 파일 전체의 파일명 리스트를 돌려준다.",
+    "usage": "업로드한 폴더의 파일 이름을 구할 때.",
+    "example": "import os\nfile_list = os.listdir('./대전태평(암반)/')",
+    "noRun": "Colab에 업로드한 [대전태평(암반)] 폴더가 있어야 한다",
+    "exampleOutput": null,
+    "relatedQuestionIds": [
+      "data-science-lec8-gather-002"
+    ]
+  },
+  {
+    "id": "lec8-pd-read-excel",
+    "lecture": "lec8",
+    "category": "파일(CSV·엑셀)",
+    "name": "pd.read_excel",
+    "lang": "python",
+    "signature": "pd.read_excel(파일 경로)",
+    "description": "엑셀 파일의 내용을 읽어 데이터프레임으로 만든다.",
+    "usage": "내려받은 지하수 엑셀 파일을 읽을 때.",
+    "example": "data = pd.read_excel(path + i)",
+    "noRun": "지하수 엑셀 파일과 openpyxl이 필요하다",
+    "exampleOutput": null,
+    "relatedQuestionIds": [
+      "data-science-lec8-gather-003"
+    ]
+  },
+  {
+    "id": "lec8-df-hist",
+    "lecture": "lec8",
+    "category": "맷플롯립",
+    "name": "df.hist",
+    "lang": "python",
+    "signature": "df.hist(bins=50, figsize=(10,6))",
+    "description": "열마다 히스토그램을 그린다(판다스가 맷플롯립으로 그림).",
+    "usage": "분포가 한쪽으로 치우쳤는지 보며 이상치를 찾을 때.",
+    "example": "df.hist(bins=50, figsize=(10,6))\nplt.show()",
+    "noRun": "그래프만 그리는 코드라 출력이 없다",
+    "exampleOutput": null,
+    "relatedQuestionIds": [
+      "data-science-lec8-check-001"
+    ]
+  },
+  {
+    "id": "lec8-df-boxplot",
+    "lecture": "lec8",
+    "category": "맷플롯립",
+    "name": "df.boxplot",
+    "lang": "python",
+    "signature": "df.boxplot(column='temp', return_type='both')",
+    "description": "열의 상자 그래프를 그린다. column으로 한 열만 고를 수 있다.",
+    "usage": "수염 바깥의 이상치를 볼 때.",
+    "example": "plt.subplot(1, 3, 1)\ndf.boxplot(column='temp', return_type='both')",
+    "noRun": "그래프만 그리는 코드라 출력이 없다",
+    "exampleOutput": null,
+    "relatedQuestionIds": [
+      "data-science-lec8-check-001",
+      "data-science-lec8-check-002"
     ]
   }
 ]

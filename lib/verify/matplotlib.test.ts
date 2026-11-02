@@ -11,12 +11,16 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import lec7 from "@/data/subjects/data-science/lec7";
+import lec7a from "@/data/subjects/data-science/lec7";
+import lec7b from "@/data/subjects/data-science/lec7b";
 import { DS_FUNCTIONS } from "@/lib/dsFunctions";
 import { fillCodeBlanks } from "@/lib/qtypes/codeBlank";
 import type { Question } from "@/lib/qtypes/registry";
 import { MPL_CHECKS } from "./matplotlibChecks";
 import { questionCode } from "./rules";
+
+/** Lec7 중간(s.1~25) + 기말 후반(s.26~59, 2026-11-03) */
+const lec7 = [...lec7a, ...lec7b];
 
 const PY = process.env.PYTHON ?? "python";
 const SCRIPT = path.resolve(import.meta.dirname, "../../scripts/verify-matplotlib.py");
