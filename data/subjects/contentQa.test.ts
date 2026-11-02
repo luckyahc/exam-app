@@ -46,7 +46,7 @@ export function slideRefOk(subject: string, ref: string): boolean {
   if (subject === "data-science") return /^Lec[1-8] (s|p)\.\d+([-,·~]\s?((s|p)\.)?\d+)*$/.test(ref);
   // 알고리즘(Sprint 21): 강의 자료 번호와 PDF 쪽 'Lec2 p.6', 'Lec5 p.133-138'
   if (subject === "algorithm") return /^Lec[1-5] p\.\d+([-,·~]\s?(p\.)?\d+)*$/.test(ref);
-  return /^Ch0\d (p|s)\.\d+([-,·]\s?(p\.)?\d+)*$/.test(ref);
+  return /^Ch\d\d (p|s)\.\d+([-,·]\s?(p\.)?\d+)*$/.test(ref);
 }
 
 describe("slideRef 형식 규칙", () => {
@@ -55,6 +55,7 @@ describe("slideRef 형식 규칙", () => {
     for (const bad of ["Ch02 s.25", "Lec9 s.1", "lec2 s.25", "Lec2 25", "Lec2 s.25 "]) expect(slideRefOk("data-science", bad), bad).toBe(false);
     for (const ok of ["Ch08 p.48", "Ch02 s.38", "Ch08 p.43-50"]) expect(slideRefOk("os", ok), ok).toBe(true);
     expect(slideRefOk("os", "Lec2 s.25")).toBe(false);
+    expect(slideRefOk("os", "Ch11 p.22")).toBe(true); // 기말 Ch11(2026-11-03)
   });
 });
 

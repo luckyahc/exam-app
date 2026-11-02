@@ -127,7 +127,7 @@ describe("분류 필터", () => {
 
   it("실제 데이터 단답형: OS 핵심 용어 127(Ch02 20·Ch03 27·Ch07 27·Ch08 31·Ch09 22) = 챕터 메타, 심리학 54(출제 범위 안), 데이터 통신 102(Ch01 33·Ch02 69), 그 밖 과목 0", async () => {
     const os2 = await Promise.all(os.chapters.map((c) => chapterMeta(os, c)));
-    expect(os2.map((m) => m.shortIds.length)).toEqual([20, 27, 27, 31, 22]);
+    expect(os2.map((m) => m.shortIds.length)).toEqual([20, 27, 27, 31, 22, 0]); // Ch11(기말, 2026-11-03)은 단답형 모음 없음
     for (const m of os2) expect(m.rows.filter((r) => r.short)).toHaveLength(m.shortIds.length);
     for (const s of SUBJECTS) {
       const all = (await Promise.all(s.chapters.map((c) => c.load()))).flat();
@@ -204,7 +204,7 @@ describe("기존 과목 회귀 · 새 과목 등록", () => {
 
   it("OS Ch09: 기존 4개 챕터 뒤에 추가(Sprint 19에 문제를 채우고 준비 중 해제)", async () => {
     const ch09 = os.chapters.find((c) => c.id === "ch09")!;
-    expect(os.chapters.map((c) => c.id)).toEqual(["ch02", "ch03", "ch07", "ch08", "ch09"]);
+    expect(os.chapters.map((c) => c.id)).toEqual(["ch02", "ch03", "ch07", "ch08", "ch09", "ch11"]); // Ch11은 기말(2026-11-03)
     expect("status" in ch09).toBe(false);
     expect((await ch09.load()).length).toBeGreaterThanOrEqual(ch09.minQuestions);
   });

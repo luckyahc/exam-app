@@ -66,6 +66,15 @@ const os = {
       minQuestions: 79,
       load: withHints("ch09", () => import("./ch09"), () => import("./ch09-jokbo"), () => import("./jokboPatterns").then((m) => ({ default: m.ch09Patterns })), () => import("./shortAnswer").then((m) => ({ default: m.shortQuestions("ch09") })), () => import("./jokboRelated2").then((m) => ({ default: m.related2Questions("ch09") }))),
     },
+    {
+      // 기말(2026-11-03): docs/final/os-format.md 형식, 계산·순서는 lib/sim/os/disk.ts
+      id: "ch11",
+      exam: "2-2-final",
+      title: "Ch11. I/O 관리와 디스크 스케줄링",
+      shortTitle: "디스크 스케줄링",
+      minQuestions: 40,
+      load: withHints("ch11", () => import("./ch11")),
+    },
   ],
 } as const satisfies SubjectDef;
 
