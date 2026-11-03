@@ -260,7 +260,7 @@ describe("심리학개론 CHAPTER 01~08 (요약 노트 PDF)", async () => {
     expect(ids.some((id) => OLD.includes(id))).toBe(false);
     // 단원·과목 통계, 정답률 요약, 생성 문제 집계 어디에도 들어가지 않는다
     const line = subjectStats(rec, metas);
-    expect([line.total, line.solved, line.attempts, line.correct, line.openWrong]).toEqual([188 + 34 + 28, 0, 0, 0, 0]); // 기말 c09 34 · c10 28(2026-11-03)
+    expect([line.total, line.solved, line.attempts, line.correct, line.openWrong]).toEqual([188 + 39 + 28, 0, 0, 0, 0]); // 기말 c09 39 · c10 28(2026-11-03)
     expect(chapterStats(rec, metas[0]).line.solved).toBe(0);
     expect(summarize(rec, ids)).toMatchObject({ attempts: 0, correct: 0, openWrong: 0 });
     expect(generatedAttempts(rec, new Set(ids))).toEqual({ attempts: 0, correct: 0 });
