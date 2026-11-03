@@ -19,6 +19,8 @@ const algorithm = {
     { id: "sorting", exam: "2-2-mid", title: "정렬 · 힙 · 선형 시간 정렬", shortTitle: "정렬", minQuestions: 12, load: (): Promise<Question[]> => Promise.all([import("./sorting"), import("./patterns"), import("./mockExams")]).then(([m, p, x]) => [...m.default, ...p.sortingPatterns, ...x.mockQuestions("sorting")]) },
     { id: "dc", exam: "2-2-mid", title: "분할 정복 · 선택", shortTitle: "분할 정복", minQuestions: 6, load: (): Promise<Question[]> => Promise.all([import("./dc"), import("./mockExams")]).then(([m, x]) => [...m.default, ...x.mockQuestions("dc")]) },
     { id: "dp", exam: "2-2-mid", title: "동적 계획법", shortTitle: "동적 계획법", minQuestions: 15, load: (): Promise<Question[]> => Promise.all([import("./dp"), import("./mockExams")]).then(([m, x]) => [...m.default, ...x.mockQuestions("dp")]) },
+    // 기말(2026-11-03): 강의 자료 6·9 생성 문항 — 형식 docs/final/algorithm-format.md, 주제-문항 표 docs/final/algorithm-coverage.md
+    { id: "greedy", exam: "2-2-final", title: "그리디 알고리즘", shortTitle: "그리디", minQuestions: 32, load: (): Promise<Question[]> => import("./greedy").then((m) => m.default) },
   ],
 } as const satisfies SubjectDef;
 
