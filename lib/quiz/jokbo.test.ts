@@ -125,14 +125,14 @@ describe("분류 필터", () => {
     expect(visibleRows(listRows(qs, undefined), "all", { source: "short" })).toHaveLength(1);
   });
 
-  it("실제 데이터 단답형: OS 핵심 용어 127(Ch02 20·Ch03 27·Ch07 27·Ch08 31·Ch09 22) = 챕터 메타, 심리학 54(출제 범위 안), 데이터 통신 102(Ch01 33·Ch02 69), 그 밖 과목 0", async () => {
+  it("실제 데이터 단답형: OS 핵심 용어 127(Ch02 20·Ch03 27·Ch07 27·Ch08 31·Ch09 22) = 챕터 메타, 심리학 54(출제 범위 안) + 기말 20(c09 11·c10 9), 데이터 통신 102(Ch01 33·Ch02 69), 그 밖 과목 0", async () => {
     const os2 = await Promise.all(os.chapters.map((c) => chapterMeta(os, c)));
     expect(os2.map((m) => m.shortIds.length)).toEqual([20, 27, 27, 31, 22, 0]); // Ch11(기말, 2026-11-03)은 단답형 모음 없음
     for (const m of os2) expect(m.rows.filter((r) => r.short)).toHaveLength(m.shortIds.length);
     for (const s of SUBJECTS) {
       const all = (await Promise.all(s.chapters.map((c) => c.load()))).flat();
       const short = filterQuestions(all, { source: "short", seed: "s" });
-      expect(short.length, s.id).toBe(s.id === "os" ? 127 : s.id === "psychology" ? 54 : s.id === "data-comm" ? 102 : 0);
+      expect(short.length, s.id).toBe(s.id === "os" ? 127 : s.id === "psychology" ? 54 + 20 : s.id === "data-comm" ? 102 : 0);
       expect(short.every((q) => q.type === "blank" || (s.id !== "os" && s.id !== "data-comm")), s.id).toBe(true);
     }
   });

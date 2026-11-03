@@ -50,3 +50,4 @@ next-env.d.ts
 # 심리학개론 원천자료(요약 노트 PDF) — 로컬에서만 읽는다
 /docs/psychology/summary-notes.pdf
 /docs/psychology/summary-notes-textbook.pdf
+/docs/psychology/summary-notes-final.pdf

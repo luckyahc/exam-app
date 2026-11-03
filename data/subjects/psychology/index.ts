@@ -23,6 +23,9 @@ export const ALL_CHAPTERS: readonly PsyChapter[] = [
   { id: "c06", exam: "2-2-mid", title: "Ch06. 감각과 지각", shortTitle: "감각과 지각", minQuestions: 24, loadAll: () => import("./c06").then((m) => m.default) },
   { id: "c07", exam: "2-2-mid", title: "Ch07. 학습", shortTitle: "학습", minQuestions: 24, loadAll: () => import("./c07").then((m) => m.default) },
   { id: "c08", exam: "2-2-mid", title: "Ch08. 기억", shortTitle: "기억", minQuestions: 26, loadAll: () => import("./c08").then((m) => m.default) },
+  // 기말(2026-11-03): 원천자료 docs/psychology/summary-notes-final.pdf p.1~5(로컬 전용), 종이시험 형식(5지선다 + 단답형) — final.ts, docs/psychology/coverage-final.md
+  { id: "c09", exam: "2-2-final", title: "Ch09. 사고와 언어", shortTitle: "사고와 언어", minQuestions: 34, loadAll: () => import("./c09").then((m) => m.default) },
+  { id: "c10", exam: "2-2-final", title: "Ch10. 지능", shortTitle: "지능", minQuestions: 28, loadAll: () => import("./c10").then((m) => m.default) },
 ];
 
 const psychology = {
