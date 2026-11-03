@@ -40,12 +40,12 @@ const VR = ["s", "a", "b", "c", "d", "t"];
 const ER: [string, string, number][] = [["s", "a", 4], ["s", "b", 1], ["b", "a", 2], ["a", "c", 5], ["b", "c", 8], ["b", "d", 10], ["c", "d", 2], ["c", "t", 6], ["d", "t", 3]];
 
 describe("알고리즘 기말 Lec6 그리디 — 형식", () => {
-  it("id 중복 없음·greedy 접두사, slideRef Lec6, 해설에 '근거: 강의자료6 p.'와 '함정:'", () => {
+  it("id 중복 없음·greedy 접두사, slideRef Lec6, 해설에 '근거: 강의자료6 p.'(개념형은 'Lec6 p.X(보기N)')와 '함정:'", () => {
     expect(new Set(questions.map((x) => x.id)).size).toBe(questions.length);
     for (const x of questions) {
       expect(x.id).toMatch(/^algorithm-greedy-[a-z]+-\d{3}$/);
       expect(x.slideRef, x.id).toMatch(/^Lec6 p\./);
-      expect(x.explanation, x.id).toMatch(/근거: 강의자료6 p\.\d+/);
+      expect(x.explanation, x.id).toMatch(/근거: (강의자료6|Lec6) p\.\d+/);
       expect(x.explanation, x.id).toMatch(/함정: /);
     }
   });

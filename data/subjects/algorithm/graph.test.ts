@@ -38,12 +38,12 @@ const AE: [string, string, number][] = [["s", "a", 5], ["s", "b", 3], ["b", "a",
 const SC = { a: ["b"], b: ["c", "e"], c: ["a", "d"], d: ["h"], e: ["f"], f: ["g"], g: ["e", "h"], h: ["i"], i: ["h"] };
 
 describe("알고리즘 기말 Lec9 그래프 — 형식", () => {
-  it("id 중복 없음·graph 접두사, slideRef Lec9, 해설에 '근거: 강의자료9 p.'와 '함정:'", () => {
+  it("id 중복 없음·graph 접두사, slideRef Lec9, 해설에 '근거: 강의자료9 p.'(개념형은 'Lec9 p.X(보기N)')와 '함정:'", () => {
     expect(new Set(questions.map((x) => x.id)).size).toBe(questions.length);
     for (const x of questions) {
       expect(x.id).toMatch(/^algorithm-graph-[a-z]+-\d{3}$/);
       expect(x.slideRef, x.id).toMatch(/^Lec9 p\./);
-      expect(x.explanation, x.id).toMatch(/근거: 강의자료9 p\.\d+/);
+      expect(x.explanation, x.id).toMatch(/근거: (강의자료9|Lec9) p\.\d+/);
       expect(x.explanation, x.id).toMatch(/함정: /);
     }
   });

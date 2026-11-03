@@ -81,7 +81,7 @@ const questions: Question[] = [
     ],
     answerIndexes: [0, 1, 3],
     explanation:
-      "인접 리스트에서 간선 존재 확인은 리스트를 따라가야 하므로 O(n). 인접 배열은 메모리 사용량을 줄이면서 포인터 오버헤드를 감소시키고, 인접 여부 체크 시간을 줄인다. 근거: 강의자료9 p.14, p.20-21. 함정: 리스트의 장점(메모리)과 행렬의 장점(즉시 확인)을 맞바꾼 보기.",
+      "인접 리스트에서 간선 존재 확인은 리스트를 따라가야 하므로 O(n). 인접 배열은 메모리 사용량을 줄이면서 포인터 오버헤드를 감소시키고, 인접 여부 체크 시간을 줄인다. 근거: Lec9 p.14(보기1·2), p.20(보기3·4), p.21(보기5). 함정: 리스트의 장점(메모리)과 행렬의 장점(즉시 확인)을 맞바꾼 보기.",
   },
   {
     ...base,
@@ -152,7 +152,7 @@ const questions: Question[] = [
     ],
     answerIndex: 4,
     explanation:
-      "최소 신장 트리는 G의 신장 트리들 중 간선 가중치의 합이 최소인 신장 트리다(도시를 최소 비용으로 모두 연결). 시작 정점에서의 거리는 최단 경로 문제의 관심사. 근거: 강의자료9 p.33-34. 함정: MST와 최단 경로 트리를 같은 것으로 보는 것.",
+      "최소 신장 트리는 G의 신장 트리들 중 간선 가중치의 합이 최소인 신장 트리다(도시를 최소 비용으로 모두 연결). 시작 정점에서의 거리는 최단 경로 문제의 관심사. 근거: Lec9 p.33(보기1~5). 함정: MST와 최단 경로 트리를 같은 것으로 보는 것.",
   },
   {
     ...base,
@@ -210,7 +210,7 @@ const questions: Question[] = [
     ],
     answerIndex: 4,
     explanation:
-      "Find-set·Union은 각각 logV(알고리즘 8-2, 8-3)이므로 루프 전체 O(ElogV), 정렬과 합쳐 O(ElogV). 근거: 강의자료9 p.42(줄별 시간), p.35·39(Prim O(|E|log|V|), 힙 이용). 함정: O(|E||V|)는 벨만-포드의 수행 시간.",
+      "Find-set·Union은 각각 logV(알고리즘 8-2, 8-3)이므로 루프 전체 O(ElogV), 정렬과 합쳐 O(ElogV). 근거: Lec9 p.42(보기1·2·3·5), p.35·p.39(보기4). 함정: O(|E||V|)는 벨만-포드의 수행 시간.",
   },
   {
     ...base,
@@ -229,7 +229,7 @@ const questions: Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "[안정성 정리] Let (S, V-S) an arbitrary partition of vertices. Let {u, v} be the min-weight edge among those crossing S and V-S. Then there exists at least a min. spanning tree containing {u, v}. 프림은 S를 키우며, 크루스칼은 두 집합을 합치며 이 간선을 고른다. 근거: 강의자료9 p.110. 함정: '모든' MST에 포함된다가 아니라 '적어도 하나'.",
+      "[안정성 정리] Let (S, V-S) an arbitrary partition of vertices. Let {u, v} be the min-weight edge among those crossing S and V-S. Then there exists at least a min. spanning tree containing {u, v}. 프림은 S를 키우며, 크루스칼은 두 집합을 합치며 이 간선을 고른다. 근거: Lec9 p.110(보기1). 함정: '모든' MST에 포함된다가 아니라 '적어도 하나'.",
   },
   {
     ...base,
@@ -287,7 +287,7 @@ const questions: Question[] = [
     ],
     answerIndexes: [0, 1, 3],
     explanation:
-      "조건은 싸이클이 없는 유향 그래프, 위상 순서는 복수일 수 있다. 알고리즘 1은 진입 간선이 없는 정점을 고르고, 알고리즘 2는 DFS(DFS-TS)를 쓴다. 둘 다 Θ(|V|+|E|). 근거: 강의자료9 p.47, p.49, p.52. 함정: 진입/진출을 맞바꾼 보기.",
+      "조건은 싸이클이 없는 유향 그래프, 위상 순서는 복수일 수 있다. 알고리즘 1은 진입 간선이 없는 정점을 고르고, 알고리즘 2는 DFS(DFS-TS)를 쓴다. 둘 다 Θ(|V|+|E|). 근거: Lec9 p.47(보기1·2), p.49(보기3·4), p.52(보기4·5). 함정: 진입/진출을 맞바꾼 보기.",
   },
   {
     ...base,
@@ -306,7 +306,7 @@ const questions: Question[] = [
     ],
     answerIndexes: [0, 1, 2],
     explanation:
-      "단일 시작점: 다익스트라(음의 가중치 불허), 벨만-포드(음의 가중치 허용), 싸이클이 없는 그래프(DAG)는 위상 정렬을 이용한 DAG-ShortestPath. 모든 쌍: 플로이드-워샬. 크루스칼은 최소 신장 트리. 근거: 강의자료9 p.57. 함정: DAG 최단 경로를 MST 알고리즘과 혼동.",
+      "단일 시작점: 다익스트라(음의 가중치 불허), 벨만-포드(음의 가중치 허용), 싸이클이 없는 그래프(DAG)는 위상 정렬을 이용한 DAG-ShortestPath. 모든 쌍: 플로이드-워샬. 크루스칼은 최소 신장 트리. 근거: Lec9 p.57(보기1~5), p.100(보기4), p.60(보기5). 함정: DAG 최단 경로를 MST 알고리즘과 혼동.",
   },
   {
     ...base,
@@ -325,7 +325,7 @@ const questions: Question[] = [
     ],
     answerIndex: 4,
     explanation:
-      "최단 경로는 가중치 합이 최소인 경로이며, 간선 수(홉 수)가 최소인 경로와 다를 수 있다(홉 수 최소는 가중치 없는 그래프의 BFS). 근거: 강의자료9 p.56, p.58. 함정: BFS의 '최소 홉 수'와 가중치 최단 경로를 혼동.",
+      "최단 경로는 가중치 합이 최소인 경로이며, 간선 수(홉 수)가 최소인 경로와 다를 수 있다(홉 수 최소는 가중치 없는 그래프의 BFS). 근거: Lec9 p.58(보기1), p.56(보기2~5), p.32(보기5). 함정: BFS의 '최소 홉 수'와 가중치 최단 경로를 혼동.",
   },
   {
     ...base,
@@ -454,7 +454,7 @@ const questions: Question[] = [
     ],
     answerIndex: 4,
     explanation:
-      "k, i, j의 3중 반복 — 문제의 총 수 Θ(|V|³), 각 문제의 계산에 Θ(1) → Θ(|V|³). 근거: 강의자료9 p.72-73, p.83-84, p.99. 함정: 결과 행렬 크기(|V|²)와 수행 시간을 혼동.",
+      "k, i, j의 3중 반복 — 문제의 총 수 Θ(|V|³), 각 문제의 계산에 Θ(1) → Θ(|V|³). 근거: Lec9 p.72(보기1), p.73(보기2), p.84(보기3), p.83(보기4), p.99(보기5). 함정: 결과 행렬 크기(|V|²)와 수행 시간을 혼동.",
   },
   {
     ...base,
@@ -499,7 +499,7 @@ const questions: Question[] = [
     ],
     answerIndex: 1,
     explanation:
-      "강하게 연결됨: 유향 그래프의 모든 정점 쌍에 양방향 경로가 있는 것. 알고리즘은 DFS(G)로 f[v] → GR 생성 → f[v]가 큰 정점부터 DFS(GR) → 분리된 트리 = 강연결요소, Θ(|V|+|E|). v와 w가 같은 요소 ⇔ GR의 DFS 숲에서 같은 트리(p.111). 근거: 강의자료9 p.104-105, p.111. 함정: 완료 시간이 '작은' 정점부터 시작하는 보기.",
+      "강하게 연결됨: 유향 그래프의 모든 정점 쌍에 양방향 경로가 있는 것. 알고리즘은 DFS(G)로 f[v] → GR 생성 → f[v]가 큰 정점부터 DFS(GR) → 분리된 트리 = 강연결요소, Θ(|V|+|E|). v와 w가 같은 요소 ⇔ GR의 DFS 숲에서 같은 트리(p.111). 근거: Lec9 p.105(보기1~4), p.104(보기5), p.111(보기2). 함정: 완료 시간이 '작은' 정점부터 시작하는 보기.",
   },
   {
     ...base,
@@ -512,7 +512,7 @@ const questions: Question[] = [
     choices: ["DFS·BFS(인접 리스트) — Θ(|V|+|E|)", "BellmanFord — Θ(|E||V|)", "DAG-ShortestPath — Θ(|E|log|V|)", "FloydWarshall — Θ(|V|³)", "stronglyConnectedComponent — Θ(|V|²)"],
     answerIndexes: [0, 1, 3],
     explanation:
-      "DFS·BFS Θ(|V|+|E|), 프림·크루스칼·다익스트라 O(|E|log|V|)(힙), 벨만-포드 Θ(|E||V|), 플로이드-워샬 Θ(|V|³), DAG-ShortestPath·위상 정렬·강연결요소 Θ(|V|+|E|). 근거: 강의자료9 p.27, p.31, p.63, p.99, p.100, p.105. 함정: DAG 최단 경로에 다익스트라의 힙 시간을 붙이는 것.",
+      "DFS·BFS Θ(|V|+|E|), 프림·크루스칼·다익스트라 O(|E|log|V|)(힙), 벨만-포드 Θ(|E||V|), 플로이드-워샬 Θ(|V|³), DAG-ShortestPath·위상 정렬·강연결요소 Θ(|V|+|E|). 근거: Lec9 p.27·p.31(보기1), p.63(보기2), p.100(보기3), p.99(보기4), p.105(보기5). 함정: DAG 최단 경로에 다익스트라의 힙 시간을 붙이는 것.",
   },
 ];
 
