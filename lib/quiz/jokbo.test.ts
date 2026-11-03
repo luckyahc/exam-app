@@ -194,7 +194,7 @@ describe("기존 과목 회귀 · 새 과목 등록", () => {
 
   it("알고리즘: 족보 주제 챕터 5개, 족보 53 + 일반 13(2026-10-15, 족보에 없던 주제 — dc 4·dp 9) + 족보 유형 생성 40(2026-10-16, analysis 10·recurrence 15·sorting 15)", async () => {
     expect("status" in algorithm).toBe(false);
-    expect(algorithm.chapters.map((c) => c.id)).toEqual(["analysis", "recurrence", "sorting", "dc", "dp", "greedy"]); // greedy는 기말(2026-11-03)
+    expect(algorithm.chapters.map((c) => c.id)).toEqual(["analysis", "recurrence", "sorting", "dc", "dp", "greedy", "graph"]); // greedy·graph는 기말(2026-11-03)
     const all = (await Promise.all(algorithm.chapters.filter((c) => c.exam === "2-2-mid").map((c) => c.load()))).flat();
     expect(all.filter(isJokbo)).toHaveLength(53);
     expect(all.filter((q) => !isJokbo(q) && !q.basedOn).map((q) => q.chapter)).toEqual([...Array(4).fill("dc"), ...Array(9).fill("dp")]);

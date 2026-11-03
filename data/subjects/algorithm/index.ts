@@ -21,6 +21,7 @@ const algorithm = {
     { id: "dp", exam: "2-2-mid", title: "동적 계획법", shortTitle: "동적 계획법", minQuestions: 15, load: (): Promise<Question[]> => Promise.all([import("./dp"), import("./mockExams")]).then(([m, x]) => [...m.default, ...x.mockQuestions("dp")]) },
     // 기말(2026-11-03): 강의 자료 6·9 생성 문항 — 형식 docs/final/algorithm-format.md, 주제-문항 표 docs/final/algorithm-coverage.md
     { id: "greedy", exam: "2-2-final", title: "그리디 알고리즘", shortTitle: "그리디", minQuestions: 32, load: (): Promise<Question[]> => import("./greedy").then((m) => m.default) },
+    { id: "graph", exam: "2-2-final", title: "그래프 알고리즘", shortTitle: "그래프", minQuestions: 32, load: (): Promise<Question[]> => import("./graph").then((m) => m.default) },
   ],
 } as const satisfies SubjectDef;
 
