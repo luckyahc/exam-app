@@ -59,6 +59,8 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
 
       {exams.map((exam) => {
         const own = chapters.filter((c) => c.exam === exam.id);
+        // 다른 시험 챕터에 있지만 이 시험에도 속하는 문항(alsoExam)
+        const also = chapters.filter((c) => c.exam !== exam.id).flatMap((c) => c.also.filter((a) => a.exams.includes(exam.id)));
         const current = exam.id === CURRENT_EXAM;
         return (
           <details key={exam.id} open={current} className="group rounded-2xl border border-border p-4 sm:p-5">
@@ -74,7 +76,7 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
             </summary>
             <div className="mt-6 flex flex-col gap-8">
               {own.length > 0 ? (
-                <ExamBody subject={subject} exam={exam.id} chapters={own} progress={current} />
+                <ExamBody subject={subject} exam={exam.id} chapters={own} also={also} progress={current} />
               ) : (
                 <p className="text-sm text-muted">이 시험 범위의 챕터가 아직 없습니다. 강의자료가 추가되면 여기에 챕터와 문제가 생깁니다.</p>
               )}
@@ -87,12 +89,13 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
 }
 
 /** 한 시험 범위의 분류별 풀기·모의시험 상자와 챕터 카드. 과목 전체 퀴즈 링크는 모두 `exam=`으로 이 시험 챕터만 고른다. `progress`가 거짓(지난 시험)이면 진행률을 숨긴다 */
-function ExamBody({ subject, exam, chapters, progress }: { subject: SubjectDef; exam: string; chapters: ChapterMeta[]; progress: boolean }) {
+function ExamBody({ subject, exam, chapters, also, progress }: { subject: SubjectDef; exam: string; chapters: ChapterMeta[]; also: ChapterMeta["also"]; progress: boolean }) {
   const allIds = chapters.flatMap((c) => c.ids);
-  const stars = chapters.reduce((n, c) => n + c.starIds.length, 0);
-  const jokbo = chapters.reduce((n, c) => n + c.jokboIds.length, 0);
+  // alsoExam 문항(다른 시험 챕터에 있는 문항)은 과목 전체 퀴즈(loadSubject)에 들어가므로 분류별 개수에도 더한다. 모의시험 세트 개수에는 넣지 않는다
+  const stars = chapters.reduce((n, c) => n + c.starIds.length, 0) + also.filter((a) => a.star).length;
+  const jokbo = chapters.reduce((n, c) => n + c.jokboIds.length, 0) + also.filter((a) => a.jokbo).length;
   const examples = chapters.reduce((n, c) => n + c.exampleIds.length, 0);
-  const related = chapters.reduce((n, c) => n + c.relatedIds.length, 0);
+  const related = chapters.reduce((n, c) => n + c.relatedIds.length, 0) + also.filter((a) => a.related).length;
   const related2 = chapters.reduce((n, c) => n + c.related2Ids.length, 0);
   const shorts = chapters.reduce((n, c) => n + c.shortIds.length, 0);
   // 족보관련1·2 모의시험 세트(id "-mock1-NNN"·"-mock2-NNN", data/subjects/algorithm/mockExams.ts)

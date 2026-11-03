@@ -258,6 +258,7 @@ const questions: Question[] = [
     ...jokboOf(["F22-2"], "jokbo", "floyd"),
     ...graph("algorithm-dp-jokbo-010"),
     id: "algorithm-dp-jokbo-010",
+    alsoExam: ["2-2-final"], // 강의 자료 9(그래프)에도 있는 주제 — 기말 범위에도 보인다
     topic: "모든 쌍 최단 경로",
     type: "mcq",
     difficulty: 2,
@@ -272,6 +273,7 @@ const questions: Question[] = [
     ...jokboOf(["F22-3"], "jokbo", "floyd"),
     ...graph("algorithm-dp-jokbo-011"),
     id: "algorithm-dp-jokbo-011",
+    alsoExam: ["2-2-final"], // 강의 자료 9(그래프)에도 있는 주제 — 기말 범위에도 보인다
     topic: "모든 쌍 최단 경로",
     type: "mcq",
     difficulty: 2,
@@ -286,6 +288,7 @@ const questions: Question[] = [
     ...jokboOf(["F23-8"], "generated", "floyd"),
     ...graph("algorithm-dp-jokbo-012"),
     id: "algorithm-dp-jokbo-012",
+    alsoExam: ["2-2-final"], // 강의 자료 9(그래프)에도 있는 주제 — 기말 범위에도 보인다
     topic: "모든 쌍 최단 경로",
     type: "blank",
     difficulty: 2,
@@ -316,6 +319,7 @@ const questions: Question[] = [
     ...jokboOf(["F22-4"], "jokbo", "edge-dp"),
     ...graph("algorithm-dp-jokbo-013"),
     id: "algorithm-dp-jokbo-013",
+    alsoExam: ["2-2-final"], // 강의 자료 9(그래프)에도 있는 주제 — 기말 범위에도 보인다
     topic: "간선 수 제한 거리 DP",
     type: "mcq",
     difficulty: 2,
@@ -330,6 +334,7 @@ const questions: Question[] = [
     ...jokboOf(["F23-4", "F22-5"], "jokbo", "edge-dp"),
     ...graph("algorithm-dp-jokbo-014"),
     id: "algorithm-dp-jokbo-014",
+    alsoExam: ["2-2-final"], // 강의 자료 9(그래프)에도 있는 주제 — 기말 범위에도 보인다
     topic: "간선 수 제한 거리 DP",
     type: "blank",
     difficulty: 2,
@@ -344,6 +349,7 @@ const questions: Question[] = [
     ...jokboOf(["F22-7"], "jokbo"),
     ...figureOf("algorithm-dp-jokbo-015", "방향 그래프: 0→a 8, 0→f 10, 0→g 13, f→a −11, a→b 7, f→b −5, f→g −3, g→e 8, g→d 8, e→f 12, e→c 5, b→c 5, c→d 4, d→e −7", 305, 213),
     id: "algorithm-dp-jokbo-015",
+    alsoExam: ["2-2-final"], // 강의 자료 9(그래프)에도 있는 주제 — 기말 범위에도 보인다
     topic: "단일 시작점 최단 경로",
     type: "mcq",
     difficulty: 3,

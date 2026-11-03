@@ -219,17 +219,17 @@ const questions: Question[] = [
     type: "mcq",
     difficulty: 2,
     slideRef: "Lec9 p.110",
-    prompt: "프림과 크루스칼 알고리즘의 이론적 근거인 안정성 정리의 내용으로 알맞은 것은?",
+    prompt: "프림과 크루스칼 알고리즘의 이론적 근거인 안정성 정리와 최소 신장 트리에 대한 설명으로 옳은 것은?",
     choices: [
       "정점 집합을 임의로 S와 V-S로 나눌 때, 둘을 가로지르는 간선 중 가중치가 최소인 간선 {u, v}를 포함하는 최소 신장 트리가 적어도 하나 존재한다.",
-      "그래프에서 가중치가 최대인 간선은 어떤 최소 신장 트리에도 포함되지 않는다.",
-      "정점 집합을 S와 V-S로 나눌 때, 가로지르는 간선 중 가중치가 최소인 간선은 모든 최단 경로에 포함된다.",
-      "최소 신장 트리는 그래프마다 항상 하나뿐이다.",
-      "가중치가 음수인 간선이 있으면 최소 신장 트리가 존재하지 않는다.",
+      "최소 신장 트리 문제의 입력은 싸이클이 없는 유향 그래프이다.",
+      "n개의 정점을 가진 최소 신장 트리는 n개의 간선을 갖는다.",
+      "프림 알고리즘은 그리디 알고리즘이므로 최적해를 보장하지 못한다.",
+      "크루스칼 알고리즘은 간선 집합을 가중치가 큰 순으로 정렬해 차례로 더한다.",
     ],
     answerIndex: 0,
     explanation:
-      "[안정성 정리] Let (S, V-S) an arbitrary partition of vertices. Let {u, v} be the min-weight edge among those crossing S and V-S. Then there exists at least a min. spanning tree containing {u, v}. 프림은 S를 키우며, 크루스칼은 두 집합을 합치며 이 간선을 고른다. 근거: Lec9 p.110(보기1). 함정: '모든' MST에 포함된다가 아니라 '적어도 하나'.",
+      "[안정성 정리] Let (S, V-S) an arbitrary partition of vertices. Let {u, v} be the min-weight edge among those crossing S and V-S. Then there exists at least a min. spanning tree containing {u, v}. 프림은 S를 키우며, 크루스칼은 두 집합을 합치며 이 간선을 고른다. 보기2: 조건은 무향 연결 그래프. 보기3: 트리는 항상 n-1개의 간선. 보기4: 프림은 그리디로 최적해를 보장하는 드문 예. 보기5: 가중치가 작은 순으로 정렬. 근거: Lec9 p.110(보기1), p.33(보기2·3), p.35(보기4), p.42(보기5). 함정: 안정성 정리는 그 간선을 포함하는 MST가 '적어도 하나' 있다는 것('모든' MST가 아님).",
   },
   {
     ...base,

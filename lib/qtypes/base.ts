@@ -1,3 +1,4 @@
+import type { ExamId } from "@/data/subjects/exams";
 import type { SubjectId } from "@/data/subjects/registry";
 
 /** ⭐ 근거: handwritten = 교수님 필기(OS), printed-emphasis = 슬라이드에 인쇄된 강조(데이터 통신),
@@ -74,6 +75,11 @@ export interface BaseQ<T extends string = string> {
    * 다시 켜려면 이 필드를 지운다
    */
   outOfScope?: true;
+  /**
+   * 챕터의 시험 범위(ChapterDef.exam) 말고도 속하는 시험 범위(2026-11-03). 예: 중간 dp 챕터의 플로이드·벨만-포드 족보는 기말(강의 자료 9)에도 나온다.
+   * 문항은 원래 챕터에 그대로 두고, 그 시험의 과목 전체 퀴즈(loadSubject)·분류별 풀기 개수에 함께 센다
+   */
+  alsoExam?: ExamId[];
 }
 
 /** 출제 범위 안의 문항만(outOfScope 제외) */

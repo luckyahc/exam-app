@@ -14,8 +14,11 @@ export async function loadChapter(subjectId: string, chapterId: string): Promise
 export async function loadSubject(subjectId: string, exam?: string): Promise<Question[]> {
   const subject = SUBJECTS.find((s) => s.id === subjectId);
   if (!subject) return [];
-  const chapters = exam ? subject.chapters.filter((c) => c.exam === exam) : subject.chapters;
-  return (await Promise.all(chapters.map((c) => c.load()))).flat();
+  if (!exam) return (await Promise.all(subject.chapters.map((c) => c.load()))).flat();
+  // 시험 범위 챕터 + 다른 챕터의 alsoExam 문항(그 시험에도 속하는 문항)
+  const own = (await Promise.all(subject.chapters.filter((c) => c.exam === exam).map((c) => c.load()))).flat();
+  const others = (await Promise.all(subject.chapters.filter((c) => c.exam !== exam).map((c) => c.load()))).flat();
+  return [...own, ...others.filter((q) => (q.alsoExam as readonly string[] | undefined)?.includes(exam))];
 }
 
 /**

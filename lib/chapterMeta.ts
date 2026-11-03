@@ -35,6 +35,8 @@ export interface ChapterMeta {
   difficulties: { difficulty: 1 | 2 | 3; count: number }[];
   /** 토픽: 처음 나온 순서 */
   topics: { topic: string; count: number; star: boolean }[];
+  /** 다른 시험 범위에도 속하는 문항(alsoExam) — 그 시험 화면의 분류별 풀기 개수에 더한다 */
+  also: { id: string; exams: ExamId[]; star: boolean; jokbo: boolean; related: boolean }[];
 }
 
 export async function chapterMeta(subject: SubjectDef, chapter: ChapterDef): Promise<ChapterMeta> {
@@ -69,6 +71,7 @@ export async function chapterMeta(subject: SubjectDef, chapter: ChapterDef): Pro
     rows: qs.map((q) => ({ type: q.type, topic: q.topic, exam: q.exam, hw: matchesStar(q, "handwritten"), hint: matchesStar(q, "hint"), jokbo: isJokbo(q), example: isExample(q), related: isJokboRelated(q), related2: isJokboRelated2(q), short: isShortAnswer(q), difficulty: q.difficulty })),
     difficulties: ([1, 2, 3] as const).map((d) => ({ difficulty: d, count: qs.filter((q) => q.difficulty === d).length })),
     topics: [...topicMap.values()],
+    also: qs.filter((q) => q.alsoExam?.length).map((q) => ({ id: q.id, exams: q.alsoExam!, star: q.exam, jokbo: isJokbo(q), related: isJokboRelated(q) })),
   };
 }
 

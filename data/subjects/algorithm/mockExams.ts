@@ -622,6 +622,7 @@ export const MOCK1: Question[] = [
     ...M("dp"),
     ...on("dp-jokbo-010", "dp-jokbo-011"),
     id: "algorithm-dp-mock1-025",
+    alsoExam: ["2-2-final"], // 플로이드·벨만-포드 — 강의 자료 9에도 있음
     topic: "모든 쌍 최단 경로",
     type: "mcq",
     difficulty: 2,
@@ -655,6 +656,7 @@ export const MOCK1: Question[] = [
     ...M("dp"),
     ...on("dp-jokbo-013", "dp-jokbo-014"),
     id: "algorithm-dp-mock1-026",
+    alsoExam: ["2-2-final"], // 플로이드·벨만-포드 — 강의 자료 9에도 있음
     topic: "간선 수 제한 거리 DP",
     type: "blank",
     difficulty: 2,
@@ -1297,6 +1299,7 @@ export const MOCK2: Question[] = [
     ...M("dp"),
     ...on("dp-jokbo-012"),
     id: "algorithm-dp-mock2-025",
+    alsoExam: ["2-2-final"], // 플로이드·벨만-포드 — 강의 자료 9에도 있음
     topic: "모든 쌍 최단 경로",
     type: "blank",
     difficulty: 2,
@@ -1330,6 +1333,7 @@ export const MOCK2: Question[] = [
     ...M("dp"),
     ...on("dp-jokbo-013"),
     id: "algorithm-dp-mock2-026",
+    alsoExam: ["2-2-final"], // 플로이드·벨만-포드 — 강의 자료 9에도 있음
     topic: "간선 수 제한 거리 DP",
     type: "mcq",
     difficulty: 2,
@@ -1380,6 +1384,7 @@ export const MOCK2: Question[] = [
     ...M("dp"),
     ...on("dp-jokbo-015"),
     id: "algorithm-dp-mock2-028",
+    alsoExam: ["2-2-final"], // 플로이드·벨만-포드 — 강의 자료 9에도 있음
     topic: "단일 시작점 최단 경로",
     type: "mcq",
     difficulty: 3,

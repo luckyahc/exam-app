@@ -36,6 +36,7 @@ const meta: ChapterMeta = {
     { topic: "TLB", count: 2, star: true },
     { topic: "Clock", count: 2, star: true },
   ],
+  also: [],
 };
 
 function play(steps: [string, number][]): SubjectRecords {
