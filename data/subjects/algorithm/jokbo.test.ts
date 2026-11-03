@@ -23,13 +23,13 @@ describe("알고리즘 족보 문항", async () => {
   const pickedMany = (id: string) => q(id).answerIndexes.map((i) => q(id).choices[i]);
   const blank = (id: string) => (answerKey(q(id)) as string[])[0];
 
-  it("inventory의 대표 문항 53개 = 데이터, 출현 기록 107개(같은 문제 54 포함)·중복 없음", () => {
+  it("inventory의 대표 문항 63개 = 데이터(기말 범위 10 포함, 2026-11-03), 출현 기록 118개(같은 문제 55 포함)·중복 없음", () => {
     const reps = [...new Set([...inventory.matchAll(/대표 `(algorithm-[a-z]+-jokbo-\d{3})`/g)].map((m) => m[1]))];
-    expect(reps).toHaveLength(53);
+    expect(reps).toHaveLength(63);
     expect(all.map((x) => x.id).sort()).toEqual(reps.sort());
     const occ = all.flatMap((x) => x.jokbo!.occurrences.map((o) => `${o.term} ${o.number}`));
-    expect(occ).toHaveLength(107);
-    expect(new Set(occ).size).toBe(107);
+    expect(occ).toHaveLength(118);
+    expect(new Set(occ).size).toBe(118);
     for (const m of inventory.matchAll(/\| \d+ \| ([A-Z]\d\d)-([^ |]+) \| [^|]+ \| (?:대표|같은 문제 →) `(algorithm-[a-z]+-jokbo-\d{3})`/g)) {
       const n = m[2] === "미표기" ? "번호 미표기" : m[2];
       expect(byId.get(m[3])!.jokbo!.occurrences.some((o) => o.file && o.number === n), `${m[1]}-${m[2]} → ${m[3]}`).toBe(true);
@@ -43,7 +43,7 @@ describe("알고리즘 족보 문항", async () => {
 
   it("그림: public/jokbo/algorithm/<id>.png, 가로 1200px 이하·300KB 이하, 실제 크기 = figure 크기", () => {
     const withFig = all.filter((x) => x.figure);
-    expect(withFig.map((x) => x.id)).toEqual(["algorithm-dp-jokbo-010", "algorithm-dp-jokbo-011", "algorithm-dp-jokbo-012", "algorithm-dp-jokbo-013", "algorithm-dp-jokbo-014", "algorithm-dp-jokbo-015"]);
+    expect(withFig.map((x) => x.id)).toEqual(["algorithm-dp-jokbo-010", "algorithm-dp-jokbo-011", "algorithm-dp-jokbo-012", "algorithm-dp-jokbo-013", "algorithm-dp-jokbo-014", "algorithm-dp-jokbo-015", ...[1, 3, 4, 5, 6, 7, 8, 2].map((n) => `algorithm-graph-jokbo-00${n}`).sort()]);
     for (const x of withFig) {
       const file = path.join(ROOT, "public", x.figure!.src);
       const buf = readFileSync(file);

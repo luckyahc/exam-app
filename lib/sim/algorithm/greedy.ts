@@ -176,3 +176,35 @@ export function huffmanDecode(codes: Readonly<Record<string, string>>, bits: str
   if (cur) throw new Error("남은 비트");
   return out;
 }
+
+// ── 기말 범위 족보(2026-11-03, docs/jokbo/algorithm/inventory.md §4 #112~) 정답 검증용 전수 탐색 ──
+
+/** 순열 전부 */
+export function permutations<T>(xs: readonly T[]): T[][] {
+  if (xs.length <= 1) return [[...xs]];
+  return xs.flatMap((x, i) => permutations([...xs.slice(0, i), ...xs.slice(i + 1)]).map((p) => [x, ...p]));
+}
+
+/** 서로 겹치지 않는 구간을 가장 많이 고른 수(전수 탐색, 끝 = 다음 시작 허용). 구간 = [시작, 끝] */
+export function maxCompatibleBrute(intervals: readonly (readonly [number, number])[]): number {
+  let best = 0;
+  for (let mask = 0; mask < 1 << intervals.length; mask++) {
+    const xs = intervals.filter((_, i) => mask & (1 << i)).sort((a, b) => a[0] - b[0]);
+    if (xs.every((x, i) => i === 0 || xs[i - 1][1] <= x[0])) best = Math.max(best, xs.length);
+  }
+  return best;
+}
+
+/** 전자레인지(F23-18): 하나씩 차례로 데우고(데우는 시간 합), 데운 즉시 먹기 시작. 모든 순서 중 마지막 사람이 다 먹는 시각의 최솟값 */
+export function lunchMinFinish(boxes: readonly (readonly [number, number])[]): number {
+  const finish = (order: (readonly [number, number])[]) => {
+    let t = 0;
+    let end = 0;
+    for (const [heat, eat] of order) {
+      t += heat;
+      end = Math.max(end, t + eat);
+    }
+    return end;
+  };
+  return Math.min(...permutations(boxes).map(finish));
+}

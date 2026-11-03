@@ -99,7 +99,7 @@ describe("알고리즘 족보관련1·2 모의시험", async () => {
   });
 
   it("장·타입·난이도 분포 = 족보 대표 문항 비율(세트 30문항 기준 ±1), 두 세트 같음", () => {
-    const jokbo = all.filter(isJokbo) as Q[];
+    const jokbo = all.filter((x) => isJokbo(x) && !["greedy", "graph"].includes(x.chapter)) as Q[]; // 모의시험은 중간 범위 족보 비율 기준(기말 족보 2026-11-03 제외)
     // 족보 원문이 예/아니오 2지선다인 mcq는 원문 형식 ox
     const typeOf = (x: Q) => (x.type === "mcq" && x.choices.length === 2 && x.choices.every((c) => c === "예" || c === "아니오") ? "ox" : x.type);
     const ratio = (xs: Q[], key: (x: Q) => string | number) => {

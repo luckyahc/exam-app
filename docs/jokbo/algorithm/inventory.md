@@ -36,11 +36,11 @@
 | 항목 | 수 |
 |---|---|
 | 원문 문항(파일에 있는 것, E19 제외) | 131 |
-| 범위 밖(강의자료 1~5에 없는 주제) | 24 |
+| 범위 밖(강의자료 1~5에 없는 주제) | 24 (그중 11개는 2026-11-03 기말 범위로 추가 — §4 #112~122) |
 | 범위 안 원문 | 107 |
-| 대표 문항 | 53 |
-| 같은 문제로 합친 원문 | 54 |
-| variantGroup | 13 |
+| 대표 문항 | 53 + 기말 10 = 63 |
+| 같은 문제로 합친 원문 | 54 + 기말 1 = 55 |
+| variantGroup | 14 |
 | 애매 | 0 |
 | 원본 해설 있는 원문(범위 안) | 58 (Sprint 21 원본 대조로 정정 — M21·T22·F22 캡처에 LMS 정답·해설이 있음, M22 교수 해설, S22 3·13) |
 
@@ -56,7 +56,7 @@
 | `dc` | 분할 정복 · 선택 | 자료 4 | 6 |
 | `dp` | 동적 계획법(최단 경로 DP 포함) | 자료 5 | 17 |
 
-그리디·그래프 탐색·트리(B-/레드블랙)·NP는 족보에 있으나 강의 자료 1~5에 없어 범위 밖으로 두었다(§5).
+그리디·그래프 탐색·트리(B-/레드블랙)·NP는 족보에 있으나 강의 자료 1~5에 없어 범위 밖으로 두었다(§5). 기말(2026-11-03)에 그리디(강의 자료 6 → 챕터 `greedy`)·그래프(강의 자료 9 → 챕터 `graph`) 문항 11개를 추가했다(§4 #112~122).
 
 ## 4. 범위 안 문항 목록과 판정
 
@@ -176,8 +176,21 @@
 | 109 | F23-7 | 계단 경로 친구 최대 | 같은 문제 → `algorithm-dp-jokbo-006` | 없음 | — | — |
 | 110 | F23-8 | Floyd-Warshall D(d)의 (D) | 대표 `algorithm-dp-jokbo-012`, vg `floyd` | 없음 | blank | dp · 모든 쌍 최단 경로 |
 | 111 | F23-9 | 4년 장학금 최대 합 | 같은 문제 → `algorithm-dp-jokbo-001` | 없음 | — | — |
+| 112 | F22-6 | 다익스트라: 정점 0 → d 최단 거리 | 대표 `algorithm-graph-jokbo-001` | 있음(LMS 정답·해설) | mcq | graph · 다익스트라 (기말) |
+| 113 | F22-10 | 프림: a부터 포함 순서 | 대표 `algorithm-graph-jokbo-002` | 있음(LMS 정답·해설) | mcq | graph · 프림 (기말) |
+| 114 | F22-15 | DFS: 시계 방향 우선 방문 순서 | 대표 `algorithm-graph-jokbo-003`, vg `clockwise-search` | 있음(LMS 정답·해설) | mcq | graph · DFS (기말) |
+| 115 | F23-2 | 겨울나기: 사냥감 최대 수(활동 선택) | 대표 `algorithm-greedy-jokbo-001` | 없음 | blank | greedy · 회의실 배정 (기말) |
+| 116 | F23-10 | 위상 정렬 결과가 아닌 것 | 대표 `algorithm-graph-jokbo-004` | 없음 | mcq | graph · 위상 정렬 (기말) |
+| 117 | F23-13 | BFS: 1시 방향부터 시계 방향 큐 입력 순서 | 대표 `algorithm-graph-jokbo-005`, vg `clockwise-search` | 없음 | mcq | graph · BFS (기말) |
+| 118 | F23-14 | 가장 큰 강연결요소 | 대표 `algorithm-graph-jokbo-006` | 없음 | blank | graph · 강연결요소 (기말) |
+| 119 | F23-16 | 프림: a부터 포함 순서(113과 같은 그래프·보기, 보기 순서만 다름) | 같은 문제 → `algorithm-graph-jokbo-002` | 없음 | — | — |
+| 120 | F23-17 | DFS span 최소·최대 | 대표 `algorithm-graph-jokbo-007` | 없음 | blank | graph · DFS 방문 순서 (기말) |
+| 121 | F23-18 | 전자레인지: 가장 빨리 끝나는 점심 시간 | 대표 `algorithm-greedy-jokbo-002` | 없음 | blank | greedy · 그리디 스케줄링 (기말) |
+| 122 | F23-19 | 프림: 서로 다른 최소 신장 트리 개수 | 대표 `algorithm-graph-jokbo-008` | 없음 | blank | graph · 프림 (기말) |
 
-variantGroup 13개(접두사 `algorithm-vg-`): `nfact-bounds`(analysis 001·002·003), `ten-inputs`(004·005), `asym-relation`(007·008), `master-apply`(recurrence 004·010), `counting-c2`(sorting 001·002), `partition`(006·007·008), `linear-select-group`(dc 002·003), `select-rank`(004·005), `matrix-chain`(dp 002·003), `matrix-path`(004·005), `pebble`(008·009), `floyd`(010·011·012), `edge-dp`(013·014).
+**기말 범위 추가(2026-11-03, 강의 자료 6·9)**: #112~122는 처음에 "강의 자료 1~5 범위 밖"(§5)으로 뺐던 문항을 원본(F22 LMS 캡처, 2023 기말기출.pdf 스캔)에서 다시 판독해 넣었다 — 데이터 `data/subjects/algorithm/finalJokbo.ts`, 검증 `finalJokbo.test.ts`. F23은 정답표가 없어 정답을 시뮬레이터(`lib/sim/algorithm/greedy.ts`·`graph.ts`)로 구했다(explanationSource generated). F22-6·10·15의 LMS 정답은 시뮬레이터와 같다. F22-7(벨만-포드)과 F22-2~5·F23-4·8(플로이드-워샬)은 이미 중간 범위 dp 챕터에 있어(강의 자료 5) 옮기지 않았다.
+
+variantGroup 14개(접두사 `algorithm-vg-`): `nfact-bounds`(analysis 001·002·003), `ten-inputs`(004·005), `asym-relation`(007·008), `master-apply`(recurrence 004·010), `counting-c2`(sorting 001·002), `partition`(006·007·008), `linear-select-group`(dc 002·003), `select-rank`(004·005), `matrix-chain`(dp 002·003), `matrix-path`(004·005), `pebble`(008·009), `floyd`(010·011·012), `edge-dp`(013·014), `clockwise-search`(graph 003·005, 기말).
 
 ## 5. 범위 밖(강의자료 1~5에 없는 주제) — 문항 만들지 않음
 
@@ -185,9 +198,9 @@ variantGroup 13개(접두사 `algorithm-vg-`): `nfact-bounds`(analysis 001·002�
 |---|---|
 | M21-6, M21-12 | B-트리 · 레드블랙 트리 |
 | M22-16 ~ M22-19 (4) | 레드블랙 트리 · B-트리 |
-| F22-6, F22-10, F22-15 | NP · 다익스트라 · 위상 정렬 · MST · DFS/BFS · 분리 집합 · 해시 중 하나(대조표가 묶어서만 적음) |
-| F23-1, 3, 5, 10~17, 19, 20 (13) | B-트리 · 분리 집합 · 레드블랙 트리 · 위상 정렬 · 해시 · NP · BFS · SCC · 프림 · DFS span |
-| F23-2, F23-18 | 활동 선택 · 도시락 스케줄링(그리디) |
+| ~~F22-6, F22-10, F22-15~~ | 다익스트라 · 프림 · DFS — 기말 범위로 추가(§4 #112~114) |
+| F23-1, 3, 5, 11, 12, 15, 20 (7) | B-트리 · 분리 집합(Find-Set 경로 압축 — 강의 자료 9에 없음) · 레드블랙 트리 · 해시 · NP — 기말 범위(강의 자료 6·9)에도 없어 계속 제외 |
+| ~~F23-2, 10, 13, 14, 16~19~~ | 활동 선택 · 위상 정렬 · BFS · SCC · 프림 · DFS span · 도시락 스케줄링 — 기말 범위로 추가(§4 #115~122) |
 
 ## 6. 충돌·주의 (Sprint 21에 확정 — 상세: `docs/verification/algorithm-*.md`)
 

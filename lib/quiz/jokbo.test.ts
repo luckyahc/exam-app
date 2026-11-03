@@ -214,7 +214,7 @@ describe("실제 데이터 족보 필터 점검(Sprint 22)", () => {
   // 과목 홈 "족보만 풀기 (N)"·챕터 시작 개수·퀴즈(/quiz?…&source=jokbo)·문제 목록 분류가 모두 같은 문항을 가리킨다
   const expected: Record<string, Record<string, number>> = {
     os: { ch02: 10, ch03: 13, ch07: 14, ch08: 13, ch09: 6 },
-    algorithm: { analysis: 9, recurrence: 11, sorting: 12, dc: 6, dp: 15 },
+    algorithm: { analysis: 9, recurrence: 11, sorting: 12, dc: 6, dp: 15, greedy: 2, graph: 8 },
   };
   it.each(SUBJECTS.map((s) => [s.id, s] as const))("%s: 챕터별 족보 수 = 챕터 메타 = 퀴즈 필터 = 문제 목록 필터", async (id, s) => {
     let total = 0;

@@ -242,3 +242,70 @@ export function scc(adj: Adj, vertices: readonly string[] = Object.keys(adj)): s
   }
   return comps;
 }
+
+// ── 기말 범위 족보(2026-11-03) 정답 검증용 전수 탐색 ──
+
+/** 최소 신장 트리의 개수(간선 n-1개 조합 전수 탐색, 가중치 합이 최소인 신장 트리만) */
+export function mstCount(vertices: readonly string[], edges: readonly Edge[]): { count: number; weight: number } {
+  const n = vertices.length;
+  let best = Infinity;
+  let count = 0;
+  const pick = (start: number, chosen: Edge[]) => {
+    if (chosen.length === n - 1) {
+      const parent = new Map(vertices.map((v) => [v, v]));
+      const find = (x: string): string => (parent.get(x) === x ? x : find(parent.get(x)!));
+      for (const [u, v] of chosen) {
+        const [a, b] = [find(u), find(v)];
+        if (a === b) return;
+        parent.set(a, b);
+      }
+      const w = chosen.reduce((s, e) => s + e[2], 0);
+      if (w < best) [best, count] = [w, 1];
+      else if (w === best) count++;
+      return;
+    }
+    for (let i = start; i < edges.length; i++) pick(i + 1, [...chosen, edges[i]]);
+  };
+  pick(0, []);
+  return { count, weight: best };
+}
+
+/**
+ * 무향 트리에서 v부터 가능한 모든 DFS 방문 순서(자식 순서를 모두 바꿔 봄)에 대해, 집합 S의 (최대 방문 번호 − 최소 방문 번호)의 최솟값·최댓값.
+ * 트리에서 자식 c의 방문 번호 = 부모 번호 + 1 + 앞선 형제들의 부분 트리 크기이므로, S를 포함하는 부분 트리의 노드에서만 자식 순서를 바꿔 본다.
+ */
+export function dfsSpanRange(adj: Adj, root: string, s: readonly string[]): [number, number] {
+  const kids: Record<string, string[]> = {};
+  const size: Record<string, number> = {};
+  const hasS: Record<string, boolean> = {};
+  const build = (x: string, p: string | null): number => {
+    kids[x] = (adj[x] ?? []).filter((y) => y !== p);
+    hasS[x] = s.includes(x);
+    size[x] = 1 + kids[x].reduce((t, c) => t + build(c, x), 0);
+    if (kids[x].some((c) => hasS[c])) hasS[x] = true;
+    return size[x];
+  };
+  build(root, null);
+  const perms = (xs: string[]): string[][] => (xs.length <= 1 ? [xs] : xs.flatMap((x, i) => perms([...xs.slice(0, i), ...xs.slice(i + 1)]).map((r) => [x, ...r])));
+  // 노드 x가 번호 n일 때 x의 부분 트리 안 S 노드 번호 목록들(가능한 모든 경우)
+  const cases = (x: string, n: number): number[][] => {
+    const own = s.includes(x) ? [n] : [];
+    if (!kids[x].some((c) => hasS[c])) return [own];
+    const out: number[][] = [];
+    for (const order of perms(kids[x])) {
+      let acc: number[][] = [own];
+      let next = n + 1;
+      for (const c of order) {
+        if (hasS[c]) {
+          const sub = cases(c, next);
+          acc = acc.flatMap((a) => sub.map((b) => [...a, ...b]));
+        }
+        next += size[c];
+      }
+      out.push(...acc);
+    }
+    return out;
+  };
+  const spans = cases(root, 1).map((ns) => Math.max(...ns) - Math.min(...ns));
+  return [Math.min(...spans), Math.max(...spans)];
+}
