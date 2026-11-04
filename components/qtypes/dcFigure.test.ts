@@ -105,10 +105,10 @@ const contrast = (a: string, b: string) => {
 describe("그림 색 대비 — 라이트·다크 모두(배경·surface 대비)", () => {
   const css = readFileSync(resolve(__dirname, "../../app/globals.css"), "utf8");
   const themes = { light: tokens(css, ":root"), dark: tokens(css, ".dark") };
-  it.each(Object.entries(themes))("%s: 글자(foreground) ≥ 4.5:1, 선(primary·muted) ≥ 3:1", (_, t) => {
-    for (const bg of [t.background, t.surface]) {
-      expect(contrast(t.foreground, bg)).toBeGreaterThanOrEqual(4.5);
-      expect(contrast(t.primary, bg)).toBeGreaterThanOrEqual(3);
+  // 그림의 이전 토큰 이름은 새 토큰을 가리킨다(globals.css): foreground·primary → sumi, background → paper, surface → paper-deep
+  it.each(Object.entries(themes))("%s: 글자·주 선(sumi) ≥ 4.5:1, 보조선(muted) ≥ 3:1", (_, t) => {
+    for (const bg of [t.paper, t["paper-deep"]]) {
+      expect(contrast(t.sumi, bg)).toBeGreaterThanOrEqual(4.5);
       expect(contrast(t.muted, bg)).toBeGreaterThanOrEqual(3);
     }
   });

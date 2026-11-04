@@ -17,6 +17,10 @@ export const bookmarksKey = (subjectId: string) => `examapp:${subjectId}:bookmar
 export const memoKey = (subjectId: string) => `examapp:${subjectId}:memo`;
 /** 모의시험 세트(힌트관련1~5) 회차별 점수. lib/storage/setScoresStore.ts */
 export const setScoresKey = (subjectId: string) => `examapp:${subjectId}:sets`;
+/** 챕터 화면 "직접 고르기"의 마지막 설정(챕터 id → 조건·문제 수·순서·모드). lib/quiz/startPrefs.ts */
+export const startPrefsKey = (subjectId: string) => `examapp:${subjectId}:start`;
+/** 저장소에 쓸 수 있는지 확인용(쓰고 바로 지운다). 문제 풀이 화면의 나가기 확인 */
+export const PROBE_KEY = "examapp:probe";
 
 /** v1(다과목 전환 전, OS 단일 과목) 키. 01-architecture.md에 계획돼 있던 형식. */
 export const LEGACY_PROGRESS_PREFIX = "progress:";

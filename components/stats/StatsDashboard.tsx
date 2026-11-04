@@ -1,181 +1,264 @@
 "use client";
 
-import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 import { useSelectedSubject } from "@/components/subject/SubjectTabs";
+import { ButtonLink } from "@/components/ui/Button";
+import { List, ListRow } from "@/components/ui/ListRow";
+import { ProgressBar } from "@/components/ui/ProgressBar";
+import { SelectInput } from "@/components/ui/SelectInput";
 import { SUBJECTS } from "@/data/subjects/registry";
 import type { ChapterMeta } from "@/lib/chapterMeta";
-import { chapterStats, generatedAttempts, type StatLine, subjectStats, sumLines } from "@/lib/stats";
+import {
+  chapterStats,
+  generatedAttempts,
+  type StatLine,
+  subjectStats,
+  sumLines,
+} from "@/lib/stats";
 import { type RecordsState, useRecords } from "@/lib/storage/recordsStore";
-import { getSubject, subjectStyle } from "@/lib/subjects";
+import { getSubject } from "@/lib/subjects";
 
 const pct = (n: number | null) => (n == null ? "—" : `${Math.round(n * 100)}%`);
 const ratio = (a: number, b: number) => (b ? a / b : null);
 
 /**
- * `/stats?subject=all|id` 대시보드. 과목 → 챕터 → 토픽 단계로 진행률·정답률·⭐ 달성도를 보여 준다.
- * 수치 계산은 lib/stats.ts(완전히 맞음 기준). 기록을 읽기 전에는 "—"를 보여 준다.
+ * `/stats?subject=all|id`. 숫자는 위에 크게 몇 개만, 아래는 "약한 챕터 TOP 3 → 바로 풀기"처럼 다음 할 일로 잇는다.
+ * 수치 계산은 lib/stats.ts 그대로(완전히 맞음 기준). 기록을 읽기 전에는 아무 수치도 보이지 않는다.
  */
 export function StatsDashboard({ metas }: { metas: Record<string, ChapterMeta[]> }) {
   const selected = useSelectedSubject();
   const records = useRecords();
-  if (!records.loaded) return <p className="text-sm text-muted">기록을 불러오는 중…</p>;
+  if (!records.loaded) return <p className="text-sm text-muted">불러오는 중…</p>;
 
-  if (selected !== "all") return <SubjectDetail subjectId={selected} chapters={metas[selected] ?? []} records={records} />;
+  const subjectIds = selected === "all" ? SUBJECTS.map((s) => s.id) : [selected];
+  const lines = subjectIds.map((id) => ({
+    id,
+    line: subjectStats(records.subjects[id], metas[id] ?? []),
+  }));
+  const line = sumLines(lines.map((l) => l.line));
+  const weak = weakChapters(records, subjectIds, metas);
 
-  const lines = SUBJECTS.map((s) => ({ s, line: subjectStats(records.subjects[s.id], metas[s.id] ?? []) }));
-  return (
-    <div className="flex flex-col gap-5">
-      <Summary line={sumLines(lines.map((l) => l.line))} />
-      <ul className="grid gap-3 sm:grid-cols-2">
-        {lines.map(({ s, line }) => (
-          <li key={s.id} data-subject={s.id} style={subjectStyle(s)} className="flex flex-col gap-2 rounded-lg border border-border border-l-4 border-l-subject bg-surface p-4">
-            <div className="flex items-center justify-between gap-2">
-              <h2 className="font-semibold">{s.name}</h2>
-              <Link href={`/stats?subject=${s.id}`} className="text-sm text-primary hover:underline">
-                자세히 →
-              </Link>
-            </div>
-            {line.total === 0 ? <p className="text-sm text-muted">준비 중 — 아직 문제가 없습니다.</p> : <LineText line={line} />}
-            {line.total > 0 && <Bar value={line.solved} max={line.total} label={`${s.name} 진행률`} />}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function SubjectDetail({ subjectId, chapters, records }: { subjectId: string; chapters: ChapterMeta[]; records: RecordsState }) {
-  const subject = getSubject(subjectId)!;
-  const rec = records.subjects[subjectId];
-  const line = subjectStats(rec, chapters);
-  const gen = generatedAttempts(rec, new Set(chapters.flatMap((c) => c.ids)));
-
-  if (line.total === 0) {
-    return (
-      <p className="rounded-lg border border-border bg-surface p-4 text-sm text-muted">
-        {subject.name}: 준비 중 — 아직 문제가 없습니다.
-      </p>
-    );
-  }
+  if (line.total === 0)
+    return <p className="py-6 text-center text-sm text-muted">아직 문제가 없습니다.</p>;
 
   return (
-    <div className="flex flex-col gap-5" data-subject={subjectId} style={subjectStyle(subject)}>
-      <Summary line={line} />
-      {gen.attempts > 0 && (
-        <p className="text-xs text-muted">
-          &ldquo;비슷한 문제 새로 생성&rdquo;으로 푼 문제 {gen.attempts}회(완전히 맞음 {gen.correct}회)는 위 수치와 따로 셉니다.
-        </p>
+    <div className="flex flex-col gap-8">
+      {line.solved === 0 ? (
+        <p className="py-2 text-sm text-muted">아직 안 풂</p>
+      ) : (
+        <Summary line={line} reviewHref={`/review?subject=${selected}`} />
       )}
-      <ul className="flex flex-col gap-2">
-        {chapters.map((c) => {
-          const { line: cl, topics } = chapterStats(rec, c);
-          return (
-            <li key={c.chapterId} className="rounded-lg border border-border border-l-4 border-l-subject bg-surface">
-              <details className="group">
-                <summary className="flex cursor-pointer flex-col gap-2 p-3 [&::-webkit-details-marker]:hidden">
-                  <span className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-                    <span className="font-semibold">
-                      <span aria-hidden className="mr-1 inline-block text-muted transition-transform group-open:rotate-90">▸</span>
-                      {c.title}
-                    </span>
-                    <Link href={`/s/${subjectId}/chapter/${c.chapterId}`} className="text-xs text-primary hover:underline">
-                      풀러 가기
-                    </Link>
-                  </span>
-                  <LineText line={cl} />
-                  <Bar value={cl.solved} max={cl.total} label={`${c.shortTitle} 진행률`} />
-                </summary>
-                <div className="overflow-x-auto border-t border-border px-3 pb-3">
-                  <table className="w-full min-w-[20rem] text-sm">
-                    <thead className="text-left text-xs text-muted">
-                      <tr>
-                        <th className="py-2 pr-2 font-medium">토픽</th>
-                        <th className="py-2 pr-2 text-right font-medium">진행</th>
-                        <th className="py-2 pr-2 text-right font-medium">정답률</th>
-                        <th className="py-2 text-right font-medium">⭐</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {topics.map((t) => (
-                        <tr key={t.topic} className="border-t border-border">
-                          <td className="py-1.5 pr-2">{t.topic}</td>
-                          <td className="py-1.5 pr-2 text-right tabular-nums">
-                            {t.solved}/{t.total}
-                          </td>
-                          <td className="py-1.5 pr-2 text-right tabular-nums">{pct(t.rate)}</td>
-                          <td className="py-1.5 text-right tabular-nums">{t.star ? `${t.starDone}/${t.star}` : "—"}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </details>
-            </li>
-          );
-        })}
-      </ul>
+
+      {weak.length > 0 && (
+        <section aria-labelledby="weak-heading" className="flex flex-col gap-2">
+          <h2 id="weak-heading" className="font-display text-lg font-bold">
+            약한 챕터
+          </h2>
+          <List>
+            {weak.map((w) => (
+              <ListRow
+                key={`${w.subjectId}/${w.meta.chapterId}`}
+                href={
+                  w.line.openWrong > 0
+                    ? `/quiz?subject=${w.subjectId}&chapter=${w.meta.chapterId}&status=wrong&mode=instant`
+                    : `/s/${w.subjectId}/chapter/${w.meta.chapterId}`
+                }
+                title={`${selected === "all" ? `${getSubject(w.subjectId)?.name} ` : ""}${w.meta.chapterId.toUpperCase()} ${w.meta.shortTitle}`}
+                description={
+                  w.line.openWrong > 0
+                    ? `정답률 ${pct(w.line.rate)} · 틀린 문제 ${w.line.openWrong}개 풀기`
+                    : `정답률 ${pct(w.line.rate)}`
+                }
+              />
+            ))}
+          </List>
+        </section>
+      )}
+
+      {selected === "all" ? (
+        <SubjectList lines={lines} />
+      ) : (
+        <SubjectDetail
+          key={selected}
+          subjectId={selected}
+          chapters={metas[selected] ?? []}
+          records={records}
+        />
+      )}
     </div>
   );
 }
 
-/** 상단 요약 카드 4개 */
-function Summary({ line }: { line: StatLine }) {
-  const cards = [
-    { label: "진행률", value: pct(ratio(line.solved, line.total)), sub: `${line.solved}/${line.total}문제` },
-    { label: "정답률", value: pct(line.rate), sub: `완전히 맞음 ${line.correct}/${line.attempts}회` },
-    // ⭐ 문제가 없는 범위(⭐을 쓰지 않는 과목 등)는 "해당 없음"
-    line.star > 0
-      ? { label: "⭐ 달성도", value: pct(ratio(line.starDone, line.star)), sub: `${line.starDone}/${line.star}문제${starByText(line)}` }
-      : { label: "⭐ 달성도", value: "해당 없음", sub: "⭐ 문제 없음" },
-    { label: "남은 오답", value: String(line.openWrong), sub: "아직 못 맞힌 문제" },
+/** 약한 챕터: 푼 기록이 있고 다 맞히지는 않은 챕터를 정답률 낮은 순(같으면 남은 오답 많은 순)으로 3개 */
+function weakChapters(
+  records: RecordsState,
+  subjectIds: readonly string[],
+  metas: Record<string, ChapterMeta[]>,
+) {
+  return subjectIds
+    .flatMap((subjectId) =>
+      (metas[subjectId] ?? []).map((meta) => ({
+        subjectId,
+        meta,
+        line: chapterStats(records.subjects[subjectId], meta).line,
+      })),
+    )
+    .filter(
+      (c) =>
+        c.line.attempts > 0 && c.line.rate !== null && (c.line.rate < 1 || c.line.openWrong > 0),
+    )
+    .sort((a, b) => a.line.rate! - b.line.rate! || b.line.openWrong - a.line.openWrong)
+    .slice(0, 3);
+}
+
+/** 큰 숫자 2~3개 + 남은 오답이 있으면 복습으로 가는 한 줄. 시험 포인트는 마지막 풀이가 완전히 맞은 비율(lib/stats.ts) */
+function Summary({ line, reviewHref }: { line: StatLine; reviewHref: string }) {
+  const items = [
+    {
+      label: "진행",
+      value: pct(ratio(line.solved, line.total)),
+      sub: `${line.solved}/${line.total}`,
+    },
+    { label: "정답률", value: pct(line.rate), sub: `${line.correct}/${line.attempts}회` },
+    ...(line.star > 0
+      ? [
+          {
+            label: "시험 포인트",
+            value: pct(ratio(line.starDone, line.star)),
+            sub: `${line.starDone}/${line.star}`,
+          },
+        ]
+      : []),
   ];
   return (
-    <div className="flex flex-col gap-2">
-      <dl className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {cards.map((c) => (
-          <div key={c.label} className="flex flex-col rounded-lg border border-border bg-surface p-3">
-            <dt className="text-xs text-muted">{c.label}</dt>
-            <dd className="text-2xl font-bold tabular-nums">{c.value}</dd>
-            <dd className="text-xs text-muted">{c.sub}</dd>
+    <div className="flex flex-col gap-3">
+      <dl className="grid grid-cols-3 gap-3">
+        {items.map((it) => (
+          <div key={it.label} className="flex flex-col">
+            <dt className="text-sm text-muted">{it.label}</dt>
+            <dd className="font-mono text-3xl font-bold tabular-nums">{it.value}</dd>
+            <dd className="font-mono text-xs text-muted tabular-nums">{it.sub}</dd>
           </div>
         ))}
       </dl>
-      <p className="text-xs text-muted">
-        정답률·⭐ 달성도는 완전히 맞힌 경우만 셉니다(부분 점수 제외). ⭐ 달성도 = ⭐ 문제 중 마지막 풀이가 완전히 맞은 문제의 비율.
-      </p>
+      {line.openWrong > 0 && (
+        <ButtonLink href={reviewHref} variant="text" className="self-start">
+          남은 오답 {line.openWrong}개 →
+        </ButtonLink>
+      )}
     </div>
   );
 }
 
-/** ⭐ 근거별 달성(OS: 교수님 필기 / 시험 힌트 — 두 근거가 다 있을 때만). 필기 ⭐에 힌트가 함께 붙은 문항은 양쪽에 든다 */
-function starByText(line: StatLine): string {
-  const b = line.starBy;
-  return b && b.hw > 0 && b.hint > 0 ? ` · 필기 ${b.hwDone}/${b.hw} · 힌트 ${b.hintDone}/${b.hint}` : "";
-}
-
-function LineText({ line }: { line: StatLine }) {
+function SubjectList({ lines }: { lines: { id: string; line: StatLine }[] }) {
+  const router = useRouter();
+  const pathname = usePathname();
   return (
-    <span className="flex flex-wrap gap-x-3 gap-y-0.5 text-sm">
-      <span>
-        진행 <b>{pct(ratio(line.solved, line.total))}</b> <span className="text-muted">({line.solved}/{line.total})</span>
-      </span>
-      <span>
-        정답률 <b>{pct(line.rate)}</b>
-      </span>
-      {line.star > 0 && (
-        <span>
-          ⭐ <b>{line.starDone}/{line.star}</b>
-          {starByText(line) && <span className="text-muted">{starByText(line)}</span>}
-        </span>
-      )}
-    </span>
+    <section aria-labelledby="subjects-heading" className="flex flex-col gap-2">
+      <h2 id="subjects-heading" className="font-display text-lg font-bold">
+        과목별
+      </h2>
+      <List>
+        {lines.map(({ id, line }) => (
+          <ListRow
+            key={id}
+            title={getSubject(id)?.name}
+            trailing={
+              line.total === 0
+                ? "준비 중"
+                : line.solved === 0
+                  ? "아직 안 풂"
+                  : pct(ratio(line.solved, line.total))
+            }
+            onClick={
+              line.total
+                ? () => router.replace(`${pathname}?subject=${id}`, { scroll: false })
+                : undefined
+            }
+            disabled={line.total === 0}
+          />
+        ))}
+      </List>
+    </section>
   );
 }
 
-function Bar({ value, max, label }: { value: number; max: number; label: string }) {
+function SubjectDetail({
+  subjectId,
+  chapters,
+  records,
+}: {
+  subjectId: string;
+  chapters: ChapterMeta[];
+  records: RecordsState;
+}) {
+  const rec = records.subjects[subjectId];
+  const gen = generatedAttempts(rec, new Set(chapters.flatMap((c) => c.ids)));
+  const ready = chapters.filter((c) => c.ids.length > 0);
+  const [topicChapter, setTopicChapter] = useState(ready[0]?.chapterId ?? "");
+  const picked = ready.find((c) => c.chapterId === topicChapter) ?? ready[0];
+  const topics = picked ? chapterStats(rec, picked).topics : [];
+
   return (
-    <span role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={max} aria-valuenow={value} className="block h-1.5 overflow-hidden rounded-full bg-border">
-      <span className="block h-full bg-subject" style={{ width: `${max ? (value / max) * 100 : 0}%` }} />
-    </span>
+    <>
+      <section aria-labelledby="chapters-heading" className="flex flex-col gap-2">
+        <h2 id="chapters-heading" className="font-display text-lg font-bold">
+          챕터별
+        </h2>
+        <List>
+          {ready.map((c) => {
+            const l = chapterStats(rec, c).line;
+            return (
+              <ListRow
+                key={c.chapterId}
+                href={`/s/${subjectId}/chapter/${c.chapterId}`}
+                title={`${c.chapterId.toUpperCase()} ${c.shortTitle}`}
+                description={l.solved > 0 ? `정답률 ${pct(l.rate)}` : "아직 안 풂"}
+                trailing={`${l.solved}/${l.total}`}
+              />
+            );
+          })}
+        </List>
+        {gen.attempts > 0 && (
+          <p className="text-xs text-muted">
+            비슷한 문제로 푼 {gen.attempts}회는 위 수치와 따로 셉니다.
+          </p>
+        )}
+      </section>
+
+      {picked && (
+        <section aria-labelledby="topics-heading" className="flex flex-col gap-3">
+          <h2 id="topics-heading" className="font-display text-lg font-bold">
+            토픽별
+          </h2>
+          <SelectInput
+            label="챕터"
+            hideLabel
+            placeholder={null}
+            value={picked.chapterId}
+            onChange={(e) => setTopicChapter(e.target.value)}
+            options={ready.map((c) => ({
+              value: c.chapterId,
+              label: `${c.chapterId.toUpperCase()} ${c.shortTitle}`,
+            }))}
+          />
+          <ul className="flex flex-col gap-3">
+            {topics.map((t) => (
+              <li key={t.topic} className="flex flex-col gap-1">
+                <div className="flex items-baseline justify-between gap-3 text-sm">
+                  <span className="min-w-0">{t.topic}</span>
+                  <span className="shrink-0 font-mono text-muted tabular-nums">
+                    {t.solved > 0 ? `${pct(t.rate)} · ` : ""}
+                    {t.solved}/{t.total}
+                  </span>
+                </div>
+                <ProgressBar value={t.solved} max={t.total} label={`${t.topic} 진행`} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </>
   );
 }

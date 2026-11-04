@@ -5,6 +5,22 @@ const nextConfig: NextConfig = {
     return [
       // Sprint 1의 OS 챕터 경로 → 다과목 구조의 과목 경로 (없는 챕터는 도착지에서 404)
       { source: "/chapter/:id", destination: "/s/os/chapter/:id", permanent: false },
+      // 디자인 개편 4단계: 과목 상세의 세그먼트(?view=)로 합친 화면. 예전 주소·저장된 세션의 돌아가기 주소를 살린다
+      {
+        source: "/s/:subject/glossary",
+        destination: "/s/:subject?view=glossary",
+        permanent: false,
+      },
+      {
+        source: "/s/:subject/questions",
+        destination: "/s/:subject?view=questions",
+        permanent: false,
+      },
+      {
+        source: "/s/:subject/functions",
+        destination: "/s/:subject?view=functions",
+        permanent: false,
+      },
     ];
   },
   async headers() {

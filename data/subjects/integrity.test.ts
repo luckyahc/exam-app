@@ -23,7 +23,7 @@ function themeTokens(selector: ":root" | ".dark") {
   const block =
     new RegExp(`(?:^|\\n)${selector.replace(".", "\\.")} \\{([^}]*)\\}`).exec(css)?.[1] ?? "";
   const get = (name: string) => new RegExp(`--${name}:\\s*(#[0-9a-fA-F]{6})`).exec(block)?.[1];
-  return { background: get("background"), surface: get("surface") };
+  return { background: get("paper"), surface: get("paper-deep") };
 }
 
 describe("과목 레지스트리", () => {

@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useEffectEvent, useState } from "react";
+import { PracticeView } from "@/components/practice/PracticeView";
 import { QuestionRenderer } from "@/components/qtypes/QuestionRenderer";
 import { useQuizShortcuts } from "@/lib/hooks/useQuizShortcuts";
 import type { GradeResult } from "@/lib/qtypes/base";
@@ -159,6 +160,27 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
         goTo={(i) => i >= 0 && i < total && goTo(i)}
         onSubmit={gradeAll}
         onSwitchView={() => setView("app")}
+      />
+    );
+
+  // 연습 모드(즉시 채점)는 개편된 화면. 시험 모드(기본 화면·실제 시험 화면)는 기존 화면 그대로
+  if (!isExam)
+    return (
+      <PracticeView
+        session={session}
+        q={q}
+        answer={answer}
+        result={result}
+        complete={complete}
+        gradedCount={gradedCount}
+        remaining={remaining}
+        generating={generating}
+        setAnswer={setAnswer}
+        submit={submit}
+        go={go}
+        goTo={goTo}
+        finish={() => finish(session)}
+        addSimilar={addSimilar}
       />
     );
 

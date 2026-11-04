@@ -4,7 +4,52 @@
    (toggled by lib/theme) instead of the OS `prefers-color-scheme` media query. */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* 디자인 토큰 (시험지: 흑백 + 빨간 펜 + 형광펜). 다크 모드는 .dark에서 값만 바꾼다 —
+   컴포넌트는 dark: 분기 없이 이 토큰만 쓴다.
+   shu·ok 라이트 값은 paper-deep 위 글자 대비 4.5:1을 맞추려고 시안(#D93A3A·#1E8E4E)보다 조금 어둡다. */
 :root {
+  --paper: #ffffff; /* 배경 */
+  --paper-deep: #f5f5f3; /* 카드·구분 면 */
+  --sumi: #141414; /* 글씨·선·주 버튼 */
+  --muted: #707070; /* 보조 글씨 */
+  --shu: #cc3737; /* 오답·빨간 펜 */
+  --ok: #1b7e45; /* 정답 */
+  --marker: #ffe45c; /* 시험 포인트 형광펜 */
+  --marker-ink: #141414; /* 형광펜 위 글씨 */
+}
+
+.dark {
+  --paper: #111111;
+  --paper-deep: #1b1b1b;
+  --sumi: #ededed;
+  --muted: #8e8e8e;
+  --shu: #ff6b6b;
+  --ok: #4cc38a;
+  --marker: #5c5114;
+  --marker-ink: #f5d547;
+}
+
+/* 하단 탭바 높이(components/layout/BottomTabBar: 3.5rem + 윗선 1.5px + 아이폰 홈 바 영역).
+   탭바 바로 위에 붙는 고정 버튼(챕터 화면)이 쓴다 */
+:root {
+  --tabbar-h: calc(3.5rem + 1.5px + env(safe-area-inset-bottom));
+}
+
+/* 이전 토큰 이름(개편 전 화면용). 새 토큰을 가리키기만 한다 — 화면을 다 옮기면 지운다.
+   변수로 한 단계 두는 이유: 시험 화면([data-exam-screen])이 이전 값을 그대로 고정할 수 있게. */
+:root {
+  --background: var(--paper);
+  --foreground: var(--sumi);
+  --surface: var(--paper-deep);
+  --border: color-mix(in srgb, var(--sumi) 15%, var(--paper));
+  --primary: var(--sumi);
+  --correct: var(--ok);
+  --incorrect: var(--shu);
+}
+
+/* 시험 모드의 실제 시험 화면은 이번 개편 대상이 아니다. 안에 들어가는 공용 부품(코드 블록·표·그림)이
+   개편 전 색·글꼴로 보이도록 이전 값을 고정한다. */
+[data-exam-screen] {
   --background: #ffffff;
   --foreground: #171717;
   --surface: #f8f9fb;
@@ -13,9 +58,12 @@
   --primary: #2563eb;
   --correct: #15803d;
   --incorrect: #b91c1c;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
 }
 
-.dark {
+.dark [data-exam-screen] {
   --background: #0b0f17;
   --foreground: #e6e8eb;
   --surface: #151a24;
@@ -26,7 +74,28 @@
   --incorrect: #f87171;
 }
 
+/* 연습 모드 화면(components/practice/*) 안의 공용 부품(코드 블록·표·그림·코드 편집기)은 시험 화면과 같은 파일이라 고치지 않고,
+   여기서만 형태 규칙을 맞춘다: 모서리 없음, 코드 입력칸 글자 16px(아이폰 포커스 확대 방지)·1.5px 먹선. 시험 화면에는 이 속성이 없다 */
+[data-practice] :where(.rounded, .rounded-md, .rounded-lg, .rounded-xl, .rounded-2xl) {
+  border-radius: 0;
+}
+
+[data-practice] textarea {
+  font-size: 16px;
+  border-width: 1.5px;
+  border-color: var(--sumi);
+  background-color: var(--paper);
+}
+
 @theme inline {
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-sumi: var(--sumi);
+  --color-shu: var(--shu);
+  --color-ok: var(--ok);
+  --color-marker: var(--marker);
+  --color-marker-ink: var(--marker-ink);
+  /* 이전 이름 */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
@@ -41,6 +110,17 @@
     "Malgun Gothic", "맑은 고딕", sans-serif;
 }
 
+/* inline이 아닌 @theme: font-display·font-mono 유틸리티가 var()를 참조해서 시험 화면이 덮어쓸 수 있다 */
+@theme {
+  /* 제목: 고운바탕(명조) */
+  --font-display:
+    var(--font-gowun-batang), "AppleMyungjo", "Batang", "바탕", "Noto Serif KR", serif;
+  /* 숫자·코드: IBM Plex Mono (한글은 본문 글꼴로) */
+  --font-mono:
+    var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, var(--font-pretendard),
+    monospace;
+}
+
 /* 과목 대표 색: 과목 영역 래퍼에 data-subject + 인라인 --subject-l/--subject-d(lib/subjects.ts의
    subjectStyle)를 붙이면 테마에 맞는 값이 --subject로 선택된다. 과목이 늘어도 이 규칙은 그대로다. */
 [data-subject] {
@@ -52,22 +132,32 @@
   --subject: var(--subject-d);
 }
 
-html {
-  color-scheme: light;
+/* 바텀시트(components/ui/BottomSheet) 열림 효과. 동작 줄이기 설정이면 바로 나타난다. */
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
 }
 
-html.dark {
-  color-scheme: dark;
-}
+@layer base {
+  html {
+    color-scheme: light;
+  }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-}
+  html.dark {
+    color-scheme: dark;
+  }
 
-/* 키보드 포커스 표시(Sprint 11 접근성): 마우스 클릭에는 안 보이고 Tab 이동 때만 테마 primary 색 테두리 */
-:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+  }
+
+  /* 키보드 포커스 표시(Sprint 11 접근성): 마우스 클릭에는 안 보이고 Tab 이동 때만 테두리.
+     base 층에 둬서 입력창처럼 자체 포커스 표시가 있는 부품이 유틸리티로 덮어쓸 수 있다. */
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
 }

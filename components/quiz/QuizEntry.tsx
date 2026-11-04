@@ -1,16 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import { BackLink } from "@/components/layout/PageHeader";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getExam } from "@/data/subjects/exams";
 import { getChapter, getSubject } from "@/lib/subjects";
-import { isQType, type Question } from "@/lib/qtypes/registry";
+import type { Question } from "@/lib/qtypes/registry";
 import { loadChapter, loadQuestions, loadSubject } from "@/lib/quiz/loadQuestions";
 import { filterQuestions, loadSession, newSession, type QuizSession, saveSession } from "@/lib/quiz/session";
-import { isStatus, questionStatus, STATUS_LABEL } from "@/lib/quiz/status";
-import { parseSource, SOURCE_LABEL } from "@/lib/quiz/jokbo";
-import { parseStar, STAR_LABEL } from "@/lib/quiz/starBasis";
+import { filterFromParams } from "@/lib/quiz/params";
+import { questionStatus, STATUS_LABEL } from "@/lib/quiz/status";
+import { SOURCE_LABEL } from "@/lib/quiz/jokbo";
+import { STAR_LABEL } from "@/lib/quiz/starBasis";
 import { subjectRecords } from "@/lib/storage/recordsStore";
 import { QuizRunner } from "./QuizRunner";
 
@@ -54,31 +56,16 @@ export function QuizEntry() {
       // 과목 전체 퀴즈는 ?exam=(시험 범위)이 있으면 그 시험 챕터만
       const exam = chapter ? undefined : getExam(params.get("exam"));
       const pool = chapter ? await loadChapter(subjectId, chapter.id) : await loadSubject(subjectId, exam?.id);
-      const types = (params.get("types") ?? "").split(",").filter(isQType);
-      const statuses = (params.get("status") ?? "").split(",").filter(isStatus);
-      const starBasis = parseStar(params.get("star"));
-      const source = parseSource(params.get("source"));
       const records = subjectRecords(subjectId);
-      const count = Number(params.get("count")) || null;
-      const picked = filterQuestions(pool, {
-        types,
-        starOnly: !!starBasis,
-        starBasis: starBasis ?? undefined,
-        source,
-        topics: (params.get("topics") ?? "").split("|").filter(Boolean),
-        difficulties: (params.get("diff") ?? "").split(",").map(Number).filter((d) => d === 1 || d === 2 || d === 3),
-        count,
-        statuses,
-        statusOf: (id) => questionStatus(records, id),
-        shuffle: params.get("shuffle") === "1",
-        seed: `${key}-${Date.now()}`,
-      });
+      // 쿼리 → 조건 변환은 챕터 화면의 개수 미리 보기와 같은 함수(lib/quiz/params.ts)
+      const { filter, starBasis, source, statuses } = filterFromParams(params, (id) => questionStatus(records, id));
+      const picked = filterQuestions(pool, { ...filter, seed: `${key}-${Date.now()}` });
       if (picked.length === 0)
         return { kind: "empty", message: pool.length ? "조건에 맞는 문제가 없습니다." : "문제 준비 중입니다.", backHref } as State;
 
       const mode = params.get("mode") === "exam" ? "exam" : "instant";
       const star =
-        (starBasis ? ` · ⭐ ${starBasis === "all" ? "시험 포인트" : STAR_LABEL[starBasis]}` : "") +
+        (starBasis ? ` · ${starBasis === "all" ? "시험 포인트" : `시험 포인트 ${STAR_LABEL[starBasis]}`}` : "") +
         (source ? ` · ${SOURCE_LABEL[source]}` : "") +
         (statuses.length ? ` · ${statuses.map((s) => STATUS_LABEL[s]).join("·")}` : "") +
         (params.get("topics") === "용어" ? " · 용어" : "");
@@ -127,5 +114,11 @@ export function QuizEntry() {
         </div>
       </div>
     );
-  return <QuizRunner key={state.session.id} initial={state.session} questions={state.questions} />;
+  return (
+    <>
+      {/* 시험 모드(기본 화면)의 나가는 길 — 머리를 없앴으므로. 연습 모드는 풀이 화면 위 막대에 따로 있다 */}
+      {state.session.mode === "exam" && <BackLink href={state.session.backHref} label="나가기" />}
+      <QuizRunner key={state.session.id} initial={state.session} questions={state.questions} />
+    </>
+  );
 }

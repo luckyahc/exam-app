@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { PracticeResult } from "@/components/practice/PracticeResult";
 import { ExplanationSource, QuestionRenderer } from "@/components/qtypes/QuestionRenderer";
 import { RichText } from "@/components/qtypes/ui";
 import { coreFor, type Question } from "@/lib/qtypes/registry";
@@ -60,16 +61,28 @@ export function ResultView() {
     };
   }, [params]);
 
-  if (data === null) return <p className="text-sm text-muted">결과를 불러오는 중…</p>;
+  if (data === null)
+    return (
+      <>
+        <Title />
+        <p className="text-sm text-muted">결과를 불러오는 중…</p>
+      </>
+    );
   if (data === "none")
     return (
+      <>
+      <Title />
       <div className="flex flex-col gap-3">
         <p className="rounded-lg border border-border bg-surface p-4 text-sm">표시할 결과가 없습니다. 퀴즈를 먼저 풀어 주세요.</p>
         <Link href="/" className="text-sm underline">
           홈으로
         </Link>
       </div>
+      </>
     );
+
+  // 연습 모드(즉시 채점) 결과는 개편된 화면. 시험 모드 결과는 아래 기존 화면 그대로
+  if (data.session.mode === "instant") return <PracticeResult session={data.session} questions={data.questions} />;
 
   const { session, questions } = data;
   const sum = summarizeSession(session, questions);
@@ -86,6 +99,8 @@ export function ResultView() {
   };
 
   return (
+    <>
+    <Title />
     <div className="flex flex-col gap-8">
       <section className="flex flex-col gap-2 rounded-xl border border-border bg-surface p-5">
         <p className="text-sm text-muted">
@@ -169,5 +184,11 @@ export function ResultView() {
         </ol>
       </section>
     </div>
+    </>
   );
+}
+
+/** 결과 화면 제목(시험 모드 결과·불러오는 중) — 예전에는 페이지(app/result/page.tsx)에 있던 것 */
+function Title() {
+  return <h1 className="text-xl font-bold sm:text-2xl">결과</h1>;
 }

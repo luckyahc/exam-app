@@ -1,14 +1,41 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { QuestionRenderer } from "@/components/qtypes/QuestionRenderer";
+import { useEffect, useMemo, useState } from "react";
+import { PracticeQuestion } from "@/components/practice/PracticeQuestion";
+import { OptionGroup } from "@/components/quiz/OptionGroup";
+import { BottomSheet } from "@/components/ui/BottomSheet";
+import { Button } from "@/components/ui/Button";
+import { Chip } from "@/components/ui/Chip";
+import { List, ListRow } from "@/components/ui/ListRow";
+import { Marker } from "@/components/ui/Marker";
 import { coreFor, type Question } from "@/lib/qtypes/registry";
 import { loadSubject } from "@/lib/quiz/loadQuestions";
-import { LIST_TABS, type ListFilter, type ListTab, listRows, promptPreview, revealAnswer, sessionFromList, TAB_LABEL, tabCounts, visibleRows } from "@/lib/quiz/questionList";
+import {
+  LIST_TABS,
+  type ListFilter,
+  type ListTab,
+  listRows,
+  promptPreview,
+  revealAnswer,
+  sessionFromList,
+  TAB_LABEL,
+  tabCounts,
+  visibleRows,
+} from "@/lib/quiz/questionList";
 import { newSession, saveSession } from "@/lib/quiz/session";
-import { exampleBadge, isExample, isJokbo, isJokboRelated, isJokboRelated2, isShortAnswer, jokboBadge, relatedBadge, SOURCE_LABEL, type SourceFilter } from "@/lib/quiz/jokbo";
+import {
+  exampleBadge,
+  isExample,
+  isJokbo,
+  isJokboRelated,
+  isJokboRelated2,
+  isShortAnswer,
+  jokboBadge,
+  relatedBadge,
+  SOURCE_LABEL,
+  type SourceFilter,
+} from "@/lib/quiz/jokbo";
 import { hasStarChoice, STAR_LABEL, type StarBasis } from "@/lib/quiz/starBasis";
 import { useRecords } from "@/lib/storage/recordsStore";
 
@@ -16,10 +43,10 @@ const PAGE = 100; // 한 번에 그리는 줄 수(과목당 수백 문항 — "�
 const COUNTS = [10, 20, 30, 0] as const;
 
 const MARK = {
-  correct: { icon: "✓", text: "맞음", cls: "text-correct" },
-  wrong: { icon: "✗", text: "틀림", cls: "text-incorrect" },
-  unsolved: { icon: "–", text: "미풀이", cls: "text-muted" },
-  submitted: { icon: "✎", text: "제출함", cls: "text-foreground" },
+  correct: { text: "맞음", cls: "text-sumi" },
+  wrong: { text: "틀림", cls: "font-semibold text-shu" },
+  unsolved: { text: "안 풂", cls: "text-muted" },
+  submitted: { text: "제출함", cls: "text-sumi" },
 } as const;
 
 /** 과목별 문제 목록: 풀이 상태 탭 + 필터, 줄을 누르면 바로 풀기 / 정답·해설 보기(기록 안 함), 이 목록으로 풀기 */
@@ -42,7 +69,7 @@ export function QuestionList({ subject }: { subject: ListSubject }) {
   const [limit, setLimit] = useState(PAGE);
   const [shuffle, setShuffle] = useState(true);
   const [count, setCount] = useState<number>(20);
-  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [sheet, setSheet] = useState<null | "filter" | "solve">(null);
 
   useEffect(() => {
     let alive = true;
@@ -57,7 +84,13 @@ export function QuestionList({ subject }: { subject: ListSubject }) {
   const visible = useMemo(() => visibleRows(rows, tab, filter), [rows, tab, filter]);
   const types = useMemo(() => [...new Set((questions ?? []).map((q) => q.type))], [questions]);
   const topics = useMemo(
-    () => [...new Set((questions ?? []).filter((q) => !filter.chapter || q.chapter === filter.chapter).map((q) => q.topic))],
+    () => [
+      ...new Set(
+        (questions ?? [])
+          .filter((q) => !filter.chapter || q.chapter === filter.chapter)
+          .map((q) => q.topic),
+      ),
+    ],
     [questions, filter.chapter],
   );
   const stars = subject.examPoints !== false && (questions ?? []).some((q) => q.exam);
@@ -68,230 +101,283 @@ export function QuestionList({ subject }: { subject: ListSubject }) {
   const hasRelated2 = useMemo(() => (questions ?? []).some(isJokboRelated2), [questions]);
   const hasShort = useMemo(() => (questions ?? []).some(isShortAnswer), [questions]);
 
-  const start = (picked: { shuffle: boolean; count: number | null; label: string; list: typeof visible }) => {
+  const start = (picked: {
+    shuffle: boolean;
+    count: number | null;
+    label: string;
+    list: typeof visible;
+  }) => {
     const s = sessionFromList(picked.list, {
       shuffle: picked.shuffle,
       count: picked.count,
       label: picked.label,
-      backHref: `/s/${subject.id}/questions`,
+      backHref: `/s/${subject.id}?view=questions`,
       seed: `${subject.id}-${Date.now()}`,
     });
     saveSession(s);
     router.push(`/quiz?session=${s.id}`);
   };
   const solveOne = (q: Question) => {
-    const s = newSession([q], { mode: "instant", label: `${subject.shortName} · 문제 목록`, backHref: `/s/${subject.id}/questions` });
+    const s = newSession([q], {
+      mode: "instant",
+      label: `${subject.shortName} · 문제 목록`,
+      backHref: `/s/${subject.id}?view=questions`,
+    });
     saveSession(s);
     router.push(`/quiz?session=${s.id}`);
   };
 
-  // 탭: ←/→로 이동(WAI-ARIA tabs)
-  const onTabKey = (e: React.KeyboardEvent, i: number) => {
-    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-    e.preventDefault();
-    const next = (i + (e.key === "ArrowRight" ? 1 : LIST_TABS.length - 1)) % LIST_TABS.length;
-    setTab(LIST_TABS[next]);
+  if (!questions) return <p className="text-sm text-muted">불러오는 중…</p>;
+
+  const sources: SourceFilter[] = [
+    ...(hasJokbo ? (["jokbo", "general"] as const) : []),
+    ...(hasRelated ? (["related"] as const) : []),
+    ...(hasRelated2 ? (["related2"] as const) : []),
+    ...(hasShort ? (["short"] as const) : []),
+    ...(hasExample ? (["example"] as const) : []),
+  ];
+  const active = [
+    filter.chapter,
+    filter.type,
+    filter.topic,
+    filter.source && filter.source !== "all" ? filter.source : null,
+    filter.star,
+  ].filter(Boolean).length;
+  // 한 번 더 누르면 풀린다(단일 선택 필터). 챕터를 바꾸면 토픽은 풀린다(이전과 같음)
+  const pick = <K extends keyof ListFilter>(key: K, v: ListFilter[K]) => {
+    setFilter({
+      ...filter,
+      [key]: filter[key] === v ? null : v,
+      ...(key === "chapter" ? { topic: null } : {}),
+    });
     setLimit(PAGE);
-    tabRefs.current[next]?.focus();
   };
-
-  const sel = "min-w-0 rounded-lg border border-border bg-background px-2 py-1.5 text-sm";
-  const chip = (on: boolean) =>
-    "rounded-full border px-3 py-1.5 text-sm " + (on ? "border-primary bg-primary/10 font-semibold" : "border-border text-muted hover:text-foreground");
-
-  if (!questions) return <p className="text-sm text-muted">문제를 불러오는 중…</p>;
+  const willSolve = count ? Math.min(count, visible.length) : visible.length;
+  const openRow = open ? visible.find((r) => r.q.id === open.id) : undefined;
 
   return (
     <div className="flex min-w-0 flex-col gap-4">
-      <div role="tablist" aria-label="풀이 상태" className="flex flex-wrap gap-2">
-        {LIST_TABS.map((t, i) => (
-          <button
+      <div role="group" aria-label="풀이 상태" className="flex flex-wrap gap-2">
+        {LIST_TABS.map((t) => (
+          <Chip
             key={t}
-            ref={(el) => {
-              tabRefs.current[i] = el;
-            }}
-            type="button"
-            role="tab"
-            id={`tab-${t}`}
-            aria-selected={tab === t}
-            aria-controls="question-list"
-            tabIndex={tab === t ? 0 : -1}
-            onKeyDown={(e) => onTabKey(e, i)}
+            selected={tab === t}
+            count={counts[t]}
             onClick={() => {
               setTab(t);
               setLimit(PAGE);
             }}
-            className={chip(tab === t)}
           >
-            {TAB_LABEL[t]} <span className="tabular-nums">{counts[t]}</span>
-          </button>
+            {TAB_LABEL[t]}
+          </Chip>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
-        <label className="flex min-w-0 flex-col gap-1 text-xs text-muted">
-          챕터
-          <select className={sel} value={filter.chapter ?? ""} onChange={(e) => setFilter({ ...filter, chapter: e.target.value || null, topic: null })}>
-            <option value="">전체</option>
-            {subject.chapters.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.id.toUpperCase()} {c.shortTitle}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex min-w-0 flex-col gap-1 text-xs text-muted">
-          유형
-          <select className={sel} value={filter.type ?? ""} onChange={(e) => setFilter({ ...filter, type: e.target.value || null })}>
-            <option value="">전체</option>
-            {types.map((t) => (
-              <option key={t} value={t}>
-                {coreFor({ type: t } as Question).label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex min-w-0 flex-col gap-1 text-xs text-muted">
-          토픽
-          <select className={sel} value={filter.topic ?? ""} onChange={(e) => setFilter({ ...filter, topic: e.target.value || null })}>
-            <option value="">전체</option>
-            {topics.map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))}
-          </select>
-        </label>
-        {(hasJokbo || hasExample || hasRelated || hasRelated2 || hasShort) && (
-          <label className="flex min-w-0 flex-col gap-1 text-xs text-muted">
-            분류
-            <select className={sel} value={filter.source ?? "all"} onChange={(e) => setFilter({ ...filter, source: e.target.value as SourceFilter })}>
-              {(["all", ...(hasJokbo ? (["jokbo", "general"] as const) : []), ...(hasRelated ? (["related"] as const) : []), ...(hasRelated2 ? (["related2"] as const) : []), ...(hasShort ? (["short"] as const) : []), ...(hasExample ? (["example"] as const) : [])] as const).map((v) => (
-                <option key={v} value={v}>
-                  {SOURCE_LABEL[v]}
-                </option>
-              ))}
-            </select>
-          </label>
-        )}
-        {stars && !starChoice && (
-          <label className="flex items-center gap-2 self-end py-1.5 text-sm">
-            <input type="checkbox" checked={!!filter.star} onChange={(e) => setFilter({ ...filter, star: e.target.checked ? "all" : null })} />
-            <span aria-hidden>⭐</span> 시험 포인트만
-          </label>
-        )}
-        {/* ⭐ 근거가 둘인 과목(OS: 교수님 필기·시험 힌트)만 근거별로 고른다 */}
-        {stars && starChoice && (
-          <label className="flex min-w-0 flex-col gap-1 text-xs text-muted">
-            ⭐ 시험 포인트
-            <select className={sel} value={filter.star ?? ""} onChange={(e) => setFilter({ ...filter, star: (e.target.value || null) as StarBasis | null })}>
-              <option value="">전체 문제</option>
-              {(["all", "handwritten", "hint"] as const).map((b) => (
-                <option key={b} value={b}>
-                  {STAR_LABEL[b]}
-                </option>
-              ))}
-            </select>
-          </label>
-        )}
-      </div>
-
-      <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border bg-surface p-3 text-sm">
-        <button
-          type="button"
+      <List>
+        <ListRow
+          title="필터"
+          description={active ? `${active}개 적용` : "챕터 · 유형 · 토픽"}
+          onClick={() => setSheet("filter")}
+        />
+        <ListRow
+          title="이 목록으로 풀기"
+          description={`${willSolve}문제 · ${shuffle ? "섞어서" : "순서대로"}`}
+          onClick={() => setSheet("solve")}
           disabled={visible.length === 0}
-          onClick={() => start({ shuffle, count: count || null, label: `${subject.shortName} · ${TAB_LABEL[tab]}`, list: visible })}
-          className="rounded-lg bg-primary px-4 py-2 font-semibold text-background disabled:opacity-40"
-        >
-          이 목록으로 풀기 ({count ? Math.min(count, visible.length) : visible.length})
-        </button>
-        <label className="flex items-center gap-1">
-          <input type="checkbox" checked={shuffle} onChange={(e) => setShuffle(e.target.checked)} /> 섞기
-        </label>
-        <label className="flex items-center gap-1">
-          문제 수
-          <select className={sel} value={count} onChange={(e) => setCount(Number(e.target.value))}>
-            {COUNTS.map((n) => (
-              <option key={n} value={n}>
-                {n ? `${n}문제` : "전체"}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
+        />
+      </List>
 
-      <ul id="question-list" role="tabpanel" aria-labelledby={`tab-${tab}`} className="flex min-w-0 flex-col gap-2">
-        {visible.length === 0 && <li className="rounded-lg border border-border bg-surface p-4 text-sm text-muted">이 조건에 맞는 문제가 없습니다.</li>}
-        {visible.slice(0, limit).map((r) => {
-          const m = MARK[r.status];
-          const isOpen = open?.id === r.q.id;
-          return (
-            <li key={r.q.id} className="min-w-0 rounded-lg border border-border bg-surface">
-              <button
-                type="button"
-                aria-expanded={isOpen}
-                onClick={() => setOpen(isOpen ? null : { id: r.q.id, reveal: false })}
-                className="flex w-full min-w-0 flex-col gap-1 px-3 py-2 text-left hover:bg-primary/5"
-              >
-                <span className="min-w-0 text-sm break-words">{promptPreview(r.q)}</span>
-                <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted">
-                  <span>{r.q.chapter.toUpperCase()}</span>
-                  <span>{coreFor(r.q).label}</span>
-                  {r.q.exam && <span aria-label="시험 포인트">⭐</span>}
-                  {jokboBadge(r.q) && <span className="font-medium text-foreground">{jokboBadge(r.q)}</span>}
-                  {relatedBadge(r.q) && <span className="font-medium text-foreground">{relatedBadge(r.q)}</span>}
-                  {exampleBadge(r.q) && <span className="font-medium text-foreground">{exampleBadge(r.q)}</span>}
-                  <span className={m.cls}>
-                    <span aria-hidden>{m.icon}</span> {m.text}
-                  </span>
-                  <span>시도 {r.attempts}회</span>
-                  {r.bookmarked && <span>☆ 북마크</span>}
-                </span>
-              </button>
-              {isOpen && (
-                <div className="flex min-w-0 flex-col gap-3 border-t border-border p-3">
-                  <div className="flex flex-wrap gap-2">
-                    <button type="button" onClick={() => solveOne(r.q)} className="rounded-lg border border-primary px-3 py-1.5 text-sm font-semibold text-primary">
-                      바로 풀기
-                    </button>
-                    <button
-                      type="button"
-                      aria-pressed={open.reveal}
-                      onClick={() => setOpen({ id: r.q.id, reveal: !open.reveal })}
-                      className="rounded-lg border border-border px-3 py-1.5 text-sm"
-                    >
-                      {open.reveal ? "정답·해설 닫기" : "정답·해설 보기"}
-                    </button>
-                  </div>
-                  {open.reveal && <RevealPanel q={r.q} />}
-                </div>
-              )}
-            </li>
-          );
-        })}
-      </ul>
-      {visible.length > limit && (
-        <button type="button" onClick={() => setLimit(limit + PAGE)} className="self-center rounded-lg border border-border px-4 py-2 text-sm">
-          더 보기 ({visible.length - limit}개 남음)
-        </button>
-      )}
-      <p className="text-xs text-muted">
-        &quot;정답·해설 보기&quot;는 풀이 기록에 넣지 않습니다. &quot;비슷한 문제&quot;로 새로 만든 문제는 이 목록에 나오지 않습니다(
-        <Link href={`/review?subject=${subject.id}`} className="underline">
-          오답노트
-        </Link>
-        에서 볼 수 있음).
+      <p className="text-sm text-muted" aria-live="polite">
+        <span className="font-mono">{visible.length}</span>문제
       </p>
+
+      {visible.length === 0 ? (
+        <p className="py-6 text-center text-sm text-muted">조건에 맞는 문제가 없습니다.</p>
+      ) : (
+        <List aria-label="문제">
+          {visible.slice(0, limit).map((r) => {
+            const m = MARK[r.status];
+            const badges = [jokboBadge(r.q), relatedBadge(r.q), exampleBadge(r.q)].filter(Boolean);
+            const meta = [
+              r.q.chapter.toUpperCase(),
+              coreFor(r.q).label,
+              ...badges,
+              r.attempts ? `${r.attempts}회` : "",
+              r.bookmarked ? "북마크" : "",
+            ];
+            return (
+              <ListRow
+                key={r.q.id}
+                onClick={() => setOpen({ id: r.q.id, reveal: false })}
+                title={<span className="font-normal break-words">{promptPreview(r.q)}</span>}
+                description={
+                  <>
+                    {r.q.exam && <Marker className="mr-1">시험 포인트</Marker>}
+                    {meta.filter(Boolean).join(" · ")}
+                  </>
+                }
+                trailing={<span className={m.cls}>{m.text}</span>}
+              />
+            );
+          })}
+        </List>
+      )}
+      {visible.length > limit && (
+        <Button variant="secondary" onClick={() => setLimit(limit + PAGE)}>
+          더 보기 ({visible.length - limit})
+        </Button>
+      )}
+      <p className="text-sm text-muted">
+        정답 보기는 기록에 넣지 않습니다. 비슷한 문제로 새로 만든 문제는 복습 탭에 있습니다.
+      </p>
+
+      <BottomSheet open={sheet === "filter"} onClose={() => setSheet(null)} title="필터">
+        <div className="flex flex-col gap-6 pt-1">
+          <OptionGroup label="챕터">
+            {subject.chapters.map((c) => (
+              <Chip
+                key={c.id}
+                selected={filter.chapter === c.id}
+                onClick={() => pick("chapter", c.id)}
+              >
+                {c.id.toUpperCase()}
+              </Chip>
+            ))}
+          </OptionGroup>
+          <OptionGroup label="유형">
+            {types.map((t) => (
+              <Chip key={t} selected={filter.type === t} onClick={() => pick("type", t)}>
+                {coreFor({ type: t } as Question).label}
+              </Chip>
+            ))}
+          </OptionGroup>
+          {sources.length > 0 && (
+            <OptionGroup label="분류">
+              {sources.map((v) => (
+                <Chip key={v} selected={filter.source === v} onClick={() => pick("source", v)}>
+                  {SOURCE_LABEL[v]}
+                </Chip>
+              ))}
+            </OptionGroup>
+          )}
+          {stars && (
+            <OptionGroup label="시험 포인트">
+              {(starChoice
+                ? (["all", "handwritten", "hint"] as StarBasis[])
+                : (["all"] as StarBasis[])
+              ).map((b) => (
+                <Chip key={b} selected={filter.star === b} onClick={() => pick("star", b)}>
+                  {b === "all" ? "시험 포인트" : STAR_LABEL[b]}
+                </Chip>
+              ))}
+            </OptionGroup>
+          )}
+          <details className="group flex flex-col gap-2">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between text-sm font-semibold [&::-webkit-details-marker]:hidden">
+              <span>
+                토픽{" "}
+                {filter.topic && <span className="font-normal text-muted">{filter.topic}</span>}
+              </span>
+              <span aria-hidden className="text-muted group-open:rotate-180">
+                ▾
+              </span>
+            </summary>
+            <div className="flex flex-wrap gap-2 pt-2">
+              {topics.map((t) => (
+                <Chip key={t} selected={filter.topic === t} onClick={() => pick("topic", t)}>
+                  {t}
+                </Chip>
+              ))}
+            </div>
+          </details>
+          {active > 0 && (
+            <Button variant="text" className="self-start" onClick={() => setFilter({})}>
+              필터 모두 풀기
+            </Button>
+          )}
+        </div>
+      </BottomSheet>
+
+      <BottomSheet
+        open={sheet === "solve"}
+        onClose={() => setSheet(null)}
+        title="이 목록으로 풀기"
+        footer={
+          <Button
+            block
+            disabled={visible.length === 0}
+            onClick={() =>
+              start({
+                shuffle,
+                count: count || null,
+                label: `${subject.shortName} · ${TAB_LABEL[tab]}`,
+                list: visible,
+              })
+            }
+          >
+            {willSolve}문제 풀기
+          </Button>
+        }
+      >
+        <div className="flex flex-col gap-6 pt-1">
+          <OptionGroup label="문제 수">
+            {COUNTS.map((n) => (
+              <Chip key={n} selected={count === n} onClick={() => setCount(n)}>
+                {n ? `${n}문제` : "전체"}
+              </Chip>
+            ))}
+          </OptionGroup>
+          <OptionGroup label="순서">
+            <Chip selected={!shuffle} onClick={() => setShuffle(false)}>
+              순서대로
+            </Chip>
+            <Chip selected={shuffle} onClick={() => setShuffle(true)}>
+              섞어서
+            </Chip>
+          </OptionGroup>
+        </div>
+      </BottomSheet>
+
+      <BottomSheet
+        open={!!openRow}
+        onClose={() => setOpen(null)}
+        title={openRow ? `${openRow.q.chapter.toUpperCase()} · ${coreFor(openRow.q).label}` : ""}
+      >
+        {openRow && open && (
+          <div className="flex flex-col gap-4 pt-1">
+            {!open.reveal && (
+              <p className="text-lg leading-relaxed break-words">{promptPreview(openRow.q)}</p>
+            )}
+            <div className="grid grid-cols-2 gap-2">
+              <Button onClick={() => solveOne(openRow.q)}>바로 풀기</Button>
+              <Button
+                variant="secondary"
+                aria-pressed={open.reveal}
+                onClick={() => setOpen({ id: openRow.q.id, reveal: !open.reveal })}
+              >
+                {open.reveal ? "정답 닫기" : "정답 보기"}
+              </Button>
+            </div>
+            {open.reveal && <RevealPanel q={openRow.q} />}
+          </div>
+        )}
+      </BottomSheet>
     </div>
   );
 }
 
-/** 정답 키로 채점한 화면만 보여 준다 — 기록하지 않는다 */
+/** 정답 키로 채점한 화면만 보여 준다 — 기록하지 않는다(연습 모드 문제 화면과 같은 모양) */
 export function RevealPanel({ q }: { q: Question }) {
   const { answer, result } = revealAnswer(q);
   return (
     <div className="min-w-0">
-      <QuestionRenderer question={q} answer={answer} onAnswer={() => {}} result={result} />
+      <PracticeQuestion
+        question={q}
+        answer={answer}
+        onAnswer={() => {}}
+        result={result}
+        onEnter={() => {}}
+      />
     </div>
   );
 }

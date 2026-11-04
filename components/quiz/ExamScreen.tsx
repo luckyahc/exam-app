@@ -247,7 +247,10 @@ export function ExamScreen({ session, getQ, remaining, now, answeredCount, onAns
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col border-t-[3px] border-[#3a9d3a] bg-white text-[#222]" style={{ colorScheme: "light" }}>
+    <div
+      // data-exam-screen: globals.css가 이 안의 공용 부품 색·글꼴을 디자인 개편 전 값으로 고정한다
+      data-exam-screen
+      className="fixed inset-0 z-50 flex flex-col border-t-[3px] border-[#3a9d3a] bg-white text-[#222]" style={{ colorScheme: "light" }}>
       {/* 상단: 시험 제목 · 과목 · 남은 시간 */}
       <header className="flex min-h-14 shrink-0 flex-wrap items-center gap-x-4 gap-y-1 border-b border-[#ddd] px-4 py-2 sm:px-16">
         <h1 className="text-xl font-bold sm:text-[28px]">모의시험</h1>

@@ -9,7 +9,7 @@ import { CodeBlock } from "./CodeBlock";
 import { DataTables } from "./DataTables";
 import { ResultBanner, RichText } from "./ui";
 
-const EXAM_LABEL: Record<ExamBasis, string> = {
+export const EXAM_LABEL: Record<ExamBasis, string> = {
   handwritten: "교수님 필기",
   "printed-emphasis": "슬라이드 강조",
   "exam-hint": "시험 힌트",

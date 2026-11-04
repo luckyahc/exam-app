@@ -16,19 +16,16 @@ import {
   shuffled,
 } from "@/lib/dsMemorize";
 import { markFunction, setMemo, useMemoRecords } from "@/lib/storage/memoStore";
+import { Button } from "@/components/ui/Button";
+import { Chip } from "@/components/ui/Chip";
+import { List } from "@/components/ui/ListRow";
+import { TextInput } from "@/components/ui/TextInput";
+import { codePre as pre } from "./codePre";
 
 const tabLabel = (t: string) => (t ? t.replace("lec", "Lec") : "전체");
-const pre =
-  "min-w-0 whitespace-pre-wrap break-words rounded-md border border-border bg-surface px-2 py-1.5 font-mono text-xs leading-5";
-const chip = (on: boolean) =>
-  "rounded-full border px-3 py-1.5 text-sm " +
-  (on
-    ? "border-primary bg-primary/10 font-semibold"
-    : "border-border text-muted hover:text-foreground");
-const btn = "rounded-md border border-border px-3 py-1.5 text-sm hover:border-primary";
-/** 가린 칸 — 폰에서도 누르기 쉬운 크기 */
+/** 가린 칸 — 누르면 펼친다(44px 이상, 면 색) */
 const hidden =
-  "flex min-h-12 w-full items-center justify-center rounded-md border border-dashed border-border bg-surface px-3 py-2 text-sm text-muted hover:border-primary";
+  "flex min-h-12 w-full items-center justify-center bg-paper-deep px-3 py-2 text-sm text-muted";
 
 const when = (e?: MemoEntry) => {
   if (!e) return "";
@@ -88,7 +85,7 @@ function MemoItem({ f, dir, open, onOpen, entry, onMark, meta, related }: ItemPr
 
       {dir === "A" && !open && (
         <form
-          className="flex min-w-0 flex-wrap items-center gap-2"
+          className="flex min-w-0 items-end gap-2"
           onSubmit={(e) => {
             e.preventDefault();
             if (!guess.trim()) return;
@@ -96,56 +93,66 @@ function MemoItem({ f, dir, open, onOpen, entry, onMark, meta, related }: ItemPr
             onOpen();
           }}
         >
-          <input
+          <TextInput
+            label="함수 이름"
+            hideLabel
             value={guess}
             onChange={(e) => setGuess(e.target.value)}
             placeholder="이름 입력(선택)"
-            aria-label="함수 이름 입력"
-            autoCapitalize="off"
-            autoCorrect="off"
-            spellCheck={false}
-            className="min-w-0 flex-1 rounded-lg border border-border bg-background px-3 py-2 font-mono text-sm text-foreground"
+            className="min-w-0 flex-1 font-mono"
           />
-          <button type="submit" className={btn}>
+          <Button type="submit" variant="secondary" className="shrink-0">
             확인
-          </button>
+          </Button>
         </form>
       )}
       {open && result !== null && (
-        <p className={"text-sm font-medium " + (result ? "text-primary" : "text-muted")}>
-          입력한 이름: {guess} — {result ? "정답과 같음" : `정답과 다름 (정답 ${f.name})`}
+        <p className="text-sm">
+          입력한 이름 <span className="font-mono">{guess}</span> ·{" "}
+          {result ? (
+            <span className="font-semibold text-ok">정답과 같음</span>
+          ) : (
+            <>
+              <span className="font-semibold text-shu">정답과 다름</span> · 정답{" "}
+              <span className="font-mono font-semibold">{f.name}</span>
+            </>
+          )}
         </p>
       )}
 
       <div className="flex min-w-0 flex-col gap-1">
-        <button
-          type="button"
+        <Button
+          variant="text"
           onClick={() => setShowEx((x) => !x)}
           aria-expanded={showEx}
-          className="self-start text-xs text-muted underline-offset-2 hover:underline"
+          className="self-start text-sm text-muted"
         >
           {showEx ? "예시 닫기" : "예시 보기"}
-        </button>
+        </Button>
         {showEx && (
           <div className="flex min-w-0 flex-col gap-1">
             {f.lang === "python" && v.setup && (
-              <details className="text-xs text-muted">
-                <summary className="cursor-pointer select-none">준비 코드</summary>
-                <pre className={pre + " mt-1"}>{v.setup}</pre>
+              <details className="text-sm text-muted">
+                <summary className="flex min-h-11 cursor-pointer items-center select-none">
+                  준비 코드
+                </summary>
+                <pre className={pre}>{v.setup}</pre>
               </details>
             )}
             <pre className={pre}>
               <code>{v.example}</code>
             </pre>
             {outputHidden ? (
-              <p className="text-xs text-muted">실행 결과는 확인한 뒤에 보입니다.</p>
+              <p className="text-sm text-muted">실행 결과는 확인한 뒤에 보입니다.</p>
             ) : v.exampleOutput !== null ? (
-              <details className="text-xs">
-                <summary className="cursor-pointer select-none text-muted">실행 결과</summary>
-                <pre className={pre + " mt-1"}>{v.exampleOutput}</pre>
+              <details className="text-sm">
+                <summary className="flex min-h-11 cursor-pointer items-center text-muted select-none">
+                  실행 결과
+                </summary>
+                <pre className={pre}>{v.exampleOutput}</pre>
               </details>
             ) : (
-              <p className="text-xs text-muted">실행 결과 없음 — {v.noRun}</p>
+              <p className="text-sm text-muted">실행 결과 없음 — {v.noRun}</p>
             )}
           </div>
         )}
@@ -156,25 +163,18 @@ function MemoItem({ f, dir, open, onOpen, entry, onMark, meta, related }: ItemPr
       <div className="flex min-w-0 flex-wrap items-center gap-2">
         {open && (
           <>
-            <button
-              type="button"
-              onClick={() => onMark(true)}
-              className={chip(entry?.known === true) + " min-h-11 px-4"}
-            >
+            <Chip selected={entry?.known === true} onClick={() => onMark(true)}>
               알았음
-            </button>
-            <button
-              type="button"
-              onClick={() => onMark(false)}
-              className={chip(entry?.known === false) + " min-h-11 px-4"}
-            >
+            </Chip>
+            <Chip selected={entry?.known === false} onClick={() => onMark(false)}>
               몰랐음
-            </button>
+            </Chip>
           </>
         )}
         {entry && (
-          <span className="text-xs text-muted">
-            마지막: {entry.known ? "알았음" : "몰랐음"} · {when(entry)}
+          <span className="text-sm text-muted">
+            마지막 {entry.known ? "알았음" : "몰랐음"} ·{" "}
+            <span className="font-mono">{when(entry)}</span>
           </span>
         )}
       </div>
@@ -267,168 +267,127 @@ export function MemorizeView({
 
   return (
     <div className="flex min-w-0 flex-col gap-4">
-      <div className="flex min-w-0 flex-wrap gap-2" role="group" aria-label="암기 방향">
-        <button
-          type="button"
-          aria-pressed={dir === "A"}
-          onClick={() => changeDir("A")}
-          className={chip(dir === "A")}
-        >
+      <div className="flex min-w-0 flex-wrap gap-2" role="group" aria-label="암기 방향·보기">
+        <Chip selected={dir === "A"} onClick={() => changeDir("A")}>
           A. 이름 맞히기
-        </button>
-        <button
-          type="button"
-          aria-pressed={dir === "B"}
-          onClick={() => changeDir("B")}
-          className={chip(dir === "B")}
-        >
+        </Chip>
+        <Chip selected={dir === "B"} onClick={() => changeDir("B")}>
           B. 역할 맞히기
-        </button>
-        <span className="mx-1 self-center text-border" aria-hidden>
-          |
-        </span>
-        <button
-          type="button"
-          aria-pressed={layout === "list"}
-          onClick={() => setLayout("list")}
-          className={chip(layout === "list")}
-        >
+        </Chip>
+        <Chip selected={layout === "list"} onClick={() => setLayout("list")}>
           목록
-        </button>
-        <button
-          type="button"
-          aria-pressed={layout === "card"}
-          onClick={() => setLayout("card")}
-          className={chip(layout === "card")}
-        >
+        </Chip>
+        <Chip selected={layout === "card"} onClick={() => setLayout("card")}>
           카드
-        </button>
+        </Chip>
       </div>
 
       <div className="flex min-w-0 flex-wrap gap-2" role="group" aria-label="기록 필터">
         {FILTERS.map((x) => (
-          <button
-            key={x.id || "all"}
-            type="button"
-            aria-pressed={filter === x.id}
-            onClick={() => setFilter(x.id)}
-            className={chip(filter === x.id)}
-          >
+          <Chip key={x.id || "all"} selected={filter === x.id} onClick={() => setFilter(x.id)}>
             {x.label}
-          </button>
+          </Chip>
         ))}
       </div>
 
-      <div className="flex min-w-0 flex-wrap gap-2">
-        <button type="button" onClick={() => setOpened(new Set())} className={btn}>
+      <div className="flex min-w-0 flex-wrap gap-x-4">
+        <Button variant="text" onClick={() => setOpened(new Set())}>
           모두 가리기
-        </button>
-        <button
-          type="button"
-          onClick={() => setOpened(new Set(deck.map((f) => f.id)))}
-          className={btn}
-        >
+        </Button>
+        <Button variant="text" onClick={() => setOpened(new Set(deck.map((f) => f.id)))}>
           모두 펼치기
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
+          variant="text"
           onClick={() => {
             setOrder(shuffled(list.map((f) => f.id)));
             setCardIdx(0);
           }}
-          className={btn}
         >
           순서 섞기
-        </button>
+        </Button>
         {order && (
-          <button type="button" onClick={() => setOrder(null)} className={btn + " text-muted"}>
+          <Button variant="text" onClick={() => setOrder(null)} className="text-muted">
             원래 순서
-          </button>
+          </Button>
         )}
       </div>
 
-      <section
-        aria-label="장별 진행"
-        className="flex min-w-0 flex-col gap-2 rounded-lg border border-border p-3"
-      >
-        <p className="text-xs text-muted">
-          장별 진행 ({dir === "A" ? "이름 맞히기" : "역할 맞히기"} · 알았음 / 전체)
+      <section aria-label="장별 진행" className="flex min-w-0 flex-col gap-2 bg-paper-deep p-3">
+        <p className="text-sm text-muted">
+          장별 진행 · {dir === "A" ? "이름 맞히기" : "역할 맞히기"} · 알았음/전체
         </p>
         <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm sm:grid-cols-4">
           {summary.map((s) => (
-            <li
-              key={s.lecture}
-              className={"tabular-nums " + (s.lecture === lecture ? "font-semibold" : "")}
-            >
-              {tabLabel(s.lecture)} {loaded ? `${s.known} / ${s.total}` : "—"}
+            <li key={s.lecture} className={s.lecture === lecture ? "font-semibold" : ""}>
+              {tabLabel(s.lecture)}{" "}
+              <span className="font-mono tabular-nums">
+                {loaded ? `${s.known}/${s.total}` : ""}
+              </span>
             </li>
           ))}
         </ul>
-        <div className="flex min-w-0 flex-wrap items-center gap-2">
-          <button type="button" onClick={doReset} className={btn + " text-xs"}>
+        <div className="flex min-w-0 flex-wrap items-center gap-x-3">
+          <Button variant="text" onClick={doReset} className="text-sm">
             {resetScope} 기록 초기화 ({dir})
-          </button>
+          </Button>
           {undo && (
             <>
-              <span className="text-xs text-muted">{undo.label} 기록을 지웠습니다.</span>
-              <button
-                type="button"
+              <span className="text-sm text-muted">{undo.label} 기록을 지웠습니다.</span>
+              <Button
+                variant="text"
                 onClick={() => {
                   setMemo(subjectId, undo.prev);
                   setUndo(null);
                 }}
-                className={btn + " text-xs font-semibold"}
+                className="text-sm"
               >
                 되돌리기
-              </button>
+              </Button>
             </>
           )}
         </div>
       </section>
 
-      <p className="text-xs text-muted" aria-live="polite">
-        {deck.length}개 ·{" "}
+      <p className="text-sm text-muted" aria-live="polite">
+        <span className="font-mono">{deck.length}</span>개 ·{" "}
         {dir === "A"
-          ? "설명을 보고 이름을 떠올린 뒤 ▢▢▢를 누르세요"
+          ? "설명을 보고 이름을 떠올린 뒤 가린 칸을 누르세요"
           : "이름을 보고 역할을 떠올린 뒤 가린 칸을 누르세요"}
       </p>
 
       {layout === "list" ? (
-        <ul className="flex flex-col gap-3">
+        <List aria-label="암기 목록">
           {deck.map((f) => (
-            <li key={f.id} className="min-w-0 rounded-lg border border-border p-3">
+            <li key={f.id} className="min-w-0 px-3 py-4">
               {item(f)}
             </li>
           ))}
-        </ul>
+        </List>
       ) : card ? (
         <div className="flex min-w-0 flex-col gap-3">
           <div className="flex items-center justify-between gap-2">
-            <button
-              type="button"
-              disabled={idx === 0}
-              onClick={() => setCardIdx(idx - 1)}
-              className={btn + " disabled:opacity-40"}
-            >
-              ← 이전
-            </button>
-            <span className="tabular-nums text-sm font-semibold" aria-live="polite">
-              {idx + 1}/{deck.length}
+            <Button variant="secondary" disabled={idx === 0} onClick={() => setCardIdx(idx - 1)}>
+              이전
+            </Button>
+            <span className="font-mono text-sm font-semibold tabular-nums" aria-live="polite">
+              {idx + 1} / {deck.length}
             </span>
-            <button
-              type="button"
+            <Button
+              variant="secondary"
               disabled={idx >= deck.length - 1}
               onClick={() => setCardIdx(idx + 1)}
-              className={btn + " disabled:opacity-40"}
             >
-              다음 →
-            </button>
+              다음
+            </Button>
           </div>
-          <div className="min-w-0 rounded-lg border border-border p-4">{item(card)}</div>
+          <div className="min-w-0 border-y-[1.5px] border-sumi px-3 py-4">{item(card)}</div>
         </div>
       ) : null}
 
-      {deck.length === 0 && <p className="py-6 text-sm text-muted">조건에 맞는 함수가 없습니다.</p>}
+      {deck.length === 0 && (
+        <p className="py-6 text-center text-sm text-muted">조건에 맞는 함수가 없습니다.</p>
+      )}
     </div>
   );
 }

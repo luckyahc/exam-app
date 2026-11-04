@@ -2,22 +2,32 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { BookmarkButton } from "@/components/quiz/BookmarkButton";
-import { useSelectedSubject } from "@/components/subject/SubjectTabs";
+import { SubjectTabs, useSelectedSubject } from "@/components/subject/SubjectTabs";
 import { RichText } from "@/components/qtypes/ui";
+import { BookmarkIcon } from "@/components/quiz/BookmarkIcon";
+import { Button } from "@/components/ui/Button";
+import { Chip } from "@/components/ui/Chip";
+import { List } from "@/components/ui/ListRow";
+import { Marker } from "@/components/ui/Marker";
+import { SegmentedControl, segmentPanelProps } from "@/components/ui/SegmentedControl";
 import { SUBJECTS } from "@/data/subjects/registry";
 import { coreFor, type Question } from "@/lib/qtypes/registry";
 import { loadSubject } from "@/lib/quiz/loadQuestions";
 import type { GeneratorMap } from "@/lib/sim/_shared/types";
 import { newSession, saveSession } from "@/lib/quiz/session";
 import { useRecords } from "@/lib/storage/recordsStore";
-import { getSubject, subjectStyle } from "@/lib/subjects";
+import { getSubject } from "@/lib/subjects";
 
 type Tab = "wrong" | "bookmarks";
 
+const TABS = [
+  { value: "wrong", label: "틀린 문제" },
+  { value: "bookmarks", label: "북마크" },
+] as const;
+
 /**
- * 오답노트·북마크. 과목 탭(?subject=all|id) + 챕터 필터, 항목별/목록 전체 다시 풀기.
- * `전체` 탭은 과목별로 묶고 과목 뱃지를 붙인다. 항목마다 틀린 횟수 / 시도 횟수를 보여 준다.
+ * 복습 탭: 틀린 문제(오답노트) | 북마크. 과목 필터(?subject=all|id) + 챕터 필터, 항목별/목록 전체 다시 풀기.
+ * 목록 만들기(미해결 오답 최신순·북마크 최신순·생성 문제 재생성·삭제된 문제 건너뛰기)는 이전과 같다.
  */
 export function ReviewView() {
   const selected = useSelectedSubject();
@@ -37,7 +47,9 @@ export function ReviewView() {
     const ids = subjectsKey.split(",");
     Promise.all([
       Promise.all(ids.map((id) => loadSubject(id))),
-      Promise.all(ids.map(async (id) => [id, (await getSubject(id)?.loadGenerators?.()) ?? {}] as const)),
+      Promise.all(
+        ids.map(async (id) => [id, (await getSubject(id)?.loadGenerators?.()) ?? {}] as const),
+      ),
     ]).then(([lists, gens]) => {
       if (cancelled) return;
       setPool(new Map(lists.flat().map((q) => [q.id, q])));
@@ -48,7 +60,30 @@ export function ReviewView() {
     };
   }, [subjectsKey]);
 
-  if (!records.loaded || !pool) return <p className="text-sm text-muted">목록을 불러오는 중…</p>;
+  // 과목을 바꾸면 그 과목에 없는 챕터 필터는 풀어 준다
+  const chapters = selected === "all" ? [] : (getSubject(selected)?.chapters ?? []);
+  const chapterFilter = chapters.some((c) => c.id === chapter) ? chapter : "all";
+
+  const header = (
+    <div className="flex flex-col gap-4">
+      <SegmentedControl
+        label="복습 목록"
+        idPrefix="review"
+        items={TABS}
+        value={tab}
+        onChange={setTab}
+      />
+      <SubjectTabs />
+    </div>
+  );
+
+  if (!records.loaded || !pool)
+    return (
+      <>
+        {header}
+        <p className="text-sm text-muted">불러오는 중…</p>
+      </>
+    );
 
   // 과목별 항목(id 목록) — 문제 데이터에 없는 id(삭제된 문제)는 건너뛴다
   const groups = subjects.map((sid) => {
@@ -67,11 +102,12 @@ export function ReviewView() {
     };
     const items = ids
       .map((id) => pool.get(id) ?? regen(id))
-      .filter((q): q is Question => !!q && (chapter === "all" || q.chapter === chapter));
+      .filter(
+        (q): q is Question => !!q && (chapterFilter === "all" || q.chapter === chapterFilter),
+      );
     return { sid, items };
   });
   const all = groups.flatMap((g) => g.items);
-  const chapters = selected === "all" ? [] : (getSubject(selected)?.chapters ?? []);
 
   const retry = (qs: Question[], label: string) => {
     if (!qs.length) return;
@@ -80,106 +116,102 @@ export function ReviewView() {
     router.push(`/quiz?session=${s.id}`);
   };
 
-  const chip = (on: boolean) =>
-    "rounded-full border px-3 py-1 text-sm " + (on ? "border-primary bg-primary/10 font-semibold" : "border-border text-muted hover:text-foreground");
-
   return (
-    <div className="flex flex-col gap-5">
-      <div role="tablist" aria-label="목록" className="flex gap-2">
-        {(["wrong", "bookmarks"] as const).map((t) => (
-          <button key={t} type="button" role="tab" aria-selected={tab === t} onClick={() => setTab(t)} className={chip(tab === t)}>
-            {t === "wrong" ? "오답노트" : "★ 북마크"}
-          </button>
-        ))}
-      </div>
+    <>
+      {header}
+      <div {...segmentPanelProps("review", tab)} className="flex flex-col gap-5">
+        {(chapters.length > 0 || tab === "wrong") && (
+          <div role="group" aria-label="목록 조건" className="flex flex-wrap gap-2">
+            {chapters.length > 0 && (
+              <>
+                <Chip selected={chapterFilter === "all"} onClick={() => setChapter("all")}>
+                  전체 챕터
+                </Chip>
+                {chapters.map((c) => (
+                  <Chip
+                    key={c.id}
+                    selected={chapterFilter === c.id}
+                    onClick={() => setChapter(c.id)}
+                  >
+                    {c.id.toUpperCase()}
+                  </Chip>
+                ))}
+              </>
+            )}
+            {tab === "wrong" && (
+              <Chip selected={showResolved} onClick={() => setShowResolved((v) => !v)}>
+                해결한 문제 포함
+              </Chip>
+            )}
+          </div>
+        )}
 
-      {chapters.length > 0 && (
-        <div className="flex flex-wrap gap-2" aria-label="챕터 필터">
-          <button type="button" aria-pressed={chapter === "all"} onClick={() => setChapter("all")} className={chip(chapter === "all")}>
-            전체 챕터
-          </button>
-          {chapters.map((c) => (
-            <button key={c.id} type="button" aria-pressed={chapter === c.id} onClick={() => setChapter(c.id)} className={chip(chapter === c.id)}>
-              {c.id.toUpperCase()}
-            </button>
-          ))}
-        </div>
-      )}
-
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-muted">
-          {all.length}문제{tab === "wrong" && !showResolved && " (아직 못 맞힌 문제)"}
-        </p>
-        <div className="flex flex-wrap items-center gap-3">
-          {tab === "wrong" && (
-            <label className="flex items-center gap-1.5 text-sm text-muted">
-              <input type="checkbox" checked={showResolved} onChange={(e) => setShowResolved(e.target.checked)} />
-              해결한 문제도 보기
-            </label>
-          )}
-          <button
-            type="button"
-            disabled={!all.length}
-            onClick={() => retry(all, tab === "wrong" ? "오답노트 다시 풀기" : "북마크 다시 풀기")}
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-background disabled:opacity-40"
+        {all.length === 0 ? (
+          <p className="py-6 text-center text-sm text-muted">
+            {tab === "wrong" ? "틀린 문제가 없습니다." : "북마크한 문제가 없습니다."}
+          </p>
+        ) : (
+          <Button
+            block
+            onClick={() => retry(all, tab === "wrong" ? "틀린 문제 다시 풀기" : "북마크 다시 풀기")}
           >
-            목록 전체 다시 풀기
-          </button>
-        </div>
+            {all.length}문제 다시 풀기
+          </Button>
+        )}
+
+        {groups
+          .filter((g) => g.items.length > 0)
+          .map((g) => {
+            const subject = getSubject(g.sid)!;
+            return (
+              <section key={g.sid} aria-label={subject.name} className="flex flex-col gap-2">
+                {selected === "all" && (
+                  <h2 className="text-sm font-semibold">
+                    {subject.name}{" "}
+                    <span className="font-mono font-normal text-muted">{g.items.length}</span>
+                  </h2>
+                )}
+                <List>
+                  {g.items.map((q) => {
+                    const w = records.subjects[g.sid]?.wrong[q.id];
+                    return (
+                      <li key={q.id} className="flex flex-col gap-1.5 py-3 pl-3">
+                        <p className="line-clamp-2 pr-3 text-base">
+                          <RichText text={q.prompt} />
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="min-w-0 flex-1 truncate text-sm text-muted">
+                            <span className="font-mono">{q.chapter.toUpperCase()}</span>{" "}
+                            {coreFor(q).label}
+                            {tab === "wrong" &&
+                              w &&
+                              w.wrongCount > 1 &&
+                              ` · ${w.wrongCount}번 틀림`}
+                            {w?.resolved && tab === "wrong" && " · 해결"}
+                            {q.exam && (
+                              <>
+                                {" "}
+                                <Marker className="text-xs">시험 포인트</Marker>
+                              </>
+                            )}
+                          </p>
+                          <BookmarkIcon subjectId={g.sid} questionId={q.id} />
+                          <Button
+                            variant="text"
+                            className="px-3"
+                            onClick={() => retry([q], "다시 풀기")}
+                          >
+                            다시 풀기
+                          </Button>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </List>
+              </section>
+            );
+          })}
       </div>
-
-      {all.length === 0 && (
-        <p className="rounded-lg border border-border bg-surface p-4 text-sm text-muted">
-          {tab === "wrong" ? "오답노트가 비어 있습니다. 문제를 풀다 틀리면 여기에 쌓입니다." : "북마크한 문제가 없습니다. 문제 화면의 ☆ 북마크 버튼으로 추가하세요."}
-        </p>
-      )}
-
-      {groups
-        .filter((g) => g.items.length > 0)
-        .map((g) => {
-          const subject = getSubject(g.sid)!;
-          return (
-            <section key={g.sid} className="flex flex-col gap-2" data-subject={g.sid} style={subjectStyle(subject)}>
-              {selected === "all" && (
-                <h2 className="flex items-center gap-2 text-sm font-semibold">
-                  <span aria-hidden className="inline-block size-2.5 rounded-full bg-subject" />
-                  {subject.name} ({g.items.length})
-                </h2>
-              )}
-              <ul className="flex flex-col gap-2">
-                {g.items.map((q) => {
-                  const w = records.subjects[g.sid]?.wrong[q.id];
-                  return (
-                    <li key={q.id} className="flex flex-col gap-2 rounded-lg border border-border border-l-4 border-l-subject bg-surface p-3">
-                      <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
-                        {selected === "all" && <span className="rounded-full border border-border px-2 py-0.5">{subject.shortName}</span>}
-                        <span className="font-semibold text-foreground">{q.chapter.toUpperCase()}</span>
-                        <span>{coreFor(q).label}</span>
-                        {q.exam && <span>⭐ 시험 포인트</span>}
-                        <span>{q.topic}</span>
-                        {w && (
-                          <span>
-                            틀린 횟수 {w.wrongCount} / 시도 {w.attempts}
-                            {w.resolved && " · ✓ 해결"}
-                          </span>
-                        )}
-                      </div>
-                      <p className="line-clamp-3 text-sm">
-                        <RichText text={q.prompt} />
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        <button type="button" onClick={() => retry([q], "다시 풀기")} className="rounded-md border border-border px-3 py-1 text-xs font-medium hover:border-primary">
-                          이 문제 다시 풀기
-                        </button>
-                        <BookmarkButton subjectId={g.sid} questionId={q.id} />
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            </section>
-          );
-        })}
-    </div>
+    </>
   );
 }
