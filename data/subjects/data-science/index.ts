@@ -6,7 +6,7 @@ const dataScience = {
   id: "data-science",
   name: "데이터과학",
   shortName: "DS",
-  color: { light: "#b45309", dark: "#fbbf24" },
+  color: { light: "#a14a0c", dark: "#fbbf24" },
   sourceDir: "source/data-science",
   // ⭐ 근거 0건(필기·인쇄 강조 없음) — 결정 3
   examPoints: false,

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 /** 앱 아이콘 색: 라이트 테마 primary(globals.css --primary)와 같은 파랑 */
-export const ICON_BG = "#2563eb";
+export const ICON_BG = "#3368a0";
 
 /**
  * 앱 아이콘 그림: 파란 바탕 + 흰 체크 표시 하나.

@@ -9,7 +9,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "운영체제·데이터 통신·데이터과학 시험 대비 문제 풀이 웹앱",
     start_url: "/",
     display: "standalone",
-    background_color: "#ffffff",
+    background_color: "#f2efe7",
     theme_color: ICON_BG,
     icons: [
       { src: "/icon/192", sizes: "192x192", type: "image/png", purpose: "any" },
