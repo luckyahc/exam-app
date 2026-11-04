@@ -39,14 +39,14 @@ describe.each([
   });
 });
 
-it("채운 영역의 글자는 text-white가 아니라 text-background를 쓴다(다크에서 밝은 primary 위 흰 글자는 대비 부족)", async () => {
+it("채운 영역의 글자는 text-white가 아니라 text-paper를 쓴다(다크에서 밝은 먹 위 흰 글자는 대비 부족)", async () => {
   const { globSync } = await import("node:fs");
   const files = globSync("{components,app}/**/*.tsx", {
     cwd: path.resolve(import.meta.dirname, "../.."),
   });
   expect(files.length).toBeGreaterThan(20);
   const bad = files.filter((f) =>
-    /bg-(primary|incorrect|correct|sumi|shu|ok)[^"`]*text-white|text-white[^"`]*bg-(primary|incorrect|correct|sumi|shu|ok)/.test(
+    /bg-(sumi|shu|ok|exam-accent)[^"`]*text-white|text-white[^"`]*bg-(sumi|shu|ok|exam-accent)/.test(
       readFileSync(path.resolve(import.meta.dirname, "../..", f), "utf8"),
     ),
   );
@@ -54,11 +54,25 @@ it("채운 영역의 글자는 text-white가 아니라 text-background를 쓴다
 });
 
 it("키보드 포커스 표시: globals.css에 :focus-visible outline 규칙이 있고, outline-none으로 지우는 컴포넌트가 없다", async () => {
-  expect(css).toMatch(/:focus-visible\s*\{[^}]*outline:\s*2px solid var\(--primary\)/);
+  // 먹색 테두리(시험 화면 안에서는 개편 전 파랑 exam-accent)
+  expect(css).toMatch(
+    /:focus-visible\s*\{[^}]*outline:\s*2px solid var\(--exam-accent, var\(--sumi\)\)/,
+  );
   const { globSync } = await import("node:fs");
   const root = path.resolve(import.meta.dirname, "../..");
   const bad = globSync("{components,app}/**/*.tsx", { cwd: root }).filter((f) =>
     /\boutline-none\b/.test(readFileSync(path.resolve(root, f), "utf8")),
+  );
+  expect(bad).toEqual([]);
+});
+
+it("이전 토큰 별칭(background·foreground·surface·border·primary·correct·incorrect·subject)을 쓰지 않는다", async () => {
+  const { globSync } = await import("node:fs");
+  const root = path.resolve(import.meta.dirname, "../..");
+  const legacy =
+    /\b(bg|text|border|ring|outline|divide|fill|stroke|placeholder)(-[trblxy])?-(background|foreground|surface|border|primary|correct|incorrect|subject)\b(?![-\w])|var\(--(background|foreground|surface|border|primary|correct|incorrect|subject)\)/;
+  const bad = globSync("{components,app,lib}/**/*.{ts,tsx,css}", { cwd: root }).filter(
+    (f) => !f.includes(".test.") && legacy.test(readFileSync(path.resolve(root, f), "utf8")),
   );
   expect(bad).toEqual([]);
 });

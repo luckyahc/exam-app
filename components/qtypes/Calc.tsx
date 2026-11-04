@@ -27,12 +27,12 @@ function Input({ question, answer, onChange, disabled }: InputProps<"calc">) {
           onChange={(e) => onChange(e.target.value)}
           aria-invalid={invalid}
           aria-describedby={invalid ? `${question.id}-err` : undefined}
-          className="w-40 rounded border border-border bg-surface px-2 py-1.5"
+          className="w-40 rounded border border-line bg-paper-deep px-2 py-1.5"
         />
         {question.unit && <span className="text-sm">{question.unit}</span>}
       </label>
       {invalid && (
-        <p id={`${question.id}-err`} className="text-xs text-incorrect">
+        <p id={`${question.id}-err`} className="text-xs text-shu">
           ⚠ 숫자로 입력하세요 (예: 1.1, 34,881, 3e8, 3×10^8, 3x10^8, 3*10^8, 10^6)
         </p>
       )}
@@ -64,7 +64,7 @@ function Review({ question, answer, result }: ReviewProps<"calc">) {
         </ReviewRow>
       </ReviewList>
       {question.steps && (
-        <ol className="list-decimal space-y-1 rounded-lg bg-surface py-2 pl-8 pr-3 font-mono text-sm">
+        <ol className="list-decimal space-y-1 rounded-lg bg-paper-deep py-2 pl-8 pr-3 font-mono text-sm">
           {question.steps.map((s, i) => (
             <li key={i}>{s}</li>
           ))}

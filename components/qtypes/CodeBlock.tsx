@@ -4,7 +4,7 @@ import { CODE_LANG_LABEL, type CodeLang } from "@/lib/qtypes/_shared/codeTokens"
 /**
  * 공통 코드 블록(Sprint 12): 여러 줄, 고정폭, 들여쓰기 보존(`whitespace-pre`), 언어 표시, 줄 번호(선택).
  * 지문·보기·해설 어디서든 쓰도록 **구문 요소(span·code)만** 쓴다 — `<p>`나 `<button>` 안에 들어가도 올바른 HTML이다.
- * 색은 테마 토큰(bg-surface · text-foreground · text-muted)만 써서 라이트/다크 대비 테스트(themeContrast.test.ts) 범위 안에 있다.
+ * 색은 테마 토큰(bg-paper-deep · text-sumi · text-muted)만 써서 라이트/다크 대비 테스트(themeContrast.test.ts) 범위 안에 있다.
  * 가로로 긴 줄은 코드 블록 안에서만 스크롤되고(overflow-x-auto) 페이지는 넘치지 않는다. `relative`는 안쪽의 sr-only(절대 위치)
  * 글자가 스크롤 영역 밖으로 빠져나가 페이지를 넓히지 않게 한다(375px 채점 화면에서 찾은 문제).
  */
@@ -29,9 +29,9 @@ export function CodeBlock({
       role="group"
       aria-label={language === "text" ? "원문 그림·표" : `${label} 코드`}
       data-code-block={language}
-      className="my-1 block w-full min-w-0 max-w-full overflow-hidden rounded-lg border border-border bg-surface text-left text-foreground"
+      className="my-1 block w-full min-w-0 max-w-full overflow-hidden rounded-lg border border-line bg-paper-deep text-left text-sumi"
     >
-      <span className="block border-b border-border px-3 py-1 font-sans text-xs font-medium text-muted">{label}</span>
+      <span className="block border-b border-line px-3 py-1 font-sans text-xs font-medium text-muted">{label}</span>
       <code className="relative block overflow-x-auto px-3 py-2 font-mono text-[13px] leading-6 whitespace-pre sm:text-sm">
         {lines.map((line, i) => (
           <span key={i} className="block min-h-6">

@@ -13,3 +13,6 @@ export function resolveIsDark(mode: ThemeMode, prefersDark: boolean): boolean {
   if (mode === "light") return false;
   return prefersDark;
 }
+
+/** theme-color 메타(주소창 색) = 배경 토큰 paper(globals.css) */
+export const THEME_COLOR = { light: "#ffffff", dark: "#111111" } as const;

@@ -41,7 +41,7 @@ function Input({ question, answer, onChange, disabled }: InputProps<"code-blank"
                 onChange={(e) => set(part, e.target.value)}
                 placeholder={`(${part + 1})`}
                 size={Math.max(6, (answer[part] ?? "").length + 1)}
-                className="mx-0.5 rounded border border-primary/60 bg-background px-1 font-mono text-foreground placeholder:text-muted disabled:opacity-80"
+                className="mx-0.5 rounded border border-exam-accent/60 bg-paper px-1 font-mono text-sumi placeholder:text-muted disabled:opacity-80"
               />
             ),
           )
@@ -64,7 +64,7 @@ function Review({ question, answer, result }: ReviewProps<"code-blank">) {
             typeof part === "string" ? (
               <span key={k}>{part}</span>
             ) : (
-              <span key={k} className={`rounded px-0.5 font-semibold ${blanks[part] ? "text-correct" : "text-incorrect"}`}>
+              <span key={k} className={`rounded px-0.5 font-semibold ${blanks[part] ? "text-ok" : "text-shu"}`}>
                 <span aria-hidden>{blanks[part] ? "✓" : "✗"}</span>
                 {normalizeCodeInput(answer[part] ?? "").text || "(빈칸)"}
                 <span className="sr-only">{blanks[part] ? " 정답" : " 오답"}</span>

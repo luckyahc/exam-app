@@ -11,7 +11,7 @@ function Input({ question, answer, onChange, disabled }: InputProps<"match">) {
       {question.pairs.map((p, i) => (
         <li
           key={p.left}
-          className="flex flex-col gap-1.5 rounded-lg border border-border bg-surface p-3 sm:flex-row sm:items-center"
+          className="flex flex-col gap-1.5 rounded-lg border border-line bg-paper-deep p-3 sm:flex-row sm:items-center"
         >
           <span className="font-medium sm:w-40 sm:shrink-0">
             <RichText text={p.left} />
@@ -21,7 +21,7 @@ function Input({ question, answer, onChange, disabled }: InputProps<"match">) {
             value={answer[i] ?? ""}
             disabled={disabled}
             onChange={(e) => onChange(answer.map((x, j) => (j === i ? e.target.value || null : x)))}
-            className="min-w-0 flex-1 rounded border border-border bg-background px-2 py-1.5 text-sm"
+            className="min-w-0 flex-1 rounded border border-line bg-paper px-2 py-1.5 text-sm"
           >
             <option value="">선택하세요</option>
             {options.map((o) => (

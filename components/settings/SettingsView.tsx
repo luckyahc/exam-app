@@ -58,8 +58,8 @@ export function SettingsView() {
           value={settings.quizMode}
           onChange={(e) => updateSettings({ quizMode: e.target.value as QuizModeSetting })}
           options={[
-            { value: "instant", label: "연습 모드 (바로 채점)" },
-            { value: "exam", label: "시험 모드 (끝나고 채점)" },
+            { value: "instant", label: "연습 모드" },
+            { value: "exam", label: "시험 모드" },
           ]}
         />
       </Section>

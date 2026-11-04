@@ -5,13 +5,13 @@ import type { DcFigure } from "@/lib/qtypes/dcFigure";
 
 /**
  * 데이터 통신 graph 그림 12종(lib/qtypes/dcFigure.ts). 슬라이드 그림을 단순화해 다시 그린 것이다.
- * 색은 테마 토큰만 쓴다 — 주 선 var(--primary), 글자·기기 currentColor(foreground), 보조선 var(--muted).
+ * 색은 테마 토큰만 쓴다 — 주 선 var(--exam-accent, var(--sumi)), 글자·기기 currentColor(foreground), 보조선 var(--muted).
  * 색만으로 구별하지 않도록 보조선은 점선, 각 부분에는 글자 라벨을 함께 단다.
  */
 
 const W = 160;
 const H = 110;
-const PRI = "var(--primary)";
+const PRI = "var(--exam-accent, var(--sumi))";
 const MUT = "var(--muted)";
 const FG = "currentColor";
 
@@ -57,7 +57,7 @@ function Axes({ x0 = 14, y0, x1 = 152, top = 8, xLabel, yLabel }: { x0?: number;
 function Device({ x, y, label }: { x: number; y: number; label?: string }) {
   return (
     <g>
-      <rect x={x - 7} y={y - 5} width={14} height={10} rx={1.5} fill="var(--surface)" stroke={FG} strokeWidth={1.2} />
+      <rect x={x - 7} y={y - 5} width={14} height={10} rx={1.5} fill="var(--paper-deep)" stroke={FG} strokeWidth={1.2} />
       {label && (
         <Label x={x} y={y + 2.5} size={6}>
           {label}
@@ -142,7 +142,7 @@ function Figure({ f, arrow }: { f: DcFigure; arrow: string }) {
             {xs.map((x) => (
               <line key={x} x1={80} y1={30} x2={x} y2={85} stroke={PRI} strokeWidth={1.5} />
             ))}
-            <rect x={56} y={16} width={48} height={16} rx={4} fill="var(--surface)" stroke={FG} strokeWidth={1.2} />
+            <rect x={56} y={16} width={48} height={16} rx={4} fill="var(--paper-deep)" stroke={FG} strokeWidth={1.2} />
             <Label x={80} y={27}>스위치/허브</Label>
             {xs.map((x) => (
               <Device key={x} x={x} y={88} />
@@ -160,7 +160,7 @@ function Figure({ f, arrow }: { f: DcFigure; arrow: string }) {
             {xs.map((x) => (
               <g key={x}>
                 <line x1={x} y1={62} x2={x} y2={36} stroke={PRI} strokeWidth={1.3} />
-                <rect x={x - 4} y={59} width={8} height={6} fill="var(--surface)" stroke={FG} strokeWidth={1} />
+                <rect x={x - 4} y={59} width={8} height={6} fill="var(--paper-deep)" stroke={FG} strokeWidth={1} />
                 <Device x={x} y={30} />
               </g>
             ))}
@@ -406,7 +406,7 @@ function Figure({ f, arrow }: { f: DcFigure; arrow: string }) {
 export function DcFigureSvg({ figure, title }: { figure: DcFigure; title: string }) {
   const arrow = `dc-arrow-${useId().replace(/[^a-zA-Z0-9-]/g, "")}`;
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={title} className="h-auto w-full max-w-xs text-foreground" data-figure={figure.name}>
+    <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={title} className="h-auto w-full max-w-xs text-sumi" data-figure={figure.name}>
       <title>{title}</title>
       <defs>
         <marker id={arrow} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">

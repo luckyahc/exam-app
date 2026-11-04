@@ -20,7 +20,7 @@ function Input({ question, answer, onChange, disabled }: InputProps<"blank">) {
               value={answer[part] ?? ""}
               disabled={disabled}
               onChange={(e) => set(part, e.target.value)}
-              className="mx-1 rounded border border-border bg-surface px-2 py-1 text-sm"
+              className="mx-1 rounded border border-line bg-paper-deep px-2 py-1 text-sm"
             >
               <option value="">({part + 1}) 선택</option>
               {question.bank.map((w) => (
@@ -38,7 +38,7 @@ function Input({ question, answer, onChange, disabled }: InputProps<"blank">) {
               onChange={(e) => set(part, e.target.value)}
               placeholder={`(${part + 1})`}
               autoComplete="off"
-              className="mx-1 w-32 rounded border border-border bg-surface px-2 py-1 text-sm"
+              className="mx-1 w-32 rounded border border-line bg-paper-deep px-2 py-1 text-sm"
             />
           ),
         )}

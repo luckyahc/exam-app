@@ -165,7 +165,7 @@ export function GlossaryView({
                   <span
                     className={`text-base font-normal break-words ${e.def ? "" : "text-muted"}`}
                   >
-                    {e.def ?? "정의 없음(슬라이드에 이름만 등장)"}
+                    {e.def ?? "정의 없음"}
                   </span>
                   {e.synonyms?.length ? (
                     <span className="text-sm font-normal text-muted">

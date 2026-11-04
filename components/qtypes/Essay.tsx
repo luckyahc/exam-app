@@ -15,7 +15,7 @@ function Input({ question, answer, onChange, disabled }: InputProps<"essay">) {
         onChange={(e) => onChange(e.target.value)}
         rows={6}
         placeholder="답을 문장으로 써 보세요. 제출하면 모범답안과 채점 포인트가 나옵니다."
-        className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-base leading-relaxed focus:border-primary disabled:opacity-80"
+        className="w-full rounded-lg border border-line bg-paper-deep px-3 py-2 text-base leading-relaxed focus:border-exam-accent disabled:opacity-80"
       />
       <p className="text-xs text-muted">자기 채점 문제 — 정답·오답으로 기록하지 않고 &ldquo;풀었음&rdquo;만 남습니다.</p>
     </div>
@@ -28,16 +28,16 @@ function Review({ question, answer }: ReviewProps<"essay">) {
   return (
     <div className="flex flex-col gap-3">
       <div className="grid gap-3 sm:grid-cols-2">
-        <section aria-label="내 답" className="flex flex-col gap-1 rounded-lg border-l-4 border-primary bg-surface px-3 py-2">
+        <section aria-label="내 답" className="flex flex-col gap-1 rounded-lg border-l-4 border-exam-accent bg-paper-deep px-3 py-2">
           <h3 className="text-xs font-semibold text-muted">내 답</h3>
           <p className="whitespace-pre-wrap text-sm leading-relaxed">{answer.trim() || "(답 없음)"}</p>
         </section>
-        <section aria-label="모범답안" className="flex flex-col gap-1 rounded-lg border-l-4 border-correct bg-surface px-3 py-2">
+        <section aria-label="모범답안" className="flex flex-col gap-1 rounded-lg border-l-4 border-ok bg-paper-deep px-3 py-2">
           <h3 className="text-xs font-semibold text-muted">모범답안</h3>
           <p className="text-sm leading-relaxed">{question.modelAnswer}</p>
         </section>
       </div>
-      <fieldset className="flex flex-col gap-1.5 rounded-lg bg-surface px-3 py-2">
+      <fieldset className="flex flex-col gap-1.5 rounded-lg bg-paper-deep px-3 py-2">
         <legend className="px-1 text-xs font-semibold text-muted">
           채점 포인트 — 내 답에 들어간 것을 체크하세요 ({n}/{question.keyPoints.length})
         </legend>

@@ -65,7 +65,7 @@ export function QTypePlayground({ questions, shortcuts = true }: { questions: Qu
           </span>
         </div>
         <div
-          className="h-1.5 overflow-hidden rounded-full bg-surface"
+          className="h-1.5 overflow-hidden rounded-full bg-paper-deep"
           role="progressbar"
           aria-label="진행"
           aria-valuemin={0}
@@ -73,7 +73,7 @@ export function QTypePlayground({ questions, shortcuts = true }: { questions: Qu
           aria-valuenow={index + 1}
         >
           <div
-            className="h-full bg-primary transition-all"
+            className="h-full bg-exam-accent transition-all"
             style={{ width: `${((index + 1) / questions.length) * 100}%` }}
           />
         </div>
@@ -89,8 +89,8 @@ export function QTypePlayground({ questions, shortcuts = true }: { questions: Qu
                 className={
                   "rounded-full border px-2.5 py-0.5 text-xs " +
                   (i === index
-                    ? "border-primary font-semibold"
-                    : "border-border text-muted hover:text-foreground")
+                    ? "border-exam-accent font-semibold"
+                    : "border-line text-muted hover:text-sumi")
                 }
               >
                 {coreFor(x).label}
@@ -111,12 +111,12 @@ export function QTypePlayground({ questions, shortcuts = true }: { questions: Qu
         result={result}
       />
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
         <button
           type="button"
           onClick={() => go(-1)}
           disabled={index === 0}
-          className="rounded-lg border border-border px-4 py-2 text-sm disabled:opacity-40"
+          className="rounded-lg border border-line px-4 py-2 text-sm disabled:opacity-40"
         >
           ← 이전
         </button>
@@ -126,7 +126,7 @@ export function QTypePlayground({ questions, shortcuts = true }: { questions: Qu
               <button
                 type="button"
                 onClick={retry}
-                className="rounded-lg border border-border px-4 py-2 text-sm"
+                className="rounded-lg border border-line px-4 py-2 text-sm"
               >
                 다시 풀기
               </button>
@@ -134,7 +134,7 @@ export function QTypePlayground({ questions, shortcuts = true }: { questions: Qu
                 type="button"
                 onClick={() => go(1)}
                 disabled={index === questions.length - 1}
-                className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-background disabled:opacity-40"
+                className="rounded-lg bg-exam-accent px-4 py-2 text-sm font-semibold text-paper disabled:opacity-40"
               >
                 다음 →
               </button>
@@ -144,7 +144,7 @@ export function QTypePlayground({ questions, shortcuts = true }: { questions: Qu
               type="button"
               onClick={submit}
               disabled={!complete}
-              className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-background disabled:opacity-40"
+              className="rounded-lg bg-exam-accent px-4 py-2 text-sm font-semibold text-paper disabled:opacity-40"
             >
               제출 (Enter)
             </button>

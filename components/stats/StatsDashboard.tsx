@@ -9,13 +9,7 @@ import { ProgressBar } from "@/components/ui/ProgressBar";
 import { SelectInput } from "@/components/ui/SelectInput";
 import { SUBJECTS } from "@/data/subjects/registry";
 import type { ChapterMeta } from "@/lib/chapterMeta";
-import {
-  chapterStats,
-  generatedAttempts,
-  type StatLine,
-  subjectStats,
-  sumLines,
-} from "@/lib/stats";
+import { chapterStats, type StatLine, subjectStats, sumLines } from "@/lib/stats";
 import { type RecordsState, useRecords } from "@/lib/storage/recordsStore";
 import { getSubject } from "@/lib/subjects";
 
@@ -66,10 +60,9 @@ export function StatsDashboard({ metas }: { metas: Record<string, ChapterMeta[]>
                 }
                 title={`${selected === "all" ? `${getSubject(w.subjectId)?.name} ` : ""}${w.meta.chapterId.toUpperCase()} ${w.meta.shortTitle}`}
                 description={
-                  w.line.openWrong > 0
-                    ? `정답률 ${pct(w.line.rate)} · 틀린 문제 ${w.line.openWrong}개 풀기`
-                    : `정답률 ${pct(w.line.rate)}`
+                  w.line.openWrong > 0 ? `틀린 문제 ${w.line.openWrong}개 풀기` : undefined
                 }
+                trailing={pct(w.line.rate)}
               />
             ))}
           </List>
@@ -194,7 +187,6 @@ function SubjectDetail({
   records: RecordsState;
 }) {
   const rec = records.subjects[subjectId];
-  const gen = generatedAttempts(rec, new Set(chapters.flatMap((c) => c.ids)));
   const ready = chapters.filter((c) => c.ids.length > 0);
   const [topicChapter, setTopicChapter] = useState(ready[0]?.chapterId ?? "");
   const picked = ready.find((c) => c.chapterId === topicChapter) ?? ready[0];
@@ -220,11 +212,6 @@ function SubjectDetail({
             );
           })}
         </List>
-        {gen.attempts > 0 && (
-          <p className="text-xs text-muted">
-            비슷한 문제로 푼 {gen.attempts}회는 위 수치와 따로 셉니다.
-          </p>
-        )}
       </section>
 
       {picked && (

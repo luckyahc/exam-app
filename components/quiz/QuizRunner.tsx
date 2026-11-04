@@ -143,8 +143,8 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
     onNext: () => go(1),
   });
 
-  const btn = "rounded-lg border border-border px-4 py-2 text-sm disabled:opacity-40";
-  const primary = "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-background disabled:opacity-40";
+  const btn = "rounded-lg border border-line px-4 py-2 text-sm disabled:opacity-40";
+  const primary = "rounded-lg bg-sumi px-4 py-2 text-sm font-semibold text-paper disabled:opacity-40";
   const last = session.index === total - 1;
   const setView = (view: ExamView) => update({ ...session, view });
 
@@ -194,27 +194,27 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
             <span className="text-muted">
               {isExam ? `시험 모드 · 답한 문제 ${answeredCount}/${total}` : `즉시 채점 · 채점 ${gradedCount}/${total}`}
               {remaining !== null && (
-                <span className={remaining <= 60 ? " font-semibold text-foreground" : ""}>
+                <span className={remaining <= 60 ? " font-semibold text-sumi" : ""}>
                   {" "}
                   · <span aria-hidden>⏱</span> 남은 시간 {mmss(remaining)}
                 </span>
               )}
             </span>
             {isExam && (
-              <button type="button" onClick={() => setView("eclass")} className="text-muted underline hover:text-foreground">
+              <button type="button" onClick={() => setView("eclass")} className="text-muted underline hover:text-sumi">
                 실제 시험 화면으로
               </button>
             )}
             {/* 제출·다음 버튼(하단)과 떨어진 상단에 두고, 누르면 한 번 더 묻는다 */}
             {!isExam && gradedCount > 0 && !(result && last) && (
-              <button type="button" onClick={() => setConfirmingStop(true)} className="text-muted underline hover:text-foreground">
+              <button type="button" onClick={() => setConfirmingStop(true)} className="text-muted underline hover:text-sumi">
                 여기까지 풀고 결과 보기
               </button>
             )}
           </span>
         </div>
         {confirmingStop && (
-          <div role="alertdialog" aria-labelledby="stop-title" className="flex flex-col gap-3 rounded-lg border border-primary bg-surface p-4">
+          <div role="alertdialog" aria-labelledby="stop-title" className="flex flex-col gap-3 rounded-lg border border-sumi bg-paper-deep p-4">
             <p id="stop-title" className="text-sm font-semibold">
               여기까지 풀고 결과를 볼까요? 채점한 문제 {gradedCount}/{total}
             </p>
@@ -238,9 +238,9 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
             aria-valuemin={1}
             aria-valuemax={total}
             aria-valuenow={session.index + 1}
-            className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface"
+            className="h-1.5 flex-1 overflow-hidden rounded-full bg-paper-deep"
           >
-            <div className="h-full bg-primary transition-all" style={{ width: `${((session.index + 1) / total) * 100}%` }} />
+            <div className="h-full bg-sumi transition-all" style={{ width: `${((session.index + 1) / total) * 100}%` }} />
           </div>
           {q && <BookmarkButton subjectId={item.subject} questionId={q.id} />}
         </div>
@@ -261,7 +261,7 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
                   aria-label={`${i + 1}번 (${label})`}
                   className={
                     "min-w-9 rounded border px-1.5 py-1 " +
-                    (i === session.index ? "border-primary font-semibold" : "border-border text-muted hover:text-foreground")
+                    (i === session.index ? "border-sumi font-semibold" : "border-line text-muted hover:text-sumi")
                   }
                 >
                   {i + 1}
@@ -276,14 +276,14 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
       {q && answer !== undefined ? (
         <QuestionRenderer key={q.id} question={q} answer={answer} onAnswer={setAnswer} result={result} />
       ) : (
-        <p className="rounded-lg border border-border bg-surface p-4 text-sm text-muted">
+        <p className="rounded-lg border border-line bg-paper-deep p-4 text-sm text-muted">
           이 문제를 불러올 수 없습니다(데이터가 바뀌었을 수 있음). 다음 문제로 넘어가세요.
         </p>
       )}
 
       {!isExam && result && q?.generator && (
-        <div className="flex flex-wrap items-center gap-2 rounded-lg border border-dashed border-border p-3">
-          <button type="button" onClick={addSimilar} disabled={generating} className={btn + " font-medium hover:border-primary"}>
+        <div className="flex flex-wrap items-center gap-2 rounded-lg border border-dashed border-line p-3">
+          <button type="button" onClick={addSimilar} disabled={generating} className={btn + " font-medium hover:border-sumi"}>
             {generating ? "만드는 중…" : "↻ 비슷한 문제 새로 생성"}
           </button>
           <span className="text-xs text-muted">같은 유형을 숫자만 바꿔 새로 만들어 바로 다음에 넣습니다(정답은 시뮬레이터 계산, 기록은 따로).</span>
@@ -291,7 +291,7 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
       )}
 
       {/* 하단: 이동·제출 */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
         <button type="button" onClick={() => go(-1)} disabled={session.index === 0} className={btn}>
           ← 이전
         </button>
@@ -333,7 +333,7 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
       </div>
 
       {confirming && (
-        <div role="alertdialog" aria-labelledby="confirm-title" className="flex flex-col gap-3 rounded-lg border border-primary bg-surface p-4">
+        <div role="alertdialog" aria-labelledby="confirm-title" className="flex flex-col gap-3 rounded-lg border border-sumi bg-paper-deep p-4">
           <p id="confirm-title" className="text-sm font-semibold">
             답안을 제출할까요? 답한 문제 {answeredCount}/{total}
             {answeredCount < total && ` — 답하지 않은 ${total - answeredCount}문제는 미응답(오답)으로 처리됩니다`}

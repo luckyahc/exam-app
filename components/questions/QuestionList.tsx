@@ -176,7 +176,7 @@ export function QuestionList({ subject }: { subject: ListSubject }) {
       <List>
         <ListRow
           title="필터"
-          description={active ? `${active}개 적용` : "챕터 · 유형 · 토픽"}
+          description={active ? `${active}개 적용` : "없음"}
           onClick={() => setSheet("filter")}
         />
         <ListRow
@@ -227,9 +227,6 @@ export function QuestionList({ subject }: { subject: ListSubject }) {
           더 보기 ({visible.length - limit})
         </Button>
       )}
-      <p className="text-sm text-muted">
-        정답 보기는 기록에 넣지 않습니다. 비슷한 문제로 새로 만든 문제는 복습 탭에 있습니다.
-      </p>
 
       <BottomSheet open={sheet === "filter"} onClose={() => setSheet(null)} title="필터">
         <div className="flex flex-col gap-6 pt-1">

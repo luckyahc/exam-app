@@ -9,7 +9,7 @@ function Input({ question, answer, onChange, disabled }: InputProps<"classify">)
       {question.items.map((it, i) => (
         <li
           key={it.label}
-          className="flex flex-col gap-2 rounded-lg border border-border bg-surface p-3"
+          className="flex flex-col gap-2 rounded-lg border border-line bg-paper-deep p-3"
         >
           <span className="font-medium">
             <RichText text={it.label} />
@@ -32,8 +32,8 @@ function Input({ question, answer, onChange, disabled }: InputProps<"classify">)
                   className={
                     "rounded-full border px-3 py-1 text-sm transition-colors " +
                     (on
-                      ? "border-primary bg-primary/10 font-semibold"
-                      : "border-border hover:border-primary/60")
+                      ? "border-exam-accent bg-exam-accent/10 font-semibold"
+                      : "border-line hover:border-exam-accent/60")
                   }
                 >
                   {on && <span aria-hidden>✓ </span>}

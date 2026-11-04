@@ -61,7 +61,8 @@ export function TimerChips({
       </OptionGroup>
       {custom !== null && (
         <TextInput
-          label={`분 (1~${MAX_TIMER_MIN})`}
+          label="분"
+          placeholder={`1~${MAX_TIMER_MIN}`}
           inputMode="numeric"
           autoFocus
           value={custom}

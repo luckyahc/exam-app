@@ -21,19 +21,19 @@ function TallyTable({ title, rows, label }: { title: string; rows: Tally[]; labe
       <table className="w-full table-fixed border-collapse text-sm">
         <thead>
           <tr className="text-left text-xs text-muted">
-            <th className="border-b border-border py-1 font-medium">항목</th>
-            <th className="w-20 border-b border-border py-1 text-right font-medium">정답</th>
-            <th className="w-16 border-b border-border py-1 text-right font-medium">정답률</th>
+            <th className="border-b border-line py-1 font-medium">항목</th>
+            <th className="w-20 border-b border-line py-1 text-right font-medium">정답</th>
+            <th className="w-16 border-b border-line py-1 text-right font-medium">정답률</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((r) => (
             <tr key={r.key}>
-              <td className="break-words border-b border-border py-1.5 pr-2">{label(r.key)}</td>
-              <td className="border-b border-border py-1.5 text-right">
+              <td className="break-words border-b border-line py-1.5 pr-2">{label(r.key)}</td>
+              <td className="border-b border-line py-1.5 text-right">
                 {r.correct}/{r.total}
               </td>
-              <td className="border-b border-border py-1.5 text-right font-semibold">{pct(r)}</td>
+              <td className="border-b border-line py-1.5 text-right font-semibold">{pct(r)}</td>
             </tr>
           ))}
         </tbody>
@@ -73,7 +73,7 @@ export function ResultView() {
       <>
       <Title />
       <div className="flex flex-col gap-3">
-        <p className="rounded-lg border border-border bg-surface p-4 text-sm">표시할 결과가 없습니다. 퀴즈를 먼저 풀어 주세요.</p>
+        <p className="rounded-lg border border-line bg-paper-deep p-4 text-sm">표시할 결과가 없습니다. 퀴즈를 먼저 풀어 주세요.</p>
         <Link href="/" className="text-sm underline">
           홈으로
         </Link>
@@ -102,7 +102,7 @@ export function ResultView() {
     <>
     <Title />
     <div className="flex flex-col gap-8">
-      <section className="flex flex-col gap-2 rounded-xl border border-border bg-surface p-5">
+      <section className="flex flex-col gap-2 rounded-xl border border-line bg-paper-deep p-5">
         <p className="text-sm text-muted">
           {session.label} · {session.mode === "exam" ? "시험 모드" : "즉시 채점"}
         </p>
@@ -117,14 +117,14 @@ export function ResultView() {
         </p>
         <div className="mt-2 flex flex-wrap gap-2">
           {sum.wrongIds.length > 0 && (
-            <button type="button" onClick={retryWrong} className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-background">
+            <button type="button" onClick={retryWrong} className="rounded-lg bg-sumi px-4 py-2 text-sm font-semibold text-paper">
               틀린 문제만 다시 풀기 ({sum.wrongIds.length})
             </button>
           )}
-          <Link href={session.backHref} className="rounded-lg border border-border px-4 py-2 text-sm">
+          <Link href={session.backHref} className="rounded-lg border border-line px-4 py-2 text-sm">
             처음 화면으로
           </Link>
-          <Link href={`/review?subject=${sum.bySubject.length === 1 ? sum.bySubject[0].key : "all"}`} className="rounded-lg border border-border px-4 py-2 text-sm">
+          <Link href={`/review?subject=${sum.bySubject.length === 1 ? sum.bySubject[0].key : "all"}`} className="rounded-lg border border-line px-4 py-2 text-sm">
             오답노트
           </Link>
         </div>
@@ -148,11 +148,11 @@ export function ResultView() {
             const n = session.items.findIndex((it) => it.id === id) + 1;
             const status = !r ? "미응답" : r.score > 0 ? `오답 · 부분 점수 ${Math.round(r.score * 100)}%` : "오답";
             return (
-              <li key={id} className="rounded-lg border border-border bg-surface">
+              <li key={id} className="rounded-lg border border-line bg-paper-deep">
                 <details>
                   <summary className="flex cursor-pointer flex-col gap-1 p-3 text-sm">
                     <span className="flex flex-wrap items-center gap-2 text-xs text-muted">
-                      <span className="font-semibold text-foreground">{n}번</span>
+                      <span className="font-semibold text-sumi">{n}번</span>
                       <span>
                         <span aria-hidden>✗ </span>
                         {status}
@@ -162,7 +162,7 @@ export function ResultView() {
                     {q ? <span className="line-clamp-2"><RichText text={q.prompt} /></span> : <span>문제를 찾을 수 없음</span>}
                   </summary>
                   {q && (
-                    <div className="border-t border-border p-3">
+                    <div className="border-t border-line p-3">
                       {r ? (
                         <QuestionRenderer question={q} answer={answerForReview(session, q)} onAnswer={() => {}} result={r} />
                       ) : (

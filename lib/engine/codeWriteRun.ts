@@ -9,6 +9,11 @@ import type { EngineClient, RunOutcome } from "./client";
 import { normalizeStdout, sameTable } from "./compare";
 import type { PythonRunResult, SqlRunResult } from "./protocol";
 
+/** 실행 시간 제한을 넘겨 Worker를 멈췄을 때의 안내: "5초를 넘겨 중단됐습니다 — …" (연습·시험 화면 모두 이 글을 보인다) */
+export function timeoutReason(limitMs: number, hint: string): string {
+  return `${limitMs / 1000}초를 넘겨 중단됐습니다 — ${hint}`;
+}
+
 export interface EngineManifest {
   pyodide: { version: string; base: string };
   sqljs: { version: string; base: string };
@@ -41,7 +46,7 @@ export async function executeCodeWrite(client: EngineClient, manifest: EngineMan
     if (exp.result.error || exp.result.setupError) return { ...base, status: "unavailable", passed: false, reason: `모범 답안 실행 오류(데이터 오류): ${exp.result.error?.message ?? exp.result.setupError}` };
     const expected: RunSide = { stdout: exp.result.stdout, error: null };
     const mine = await client.runPython({ ...req, code });
-    if (mine.status === "timeout") return { ...base, status: "timeout", passed: false, expected, reason: `시간 초과(${mine.limitMs / 1000}초) — 무한 반복이 없는지 확인하세요` };
+    if (mine.status === "timeout") return { ...base, status: "timeout", passed: false, expected, reason: timeoutReason(mine.limitMs, "무한 반복이 없는지 확인하세요") };
     if (mine.status === "unavailable") return { ...base, status: "unavailable", passed: false, reason: mine.message };
     const r = mine.result;
     const mineSide: RunSide = { stdout: r.stdout, error: r.error ? (r.error.line ? `${r.error.message} (${r.error.line}번째 줄)` : r.error.message) : null, truncated: r.truncated };
@@ -68,7 +73,7 @@ export async function executeCodeWrite(client: EngineClient, manifest: EngineMan
   if (exp.result.error) return { ...base, status: "unavailable", passed: false, reason: `모범 답안 실행 오류(데이터 오류): ${exp.result.error}` };
   const expected: RunSide = sql.mode === "select" ? { table: exp.result.result, error: null } : { tables: exp.result.tables, error: null };
   const mine = await client.runSql({ ...req, code });
-  if (mine.status === "timeout") return { ...base, status: "timeout", passed: false, expected, reason: `시간 초과(${mine.limitMs / 1000}초)` };
+  if (mine.status === "timeout") return { ...base, status: "timeout", passed: false, expected, reason: timeoutReason(mine.limitMs, "끝나지 않는 반복(재귀 WITH 등)이 없는지 확인하세요") };
   if (mine.status === "unavailable") return { ...base, status: "unavailable", passed: false, reason: mine.message };
   const r = mine.result;
   const mineSide: RunSide = sql.mode === "select" ? { table: r.result, error: r.error } : { tables: r.tables, error: r.error };

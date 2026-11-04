@@ -63,10 +63,10 @@ function Output({ side, title }: { side: RunSide | undefined; title: string }) {
     <div className="flex min-w-0 flex-col gap-1">
       <span className="text-xs font-semibold text-muted">{title}</span>
       {side.error && (
-        <pre className="overflow-x-auto rounded-lg border border-incorrect bg-surface px-3 py-2 font-mono text-xs whitespace-pre-wrap text-incorrect">{side.error}</pre>
+        <pre className="overflow-x-auto rounded-lg border border-shu bg-paper-deep px-3 py-2 font-mono text-xs whitespace-pre-wrap text-shu">{side.error}</pre>
       )}
       {side.stdout !== undefined && (
-        <pre className="max-h-72 overflow-auto rounded-lg border border-border bg-surface px-3 py-2 font-mono text-xs leading-5 whitespace-pre text-foreground">
+        <pre className="max-h-72 overflow-auto rounded-lg border border-line bg-paper-deep px-3 py-2 font-mono text-xs leading-5 whitespace-pre text-sumi">
           {side.stdout === "" ? <span className="text-muted">(출력 없음)</span> : side.stdout}
           {side.truncated && <span className="text-muted">{"\n"}… 출력이 너무 길어 잘랐습니다</span>}
         </pre>
@@ -86,9 +86,9 @@ function Output({ side, title }: { side: RunSide | undefined; title: string }) {
 function ResultTable({ table }: { table: { columns: string[]; rows: unknown[][] } | null | undefined }) {
   if (!table) return <p className="text-xs text-muted">(결과 표 없음)</p>;
   return (
-    <div className="max-h-72 overflow-auto rounded-lg border border-border">
+    <div className="max-h-72 overflow-auto rounded-lg border border-line">
       <table className="w-full min-w-max text-xs">
-        <thead className="bg-surface text-left text-muted">
+        <thead className="bg-paper-deep text-left text-muted">
           <tr>
             {table.columns.map((c, i) => (
               <th key={i} className="px-2 py-1 font-medium">
@@ -99,7 +99,7 @@ function ResultTable({ table }: { table: { columns: string[]; rows: unknown[][] 
         </thead>
         <tbody className="font-mono">
           {table.rows.map((r, i) => (
-            <tr key={i} className="border-t border-border">
+            <tr key={i} className="border-t border-line">
               {r.map((v, j) => (
                 <td key={j} className="px-2 py-1">
                   {v === null ? <span className="text-muted">NULL</span> : String(v)}
@@ -109,7 +109,7 @@ function ResultTable({ table }: { table: { columns: string[]; rows: unknown[][] 
           ))}
         </tbody>
       </table>
-      <p className="border-t border-border px-2 py-1 text-xs text-muted">{table.rows.length}행</p>
+      <p className="border-t border-line px-2 py-1 text-xs text-muted">{table.rows.length}행</p>
     </div>
   );
 }
@@ -138,12 +138,12 @@ function Input({ question: q, answer, onChange, disabled }: InputProps<"code-wri
       </p>
 
       {pandasWaiting && manifest && (
-        <div className="flex flex-col gap-2 rounded-lg border border-primary/60 bg-primary/5 p-3 text-sm">
+        <div className="flex flex-col gap-2 rounded-lg border border-exam-accent/60 bg-exam-accent/5 p-3 text-sm">
           <p>
             이 문제는 <b>판다스</b>가 필요합니다. 엔진을 불러오기 전에는 실행·제출할 수 없습니다(건너뛰기는 할 수 있어요).
           </p>
           <div className="flex flex-wrap items-center gap-3">
-            <button type="button" onClick={() => void prepare()} className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-background">
+            <button type="button" onClick={() => void prepare()} className="rounded-lg bg-exam-accent px-4 py-2 text-sm font-semibold text-paper">
               실행 엔진 불러오기
             </button>
             <span className="text-xs text-muted">
@@ -161,12 +161,12 @@ function Input({ question: q, answer, onChange, disabled }: InputProps<"code-wri
       )}
 
       {st.state === "failed" && (
-        <div role="alert" className="flex flex-col gap-2 rounded-lg border border-incorrect p-3 text-sm">
-          <p className="font-semibold text-incorrect">채점할 수 없음 — 실행 엔진을 불러오지 못했습니다</p>
+        <div role="alert" className="flex flex-col gap-2 rounded-lg border border-shu p-3 text-sm">
+          <p className="font-semibold text-shu">채점할 수 없음 — 실행 엔진을 불러오지 못했습니다</p>
           <p className="text-xs text-muted">{st.message} · 이 문제는 기록에 남지 않습니다.</p>
           {/* 내려받기 실패·느린 네트워크 뒤 다시 불러오기(Sprint 17). 불러오기 시간 초과였다면 Worker를 이미 버렸으므로 새로 띄운다 */}
           <div>
-            <button type="button" onClick={() => void prepare()} className="rounded-lg border border-primary px-4 py-2 text-sm font-semibold text-primary">
+            <button type="button" onClick={() => void prepare()} className="rounded-lg border border-exam-accent px-4 py-2 text-sm font-semibold text-exam-accent">
               다시 시도
             </button>
           </div>
@@ -185,7 +185,7 @@ function Input({ question: q, answer, onChange, disabled }: InputProps<"code-wri
             type="button"
             onClick={() => void execute()}
             disabled={running || st.state !== "ready" || !answer.source.trim()}
-            className="rounded-lg border border-primary px-4 py-2 text-sm font-semibold text-primary disabled:opacity-40"
+            className="rounded-lg border border-exam-accent px-4 py-2 text-sm font-semibold text-exam-accent disabled:opacity-40"
           >
             {running ? "실행 중…" : "▶ 실행"}
           </button>
@@ -198,8 +198,8 @@ function Input({ question: q, answer, onChange, disabled }: InputProps<"code-wri
       )}
 
       {run && run.status === "unavailable" && (
-        <div role="alert" className="flex flex-col gap-2 rounded-lg border border-incorrect p-3 text-sm">
-          <p className="font-semibold text-incorrect">채점할 수 없음</p>
+        <div role="alert" className="flex flex-col gap-2 rounded-lg border border-shu p-3 text-sm">
+          <p className="font-semibold text-shu">채점할 수 없음</p>
           <p className="text-xs text-muted">{run.reason} · 이 문제는 기록에 남지 않습니다.</p>
           <details>
             <summary className="cursor-pointer text-sm font-medium">모범 답안 보기</summary>
@@ -207,7 +207,7 @@ function Input({ question: q, answer, onChange, disabled }: InputProps<"code-wri
           </details>
         </div>
       )}
-      {run && run.status === "timeout" && !disabled && <p className="text-sm text-incorrect">{run.reason}</p>}
+      {run && run.status === "timeout" && !disabled && <p className="text-sm text-shu">{run.reason}</p>}
       {run && run.status === "done" && !disabled && <Output side={run.mine} title="내 실행 결과" />}
     </div>
   );
@@ -221,7 +221,7 @@ function Review({ question: q, result }: ReviewProps<"code-write">) {
         <>
           <div className="flex flex-wrap items-center gap-2 text-sm">
             <Mark ok={result.correct} okText="결과 일치" noText="결과 불일치" />
-            {run.reason && <span className="text-incorrect">{run.reason}</span>}
+            {run.reason && <span className="text-shu">{run.reason}</span>}
             {run.ms !== undefined && <span className="text-xs text-muted">실행 {Math.round(run.ms)}ms</span>}
           </div>
           {!result.correct && (

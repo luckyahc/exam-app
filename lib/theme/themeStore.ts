@@ -1,5 +1,11 @@
 import { safeGet, safeSet } from "@/lib/storage/safeStorage";
-import { THEME_STORAGE_KEY, isThemeMode, resolveIsDark, type ThemeMode } from "./constants";
+import {
+  THEME_COLOR,
+  THEME_STORAGE_KEY,
+  isThemeMode,
+  resolveIsDark,
+  type ThemeMode,
+} from "./constants";
 
 /**
  * React 외부에 사는 작은 테마 스토어. `useSyncExternalStore`로 구독한다.
@@ -21,7 +27,11 @@ function readStored(): ThemeMode {
 function applyClass(mode: ThemeMode) {
   if (typeof document === "undefined") return;
   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  document.documentElement.classList.toggle("dark", resolveIsDark(mode, prefersDark));
+  const dark = resolveIsDark(mode, prefersDark);
+  document.documentElement.classList.toggle("dark", dark);
+  // theme-color 메타는 기기 설정(media)만 보므로, 직접 고른 테마와 어긋나지 않게 두 태그 모두 지금 테마 색으로 맞춘다
+  for (const meta of document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]'))
+    meta.content = dark ? THEME_COLOR.dark : THEME_COLOR.light;
 }
 
 function emit() {

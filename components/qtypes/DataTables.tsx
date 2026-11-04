@@ -14,7 +14,7 @@ function useFold(total: number) {
   const shown = open || total <= FOLD_ROWS ? total : FOLD_ROWS;
   const toggle =
     total > FOLD_ROWS ? (
-      <button type="button" onClick={() => setOpen(!open)} className="text-xs font-medium text-primary underline-offset-2 hover:underline" aria-expanded={open}>
+      <button type="button" onClick={() => setOpen(!open)} className="text-xs font-medium text-exam-accent underline-offset-2 hover:underline" aria-expanded={open}>
         {open ? "접기" : `모두 보기 (${total}행)`}
       </button>
     ) : null;
@@ -26,9 +26,9 @@ function Grid({ head, rows, rowHeads, cornerHead }: { head: ReactNode[]; rows: C
   const { shown, toggle } = useFold(rows.length);
   return (
     <div className="flex min-w-0 flex-col items-start gap-1">
-      <div className="max-w-full overflow-x-auto rounded-lg border border-border">
+      <div className="max-w-full overflow-x-auto rounded-lg border border-line">
         <table className="min-w-max text-xs">
-          <thead className="bg-surface text-left text-muted">
+          <thead className="bg-paper-deep text-left text-muted">
             <tr>
               {rowHeads && <th className="px-2 py-1 font-medium">{cornerHead}</th>}
               {head.map((h, i) => (
@@ -40,8 +40,8 @@ function Grid({ head, rows, rowHeads, cornerHead }: { head: ReactNode[]; rows: C
           </thead>
           <tbody className="font-mono">
             {rows.slice(0, shown).map((r, i) => (
-              <tr key={i} className="border-t border-border">
-                {rowHeads && <th className="bg-surface px-2 py-1 text-left font-medium text-muted">{cellText(rowHeads[i] ?? null)}</th>}
+              <tr key={i} className="border-t border-line">
+                {rowHeads && <th className="bg-paper-deep px-2 py-1 text-left font-medium text-muted">{cellText(rowHeads[i] ?? null)}</th>}
                 {r.map((v, j) => (
                   <td key={j} className="px-2 py-1 whitespace-pre">
                     {cellText(v)}
@@ -51,7 +51,7 @@ function Grid({ head, rows, rowHeads, cornerHead }: { head: ReactNode[]; rows: C
             ))}
           </tbody>
         </table>
-        <p className="border-t border-border px-2 py-1 text-xs text-muted">
+        <p className="border-t border-line px-2 py-1 text-xs text-muted">
           {rows.length}행{shown < rows.length && ` 중 ${shown}행 표시`}
         </p>
       </div>
@@ -82,7 +82,7 @@ function CsvFile({ file }: { file: Extract<PyFile, { kind: "csv" }> }) {
   return (
     <Titled title={<>{file.name} <span className="font-normal text-muted">(파일 내용 · {file.encoding})</span></>}>
       <div className="flex min-w-0 flex-col items-start gap-1">
-        <pre className="max-w-full overflow-x-auto rounded-lg border border-border bg-surface px-3 py-2 font-mono text-xs leading-5 whitespace-pre text-foreground">
+        <pre className="max-w-full overflow-x-auto rounded-lg border border-line bg-paper-deep px-3 py-2 font-mono text-xs leading-5 whitespace-pre text-sumi">
           {lines.slice(0, shown).join("\n")}
         </pre>
         {toggle}
@@ -118,7 +118,7 @@ function Frame({ frame }: { frame: PyFrame }) {
 export function DataTables({ data }: { data: QuestionData }) {
   const title = data.kind === "sql" ? (data.before ? "실행 전 테이블" : "사용 테이블") : "사용 데이터";
   return (
-    <section aria-label={title} className="flex min-w-0 flex-col gap-2 rounded-lg border border-border p-3">
+    <section aria-label={title} className="flex min-w-0 flex-col gap-2 rounded-lg border border-line p-3">
       <h3 className="text-xs font-semibold text-muted">{title}</h3>
       {data.kind === "sql"
         ? data.tables.map(({ name, table }) => (

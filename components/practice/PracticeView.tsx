@@ -243,7 +243,7 @@ export function PracticeView(p: PracticeViewProps) {
       >
         <p className="pt-1 text-base">
           {exitOpen === "storage"
-            ? "이 브라우저는 기록을 저장할 수 없습니다. 나가면 이번 풀이 기록이 남지 않습니다."
+            ? "이 브라우저는 기록을 저장할 수 없어, 나가면 이번 풀이가 사라집니다."
             : "확인하지 않은 답은 기록되지 않습니다."}
         </p>
       </BottomSheet>

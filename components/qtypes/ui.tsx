@@ -32,7 +32,7 @@ function InlineText({ text }: { text: string }) {
             {p.slice(2, -2)}
           </strong>
         ) : p.startsWith("`") && p.endsWith("`") ? (
-          <code key={i} className="rounded bg-surface px-1 py-0.5 font-mono text-[0.9em]">
+          <code key={i} className="rounded bg-paper-deep px-1 py-0.5 font-mono text-[0.9em]">
             {p.slice(1, -1)}
           </code>
         ) : (
@@ -55,7 +55,7 @@ export function Mark({
 }) {
   return (
     <span
-      className={`inline-flex shrink-0 items-center gap-1 text-sm font-semibold ${ok ? "text-correct" : "text-incorrect"}`}
+      className={`inline-flex shrink-0 items-center gap-1 text-sm font-semibold ${ok ? "text-ok" : "text-shu"}`}
     >
       <span aria-hidden>{ok ? "✓" : "✗"}</span>
       {ok ? okText : noText}
@@ -75,17 +75,17 @@ export function ResultBanner({ correct, score }: { correct: boolean; score: numb
       role="status"
       className={
         "flex flex-col gap-0.5 rounded-xl border-2 px-4 py-3 " +
-        (correct ? "border-correct bg-correct/5" : "border-incorrect bg-incorrect/5")
+        (correct ? "border-ok bg-ok/5" : "border-shu bg-shu/5")
       }
     >
       <p
-        className={`flex items-center gap-2 text-2xl font-bold ${correct ? "text-correct" : "text-incorrect"}`}
+        className={`flex items-center gap-2 text-2xl font-bold ${correct ? "text-ok" : "text-shu"}`}
       >
         <span aria-hidden>{correct ? "✓" : "✗"}</span>
         {correct ? "정답" : "오답"}
       </p>
       {partial && (
-        <p className="text-xs text-foreground">
+        <p className="text-xs text-sumi">
           부분 점수 {Math.round(score * 100)}% (일부만 맞음 — 오답으로 기록됩니다)
         </p>
       )}
@@ -102,10 +102,10 @@ export function Tag({
   tone?: "muted" | "correct" | "incorrect" | "primary";
 }) {
   const color = {
-    muted: "border-border text-muted",
-    correct: "border-correct text-correct",
-    incorrect: "border-incorrect text-incorrect",
-    primary: "border-primary text-primary",
+    muted: "border-line text-muted",
+    correct: "border-ok text-ok",
+    incorrect: "border-shu text-shu",
+    primary: "border-exam-accent text-exam-accent",
   }[tone];
   return (
     <span className={`shrink-0 rounded border px-1.5 py-0.5 text-xs font-medium ${color}`}>
@@ -140,15 +140,15 @@ export function ChoiceButton({
       className={
         "flex w-full items-start gap-3 rounded-lg border px-3 py-2.5 text-left transition-colors disabled:cursor-default " +
         (selected
-          ? "border-primary bg-primary/10"
-          : "border-border bg-surface hover:border-primary/60")
+          ? "border-exam-accent bg-exam-accent/10"
+          : "border-line bg-paper-deep hover:border-exam-accent/60")
       }
     >
       <span
         aria-hidden
         className={
           "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded text-xs font-semibold " +
-          (selected ? "bg-primary text-background" : "border border-border text-muted")
+          (selected ? "bg-exam-accent text-paper" : "border border-line text-muted")
         }
       >
         {index + 1}
@@ -169,13 +169,13 @@ export function ReviewRow({
   aside?: ReactNode;
 }) {
   const border = {
-    correct: "border-correct",
-    incorrect: "border-incorrect",
-    neutral: "border-border",
+    correct: "border-ok",
+    incorrect: "border-shu",
+    neutral: "border-line",
   }[tone];
   return (
     <li
-      className={`flex flex-wrap items-center justify-between gap-2 rounded-lg border-l-4 ${border} bg-surface px-3 py-2`}
+      className={`flex flex-wrap items-center justify-between gap-2 rounded-lg border-l-4 ${border} bg-paper-deep px-3 py-2`}
     >
       <div className="min-w-0 flex-1">{children}</div>
       {aside && <div className="flex flex-wrap items-center gap-1.5">{aside}</div>}

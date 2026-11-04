@@ -98,7 +98,7 @@ function MemoItem({ f, dir, open, onOpen, entry, onMark, meta, related }: ItemPr
             hideLabel
             value={guess}
             onChange={(e) => setGuess(e.target.value)}
-            placeholder="이름 입력(선택)"
+            placeholder="이름 입력"
             className="min-w-0 flex-1 font-mono"
           />
           <Button type="submit" variant="secondary" className="shrink-0">
@@ -314,9 +314,7 @@ export function MemorizeView({
       </div>
 
       <section aria-label="장별 진행" className="flex min-w-0 flex-col gap-2 bg-paper-deep p-3">
-        <p className="text-sm text-muted">
-          장별 진행 · {dir === "A" ? "이름 맞히기" : "역할 맞히기"} · 알았음/전체
-        </p>
+        <p className="text-sm text-muted">장별 알았음</p>
         <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm sm:grid-cols-4">
           {summary.map((s) => (
             <li key={s.lecture} className={s.lecture === lecture ? "font-semibold" : ""}>
@@ -329,7 +327,7 @@ export function MemorizeView({
         </ul>
         <div className="flex min-w-0 flex-wrap items-center gap-x-3">
           <Button variant="text" onClick={doReset} className="text-sm">
-            {resetScope} 기록 초기화 ({dir})
+            {resetScope} 기록 초기화
           </Button>
           {undo && (
             <>
@@ -350,10 +348,7 @@ export function MemorizeView({
       </section>
 
       <p className="text-sm text-muted" aria-live="polite">
-        <span className="font-mono">{deck.length}</span>개 ·{" "}
-        {dir === "A"
-          ? "설명을 보고 이름을 떠올린 뒤 가린 칸을 누르세요"
-          : "이름을 보고 역할을 떠올린 뒤 가린 칸을 누르세요"}
+        <span className="font-mono">{deck.length}</span>개
       </p>
 
       {layout === "list" ? (

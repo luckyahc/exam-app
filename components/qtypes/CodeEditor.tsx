@@ -106,7 +106,7 @@ export function CodeEditor({
         autoCapitalize="off"
         spellCheck={false}
         data-gramm="false"
-        className="w-full min-w-0 resize-y overflow-x-auto rounded-lg border border-border bg-surface px-3 py-2 font-mono text-[13px] leading-6 whitespace-pre text-foreground read-only:opacity-80 sm:text-sm"
+        className="w-full min-w-0 resize-y overflow-x-auto rounded-lg border border-line bg-paper-deep px-3 py-2 font-mono text-[13px] leading-6 whitespace-pre text-sumi read-only:opacity-80 sm:text-sm"
       />
       <span id={hintId} className="text-xs text-muted">
         Tab: 들여쓰기 4칸 · Shift+Tab: 내어쓰기 · Esc 다음 Tab: 다음 항목으로 이동{escaped && " — 지금 Tab을 누르면 이동합니다"}

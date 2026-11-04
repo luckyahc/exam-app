@@ -53,7 +53,7 @@ export function DataManager() {
     setTimeout(() => URL.revokeObjectURL(url), 0);
     setNotice({
       kind: "ok",
-      text: `${exportScope === "all" ? "전체" : subjectName(exportScope)} 기록을 내보냈습니다(${a.download}).`,
+      text: `${exportScope === "all" ? "전체" : subjectName(exportScope)} 기록을 내보냈습니다.`,
     });
   };
 
@@ -63,7 +63,7 @@ export function DataManager() {
     if (file.size > MAX_BACKUP_BYTES) {
       setNotice({
         kind: "error",
-        text: "파일이 너무 큽니다(5MB 초과). 이 앱의 백업 파일인지 확인해 주세요.",
+        text: "5MB가 넘는 파일은 가져올 수 없습니다.",
       });
       return;
     }
@@ -233,9 +233,7 @@ export function DataManager() {
         }
       >
         <div className="flex flex-col gap-4 pt-1">
-          <p className="text-sm font-semibold">
-            되돌릴 수 없습니다. 필요하면 먼저 내보내기로 백업하세요.
-          </p>
+          <p className="text-sm font-semibold">되돌릴 수 없습니다.</p>
           <div role="radiogroup" aria-label="범위" className="flex flex-col gap-2">
             {scopeOptions.map((o) => (
               <Option

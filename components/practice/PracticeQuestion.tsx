@@ -152,21 +152,26 @@ function Verdict({ correct, score }: { correct: boolean; score: number }) {
 
 /** 해설: 핵심 한 줄(summary 또는 첫 문장) + 본문 + 근거·출처. 내용 규칙은 기존 문제 화면과 같다 */
 export function Explanation({ question }: { question: Question }) {
-  const key = question.summary ?? keyLine(question.explanation);
-  const basis = explanationBasis(question.explanation);
+  // 문제 데이터 해설의 "⭐ 근거: …"는 데이터를 바꾸지 않고 화면에서만 글자로 보인다(이모지 금지)
+  const explanation = noStar(question.explanation);
+  const key = noStar(question.summary ?? keyLine(question.explanation));
+  const basis = explanationBasis(explanation);
   return (
     <div className="flex flex-col gap-2 bg-paper-deep p-4 text-base leading-relaxed">
       <ExplanationSource question={question} />
-      {key !== question.explanation.trim() && (
+      {key !== explanation.trim() && (
         <p className="font-semibold">
           <RichText text={key} />
         </p>
       )}
       <p>
-        <RichText text={explanationBody(question.explanation)} />
+        <RichText text={explanationBody(explanation)} />
       </p>
       {basis && <p className="text-sm text-muted">{basis}</p>}
       <p className="text-sm text-muted">출처 {question.slideRef}</p>
     </div>
   );
 }
+
+/** ⭐ → "시험 포인트"(해설·요약 표시용) */
+const noStar = (s: string) => s.replace(/⭐\s*/g, "시험 포인트 ");

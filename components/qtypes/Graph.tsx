@@ -36,7 +36,7 @@ function CurveSvg({
       viewBox={`0 0 ${W} ${H}`}
       role="img"
       aria-label={title}
-      className="h-auto w-full max-w-xs text-foreground"
+      className="h-auto w-full max-w-xs text-sumi"
     >
       <title>{title}</title>
       <g className="text-muted" stroke="currentColor" strokeWidth="1">
@@ -46,7 +46,7 @@ function CurveSvg({
       <path
         d={d}
         fill="none"
-        stroke="var(--primary)"
+        stroke="var(--exam-accent, var(--sumi))"
         strokeWidth="2.5"
         strokeLinejoin="round"
         strokeLinecap="round"
@@ -104,7 +104,7 @@ function Review({ question, answer }: ReviewProps<"graph">) {
         return (
           <div
             key={o.key}
-            className={`flex flex-col gap-1 rounded-lg border-2 bg-surface p-2 ${isAnswer ? "border-correct" : isMine ? "border-incorrect" : "border-border"}`}
+            className={`flex flex-col gap-1 rounded-lg border-2 bg-paper-deep p-2 ${isAnswer ? "border-ok" : isMine ? "border-shu" : "border-line"}`}
           >
             <span className="flex flex-wrap items-center gap-1.5 text-sm">
               <span className="font-semibold">

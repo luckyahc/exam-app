@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { ButtonLink } from "@/components/ui/Button";
 import { BackLink } from "@/components/layout/PageHeader";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -37,7 +37,7 @@ export function QuizEntry() {
       const sessionId = params.get("session");
       if (sessionId) {
         const s = loadSession(sessionId);
-        if (!s) return { kind: "empty", message: "이어서 풀 세션을 찾을 수 없습니다(다른 퀴즈를 시작했거나 저장소가 비워졌습니다).", backHref: "/" } as State;
+        if (!s) return { kind: "empty", message: "이어서 풀 세션을 찾을 수 없습니다.", backHref: "/" } as State;
         const gens = Object.fromEntries(
           s.items.map((it) => [it.id, subjectRecords(it.subject).wrong[it.id]?.gen]),
         );
@@ -94,23 +94,21 @@ export function QuizEntry() {
   if (state.kind === "empty")
     return (
       <div className="flex flex-col gap-3">
-        <p className="rounded-lg border border-border bg-surface p-4 text-sm">{state.message}</p>
-        <Link href={state.backHref} className="text-sm text-muted underline hover:text-foreground">
+        <p className="bg-paper-deep p-4 text-base">{state.message}</p>
+        <ButtonLink href={state.backHref} variant="secondary">
           돌아가기
-        </Link>
+        </ButtonLink>
       </div>
     );
   if (state.session.finished)
     return (
       <div className="flex flex-col gap-3">
-        <p className="rounded-lg border border-border bg-surface p-4 text-sm">이 퀴즈는 이미 채점을 마쳤습니다.</p>
-        <div className="flex gap-3 text-sm">
-          <Link href={`/result?session=${state.session.id}`} className="underline">
-            결과 보기
-          </Link>
-          <Link href={state.session.backHref} className="text-muted underline hover:text-foreground">
+        <p className="bg-paper-deep p-4 text-base">이미 채점을 마친 퀴즈입니다.</p>
+        <div className="grid grid-cols-2 gap-2">
+          <ButtonLink href={`/result?session=${state.session.id}`}>결과 보기</ButtonLink>
+          <ButtonLink href={state.session.backHref} variant="secondary">
             처음 화면으로
-          </Link>
+          </ButtonLink>
         </div>
       </div>
     );

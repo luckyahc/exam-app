@@ -76,6 +76,7 @@ describe.skipIf(!ready)("code-write 실행 판정(Node 엔진)", () => {
     const q = DS_CODE_WRITE_PYTHON as CodeWriteQ;
     const t = await exec(q, "while True:\n    pass");
     expect(t).toMatchObject({ status: "timeout", passed: false });
+    expect(t.reason).toContain("5초를 넘겨 중단됐습니다");
     expect((await exec(q, q.solution)).passed).toBe(true);
   }, 90_000);
 

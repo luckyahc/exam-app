@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { CodeBlock } from "@/components/qtypes/CodeBlock";
 import { QTypePlayground } from "@/components/qtypes/QTypePlayground";
 import { dcPlaygroundQuestions } from "@/lib/qtypes/dcSamples";
@@ -11,6 +12,9 @@ export const metadata: Metadata = {
 };
 
 export default function PlaygroundPage() {
+  // 개발용 미리보기 — next dev에서만 연다. 배포(production 빌드)에서는 404
+  if (process.env.NODE_ENV === "production") notFound();
+
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-8 sm:px-6">
       <div className="flex flex-col gap-1">
@@ -21,7 +25,7 @@ export default function PlaygroundPage() {
         </p>
       </div>
       <QTypePlayground questions={QTYPE_FIXTURES} />
-      <section aria-labelledby="dc-preview" className="flex flex-col gap-4 border-t border-border pt-6">
+      <section aria-labelledby="dc-preview" className="flex flex-col gap-4 border-t border-line pt-6">
         <div className="flex flex-col gap-1">
           <h2 id="dc-preview" className="text-lg font-bold">
             데이터 통신 미리보기
@@ -32,7 +36,7 @@ export default function PlaygroundPage() {
         </div>
         <QTypePlayground questions={dcPlaygroundQuestions()} shortcuts={false} />
       </section>
-      <section aria-labelledby="ds-preview" className="flex flex-col gap-4 border-t border-border pt-6">
+      <section aria-labelledby="ds-preview" className="flex flex-col gap-4 border-t border-line pt-6">
         <div className="flex flex-col gap-1">
           <h2 id="ds-preview" className="text-lg font-bold">
             데이터과학 미리보기

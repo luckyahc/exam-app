@@ -162,7 +162,7 @@ function DetailView({ subject, exams, exam, view }: Props & { exam: ExamId; view
 
       <section aria-label="진행" className="flex flex-col gap-3">
         {ex.ids.length === 0 ? (
-          <p className="text-sm text-muted">이 시험 범위는 준비 중입니다.</p>
+          <p className="text-sm text-muted">준비 중</p>
         ) : (
           <>
             <div className="flex min-h-10 items-end justify-between gap-3">

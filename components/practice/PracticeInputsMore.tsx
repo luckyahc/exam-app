@@ -218,7 +218,7 @@ function Calc({ question, answer, onChange, result, onEnter }: PracticeInputProp
         answer={`${num(question.answer)}${unit}${toleranceText(question)}`}
       />
       {invalid && !result && (
-        <p className="text-sm text-muted">숫자로 입력하세요 (예: 1.1, 34,881, 3e8, 3×10^8)</p>
+        <p className="text-sm text-muted">숫자로 입력하세요. 3e8, 3×10^8도 됩니다</p>
       )}
       {result && question.steps && (
         <ol className="list-decimal space-y-1 bg-paper-deep py-3 pr-3 pl-8 font-mono text-sm">
@@ -557,7 +557,7 @@ function RunTable({
 }: {
   table: { columns: string[]; rows: unknown[][] } | null | undefined;
 }) {
-  if (!table) return <p className="text-sm text-muted">(결과 표 없음)</p>;
+  if (!table) return <p className="text-sm text-muted">결과 표 없음</p>;
   return (
     <div className="max-h-72 overflow-auto border-y-[1.5px] border-sumi">
       <table className="w-full min-w-max text-sm">
@@ -598,7 +598,7 @@ function RunOutput({ side, title }: { side: RunSide | undefined; title: string }
       )}
       {side.stdout !== undefined && (
         <pre className="max-h-72 overflow-auto bg-paper-deep px-3 py-2 font-mono text-sm leading-6 whitespace-pre">
-          {side.stdout === "" ? <span className="text-muted">(출력 없음)</span> : side.stdout}
+          {side.stdout === "" ? <span className="text-muted">출력 없음</span> : side.stdout}
           {side.truncated && <span className="text-muted">{"\n"}… 출력이 길어 잘랐습니다</span>}
         </pre>
       )}
@@ -648,21 +648,15 @@ function CodeWriteInput({
 
   return (
     <div className="flex flex-col gap-3">
-      {!result && (
-        <p className="text-sm text-muted">
-          실행한 뒤 확인 · 결과가 모범 답안과 같아야 정답 · 5초 제한
-        </p>
-      )}
+      {!result && <p className="text-sm text-muted">실행한 뒤 확인을 누르세요</p>}
 
       {pandasWaiting && manifest && !result && (
         <div className="flex flex-col gap-2 bg-paper-deep p-3 text-sm">
-          <p>판다스가 필요한 문제입니다. 엔진을 불러와야 실행할 수 있습니다.</p>
+          <p>판다스 엔진이 필요합니다.</p>
           <Button variant="secondary" onClick={() => void prepare()}>
             실행 엔진 불러오기
           </Button>
-          <span className="text-muted">
-            약 {mb(manifest.bytes.numpy + manifest.bytes.pandas)} · 처음 한 번만 내려받음
-          </span>
+          <span className="text-muted">약 {mb(manifest.bytes.numpy + manifest.bytes.pandas)}</span>
         </div>
       )}
       {st.state === "loading" && (
@@ -735,9 +729,7 @@ function CodeWriteInput({
             <p className="text-sm text-muted">굽은 따옴표를 곧은 따옴표로 바꿔 실행했습니다.</p>
           )}
           {q.language === "sql" && (
-            <p className="text-sm text-muted">
-              채점은 SQLite(sql.js)로 실행 — MySQL과 문법 차이가 있을 수 있음
-            </p>
+            <p className="text-sm text-muted">SQLite로 채점 — MySQL과 문법이 다를 수 있음</p>
           )}
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">모범 답안</span>
@@ -766,11 +758,7 @@ function Essay({ question, answer, onChange, result }: PracticeInputProps<"essay
           rows={6}
           className="w-full border-[1.5px] border-sumi bg-paper px-3.5 py-2.5 text-base leading-relaxed focus:outline-2 focus:-outline-offset-2 focus:outline-sumi"
         />
-        {!result && (
-          <span className="text-sm text-muted">
-            자기 채점 · 기록에는 &ldquo;풀었음&rdquo;만 남습니다
-          </span>
-        )}
+        {!result && <span className="text-sm text-muted">스스로 채점하는 문제</span>}
       </label>
       {result && (
         <>

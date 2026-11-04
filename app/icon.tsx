@@ -7,5 +7,5 @@ export function generateImageMetadata() {
 
 export default async function Icon({ id }: { id: Promise<string> }) {
   const n = Number(await id);
-  return appIcon(n, { rounded: n === 32 });
+  return appIcon(n);
 }

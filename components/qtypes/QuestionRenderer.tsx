@@ -25,7 +25,7 @@ const EXAM_TITLE: Record<ExamBasis, string> = {
 export function ExamBadge({ basis, hintIds }: { basis: ExamBasis; hintIds?: readonly string[] }) {
   return (
     <span
-      className="inline-flex items-center gap-1 rounded-full border border-primary/60 px-2 py-0.5 text-xs font-medium"
+      className="inline-flex items-center gap-1 rounded-full border border-exam-accent/60 px-2 py-0.5 text-xs font-medium"
       title={EXAM_TITLE[basis] + (hintIds?.length ? ` · 시험 힌트 ${hintIds.join(", ")}` : "")}
     >
       <span aria-hidden>⭐</span>
@@ -70,7 +70,7 @@ export function JokboBadge({ question }: { question: Question }) {
   if (!text) return null;
   const terms = question.jokbo?.occurrences.map((o) => [o.term, o.file, `${o.number}번`].filter(Boolean).join(" ")).join(" / ");
   return (
-    <span className="inline-flex items-center rounded-full border border-foreground/40 px-2 py-0.5 text-xs font-medium" title={terms ? `족보 출현: ${terms}` : undefined}>
+    <span className="inline-flex items-center rounded-full border border-sumi/40 px-2 py-0.5 text-xs font-medium" title={terms ? `족보 출현: ${terms}` : undefined}>
       {text}
     </span>
   );
@@ -87,7 +87,7 @@ export function QuestionFigureView({ question }: { question: Question }) {
   const f = question.figure;
   if (!f) return null;
   return (
-    <figure className="self-start rounded-lg border border-border bg-white p-2">
+    <figure className="self-start rounded-lg border border-line bg-white p-2">
       {/* 정적 원본 그림(작은 PNG) — 크기를 고정해 레이아웃이 밀리지 않게 한다 */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={f.src} alt={f.alt} width={f.width} height={f.height} className="h-auto max-w-full" loading="lazy" />
@@ -104,14 +104,14 @@ export function QuestionRenderer({ question, answer, onAnswer, result }: Props) 
   return (
     <article className="flex flex-col gap-4" aria-labelledby={`${question.id}-prompt`}>
       <header className="flex flex-wrap items-center gap-1.5 text-xs">
-        <span className="rounded-full bg-surface px-2 py-0.5 font-medium">{core.label}</span>
+        <span className="rounded-full bg-paper-deep px-2 py-0.5 font-medium">{core.label}</span>
         {question.exam && question.examBasis && <ExamBadge basis={question.examBasis} hintIds={question.hintIds} />}
         <JokboBadge question={question} />
         {relatedBadge(question) && (
-          <span className="inline-flex items-center rounded-full border border-foreground/40 px-2 py-0.5 text-xs font-medium">{relatedBadge(question)}</span>
+          <span className="inline-flex items-center rounded-full border border-sumi/40 px-2 py-0.5 text-xs font-medium">{relatedBadge(question)}</span>
         )}
         {exampleBadge(question) && (
-          <span className="inline-flex items-center rounded-full border border-foreground/40 px-2 py-0.5 text-xs font-medium">{exampleBadge(question)}</span>
+          <span className="inline-flex items-center rounded-full border border-sumi/40 px-2 py-0.5 text-xs font-medium">{exampleBadge(question)}</span>
         )}
         <span className="text-muted">
           {question.topic} · 난이도 {"●".repeat(question.difficulty)}
@@ -146,10 +146,10 @@ export function QuestionRenderer({ question, answer, onAnswer, result }: Props) 
       />
 
       {result && (
-        <section aria-label="채점 결과" className="flex flex-col gap-3 border-t border-border pt-4">
+        <section aria-label="채점 결과" className="flex flex-col gap-3 border-t border-line pt-4">
           {!result.selfCheck && <ResultBanner correct={result.correct} score={result.score} />}
           <Review question={question as never} answer={answer as never} result={result as never} />
-          <div className="flex flex-col gap-1 rounded-lg bg-surface p-3 text-sm leading-relaxed">
+          <div className="flex flex-col gap-1 rounded-lg bg-paper-deep p-3 text-sm leading-relaxed">
             <ExplanationSource question={question} />
             {/* 핵심 한 줄: summary가 없으면 해설 첫 문장. 해설이 한 문장뿐이면 같은 말을 두 번 보이지 않는다 */}
             {(question.summary ?? keyLine(question.explanation)) !== question.explanation.trim() && (

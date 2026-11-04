@@ -28,8 +28,8 @@ function Input({ question, answer, onChange, disabled }: InputProps<"order">) {
             setDragging(null);
           }}
           className={
-            "flex items-center gap-2 rounded-lg border bg-surface px-3 py-2 " +
-            (dragging === pos ? "border-primary opacity-60" : "border-border")
+            "flex items-center gap-2 rounded-lg border bg-paper-deep px-3 py-2 " +
+            (dragging === pos ? "border-exam-accent opacity-60" : "border-line")
           }
         >
           <span aria-hidden className={`select-none text-muted ${disabled ? "" : "cursor-grab"}`}>
@@ -45,7 +45,7 @@ function Input({ question, answer, onChange, disabled }: InputProps<"order">) {
               aria-label={`${pos + 1}번째 항목을 위로`}
               disabled={disabled || pos === 0}
               onClick={() => onChange(move(answer, pos, pos - 1))}
-              className="size-8 rounded border border-border text-sm disabled:opacity-30"
+              className="size-8 rounded border border-line text-sm disabled:opacity-30"
             >
               ↑
             </button>
@@ -54,7 +54,7 @@ function Input({ question, answer, onChange, disabled }: InputProps<"order">) {
               aria-label={`${pos + 1}번째 항목을 아래로`}
               disabled={disabled || pos === answer.length - 1}
               onClick={() => onChange(move(answer, pos, pos + 1))}
-              className="size-8 rounded border border-border text-sm disabled:opacity-30"
+              className="size-8 rounded border border-line text-sm disabled:opacity-30"
             >
               ↓
             </button>

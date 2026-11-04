@@ -44,7 +44,7 @@ function Example({ f }: { f: DsFunction }) {
       {f.exampleOutput !== null ? (
         <details className="text-sm">
           <summary className="flex min-h-11 cursor-pointer items-center text-muted select-none">
-            실행 결과{f.localRun ? " (맷플롯립 — 로컬 실행)" : ""}
+            실행 결과{f.localRun ? " — 로컬 실행" : ""}
           </summary>
           <pre className={codePre}>{f.exampleOutput}</pre>
         </details>
@@ -171,7 +171,7 @@ export function FunctionsView({ subjectId }: { subjectId: string }) {
         ) : (
           <>
             <p className="text-sm text-muted" aria-live="polite">
-              <span className="font-mono">{shown.length}</span>개 · (보충)은 강의자료에 없는 설명
+              <span className="font-mono">{shown.length}</span>개
             </p>
             {shown.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted">조건에 맞는 함수가 없습니다.</p>

@@ -43,7 +43,7 @@ export function SetStartRow({
   const minutes = timer;
   const scoreText =
     hint && scores.length > 0
-      ? ` · 기록 ${scores.map((x) => `${x.correct}/${x.total}`).join(", ")}`
+      ? ` · 최근 ${scores[scores.length - 1].correct}/${scores[scores.length - 1].total}`
       : "";
 
   const start = () => {

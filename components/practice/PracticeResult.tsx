@@ -61,7 +61,7 @@ export function PracticeResult({
   const extra = [
     sum.unanswered ? `미응답 ${sum.unanswered}` : "",
     sum.partialIds.length ? `부분 점수 ${sum.partialIds.length}` : "",
-    sum.selfCheckIds.length ? `서술형 ${sum.selfCheckIds.length}(점수 제외)` : "",
+    sum.selfCheckIds.length ? `서술형 ${sum.selfCheckIds.length} 제외` : "",
   ].filter(Boolean);
 
   const openItem = open ? session.items.findIndex((it) => it.id === open) : -1;

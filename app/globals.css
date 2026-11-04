@@ -35,43 +35,37 @@
   --tabbar-h: calc(3.5rem + 1.5px + env(safe-area-inset-bottom));
 }
 
-/* 이전 토큰 이름(개편 전 화면용). 새 토큰을 가리키기만 한다 — 화면을 다 옮기면 지운다.
-   변수로 한 단계 두는 이유: 시험 화면([data-exam-screen])이 이전 값을 그대로 고정할 수 있게. */
+/* 선 색: 먹 15%를 종이에 섞은 옅은 선(시험 모드 화면·표의 칸 구분). 새 화면은 대부분 1.5px 먹선이나 면 색으로 나눈다 */
 :root {
-  --background: var(--paper);
-  --foreground: var(--sumi);
-  --surface: var(--paper-deep);
-  --border: color-mix(in srgb, var(--sumi) 15%, var(--paper));
-  --primary: var(--sumi);
-  --correct: var(--ok);
-  --incorrect: var(--shu);
+  --line: color-mix(in srgb, var(--sumi) 15%, var(--paper));
 }
 
-/* 시험 모드의 실제 시험 화면은 이번 개편 대상이 아니다. 안에 들어가는 공용 부품(코드 블록·표·그림)이
-   개편 전 색·글꼴로 보이도록 이전 값을 고정한다. */
+/* 시험 모드의 실제 시험 화면은 디자인 개편 대상이 아니다. 안에 들어가는 공용 부품(코드 블록·표·그림·입력)이
+   개편 전 색·글꼴로 보이도록 토큰 값을 개편 전 값으로 고정한다.
+   exam-accent: 개편 전 강조색(파랑) — 시험 화면에서만 값이 있고, 그 밖에서는 먹색(sumi)으로 보인다(@theme 참고) */
 [data-exam-screen] {
-  --background: #ffffff;
-  --foreground: #171717;
-  --surface: #f8f9fb;
-  --border: #e2e5ea;
+  --paper: #ffffff;
+  --paper-deep: #f8f9fb;
+  --sumi: #171717;
+  --line: #e2e5ea;
   --muted: #6b7280;
-  --primary: #2563eb;
-  --correct: #15803d;
-  --incorrect: #b91c1c;
+  --ok: #15803d;
+  --shu: #b91c1c;
+  --exam-accent: #2563eb;
   --font-mono:
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
     monospace;
 }
 
 .dark [data-exam-screen] {
-  --background: #0b0f17;
-  --foreground: #e6e8eb;
-  --surface: #151a24;
-  --border: #262c38;
+  --paper: #0b0f17;
+  --paper-deep: #151a24;
+  --sumi: #e6e8eb;
+  --line: #262c38;
   --muted: #9aa3b2;
-  --primary: #60a5fa;
-  --correct: #4ade80;
-  --incorrect: #f87171;
+  --ok: #4ade80;
+  --shu: #f87171;
+  --exam-accent: #60a5fa;
 }
 
 /* 연습 모드 화면(components/practice/*) 안의 공용 부품(코드 블록·표·그림·코드 편집기)은 시험 화면과 같은 파일이라 고치지 않고,
@@ -95,16 +89,10 @@
   --color-ok: var(--ok);
   --color-marker: var(--marker);
   --color-marker-ink: var(--marker-ink);
-  /* 이전 이름 */
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-surface: var(--surface);
-  --color-border: var(--border);
   --color-muted: var(--muted);
-  --color-primary: var(--primary);
-  --color-correct: var(--correct);
-  --color-incorrect: var(--incorrect);
-  --color-subject: var(--subject);
+  --color-line: var(--line);
+  /* 시험 화면이 빌려 쓰는 기존 부품(components/qtypes/*)의 강조색: 시험 화면 안은 파랑, 그 밖은 먹 */
+  --color-exam-accent: var(--exam-accent, var(--sumi));
   --font-sans:
     var(--font-pretendard), -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
     "Malgun Gothic", "맑은 고딕", sans-serif;
@@ -119,17 +107,6 @@
   --font-mono:
     var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, var(--font-pretendard),
     monospace;
-}
-
-/* 과목 대표 색: 과목 영역 래퍼에 data-subject + 인라인 --subject-l/--subject-d(lib/subjects.ts의
-   subjectStyle)를 붙이면 테마에 맞는 값이 --subject로 선택된다. 과목이 늘어도 이 규칙은 그대로다. */
-[data-subject] {
-  --subject: var(--subject-l);
-}
-
-.dark [data-subject],
-[data-subject].dark {
-  --subject: var(--subject-d);
 }
 
 /* 바텀시트(components/ui/BottomSheet) 열림 효과. 동작 줄이기 설정이면 바로 나타난다. */
@@ -149,15 +126,15 @@
   }
 
   body {
-    background: var(--background);
-    color: var(--foreground);
+    background: var(--paper);
+    color: var(--sumi);
     font-family: var(--font-sans);
   }
 
   /* 키보드 포커스 표시(Sprint 11 접근성): 마우스 클릭에는 안 보이고 Tab 이동 때만 테두리.
      base 층에 둬서 입력창처럼 자체 포커스 표시가 있는 부품이 유틸리티로 덮어쓸 수 있다. */
   :focus-visible {
-    outline: 2px solid var(--primary);
+    outline: 2px solid var(--exam-accent, var(--sumi));
     outline-offset: 2px;
   }
 }

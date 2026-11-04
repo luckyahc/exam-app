@@ -1,4 +1,3 @@
-import type { CSSProperties } from "react";
 import { SUBJECTS, type SubjectId } from "@/data/subjects/registry";
 import type { ChapterDef, SubjectDef } from "@/data/subjects/types";
 
@@ -25,14 +24,6 @@ export function subjectOfQuestionId(
     if (questionId.startsWith(`${id}-`) && (!best || id.length > best.length)) best = id;
   }
   return best;
-}
-
-/** 과목 영역 래퍼에 붙이는 CSS 변수. globals.css의 [data-subject] 규칙이 라이트/다크 값을 고른다. */
-export function subjectStyle(subject: Pick<SubjectDef, "color">): CSSProperties {
-  return {
-    "--subject-l": subject.color.light,
-    "--subject-d": subject.color.dark,
-  } as CSSProperties;
 }
 
 /** 이 과목이 ⭐(시험 포인트)를 쓰는가. false면 화면에 "⭐ 해당 없음"(데이터과학 — 근거 0건) */

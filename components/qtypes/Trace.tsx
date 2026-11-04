@@ -5,8 +5,8 @@ import { cellKey, type TraceQ } from "@/lib/qtypes/trace";
 import type { InputProps, QTypeUI, ReviewProps } from "./types";
 
 const table = "min-w-full border-collapse text-center text-sm";
-const th = "border border-border bg-surface px-2 py-1.5 font-semibold";
-const td = "border border-border px-1 py-1";
+const th = "border border-line bg-paper-deep px-2 py-1.5 font-semibold";
+const td = "border border-line px-1 py-1";
 
 /** 넓은 화면(sm 이상): 표. 표 영역만 가로 스크롤 */
 function Scroll({ children }: { children: ReactNode }) {
@@ -21,7 +21,7 @@ function Cards({ question, cell }: { question: TraceQ; cell(i: number, j: number
   return (
     <ol className="flex flex-col gap-2 sm:hidden" aria-label="표 (열별)">
       {question.columns.map((c, j) => (
-        <li key={j} className="rounded-lg border border-border p-2">
+        <li key={j} className="rounded-lg border border-line p-2">
           <p className="mb-1 text-xs font-semibold text-muted">
             {j + 1}열 · {c}
           </p>
@@ -68,7 +68,7 @@ function Input({ question, answer, onChange, disabled }: InputProps<"trace">) {
         value={answer[key] ?? ""}
         disabled={disabled}
         onChange={(e) => set(key, e.target.value)}
-        className={`${size} rounded border border-primary/60 bg-background px-1 py-1`}
+        className={`${size} rounded border border-exam-accent/60 bg-paper px-1 py-1`}
       >
         <option value="">?</option>
         {cell.options.map((o) => (
@@ -84,7 +84,7 @@ function Input({ question, answer, onChange, disabled }: InputProps<"trace">) {
         disabled={disabled}
         onChange={(e) => set(key, e.target.value)}
         autoComplete="off"
-        className={`${wide ? "w-full" : "w-14"} rounded border border-primary/60 bg-background px-1 py-1 text-center`}
+        className={`${wide ? "w-full" : "w-14"} rounded border border-exam-accent/60 bg-paper px-1 py-1 text-center`}
       />
     );
   };
@@ -100,7 +100,7 @@ function Input({ question, answer, onChange, disabled }: InputProps<"trace">) {
                   {r.label}
                 </th>
                 {r.cells.map((cell, j) => (
-                  <td key={j} className={`${td} ${cell.blank ? "bg-primary/5" : ""}`}>
+                  <td key={j} className={`${td} ${cell.blank ? "bg-exam-accent/5" : ""}`}>
                     {field(i, j, false)}
                   </td>
                 ))}
@@ -121,7 +121,7 @@ function Review({ question, answer, result }: ReviewProps<"trace">) {
     const key = cellKey(i, j);
     const ok = result.detail[key];
     return (
-      <span className={`inline-flex flex-col leading-tight ${ok ? "text-correct" : "text-incorrect"}`}>
+      <span className={`inline-flex flex-col leading-tight ${ok ? "text-ok" : "text-shu"}`}>
         <span className="font-semibold">
           <span aria-hidden>{ok ? "✓" : "✗"}</span> {cell.value}
           <span className="sr-only">{ok ? " 정답" : " 오답, 정답은 " + cell.value}</span>

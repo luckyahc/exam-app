@@ -13,7 +13,7 @@ export function BookmarkButton({ subjectId, questionId }: { subjectId: string; q
       onClick={() => toggleBookmark(subjectId, questionId)}
       className={
         "flex shrink-0 items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium " +
-        (on ? "border-primary text-foreground" : "border-border text-muted hover:text-foreground")
+        (on ? "border-sumi text-sumi" : "border-line text-muted hover:text-sumi")
       }
     >
       <span aria-hidden>{on ? "★" : "☆"}</span>

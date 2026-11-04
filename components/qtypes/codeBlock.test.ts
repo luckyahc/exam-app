@@ -27,8 +27,8 @@ describe("CodeBlock (공통 코드 블록)", () => {
     expect(out).toContain('aria-label="Python 코드"');
     expect(out).toContain(">14<"); // 14줄
     expect(out).toContain("font-mono");
-    expect(out).toMatch(/bg-surface/);
-    expect(out).toMatch(/text-foreground/);
+    expect(out).toMatch(/bg-paper-deep/);
+    expect(out).toMatch(/text-sumi/);
     expect(out).not.toMatch(/(text|bg)-(red|green|blue|gray|slate|zinc|amber)-\d/);
   });
   it("가로 스크롤은 코드 블록 안에서만(overflow-x-auto), 바깥은 max-w-full", () => {
@@ -49,7 +49,7 @@ describe("CodeBlock (공통 코드 블록)", () => {
 describe("RichText", () => {
   it("펜스가 없는 글은 예전과 같은 마크업(굵게·인라인 코드)", () => {
     expect(html(createElement(RichText, { text: "가 **나** `다` 라" }))).toBe(
-      '<span>가 </span><strong class="font-semibold">나</strong><span> </span><code class="rounded bg-surface px-1 py-0.5 font-mono text-[0.9em]">다</code><span> 라</span>',
+      '<span>가 </span><strong class="font-semibold">나</strong><span> </span><code class="rounded bg-paper-deep px-1 py-0.5 font-mono text-[0.9em]">다</code><span> 라</span>',
     );
   });
   it("```python / ```sql 펜스는 코드 블록으로, 앞뒤 글은 그대로", () => {

@@ -1,5 +1,4 @@
 import type { MetadataRoute } from "next";
-import { ICON_BG } from "@/lib/appIcon";
 
 // 홈 화면 설치(PWA) 정보. 아이콘 이미지는 app/icon.tsx가 만든다.
 export default function manifest(): MetadataRoute.Manifest {
@@ -10,7 +9,8 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",
-    theme_color: ICON_BG,
+    // 설치한 앱의 제목 막대 색: 라이트 배경(종이). 브라우저의 theme-color 메타는 라이트·다크로 나눠 app/layout.tsx에서
+    theme_color: "#ffffff",
     icons: [
       { src: "/icon/192", sizes: "192x192", type: "image/png", purpose: "any" },
       { src: "/icon/512", sizes: "512x512", type: "image/png", purpose: "any" },
