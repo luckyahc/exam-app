@@ -3,6 +3,7 @@
 import { ButtonLink } from "@/components/ui/Button";
 import { List, ListRow } from "@/components/ui/ListRow";
 import { ProgressBar } from "@/components/ui/ProgressBar";
+import { ProgressScopeToggle } from "@/components/ui/ProgressScopeToggle";
 import { CURRENT_EXAM, getExam } from "@/data/subjects/exams";
 import { continueLink } from "@/lib/quiz/startLinks";
 import { type AppSettings, daysUntil, ddayLabel, useAppSettings } from "@/lib/settings/appSettings";
@@ -12,8 +13,10 @@ export interface HomeSubject {
   id: string;
   name: string;
   ready: boolean;
-  /** 준비 중인 시험(CURRENT_EXAM) 범위 문제 id */
+  /** 준비 중인 시험(CURRENT_EXAM) 범위 문제 id(alsoExam 포함) */
   ids: string[];
+  /** 과목 전체 문제 id — 진행 범위 [전체]일 때 과목 행에 쓴다 */
+  allIds?: string[];
 }
 
 /**
@@ -25,10 +28,11 @@ export function HomeView({ subjects }: { subjects: HomeSubject[] }) {
   const { loaded, settings } = useAppSettings();
   const ready = records.loaded && loaded;
   const exam = getExam(CURRENT_EXAM)!;
-  const solvedOf = (s: HomeSubject) => {
+  const solvedIn = (s: HomeSubject, ids: readonly string[]) => {
     const rec = records.subjects[s.id];
-    return rec ? s.ids.filter((id) => rec.progress[id]).length : 0;
+    return rec ? ids.filter((id) => rec.progress[id]).length : 0;
   };
+  const solvedOf = (s: HomeSubject) => solvedIn(s, s.ids);
   const hero = ready ? pickHero(subjects, records, settings) : undefined;
 
   return (
@@ -47,12 +51,16 @@ export function HomeView({ subjects }: { subjects: HomeSubject[] }) {
       )}
 
       <section aria-labelledby="subjects-heading" className="flex flex-col gap-2">
-        <h2 id="subjects-heading" className="font-display text-lg font-bold">
-          과목
-        </h2>
+        <div className="flex items-center justify-between gap-3">
+          <h2 id="subjects-heading" className="font-display text-lg font-bold">
+            과목
+          </h2>
+          <ProgressScopeToggle className="w-32 shrink-0" />
+        </div>
         <List>
           {subjects.map((s) => {
-            const n = solvedOf(s);
+            const ids = settings.progressScope === "all" ? (s.allIds ?? s.ids) : s.ids;
+            const n = solvedIn(s, ids);
             return (
               <ListRow
                 key={s.id}
@@ -62,10 +70,10 @@ export function HomeView({ subjects }: { subjects: HomeSubject[] }) {
                 trailing={
                   !s.ready
                     ? "준비 중"
-                    : !ready || !s.ids.length
+                    : !ready || !ids.length
                       ? undefined
                       : n > 0
-                        ? `${Math.round((n / s.ids.length) * 100)}%`
+                        ? `${Math.round((n / ids.length) * 100)}%`
                         : "아직 안 풂"
                 }
               />

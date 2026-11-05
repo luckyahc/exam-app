@@ -102,7 +102,7 @@ export function UiPreview() {
           title="직접 고르기"
           footer={
             <Button block onClick={() => setSheet(false)}>
-              조건에 맞는 문제 18개 · 풀기
+              조건에 맞는 문제 18개 풀기
             </Button>
           }
         >

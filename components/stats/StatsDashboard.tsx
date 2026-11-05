@@ -6,9 +6,12 @@ import { useSelectedSubject } from "@/components/subject/SubjectTabs";
 import { ButtonLink } from "@/components/ui/Button";
 import { List, ListRow } from "@/components/ui/ListRow";
 import { ProgressBar } from "@/components/ui/ProgressBar";
+import { ProgressScopeToggle } from "@/components/ui/ProgressScopeToggle";
 import { SelectInput } from "@/components/ui/SelectInput";
 import { SUBJECTS } from "@/data/subjects/registry";
 import type { ChapterMeta } from "@/lib/chapterMeta";
+import { scopeChapters } from "@/lib/quiz/progressScope";
+import { useAppSettings } from "@/lib/settings/appSettings";
 import { chapterStats, type StatLine, subjectStats, sumLines } from "@/lib/stats";
 import { type RecordsState, useRecords } from "@/lib/storage/recordsStore";
 import { getSubject } from "@/lib/subjects";
@@ -19,11 +22,18 @@ const ratio = (a: number, b: number) => (b ? a / b : null);
 /**
  * `/stats?subject=all|id`. 숫자는 위에 크게 몇 개만, 아래는 "약한 챕터 TOP 3 → 바로 풀기"처럼 다음 할 일로 잇는다.
  * 수치 계산은 lib/stats.ts 그대로(완전히 맞음 기준). 기록을 읽기 전에는 아무 수치도 보이지 않는다.
+ * 모든 수치는 진행 범위([기말 | 전체], 기본 기말)의 문제만 센다 — 중간 기록은 지우지 않고 [전체]에서 보인다.
  */
-export function StatsDashboard({ metas }: { metas: Record<string, ChapterMeta[]> }) {
+export function StatsDashboard({ metas: allMetas }: { metas: Record<string, ChapterMeta[]> }) {
   const selected = useSelectedSubject();
   const records = useRecords();
-  if (!records.loaded) return <p className="text-sm text-muted">불러오는 중…</p>;
+  const { loaded, settings } = useAppSettings();
+  if (!records.loaded || !loaded) return <p className="text-sm text-muted">불러오는 중…</p>;
+
+  const scope = settings.progressScope;
+  const metas = Object.fromEntries(
+    Object.entries(allMetas).map(([id, chapters]) => [id, scopeChapters(chapters, scope)]),
+  );
 
   const subjectIds = selected === "all" ? SUBJECTS.map((s) => s.id) : [selected];
   const lines = subjectIds.map((id) => ({
@@ -34,15 +44,29 @@ export function StatsDashboard({ metas }: { metas: Record<string, ChapterMeta[]>
   const weak = weakChapters(records, subjectIds, metas);
 
   if (line.total === 0)
-    return <p className="py-6 text-center text-sm text-muted">아직 문제가 없습니다.</p>;
+    return (
+      <div className="flex flex-col gap-4">
+        <ProgressScopeToggle className="w-32 self-end" />
+        <p className="py-6 text-center text-sm text-muted">
+          {scope === "final" ? "기말 범위 문제가 없습니다." : "아직 문제가 없습니다."}
+        </p>
+      </div>
+    );
 
   return (
     <div className="flex flex-col gap-8">
-      {line.solved === 0 ? (
-        <p className="py-2 text-sm text-muted">아직 안 풂</p>
-      ) : (
-        <Summary line={line} reviewHref={`/review?subject=${selected}`} />
-      )}
+      <div className="flex flex-col gap-3">
+        <ProgressScopeToggle className="w-32 self-end" />
+        {line.solved === 0 ? (
+          <p className="py-2 text-sm text-muted">아직 안 풂</p>
+        ) : (
+          <Summary
+            line={line}
+            reviewHref={`/review?subject=${selected}`}
+            wrongLabel={scope === "final" ? "기말 범위 남은 오답" : "남은 오답"}
+          />
+        )}
+      </div>
 
       {weak.length > 0 && (
         <section aria-labelledby="weak-heading" className="flex flex-col gap-2">
@@ -106,7 +130,15 @@ function weakChapters(
 }
 
 /** 큰 숫자 2~3개 + 남은 오답이 있으면 복습으로 가는 한 줄. 시험 포인트는 마지막 풀이가 완전히 맞은 비율(lib/stats.ts) */
-function Summary({ line, reviewHref }: { line: StatLine; reviewHref: string }) {
+function Summary({
+  line,
+  reviewHref,
+  wrongLabel,
+}: {
+  line: StatLine;
+  reviewHref: string;
+  wrongLabel: string;
+}) {
   const items = [
     {
       label: "진행",
@@ -137,7 +169,7 @@ function Summary({ line, reviewHref }: { line: StatLine; reviewHref: string }) {
       </dl>
       {line.openWrong > 0 && (
         <ButtonLink href={reviewHref} variant="text" className="self-start">
-          남은 오답 {line.openWrong}개 →
+          {wrongLabel} {line.openWrong}개 →
         </ButtonLink>
       )}
     </div>

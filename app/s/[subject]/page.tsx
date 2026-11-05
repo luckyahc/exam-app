@@ -43,7 +43,8 @@ export default async function SubjectHomePage({ params }: PageProps<"/s/[subject
       id: exam.id,
       shortName: exam.shortName,
       chapters: own.map((c) => ({ chapterId: c.chapterId, shortTitle: c.shortTitle, ids: c.ids })),
-      ids: allIds,
+      // 진행률 분모는 과목 전체 퀴즈(loadSubject)와 같은 범위: 이 시험 챕터 + 다른 챕터의 alsoExam 문항
+      ids: [...allIds, ...also.map((a) => a.id)],
       stars: sum((c) => c.starIds) + also.filter((a) => a.star).length,
       direct: [
         ...(related > 0

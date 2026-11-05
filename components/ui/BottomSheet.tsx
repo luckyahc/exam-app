@@ -5,7 +5,7 @@ import { type ReactNode, useEffect, useId, useRef } from "react";
 
 /**
  * 아래에서 올라오는 시트. 네이티브 <dialog>(showModal)라 포커스 가두기·Esc 닫기·배경 비활성이 기본으로 된다.
- * 배경(어두운 막)을 눌러도 닫힌다. footer는 스크롤 영역 밖 하단에 고정된다(예: “조건에 맞는 문제 18개 · 풀기”).
+ * 배경(어두운 막)을 눌러도 닫힌다. footer는 스크롤 영역 밖 하단에 고정된다(예: “조건에 맞는 문제 18개 풀기”).
  */
 export function BottomSheet({
   open,

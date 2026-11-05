@@ -8,6 +8,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { List, ListRow } from "@/components/ui/ListRow";
 import { Marker } from "@/components/ui/Marker";
 import { ProgressBar } from "@/components/ui/ProgressBar";
+import { ProgressScopeToggle } from "@/components/ui/ProgressScopeToggle";
 import { SegmentedControl, segmentPanelProps } from "@/components/ui/SegmentedControl";
 import { SelectInput } from "@/components/ui/SelectInput";
 import { CURRENT_EXAM, type ExamId } from "@/data/subjects/exams";
@@ -49,7 +50,7 @@ export interface DetailExam {
   id: ExamId;
   shortName: string;
   chapters: { chapterId: string; shortTitle: string; ids: string[] }[];
-  /** 진행률 분모: 이 시험 범위 챕터의 문제 */
+  /** 진행률 분모: 이 시험 범위 챕터의 문제 + 다른 챕터의 alsoExam 문항 */
   ids: string[];
   /** 시험 포인트 문제 수(다른 시험 챕터의 alsoExam 포함 — 과목 전체 퀴즈와 같은 범위) */
   stars: number;
@@ -134,6 +135,13 @@ function DetailView({ subject, exams, exam, view }: Props & { exam: ExamId; view
   const solvedOf = (ids: readonly string[]) =>
     rec ? ids.filter((id) => rec.progress[id]).length : 0;
   const solved = solvedOf(ex.ids);
+  // 진행 표시는 시험 드롭다운과 따로 [기말 | 전체]를 따른다(기본 기말). 이어 풀기 버튼은 고른 시험 범위 그대로
+  const scope = settings.progressScope;
+  const progressIds =
+    scope === "all"
+      ? [...new Set(exams.flatMap((e) => e.ids))]
+      : (exams.find((e) => e.id === CURRENT_EXAM)?.ids ?? []);
+  const progressSolved = solvedOf(progressIds);
   const openWrong = rec ? summarize(rec).openWrong : 0;
   const dday = exam === CURRENT_EXAM ? ddayLabel(settings.examDates[subject.id]) : null;
   const cont = continueLink(subject.id, exam, solved, ex.ids.length, settings);
@@ -165,24 +173,31 @@ function DetailView({ subject, exams, exam, view }: Props & { exam: ExamId; view
           <p className="text-sm text-muted">준비 중</p>
         ) : (
           <>
+            <ProgressScopeToggle className="w-32 self-end" />
             <div className="flex min-h-10 items-end justify-between gap-3">
               {/* 기록이 없으면 0/N 대신 "아직 안 풂"(문제 수만 함께) */}
               {!ready ? (
                 <span />
-              ) : solved > 0 ? (
+              ) : progressIds.length === 0 ? (
+                <p className="text-base text-muted">기말 범위 문제 없음</p>
+              ) : progressSolved > 0 ? (
                 <p className="font-mono text-3xl font-bold tabular-nums">
-                  {solved}
-                  <span className="text-lg font-normal text-muted">/{ex.ids.length}</span>
+                  {progressSolved}
+                  <span className="text-lg font-normal text-muted">/{progressIds.length}</span>
                 </p>
               ) : (
                 <p className="text-base">
-                  아직 안 풂 <span className="text-muted">· {ex.ids.length}문제</span>
+                  아직 안 풂 <span className="text-muted">· {progressIds.length}문제</span>
                 </p>
               )}
               {dday && <p className="font-mono text-lg font-bold">{dday}</p>}
             </div>
-            {ready && solved > 0 && (
-              <ProgressBar value={solved} max={ex.ids.length} label={`${ex.shortName} 진행`} />
+            {ready && progressSolved > 0 && (
+              <ProgressBar
+                value={progressSolved}
+                max={progressIds.length}
+                label={scope === "all" ? "전체 진행" : "기말 진행"}
+              />
             )}
             <ButtonLink href={cont.href} block className={ready ? undefined : "invisible"}>
               {cont.label}

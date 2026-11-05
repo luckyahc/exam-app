@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Gowun_Batang, IBM_Plex_Mono } from "next/font/google";
+import { IBM_Plex_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { THEME_COLOR } from "@/lib/theme/constants";
@@ -15,14 +15,6 @@ const pretendard = localFont({
 });
 
 // next/font/google은 빌드 때 글꼴 파일을 내려받아 같이 배포한다(실행 중 외부 요청 없음).
-// 고운바탕은 한글 조각(unicode-range)이 많아 미리 불러오지 않고, 제목에 쓰일 때 필요한 조각만 받는다.
-const gowunBatang = Gowun_Batang({
-  weight: ["400", "700"],
-  variable: "--font-gowun-batang",
-  display: "swap",
-  preload: false,
-});
-
 const plexMono = IBM_Plex_Mono({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
@@ -51,7 +43,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     // noFlashScript가 하이드레이션 전에 dark 클래스를 붙이므로 <html>만 className 불일치를 허용한다.
     <html
       lang="ko"
-      className={`${pretendard.variable} ${gowunBatang.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${pretendard.variable} ${plexMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>

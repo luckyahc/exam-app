@@ -1,6 +1,7 @@
 import { isQType } from "@/lib/qtypes/registry";
+import type { Question } from "@/lib/qtypes/registry";
 import { parseSource } from "./jokbo";
-import type { QuizFilter } from "./session";
+import { filterQuestions, type QuizFilter } from "./session";
 import { parseStar } from "./starBasis";
 import { isStatus, type QStatus } from "./status";
 
@@ -30,3 +31,14 @@ export function filterFromParams(params: URLSearchParams, statusOf: (id: string)
   };
   return { filter, starBasis, source, statuses };
 }
+
+/**
+ * 이 쿼리로 /quiz를 시작하면 실제로 풀게 될 문제 수 — /quiz가 고를 때와 같은 함수로 센다(문제 수 제한 포함).
+ * 조건에 맞는 문제가 지정 수보다 적으면 실제 개수가 된다(지정 20, 해당 13 → 13).
+ */
+export function startCount(pool: readonly Question[], params: URLSearchParams, statusOf: (id: string) => QStatus): number {
+  return filterQuestions(pool, { ...filterFromParams(params, statusOf).filter, shuffle: false, seed: "" }).length;
+}
+
+/** 직접 고르기 바텀시트의 시작 버튼 문구 */
+export const startLabel = (n: number) => (n === 0 ? "조건에 맞는 문제 없음" : `조건에 맞는 문제 ${n}개 풀기`);

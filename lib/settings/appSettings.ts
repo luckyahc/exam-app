@@ -12,6 +12,8 @@ export const QUIZ_COUNTS = [10, 20, 30] as const;
 export type QuizCount = (typeof QUIZ_COUNTS)[number];
 export type QuizOrder = "ordered" | "shuffle";
 export type QuizModeSetting = "instant" | "exam";
+/** 진행상황 집계 범위: 준비 중인 시험(기말) 또는 과목 전체. lib/quiz/progressScope.ts */
+export type ProgressScope = "final" | "all";
 
 export interface AppSettings {
   quizCount: QuizCount;
@@ -19,6 +21,7 @@ export interface AppSettings {
   quizMode: QuizModeSetting;
   /** 과목 id → 준비 중인 시험(CURRENT_EXAM) 날짜 "YYYY-MM-DD" */
   examDates: Record<string, string>;
+  progressScope: ProgressScope;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -26,6 +29,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   quizOrder: "ordered",
   quizMode: "instant",
   examDates: {},
+  progressScope: "final",
 };
 
 const isDate = (v: unknown): v is string => typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v);
@@ -47,6 +51,7 @@ export function parseSettings(raw: unknown): AppSettings {
       string,
       string
     >,
+    progressScope: o.progressScope === "all" ? "all" : "final",
   };
 }
 

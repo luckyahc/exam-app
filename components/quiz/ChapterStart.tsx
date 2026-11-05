@@ -11,7 +11,7 @@ import type { ChapterMeta } from "@/lib/chapterMeta";
 import type { Question } from "@/lib/qtypes/registry";
 import { SOURCE_LABEL, type SourceFilter } from "@/lib/quiz/jokbo";
 import { loadChapter } from "@/lib/quiz/loadQuestions";
-import { filterFromParams } from "@/lib/quiz/params";
+import { filterFromParams, startCount, startLabel } from "@/lib/quiz/params";
 import { filterQuestions } from "@/lib/quiz/session";
 import { STAR_LABEL, type StarBasis } from "@/lib/quiz/starBasis";
 import {
@@ -115,8 +115,8 @@ function Ready({
     });
 
   const customParams = toParams(meta.subjectId, meta.chapterId, prefs);
-  const available = matching(customParams);
-  const willSolve = prefs.count ? Math.min(prefs.count, available) : available;
+  // 버튼 숫자 = /quiz가 실제로 고르는 문제 수(문제 수 제한 포함)
+  const willSolve = startCount(pool, customParams, statusOf);
   const start = () => {
     writePrefs(meta.subjectId, meta.chapterId, prefs);
     router.push(`/quiz?${customParams.toString()}`);
@@ -221,8 +221,8 @@ function Ready({
         onClose={() => setOpen(false)}
         title="직접 고르기"
         footer={
-          <Button block onClick={start} disabled={available === 0}>
-            조건에 맞는 문제 {available}개 · 풀기
+          <Button block onClick={start} disabled={willSolve === 0}>
+            {startLabel(willSolve)}
           </Button>
         }
       >

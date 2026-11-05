@@ -54,7 +54,7 @@
   --exam-accent: #2563eb;
   --font-mono:
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
-    monospace;
+    var(--font-pretendard), monospace;
 }
 
 .dark [data-exam-screen] {
@@ -100,9 +100,8 @@
 
 /* inline이 아닌 @theme: font-display·font-mono 유틸리티가 var()를 참조해서 시험 화면이 덮어쓸 수 있다 */
 @theme {
-  /* 제목: 고운바탕(명조) */
-  --font-display:
-    var(--font-gowun-batang), "AppleMyungjo", "Batang", "바탕", "Noto Serif KR", serif;
+  /* 제목: 본문과 같은 글꼴(명조 계열은 Windows에서 궁서처럼 보여 쓰지 않는다) */
+  --font-display: var(--font-sans);
   /* 숫자·코드: IBM Plex Mono (한글은 본문 글꼴로) */
   --font-mono:
     var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, var(--font-pretendard),

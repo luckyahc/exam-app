@@ -22,6 +22,7 @@ describe("설정 값 읽기", () => {
         examDates: { os: "2026-12-10", dc: "12/10", ds: 3 },
       }),
     ).toEqual({
+      progressScope: "final",
       quizCount: 20,
       quizOrder: "ordered",
       quizMode: "exam",
