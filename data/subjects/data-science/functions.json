@@ -115,7 +115,12 @@
       "data-science-lec2-loop-002",
       "data-science-lec2-loop-003",
       "data-science-lec2-loop-005",
-      "data-science-lec2-loop-006"
+      "data-science-lec2-loop-006",
+      "data-science-lec9-rate-003",
+      "data-science-lec9-rate-004"
+    ],
+    "alsoIn": [
+      "lec9"
     ]
   },
   {
@@ -215,7 +220,12 @@
       "data-science-lec2-list-001",
       "data-science-lec2-dict-002",
       "data-science-lec2-list-005",
-      "data-science-lec2-list-006"
+      "data-science-lec2-list-006",
+      "data-science-lec9-rate-003",
+      "data-science-lec9-rate-004"
+    ],
+    "alsoIn": [
+      "lec9"
     ]
   },
   {
@@ -1840,7 +1850,22 @@
       "data-science-lec6-frame-002",
       "data-science-lec6-frame-003",
       "data-science-lec6-csv-003",
-      "data-science-lec6-struct-005"
+      "data-science-lec6-struct-005",
+      "data-science-lec9-corr-001",
+      "data-science-lec9-corr-002",
+      "data-science-lec9-corr-004",
+      "data-science-lec9-many-001",
+      "data-science-lec9-many-002",
+      "data-science-lec9-rate-002",
+      "data-science-lec9-rate-004",
+      "data-science-lec9-rate-005",
+      "data-science-lec9-rank-001",
+      "data-science-lec9-rank-002",
+      "data-science-lec9-gdp-001",
+      "data-science-lec9-gdp-003"
+    ],
+    "alsoIn": [
+      "lec9"
     ]
   },
   {
@@ -2430,7 +2455,12 @@
     "relatedQuestionIds": [
       "data-science-lec7-types-004",
       "data-science-lec7-scatter-001",
-      "data-science-lec7-scatter-002"
+      "data-science-lec7-scatter-002",
+      "data-science-lec9-corr-002",
+      "data-science-lec9-rate-001"
+    ],
+    "alsoIn": [
+      "lec9"
     ]
   },
   {
@@ -3053,6 +3083,68 @@
     "relatedQuestionIds": [
       "data-science-lec8-check-001",
       "data-science-lec8-check-002"
+    ]
+  },
+  {
+    "id": "lec9-df-corr",
+    "lecture": "lec9",
+    "category": "pandas",
+    "name": "df.corr",
+    "lang": "python",
+    "signature": "df.corr(method='pearson')",
+    "description": "열끼리의 상관계수 표를 돌려준다. method는 'pearson'·'spearman'·'kendall'.",
+    "usage": "두 변수 사이 관계의 강도와 방향을 수치로 볼 때.",
+    "example": "coef = df.corr(method='pearson')\nprint(coef)",
+    "setup": "import pandas as pd\ndf = pd.DataFrame({'engListening': [30, 60, 90, 31, 32, 69, 92, 99], 'engScore': [70, 80, 90, 70, 71, 85, 90, 92]})",
+    "exampleOutput": "              engListening  engScore\nengListening      1.000000  0.995829\nengScore          0.995829  1.000000",
+    "pitfall": "문자열 열이 있으면 오류가 나므로 숫자형 열만 골라서 쓴다. (보충)",
+    "relatedQuestionIds": [
+      "data-science-lec9-corr-001",
+      "data-science-lec9-corr-003",
+      "data-science-lec9-corr-004",
+      "data-science-lec9-corr-005",
+      "data-science-lec9-many-002",
+      "data-science-lec9-rate-002",
+      "data-science-lec9-rate-004",
+      "data-science-lec9-rate-005",
+      "data-science-lec9-rank-001",
+      "data-science-lec9-rank-002",
+      "data-science-lec9-gdp-002",
+      "data-science-lec9-gdp-003",
+      "data-science-lec9-gdp-004"
+    ]
+  },
+  {
+    "id": "lec9-df-select-dtypes",
+    "lecture": "lec9",
+    "category": "pandas",
+    "name": "df.select_dtypes",
+    "lang": "python",
+    "signature": "df.select_dtypes(include=['number'])",
+    "description": "지정한 자료형의 열만 골라 데이터프레임으로 돌려준다.",
+    "usage": "문자열 열을 빼고 숫자형 열만 corr( )에 넘길 때.",
+    "example": "numeric_df = df.select_dtypes(include=['number'])\nprint(numeric_df.columns.tolist())",
+    "setup": "import pandas as pd\ndf = pd.DataFrame({'국가': ['미국', '일본'], 'GDP 성장률': [0.9, 0.6], '인구수': [334, 125]})",
+    "exampleOutput": "['GDP 성장률', '인구수']",
+    "relatedQuestionIds": [
+      "data-science-lec9-gdp-002",
+      "data-science-lec9-gdp-003",
+      "data-science-lec9-gdp-004"
+    ]
+  },
+  {
+    "id": "lec9-dict-items",
+    "lecture": "lec9",
+    "category": "Python 기본",
+    "name": "dict.items",
+    "lang": "python",
+    "signature": "d.items()",
+    "description": "딕셔너리의 (키, 값) 쌍을 차례로 돌려준다.",
+    "usage": "for key, value in d.items( ): 처럼 키와 값을 함께 꺼낼 때.",
+    "example": "d = {'부동산': [83, 83.5], '금리': [2.75, 2.5]}\nfor key, value in d.items():\n    print(key, value)",
+    "exampleOutput": "부동산 [83, 83.5]\n금리 [2.75, 2.5]",
+    "relatedQuestionIds": [
+      "data-science-lec9-rate-003"
     ]
   }
 ]

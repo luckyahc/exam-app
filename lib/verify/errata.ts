@@ -2,7 +2,7 @@
  * 슬라이드 실행결과 ↔ 실제 실행이 다른 코드 목록(Sprint 14). 근거: docs/ds-source-analysis.md §4-3, 결정 11.
  * 이 코드를 쓰는 문항(지문·해설에 `[코드 N-M]`)은 해설에 "(보충)"과 다른 점의 핵심어 중 하나가 있어야 한다 — 정답은 실제 실행 결과.
  */
-export type ErrataKind = "slide-code-error" | "nondeterministic" | "output-notation" | "slide-order" | "platform";
+export type ErrataKind = "slide-code-error" | "nondeterministic" | "output-notation" | "slide-order" | "platform" | "slide-data";
 
 export interface Erratum {
   code: string;
@@ -28,6 +28,10 @@ export const DS_ERRATA: readonly Erratum[] = [
   { code: "6-1", kind: "output-notation", note: "슬라이드 (2,3)·[1, 2, 3] — 실제 출력은 (2, 3)·[1 2 3]", keywords: ["(2, 3)", "[1 2 3]", "표기"] },
   { code: "6-4", kind: "platform", note: "Pyodide(wasm32)는 int32·itemsize 4·nbytes 24 — 슬라이드는 64비트 PC 기준 int64·8·48", keywords: ["int32", "int64", "플랫폼"] },
   { code: "8-4", kind: "output-notation", note: "슬라이드 설명은 '다섯 행 중 세 행이 남음' — [코드 8-1]의 df로 실제 실행하면 0·1행 두 행", keywords: ["두 행", "2행"] },
+  { code: "9-7", kind: "slide-data", note: "슬라이드 코드에는 표의 앞뒤 10개 값만 적혀 있어 산점도 점이 슬라이드 그림(월별 전체 데이터)보다 훨씬 적다", keywords: ["10개"] },
+  { code: "9-8", kind: "slide-data", note: "슬라이드 결과 -0.497677은 월별 전체 데이터의 값 — 코드에 적힌 10개 값으로 실행하면 -0.154356", keywords: ["-0.154356"] },
+  { code: "9-9", kind: "slide-data", note: "슬라이드 결과 -0.854603은 월별 전체 데이터의 값 — 코드에 적힌 10개 값으로 실행하면 -0.601115", keywords: ["-0.601115"], when: /corr\(/ },
+  { code: "9-9", kind: "slide-code-error", note: "슬라이드의 if key == '부동산’: 에 굽은 따옴표가 섞여 그대로 입력하면 SyntaxError", keywords: ["굽은 따옴표", "SyntaxError"], when: /if key == / },
   { code: "6-40", kind: "slide-order", note: "슬라이드 결과는 6-33(이새봄 키 +5) 이전 값 — 순서대로 실행하면 여자 평균 163.8·표준편차 5.449771", keywords: ["6-33", "163.8", "순서"] },
 ];
 

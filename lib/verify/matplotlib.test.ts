@@ -13,18 +13,19 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import lec7a from "@/data/subjects/data-science/lec7";
 import lec7b from "@/data/subjects/data-science/lec7b";
+import lec9 from "@/data/subjects/data-science/lec9";
 import { DS_FUNCTIONS } from "@/lib/dsFunctions";
 import { fillCodeBlanks } from "@/lib/qtypes/codeBlank";
 import type { Question } from "@/lib/qtypes/registry";
 import { MPL_CHECKS } from "./matplotlibChecks";
 import { questionCode } from "./rules";
 
-/** Lec7 중간(s.1~25) + 기말 후반(s.26~59, 2026-11-03) */
-const lec7 = [...lec7a, ...lec7b];
+/** Lec7 중간(s.1~25) + 기말 후반(s.26~59, 2026-11-03) + Lec9 산점도 빈칸(2026-11-05) */
+const lec7 = [...lec7a, ...lec7b, ...lec9];
 
 const PY = process.env.PYTHON ?? "python";
 const SCRIPT = path.resolve(import.meta.dirname, "../../scripts/verify-matplotlib.py");
-const ready = spawnSync(PY, ["-c", "import matplotlib, numpy, pandas"]).status === 0;
+const ready = spawnSync(PY, ["-c", "import matplotlib, numpy, pandas, scipy"]).status === 0; // scipy: Lec9 켄달 빈칸
 
 interface Job {
   key: string;
@@ -84,6 +85,9 @@ function expectedTruths(q: Question): boolean[] | null {
   return null;
 }
 
+/** 코드 빈칸 비교: 그래프 + print 출력(켄달처럼 그래프 없이 출력만 있는 코드) */
+const result = (r: JobResult) => JSON.stringify([r.signature, r.stdout]);
+
 /** 검사 결과 → 문제점 목록 */
 function problemsOf(q: Question, results: Map<string, JobResult>): string[] {
   const p: string[] = [];
@@ -95,11 +99,11 @@ function problemsOf(q: Question, results: Map<string, JobResult>): string[] {
       b.accept.slice(1).forEach((a, j) => {
         const r = get(`${q.id}#accept${i}.${j + 1}`);
         if (r.error) p.push(`${i}번 허용 답안 '${a}' 오류: ${r.error.type}`);
-        else if (JSON.stringify(r.signature) !== JSON.stringify(base.signature)) p.push(`${i}번 허용 답안 '${a}'의 그래프가 첫 정답과 다름`);
+        else if (result(r) !== result(base)) p.push(`${i}번 허용 답안 '${a}'의 그래프·출력이 첫 정답과 다름`);
       });
       (b.wrong ?? []).forEach((w, j) => {
         const r = get(`${q.id}#wrong${i}.${j}`);
-        if (!r.error && JSON.stringify(r.signature) === JSON.stringify(base.signature)) p.push(`${i}번 wrong '${w}'가 첫 정답과 같은 그래프`);
+        if (!r.error && result(r) === result(base)) p.push(`${i}번 wrong '${w}'가 첫 정답과 같은 그래프·출력`);
       });
     });
   }
