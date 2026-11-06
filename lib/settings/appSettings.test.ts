@@ -1,7 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { continueLink } from "@/lib/quiz/startLinks";
-import { pickHero } from "@/components/home/HomeView";
-import type { RecordsState } from "@/lib/storage/recordsStore";
 import {
   applyQuizDefaults,
   daysUntil,
@@ -70,39 +68,5 @@ describe("이어 풀기 주소(기존 퀴즈 쿼리만 사용)", () => {
     expect(applyQuizDefaults(new URLSearchParams(), DEFAULT_SETTINGS).toString()).toBe(
       "count=20&shuffle=0&mode=instant",
     );
-  });
-});
-
-describe("홈 맨 위 과목 고르기", () => {
-  const subjects = [
-    { id: "os", name: "운영체제", ready: true, ids: ["os-1"] },
-    { id: "dc", name: "데이터 통신", ready: true, ids: ["dc-1"] },
-    { id: "ps", name: "심리학개론", ready: false, ids: [] },
-  ];
-  const rec = (lastAt: string) => ({
-    progress: { x: { attempts: 1, correctCount: 1, lastScore: 1, lastAt } },
-    wrong: {},
-    bookmarks: [],
-  });
-  const records: RecordsState = {
-    loaded: true,
-    subjects: { os: rec("2026-11-01T00:00:00Z"), dc: rec("2026-11-03T00:00:00Z") },
-  };
-
-  it("기록도 날짜도 없으면 문제가 있는 첫 과목", () => {
-    expect(pickHero(subjects, { loaded: true, subjects: {} }, DEFAULT_SETTINGS)?.id).toBe("os");
-  });
-  it("날짜가 없으면 가장 최근에 푼 과목", () => {
-    expect(pickHero(subjects, records, DEFAULT_SETTINGS)?.id).toBe("dc");
-  });
-  it("날짜가 있으면 가장 가까운 시험(지난 날짜 제외)", () => {
-    const far = new Date(Date.now() + 30 * 86_400_000).toISOString().slice(0, 10);
-    const near = new Date(Date.now() + 5 * 86_400_000).toISOString().slice(0, 10);
-    expect(
-      pickHero(subjects, records, { ...DEFAULT_SETTINGS, examDates: { os: near, dc: far } })?.id,
-    ).toBe("os");
-    expect(
-      pickHero(subjects, records, { ...DEFAULT_SETTINGS, examDates: { os: "2000-01-01" } })?.id,
-    ).toBe("dc");
   });
 });
