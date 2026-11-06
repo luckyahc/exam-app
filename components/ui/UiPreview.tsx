@@ -7,7 +7,7 @@ import { Button, ButtonLink } from "./Button";
 import { Chip } from "./Chip";
 import { ChoiceRow } from "./ChoiceRow";
 import { List, ListRow } from "./ListRow";
-import { Marker } from "./Marker";
+import { EXAM_MARK, Marker } from "./Marker";
 import { SegmentedControl, segmentPanelProps } from "./SegmentedControl";
 import { SelectInput } from "./SelectInput";
 import { TextInput } from "./TextInput";
@@ -41,7 +41,7 @@ export function UiPreview() {
           이 과목 틀린 문제 7개 →
         </ButtonLink>
         <ButtonLink href="#" variant="text" className="self-start">
-          <Marker>시험 포인트만 풀기 (24)</Marker> →
+          <Marker>{EXAM_MARK}만 풀기 (24)</Marker> →
         </ButtonLink>
       </Section>
 

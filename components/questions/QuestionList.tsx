@@ -8,7 +8,7 @@ import { BottomSheet } from "@/components/ui/BottomSheet";
 import { Button } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
 import { List, ListRow } from "@/components/ui/ListRow";
-import { Marker } from "@/components/ui/Marker";
+import { EXAM_MARK, Marker } from "@/components/ui/Marker";
 import { coreFor, type Question } from "@/lib/qtypes/registry";
 import { loadSubject } from "@/lib/quiz/loadQuestions";
 import {
@@ -212,7 +212,7 @@ export function QuestionList({ subject }: { subject: ListSubject }) {
                 title={<span className="font-normal break-words">{promptPreview(r.q)}</span>}
                 description={
                   <>
-                    {r.q.exam && <Marker className="mr-1">시험 포인트</Marker>}
+                    {r.q.exam && <Marker className="mr-1">{EXAM_MARK}</Marker>}
                     {meta.filter(Boolean).join(" · ")}
                   </>
                 }

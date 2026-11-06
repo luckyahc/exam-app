@@ -8,7 +8,7 @@ import { BookmarkIcon } from "@/components/quiz/BookmarkIcon";
 import { Button } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
 import { List } from "@/components/ui/ListRow";
-import { Marker } from "@/components/ui/Marker";
+import { EXAM_MARK, Marker } from "@/components/ui/Marker";
 import { SegmentedControl, segmentPanelProps } from "@/components/ui/SegmentedControl";
 import { SUBJECTS } from "@/data/subjects/registry";
 import { coreFor, type Question } from "@/lib/qtypes/registry";
@@ -191,7 +191,7 @@ export function ReviewView() {
                             {q.exam && (
                               <>
                                 {" "}
-                                <Marker className="text-xs">시험 포인트</Marker>
+                                <Marker className="text-xs">{EXAM_MARK}</Marker>
                               </>
                             )}
                           </p>

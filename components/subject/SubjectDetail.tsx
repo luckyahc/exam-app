@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ButtonLink } from "@/components/ui/Button";
 import { List, ListRow } from "@/components/ui/ListRow";
-import { Marker } from "@/components/ui/Marker";
+import { EXAM_MARK, Marker } from "@/components/ui/Marker";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { ProgressScopeToggle } from "@/components/ui/ProgressScopeToggle";
 import { SegmentedControl, segmentPanelProps } from "@/components/ui/SegmentedControl";
@@ -208,7 +208,7 @@ function DetailView({ subject, exams, exam, view }: Props & { exam: ExamId; view
           <div className="flex flex-col items-start">
             {subject.examPoints && ex.stars > 0 && (
               <ButtonLink href={`${quiz}&star=1&shuffle=1&mode=instant`} variant="text">
-                <Marker>시험 포인트만 풀기 ({ex.stars})</Marker>→
+                <Marker>{EXAM_MARK}만 풀기 ({ex.stars})</Marker>→
               </ButtonLink>
             )}
             {ready && openWrong > 0 && (

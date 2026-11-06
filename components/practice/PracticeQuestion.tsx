@@ -4,7 +4,6 @@ import { Check, X } from "lucide-react";
 import { CodeBlock } from "@/components/qtypes/CodeBlock";
 import { DataTables } from "@/components/qtypes/DataTables";
 import {
-  EXAM_LABEL,
   ExplanationSource,
   explanationBasis,
   explanationBody,
@@ -13,7 +12,7 @@ import {
 } from "@/components/qtypes/QuestionRenderer";
 import { uiFor } from "@/components/qtypes/registry";
 import { RichText } from "@/components/qtypes/ui";
-import { Marker } from "@/components/ui/Marker";
+import { EXAM_MARK, Marker } from "@/components/ui/Marker";
 import type { GradeResult } from "@/lib/qtypes/base";
 import { questionData } from "@/lib/qtypes/dataSnapshots";
 import { type AnyAnswer, coreFor, type Question } from "@/lib/qtypes/registry";
@@ -54,9 +53,7 @@ export function PracticeQuestion({
     >
       <header className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted">
         {question.exam && (
-          <Marker className="text-sm font-semibold">
-            시험 포인트{question.examBasis ? ` · ${EXAM_LABEL[question.examBasis]}` : ""}
-          </Marker>
+          <Marker className="text-sm font-semibold">{EXAM_MARK}</Marker>
         )}
         <span>{[core.label, question.topic, ...badges].join(" · ")}</span>
       </header>

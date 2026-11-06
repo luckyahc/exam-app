@@ -7,7 +7,7 @@ import { BottomSheet } from "@/components/ui/BottomSheet";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { List, ListRow } from "@/components/ui/ListRow";
 import { getSubject } from "@/lib/subjects";
-import { Marker } from "@/components/ui/Marker";
+import { EXAM_MARK, Marker } from "@/components/ui/Marker";
 import { coreFor, type Question } from "@/lib/qtypes/registry";
 import {
   answerForReview,
@@ -134,7 +134,7 @@ export function PracticeResult({
                     <>
                       {q.exam && (
                         <>
-                          <Marker>시험 포인트</Marker>{" "}
+                          <Marker>{EXAM_MARK}</Marker>{" "}
                         </>
                       )}
                       {q.topic}
