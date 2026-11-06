@@ -2,6 +2,7 @@
 
 import { Check, X } from "lucide-react";
 import { CodeBlock } from "@/components/qtypes/CodeBlock";
+import { CopyQuestionButton } from "@/components/qtypes/CopyQuestionButton";
 import { DataTables } from "@/components/qtypes/DataTables";
 import {
   ExplanationSource,
@@ -56,6 +57,10 @@ export function PracticeQuestion({
           <Marker className="text-sm font-semibold">{EXAM_MARK}</Marker>
         )}
         <span>{[core.label, question.topic, ...badges].join(" · ")}</span>
+        <CopyQuestionButton
+          question={question}
+          className="ml-auto inline-flex min-h-8 items-center text-sm text-muted underline underline-offset-4"
+        />
       </header>
 
       <div className="flex flex-col gap-3">

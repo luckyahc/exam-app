@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { type ReactNode, useEffect, useState } from "react";
 import { CodeBlock } from "@/components/qtypes/CodeBlock";
+import { CopyQuestionButton } from "@/components/qtypes/CopyQuestionButton";
 import { DataTables } from "@/components/qtypes/DataTables";
 import { QuestionFigureView } from "@/components/qtypes/QuestionRenderer";
 import { uiFor } from "@/components/qtypes/registry";
@@ -317,6 +318,7 @@ export function ExamScreen({ session, getQ, remaining, now, answeredCount, onAns
                 </div>
                 {/* 기본 화면에서 이미 확인(채점)한 문제는 답을 바꿔도 채점에 들어가지 않으므로 잠근다 */}
                 {session.results[q.id] && <p className="text-sm text-[#888]">이미 채점한 문제입니다.</p>}
+                <CopyQuestionButton question={q} className="self-start text-xs text-[#888] underline" />
                 <fieldset disabled={!!session.results[q.id]} className="contents">
                   <ExamInput q={q} a={answer} onAnswer={onAnswer} />
                 </fieldset>
