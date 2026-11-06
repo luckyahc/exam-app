@@ -1,6 +1,12 @@
 import { deviceStore, readDevices } from "@/lib/analytics/devices";
 import { createLimiter, passwordMatches } from "@/lib/analytics/guard";
-import { AnalyticsApiError, fetchReport, REPORT_DAYS, type ReportDays } from "@/lib/analytics/report";
+import {
+  AnalyticsApiError,
+  deviceDates,
+  fetchReport,
+  REPORT_DAYS,
+  type ReportDays,
+} from "@/lib/analytics/report";
 
 const limiter = createLimiter({ max: 5, windowMs: 10 * 60_000 });
 const json = (body: unknown, status = 200) =>
@@ -46,7 +52,7 @@ export async function POST(request: Request) {
     );
     const redis = deviceStore();
     const deviceStats = redis
-      ? await readDevices(redis, report.daily.map((d) => d.date)).catch(() => null)
+      ? await readDevices(redis, deviceDates(days)).catch(() => null)
       : null;
     return json({ ...report, deviceStats });
   } catch (e) {

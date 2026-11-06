@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createLimiter, passwordMatches } from "./guard";
-import { AnalyticsApiError, fetchReport, fillDays, reportRange, toBars } from "./report";
+import { AnalyticsApiError, deviceDates, fetchReport, fillDays, reportRange, toBars } from "./report";
 
 const NOW = new Date("2026-11-20T12:00:00Z");
 
@@ -14,6 +14,12 @@ describe("분석 조회", () => {
       { date: "2026-11-05", pageviews: 5, visitors: 2 },
       { date: "2026-11-06", pageviews: 0, visitors: 0 },
     ]);
+  });
+
+  it("기기 집계는 방문 분석 기준 날짜를 기다리지 않는다", () => {
+    expect(deviceDates(7, new Date("2026-11-06T12:00:00Z"))).toEqual(["2026-11-06"]);
+    expect(deviceDates(7, NOW)).toHaveLength(7);
+    expect(deviceDates(30, NOW)[0]).toBe("2026-11-06");
   });
 
   it("항목은 많은 순, Others는 맨 뒤 기타, 값 없는 행은 대체 이름", () => {

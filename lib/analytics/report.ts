@@ -8,6 +8,8 @@ const API = "https://api.vercel.com/v1/query/web-analytics/visits";
 
 /** 이 날짜(UTC)부터의 데이터만 관리자 화면에 보여 준다. Vercel의 이전 데이터는 지울 수 없어 그대로 남아 있고 조회만 하지 않는다 */
 export const ANALYTICS_START = "2026-11-07";
+/** 기기 집계 시작 날짜. 저장소를 이날 새로 만들어 이전 데이터가 없으므로 ANALYTICS_START를 기다리지 않는다 */
+export const DEVICE_START = "2026-11-06";
 
 export const REPORT_DAYS = [7, 30] as const;
 export type ReportDays = (typeof REPORT_DAYS)[number];
@@ -94,6 +96,12 @@ export function toBars(
     ...bars.filter((b) => b.label !== "Others").sort((a, b) => b.pageviews - a.pageviews),
     ...rest,
   ];
+}
+
+/** 기기 집계에 쓸 날짜 목록(최근 days일, 시작 날짜 이전 제외) */
+export function deviceDates(days: number, now = new Date()) {
+  const { since, until } = reportRange(days, now, DEVICE_START);
+  return fillDays([], since, until).map((d) => d.date);
 }
 
 export async function fetchReport(
