@@ -1,6 +1,7 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
+import { ChoiceRow } from "@/components/ui/ChoiceRow";
 import { QTYPE_FIXTURES } from "@/lib/qtypes/fixtures";
 import { coreFor, type Question } from "@/lib/qtypes/registry";
 import { newSession, type QuizMode } from "@/lib/quiz/session";
@@ -57,6 +58,19 @@ describe("기본 풀이 화면", () => {
     expect(h).not.toMatch(/>확인</);
     expect(h).not.toContain("건너뛰기");
     expect(html("exam", qs.length - 1)).toContain("답안 제출");
+  });
+});
+
+describe("채점된 보기", () => {
+  const row = (result: "correct" | "missed") =>
+    renderToStaticMarkup(createElement(ChoiceRow, { selected: false, result, children: "보기" }));
+
+  it("놓친 정답은 빨간 점선·빨간 글씨, 맞힌 정답은 초록", () => {
+    expect(row("missed")).toContain("border-dashed border-shu");
+    expect(row("missed")).toContain("text-shu");
+    expect(row("missed")).not.toContain("text-ok");
+    expect(row("correct")).toContain("border-ok");
+    expect(row("correct")).toContain("text-ok");
   });
 });
 

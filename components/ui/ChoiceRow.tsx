@@ -11,7 +11,7 @@ export type ChoiceResult = "correct" | "incorrect" | "missed" | "neutral";
 const RESULT_CLASS: Record<ChoiceResult, string> = {
   correct: "border-ok text-sumi",
   incorrect: "border-shu text-sumi",
-  missed: "border-dashed border-ok text-sumi",
+  missed: "border-dashed border-shu text-sumi",
   neutral: "border-sumi/15 text-muted",
 };
 
@@ -72,7 +72,12 @@ export function ChoiceRow({
       )}
       <span className="min-w-0 flex-1">{children}</span>
       {(result === "correct" || result === "missed") && (
-        <span className="flex shrink-0 items-center gap-1 text-sm font-semibold text-ok">
+        <span
+          className={cn(
+            "flex shrink-0 items-center gap-1 text-sm font-semibold",
+            result === "missed" ? "text-shu" : "text-ok",
+          )}
+        >
           <Check aria-hidden className="size-4" strokeWidth={2.5} />
           {result === "correct" ? "정답" : "놓친 정답"}
         </span>
