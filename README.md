@@ -135,10 +135,23 @@ npm run build && npm start       # 프로덕션 모드 확인
 
 ## Vercel 배포
 
-설정 파일·환경변수·빌드 명령 변경이 필요 없다(전 경로 정적 생성, 실행 중 외부 요청 없음, 폰트도 로컬 포함). 빌드 중 `prebuild`가 실행 엔진 휠을 내려받는다(약 20초 + 내려받기, Vercel 빌드 상한 45분).
+설정 파일·빌드 명령 변경이 필요 없다. 환경 변수는 통계 탭의 관리자 분석에만 쓴다(아래 표). 문제 풀이 화면은 전 경로 정적 생성이고 실행 중 외부 요청이 없다(폰트도 로컬 포함). 빌드 중 `prebuild`가 실행 엔진 휠을 내려받는다(약 20초 + 내려받기, Vercel 빌드 상한 45분).
 
 1. 이 저장소를 GitHub에 push
 2. [vercel.com/new](https://vercel.com/new)에서 저장소 **Import** — Framework Preset은 Next.js로 자동 인식된다
 3. **Deploy**. 이후 `main`에 push하면 자동 배포, PR마다 미리보기 배포가 만들어진다
+
+### 관리자 분석(Vercel Web Analytics)
+
+통계 탭의 **관리자** 버튼 → 비밀번호 → 방문자·페이지뷰 그래프. 저장소가 공개이므로 비밀번호와 토큰은 코드에 넣지 않고 Vercel 프로젝트의 **Settings → Environment Variables**(Production)에 둔다. 값을 넣은 뒤 다시 배포해야 적용된다.
+
+| 이름 | 값 |
+|---|---|
+| `ADMIN_PASSWORD` | 관리자 비밀번호 |
+| `VERCEL_ANALYTICS_TOKEN` | Vercel Account Settings → Tokens에서 만든 토큰 |
+| `ANALYTICS_TEAM_ID` | 팀 소유 프로젝트만: 팀 ID(`team_…`). 개인 프로젝트는 비운다 |
+| `ANALYTICS_PROJECT_ID` | 선택: 프로젝트 이름 또는 ID. 없으면 Vercel 시스템 변수 `VERCEL_PROJECT_ID`를 쓴다 |
+
+수집을 시작하려면 프로젝트의 **Analytics** 탭에서 **Enable**을 눌러야 한다.
 
 배포한 뒤에는 [`docs/deploy-checklist.md`](docs/deploy-checklist.md)로 엔진 파일 응답 헤더와 휴대폰 로딩 시간, 족보 화면(6번)을 확인한다.

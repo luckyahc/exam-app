@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono } from "next/font/google";
 import localFont from "next/font/local";
@@ -53,6 +54,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <StorageBootstrap />
         <main className="flex flex-1 flex-col">{children}</main>
         <BottomTabBar />
+        <Analytics />
       </body>
     </html>
   );

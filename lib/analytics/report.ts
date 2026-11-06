@@ -1,0 +1,129 @@
+/**
+ * Vercel Web Analytics 조회(서버 전용, app/api/admin/analytics/route.ts가 쓴다). 문서: https://vercel.com/docs/analytics/web-analytics-api
+ * 방문자는 쿠키 없이 익명으로 집계된 값이라 "누가" 접속했는지는 알 수 없다. 조회 범위는 프로덕션 배포만.
+ */
+const API = "https://api.vercel.com/v1/query/web-analytics/visits";
+
+export const REPORT_DAYS = [7, 30] as const;
+export type ReportDays = (typeof REPORT_DAYS)[number];
+
+export interface DayPoint {
+  /** YYYY-MM-DD(UTC) */
+  date: string;
+  pageviews: number;
+  visitors: number;
+}
+export interface BarRow {
+  label: string;
+  pageviews: number;
+  visitors: number;
+}
+export interface AnalyticsReport {
+  days: ReportDays;
+  totals: { pageviews: number; visitors: number };
+  daily: DayPoint[];
+  pages: BarRow[];
+  countries: BarRow[];
+  devices: BarRow[];
+  referrers: BarRow[];
+}
+export interface AnalyticsConfig {
+  token: string;
+  projectId: string;
+  teamId?: string;
+}
+
+export class AnalyticsApiError extends Error {
+  constructor(readonly status: number) {
+    super(`Web Analytics API ${status}`);
+  }
+}
+
+const iso = (d: Date) => d.toISOString().slice(0, 10);
+
+/** 오늘(UTC)을 포함한 최근 days일 */
+export function reportRange(days: number, now = new Date()) {
+  const since = new Date(now);
+  since.setUTCDate(since.getUTCDate() - (days - 1));
+  return { since: iso(since), until: iso(now) };
+}
+
+/** 방문이 없는 날은 응답에 없으므로 0으로 채워 날짜가 끊기지 않게 한다 */
+export function fillDays(
+  rows: readonly { timestamp: string; pageviews?: number; visitors?: number }[],
+  since: string,
+  until: string,
+): DayPoint[] {
+  const byDay = new Map(rows.map((r) => [r.timestamp.slice(0, 10), r]));
+  const out: DayPoint[] = [];
+  for (const d = new Date(`${since}T00:00:00Z`); iso(d) <= until; d.setUTCDate(d.getUTCDate() + 1)) {
+    const r = byDay.get(iso(d));
+    out.push({ date: iso(d), pageviews: r?.pageviews ?? 0, visitors: r?.visitors ?? 0 });
+  }
+  return out;
+}
+
+/** 항목별 행: 많은 순, "Others"는 맨 뒤 "기타"로. 값이 없는 행은 emptyLabel(유입 경로의 직접 접속 등) */
+export function toBars(
+  rows: readonly Record<string, unknown>[],
+  key: string,
+  emptyLabel = "(알 수 없음)",
+): BarRow[] {
+  const bars = rows.map((r) => ({
+    label: typeof r[key] === "string" && r[key] ? (r[key] as string) : emptyLabel,
+    pageviews: Number(r.pageviews) || 0,
+    visitors: Number(r.visitors) || 0,
+  }));
+  const rest = bars.filter((b) => b.label === "Others").map((b) => ({ ...b, label: "기타" }));
+  return [
+    ...bars.filter((b) => b.label !== "Others").sort((a, b) => b.pageviews - a.pageviews),
+    ...rest,
+  ];
+}
+
+export async function fetchReport(
+  cfg: AnalyticsConfig,
+  days: ReportDays,
+  fetchFn: typeof fetch = fetch,
+  now = new Date(),
+): Promise<AnalyticsReport> {
+  const { since, until } = reportRange(days, now);
+  const get = async <T,>(path: "count" | "aggregate", params: Record<string, string>): Promise<T> => {
+    const q = new URLSearchParams({
+      projectId: cfg.projectId,
+      since,
+      until,
+      ...(cfg.teamId ? { teamId: cfg.teamId } : {}),
+      ...params,
+    });
+    const res = await fetchFn(`${API}/${path}?${q}`, {
+      headers: { Authorization: `Bearer ${cfg.token}` },
+      cache: "no-store",
+    });
+    if (!res.ok) throw new AnalyticsApiError(res.status);
+    return ((await res.json()) as { data: T }).data;
+  };
+  const by = (dimension: string, limit: number) =>
+    get<Record<string, unknown>[]>("aggregate", { by: dimension, limit: String(limit) });
+
+  const [totals, daily, pages, countries, devices, referrers] = await Promise.all([
+    get<{ pageviews?: number; visitors?: number }>("count", {}),
+    get<{ timestamp: string; pageviews?: number; visitors?: number }[]>("aggregate", {
+      by: "day",
+      limit: "100",
+    }),
+    by("requestPath", 8),
+    by("country", 6),
+    by("deviceType", 4),
+    by("referrerHostname", 6),
+  ]);
+  return {
+    days,
+    totals: { pageviews: totals.pageviews ?? 0, visitors: totals.visitors ?? 0 },
+    daily: fillDays(daily, since, until),
+    pages: toBars(pages, "requestPath"),
+    countries: toBars(countries, "country"),
+    devices: toBars(devices, "deviceType"),
+    referrers: toBars(referrers, "referrerHostname", "(직접 접속)"),
+  };
+}

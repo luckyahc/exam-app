@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { AdminPanel } from "@/components/stats/AdminPanel";
 import { StatsDashboard } from "@/components/stats/StatsDashboard";
 import { SubjectTabs } from "@/components/subject/SubjectTabs";
 import { SUBJECTS } from "@/data/subjects/registry";
@@ -16,6 +17,7 @@ export default async function StatsPage() {
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-5 px-4 py-6 sm:px-6">
       <PageHeader title="통계" />
+      <AdminPanel />
       <Suspense fallback={<div className="h-24" />}>
         <SubjectTabs />
         <StatsDashboard metas={metas} />
