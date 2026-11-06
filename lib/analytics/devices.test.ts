@@ -41,8 +41,8 @@ describe("기기 집계", () => {
         { date: "2026-11-08", devices: 2, newDevices: 1 },
       ],
     });
-    expect(ttl.has("devices:all")).toBe(false);
-    expect(ttl.get("devices:day:2026-11-07")).toBeGreaterThan(0);
+    expect(ttl.has("devices:v2:all")).toBe(false);
+    expect(ttl.get("devices:v2:day:2026-11-07")).toBeGreaterThan(0);
   });
 
   it("기간이 비어 있어도 된다", async () => {
@@ -61,8 +61,12 @@ describe("브라우저 기기 번호", () => {
   const makeId = () => "new";
 
   it("처음이면 만들어 보내고, 같은 날 다시 오면 보내지 않으며, 다음 날 같은 번호로 보낸다", () => {
-    expect(deviceVisit(null, "d1", makeId)).toEqual({ next: { id: "new", sentOn: "d1" }, send: true });
-    expect(deviceVisit({ id: "x", sentOn: "d1" }, "d1", makeId).send).toBe(false);
-    expect(deviceVisit({ id: "x", sentOn: "d1" }, "d2", makeId)).toEqual({ next: { id: "x", sentOn: "d2" }, send: true });
+    expect(deviceVisit(null, "d1", makeId)).toEqual({ next: { id: "new", sentOn: "2:d1" }, send: true });
+    expect(deviceVisit({ id: "x", sentOn: "2:d1" }, "d1", makeId).send).toBe(false);
+    expect(deviceVisit({ id: "x", sentOn: "2:d1" }, "d2", makeId)).toEqual({ next: { id: "x", sentOn: "2:d2" }, send: true });
+  });
+
+  it("집계를 새로 시작하면 오늘 이미 알린 브라우저도 같은 번호로 다시 알린다", () => {
+    expect(deviceVisit({ id: "x", sentOn: "d1" }, "d1", makeId)).toEqual({ next: { id: "x", sentOn: "2:d1" }, send: true });
   });
 });

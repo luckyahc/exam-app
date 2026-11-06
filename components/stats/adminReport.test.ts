@@ -6,7 +6,7 @@ import { AdminPanel, AdminReport } from "./AdminPanel";
 
 const report: AnalyticsReport = {
   days: 7,
-  start: "2026-11-07",
+  start: "2026-11-06T08:00:00.000Z",
   totals: { pageviews: 120, visitors: 34 },
   daily: [
     { date: "2026-11-05", pageviews: 10, visitors: 4 },
@@ -55,6 +55,7 @@ describe("관리자 분석 화면", () => {
     expect(h).toContain("아직 데이터가 없습니다");
     expect(h).toContain("재방문");
     expect(h).toContain("지금까지 9대");
-    expect(h).toContain("2026.11.07");
+    expect(h).toContain("2026년 11월 6일");
+    expect(h).toContain("부터의 데이터");
   });
 });

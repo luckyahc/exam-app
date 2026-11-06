@@ -182,8 +182,8 @@ export function AdminReport({
       </div>
       <BarList title="유입 경로" rows={report.referrers} />
       <p className="text-xs text-muted">
-        방문자·페이지뷰는 {report.start.replaceAll("-", ".")}부터 보여 줍니다. 누구인지는 알 수 없고,
-        날짜는 UTC 기준입니다.
+        {new Date(report.start).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", dateStyle: "long", timeStyle: "short" })}
+        부터의 데이터만 보여 줍니다. 누구인지는 알 수 없고, 날짜는 UTC 기준입니다.
       </p>
     </section>
   );

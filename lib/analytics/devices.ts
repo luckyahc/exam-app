@@ -3,12 +3,13 @@ import { Redis } from "@upstash/redis";
 /**
  * 기기 기준 방문 집계(서버 전용). 브라우저가 만든 무작위 기기 번호만 저장한다(이름·IP 없음).
  * 번호는 localStorage에 있어 네트워크가 바뀌거나 다음 날이 되어도 같고, 브라우저가 다르거나 사이트 데이터를 지우면 새 기기로 센다.
- * - devices:all = 지금까지 본 기기 / devices:day:<날짜> = 그날 방문 기기 / devices:new:<날짜> = 그날 처음 본 기기
+ * - <접두어>:all = 지금까지 본 기기 / :day:<날짜> = 그날 방문 기기 / :new:<날짜> = 그날 처음 본 기기
  * 날짜는 UTC(Web Analytics 그래프와 같은 기준).
  */
-const ALL = "devices:all";
-const dayKey = (date: string) => `devices:day:${date}`;
-const newKey = (date: string) => `devices:new:${date}`;
+const PREFIX = "devices:v2"; // v1(2026-11-06 낮 기록)은 쓰지 않는다 — 집계를 새로 시작하며 그대로 남겨 둠
+const ALL = `${PREFIX}:all`;
+const dayKey = (date: string) => `${PREFIX}:day:${date}`;
+const newKey = (date: string) => `${PREFIX}:new:${date}`;
 /** 날짜별 기록은 Hobby 보고 기간보다 넉넉히 두고 지운다 */
 const DAY_TTL_SECONDS = 90 * 86_400;
 

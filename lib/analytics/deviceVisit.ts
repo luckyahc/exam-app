@@ -1,4 +1,7 @@
-/** 브라우저에 저장하는 기기 번호와 마지막으로 서버에 알린 날짜(UTC) */
+/** 집계를 새로 시작할 때 올린다: 오늘 이미 알린 브라우저도 새 집계에 한 번 더 알리게 된다(서버 키 접두어와 함께) */
+const EPOCH = 2;
+
+/** 브라우저에 저장하는 기기 번호와 마지막으로 서버에 알린 표시(집계 차수:날짜) */
 export interface StoredDevice {
   id: string;
   sentOn: string;
@@ -11,6 +14,6 @@ export function deviceVisit(
   makeId: () => string,
 ): { next: StoredDevice; send: boolean } {
   const id = stored?.id || makeId();
-  if (stored?.id && stored.sentOn === today) return { next: { id, sentOn: today }, send: false };
-  return { next: { id, sentOn: today }, send: true };
+  const sentOn = `${EPOCH}:${today}`;
+  return { next: { id, sentOn }, send: !(stored?.id && stored.sentOn === sentOn) };
 }
