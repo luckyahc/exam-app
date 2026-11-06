@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { POST } from "./route";
 
 let ipCount = 0;
@@ -11,7 +11,13 @@ const post = (body: unknown, ip = `10.0.0.${++ipCount}`) =>
     }),
   );
 
+beforeEach(() => {
+  vi.useFakeTimers({ toFake: ["Date"], now: new Date("2026-12-20T12:00:00Z") });
+  vi.stubEnv("KV_REST_API_URL", "");
+});
+
 afterEach(() => {
+  vi.useRealTimers();
   vi.unstubAllEnvs();
   vi.unstubAllGlobals();
 });

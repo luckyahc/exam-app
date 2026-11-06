@@ -1,16 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { cn } from "@/lib/cn";
-import type { BarRow, DayPoint } from "@/lib/analytics/report";
-
-type Metric = "visitors" | "pageviews";
-const METRICS = [
-  { value: "visitors", label: "방문자" },
-  { value: "pageviews", label: "페이지뷰" },
-] as const;
-const METRIC_LABEL: Record<Metric, string> = { visitors: "방문자", pageviews: "페이지뷰" };
+import type { BarRow } from "@/lib/analytics/report";
 
 const shortDate = (date: string) => `${Number(date.slice(5, 7))}/${Number(date.slice(8, 10))}`;
 
@@ -28,28 +21,39 @@ export function StatTile({ label, value }: { label: string; value: number }) {
  * 일별 추이 막대. 측정값이 달라 축을 둘로 나누지 않고 전환으로 하나씩 본다. 색은 먹색 한 가지.
  * 막대 위에 올리거나 누르면 위쪽 줄에 그날 값이 나온다(기본은 가장 최근 날). 같은 값은 아래 "표로 보기"에도 있다.
  */
-export function DailyChart({ data }: { data: readonly DayPoint[] }) {
-  const [metric, setMetric] = useState<Metric>("visitors");
+export function DailyChart<K extends string>({
+  title,
+  metrics,
+  data,
+}: {
+  title: string;
+  metrics: readonly { value: K; label: string }[];
+  data: readonly ({ date: string } & Record<K, number>)[];
+}) {
+  const [metric, setMetric] = useState<K>(metrics[0].value);
   const [active, setActive] = useState<number | null>(null);
-  const max = Math.max(1, ...data.map((d) => d[metric]));
+  const headingId = useId();
+  const metricLabel = metrics.find((m) => m.value === metric)!.label;
+  const value = (d: (typeof data)[number]) => d[metric] as number;
+  const max = Math.max(1, ...data.map(value));
   const shown = data[active ?? data.length - 1];
 
   return (
-    <section aria-labelledby="daily-heading" className="flex flex-col gap-3">
+    <section aria-labelledby={headingId} className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
-        <h3 id="daily-heading" className="font-display text-base font-bold">
-          일별 추이
+        <h3 id={headingId} className="font-display text-base font-bold">
+          {title}
         </h3>
         <SegmentedControl
           label="그래프 값"
-          items={METRICS}
+          items={metrics}
           value={metric}
           onChange={setMetric}
           className="w-40 shrink-0"
         />
       </div>
       <p aria-live="polite" className="font-mono text-sm tabular-nums">
-        {shown ? `${shortDate(shown.date)} · ${METRIC_LABEL[metric]} ${shown[metric]}` : "데이터 없음"}
+        {shown ? `${shortDate(shown.date)} · ${metricLabel} ${value(shown)}` : "아직 데이터가 없습니다."}
       </p>
       <div className="flex gap-2">
         <div aria-hidden className="flex h-40 flex-col justify-between font-mono text-xs text-muted tabular-nums">
@@ -59,7 +63,7 @@ export function DailyChart({ data }: { data: readonly DayPoint[] }) {
         <div className="min-w-0 flex-1">
           <div
             role="img"
-            aria-label={`최근 ${data.length}일 ${METRIC_LABEL[metric]} 막대그래프, 최대 ${max}`}
+            aria-label={`최근 ${data.length}일 ${metricLabel} 막대그래프, 최대 ${max}`}
             onPointerLeave={() => setActive(null)}
             className="flex h-40 items-end gap-0.5 border-b border-line"
           >
@@ -73,7 +77,7 @@ export function DailyChart({ data }: { data: readonly DayPoint[] }) {
                 <div
                   className={cn("w-full bg-sumi", active !== null && active !== i && "opacity-40")}
                   style={{
-                    height: d[metric] ? `${Math.max(2, (d[metric] / max) * 100)}%` : 0,
+                    height: value(d) ? `${Math.max(2, (value(d) / max) * 100)}%` : 0,
                   }}
                 />
               </div>
@@ -93,16 +97,22 @@ export function DailyChart({ data }: { data: readonly DayPoint[] }) {
           <thead>
             <tr className="text-left text-muted">
               <th className="py-1 font-normal">날짜</th>
-              <th className="py-1 text-right font-normal">방문자</th>
-              <th className="py-1 text-right font-normal">페이지뷰</th>
+              {metrics.map((m) => (
+                <th key={m.value} className="py-1 text-right font-normal">
+                  {m.label}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody className="font-mono tabular-nums">
             {data.map((d) => (
               <tr key={d.date} className="border-t border-line">
                 <td className="py-1">{shortDate(d.date)}</td>
-                <td className="py-1 text-right">{d.visitors}</td>
-                <td className="py-1 text-right">{d.pageviews}</td>
+                {metrics.map((m) => (
+                  <td key={m.value} className="py-1 text-right">
+                    {d[m.value] as number}
+                  </td>
+                ))}
               </tr>
             ))}
           </tbody>

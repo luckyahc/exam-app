@@ -19,6 +19,8 @@ export const memoKey = (subjectId: string) => `examapp:${subjectId}:memo`;
 export const setScoresKey = (subjectId: string) => `examapp:${subjectId}:sets`;
 /** 챕터 화면 "직접 고르기"의 마지막 설정(챕터 id → 조건·문제 수·순서·모드). lib/quiz/startPrefs.ts */
 export const startPrefsKey = (subjectId: string) => `examapp:${subjectId}:start`;
+/** 고유 기기 수 집계용 무작위 번호와 마지막으로 알린 날짜. lib/analytics/deviceVisit.ts */
+export const DEVICE_KEY = "examapp:device";
 /** 저장소에 쓸 수 있는지 확인용(쓰고 바로 지운다). 문제 풀이 화면의 나가기 확인 */
 export const PROBE_KEY = "examapp:probe";
 

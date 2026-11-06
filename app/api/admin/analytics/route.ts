@@ -1,3 +1,4 @@
+import { deviceStore, readDevices } from "@/lib/analytics/devices";
 import { createLimiter, passwordMatches } from "@/lib/analytics/guard";
 import { AnalyticsApiError, fetchReport, REPORT_DAYS, type ReportDays } from "@/lib/analytics/report";
 
@@ -43,7 +44,11 @@ export async function POST(request: Request) {
       { token, projectId, teamId: process.env.ANALYTICS_TEAM_ID },
       days,
     );
-    return json(report);
+    const redis = deviceStore();
+    const deviceStats = redis
+      ? await readDevices(redis, report.daily.map((d) => d.date)).catch(() => null)
+      : null;
+    return json({ ...report, deviceStats });
   } catch (e) {
     const status = e instanceof AnalyticsApiError ? e.status : 0;
     return json({ error: apiMessage(status) }, 502);

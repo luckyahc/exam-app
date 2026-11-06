@@ -6,6 +6,7 @@ import "./globals.css";
 import { THEME_COLOR } from "@/lib/theme/constants";
 import { noFlashScript } from "@/lib/theme/noFlashScript";
 import { BottomTabBar } from "@/components/layout/BottomTabBar";
+import { DeviceBeacon } from "@/components/layout/DeviceBeacon";
 import { StorageBootstrap } from "@/components/storage/StorageBootstrap";
 
 const pretendard = localFont({
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main className="flex flex-1 flex-col">{children}</main>
         <BottomTabBar />
         <Analytics />
+        <DeviceBeacon />
       </body>
     </html>
   );

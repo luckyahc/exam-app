@@ -95,6 +95,10 @@ export function SettingsView() {
       </Section>
 
       <Section title="기록 관리">
+        <p className="text-sm text-muted">
+          방문자 통계를 위해 이 브라우저에 무작위 기기 번호를 저장해 서버로 보냅니다. 이름이나 IP는
+          저장하지 않습니다.
+        </p>
         <DataManager />
       </Section>
     </div>

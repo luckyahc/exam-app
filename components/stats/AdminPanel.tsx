@@ -13,6 +13,15 @@ const DAY_ITEMS = [
   { value: "30", label: "30일" },
 ] as const;
 
+const VISIT_METRICS = [
+  { value: "visitors", label: "방문자" },
+  { value: "pageviews", label: "페이지뷰" },
+] as const;
+const DEVICE_METRICS = [
+  { value: "devices", label: "기기" },
+  { value: "newDevices", label: "새 기기" },
+] as const;
+
 const DEVICE: Record<string, string> = { desktop: "데스크톱", mobile: "모바일", tablet: "태블릿" };
 
 function countryName(code: string) {
@@ -127,6 +136,7 @@ export function AdminReport({
   error: string | null;
   onDays(days: ReportDays): void;
 }) {
+  const stats = report.deviceStats;
   return (
     <section aria-labelledby="admin-heading" className="flex flex-col gap-6 bg-paper-deep p-4">
       <div className="flex items-center justify-between gap-3">
@@ -146,11 +156,25 @@ export function AdminReport({
           {error}
         </p>
       )}
+      {stats && (
+        <div className="flex flex-col gap-3">
+          <div className="grid grid-cols-3 gap-3">
+            <StatTile label="기기" value={stats.inRange} />
+            <StatTile label="새 기기" value={stats.newInRange} />
+            <StatTile label="재방문" value={stats.inRange - stats.newInRange} />
+          </div>
+          <p className="text-xs text-muted">
+            지금까지 {stats.total.toLocaleString("ko-KR")}대. 브라우저가 다르거나 사이트 데이터를 지우면
+            새 기기로 셉니다.
+          </p>
+          <DailyChart title="일별 기기" metrics={DEVICE_METRICS} data={stats.daily} />
+        </div>
+      )}
       <div className="grid grid-cols-2 gap-3">
-        <StatTile label="방문자" value={report.totals.visitors} />
+        <StatTile label="방문자(추정)" value={report.totals.visitors} />
         <StatTile label="페이지뷰" value={report.totals.pageviews} />
       </div>
-      <DailyChart data={report.daily} />
+      <DailyChart title="일별 추이" metrics={VISIT_METRICS} data={report.daily} />
       <BarList title="많이 본 페이지" rows={report.pages} />
       <div className="grid gap-6 sm:grid-cols-2">
         <BarList title="국가" rows={report.countries} label={countryName} />
@@ -158,7 +182,8 @@ export function AdminReport({
       </div>
       <BarList title="유입 경로" rows={report.referrers} />
       <p className="text-xs text-muted">
-        쿠키 없이 익명으로 집계한 수치라 개인은 알 수 없습니다. 날짜는 UTC 기준입니다.
+        {report.start.replaceAll("-", ".")}부터의 데이터만 보여 줍니다. 누구인지는 알 수 없고, 날짜는
+        UTC 기준입니다.
       </p>
     </section>
   );

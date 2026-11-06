@@ -152,6 +152,6 @@ npm run build && npm start       # 프로덕션 모드 확인
 | `ANALYTICS_TEAM_ID` | 팀 소유 프로젝트만: 팀 ID(`team_…`). 개인 프로젝트는 비운다 |
 | `ANALYTICS_PROJECT_ID` | 선택: 프로젝트 이름 또는 ID. 없으면 Vercel 시스템 변수 `VERCEL_PROJECT_ID`를 쓴다 |
 
-수집을 시작하려면 프로젝트의 **Analytics** 탭에서 **Enable**을 눌러야 한다.
+수집을 시작하려면 프로젝트의 **Analytics** 탭에서 **Enable**을 눌러야 한다. 기기 수 집계는 Vercel Marketplace의 Upstash for Redis(`exam-app-devices`, Production)를 쓰며 연결하면 `KV_REST_API_URL`·`KV_REST_API_TOKEN`이 자동으로 들어간다. 관리자 화면은 `lib/analytics/report.ts`의 `ANALYTICS_START` 날짜부터 보여 준다.
 
 배포한 뒤에는 [`docs/deploy-checklist.md`](docs/deploy-checklist.md)로 엔진 파일 응답 헤더와 휴대폰 로딩 시간, 족보 화면(6번)을 확인한다.
