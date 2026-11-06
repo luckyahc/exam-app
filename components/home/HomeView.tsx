@@ -1,11 +1,10 @@
 "use client";
 
-import { ButtonLink } from "@/components/ui/Button";
+import Link from "next/link";
 import { List, ListRow } from "@/components/ui/ListRow";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { ProgressScopeToggle } from "@/components/ui/ProgressScopeToggle";
 import { CURRENT_EXAM, getExam } from "@/data/subjects/exams";
-import { continueLink } from "@/lib/quiz/startLinks";
 import { type AppSettings, daysUntil, ddayLabel, useAppSettings } from "@/lib/settings/appSettings";
 import { type RecordsState, useRecords } from "@/lib/storage/recordsStore";
 
@@ -20,7 +19,7 @@ export interface HomeSubject {
 }
 
 /**
- * 과목 탭(홈). 맨 위에 다가오는 시험 하나와 주 버튼 하나, 아래는 과목 행(이름 + 진행률).
+ * 과목 탭(홈). 맨 위에 다가오는 시험 하나(누르면 그 과목으로), 아래는 과목 행(이름 + 진행률). 이어 풀기 버튼은 과목마다 과목 상세에 있다.
  * 기록·설정은 브라우저에만 있으므로 읽기 전(프리렌더)에는 같은 크기의 빈 자리만 그려 둔다.
  */
 export function HomeView({ subjects }: { subjects: HomeSubject[] }) {
@@ -47,7 +46,7 @@ export function HomeView({ subjects }: { subjects: HomeSubject[] }) {
           settings={settings}
         />
       ) : (
-        <div aria-hidden className="h-48 bg-paper-deep" />
+        <div aria-hidden className="h-32 bg-paper-deep" />
       )}
 
       <section aria-labelledby="subjects-heading" className="flex flex-col gap-2">
@@ -97,12 +96,13 @@ function HeroCard({
   settings: AppSettings;
 }) {
   const dday = ddayLabel(settings.examDates[subject.id]);
-  const cont = continueLink(subject.id, CURRENT_EXAM, solved, subject.ids.length, settings);
   return (
     <section aria-labelledby="hero-heading" className="flex flex-col gap-5 bg-paper-deep p-5">
       <div className="flex items-baseline justify-between gap-3">
         <h2 id="hero-heading" className="font-display text-2xl font-bold">
-          {subject.name} <span className="text-lg">{examName}</span>
+          <Link href={`/s/${subject.id}`} className="underline-offset-4 hover:underline">
+            {subject.name} <span className="text-lg">{examName}</span>
+          </Link>
         </h2>
         {dday && <span className="shrink-0 font-mono text-xl font-bold">{dday}</span>}
       </div>
@@ -114,9 +114,6 @@ function HeroCard({
           track="paper"
         />
       )}
-      <ButtonLink href={cont.href} block>
-        {cont.label}
-      </ButtonLink>
     </section>
   );
 }
