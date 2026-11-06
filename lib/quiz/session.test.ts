@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { QTYPE_FIXTURES } from "@/lib/qtypes/fixtures";
 import type { Question } from "@/lib/qtypes/registry";
-import { filterQuestions, newSession, summarizeSession } from "./session";
+import { filterQuestions, itemsToGrade, newSession, summarizeSession } from "./session";
 
 const qs = QTYPE_FIXTURES as readonly Question[];
 
@@ -33,6 +33,13 @@ describe("filterQuestions", () => {
 });
 
 describe("newSession / summarizeSession", () => {
+  it("한 번에 채점: 즉시 채점으로 이미 확인한 문제는 빼고 고른다(다시 기록하지 않는다)", () => {
+    const s = newSession(qs, { mode: "instant", label: "", backHref: "/" });
+    const graded = { ...s, results: { [qs[0].id]: { correct: true, score: 1 } as never } };
+    expect(itemsToGrade(s).map((it) => it.id)).toEqual(qs.map((q) => q.id));
+    expect(itemsToGrade(graded).map((it) => it.id)).toEqual(qs.slice(1).map((q) => q.id));
+  });
+
   it("시험 화면(view): 시험 모드에서 eclass를 고른 경우만 남는다(없으면 기본 화면)", () => {
     expect(newSession(qs, { mode: "exam", view: "eclass", label: "", backHref: "/" }).view).toBe("eclass");
     expect(newSession(qs, { mode: "exam", view: "app", label: "", backHref: "/" }).view).toBeUndefined();

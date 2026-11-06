@@ -3,32 +3,27 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useEffectEvent, useState } from "react";
 import { PracticeView } from "@/components/practice/PracticeView";
-import { QuestionRenderer } from "@/components/qtypes/QuestionRenderer";
 import { useQuizShortcuts } from "@/lib/hooks/useQuizShortcuts";
 import type { GradeResult } from "@/lib/qtypes/base";
 import { type AnyAnswer, coreFor, gradeQuestion, type Question } from "@/lib/qtypes/registry";
 import { setScoreOf } from "@/lib/quiz/setScores";
-import { type ExamView, gradeInSession, type QuizSession, saveSession, summarizeSession } from "@/lib/quiz/session";
+import { type ExamView, gradeInSession, itemsToGrade, type QuizSession, saveSession, summarizeSession } from "@/lib/quiz/session";
 import { makeSimilar } from "@/lib/quiz/similar";
 import { getSubject } from "@/lib/subjects";
 import { recordResult } from "@/lib/storage/recordsStore";
 import { recordSetScore } from "@/lib/storage/setScoresStore";
-import { BookmarkButton } from "./BookmarkButton";
 import { ExamScreen } from "./ExamScreen";
 
-const mmss = (sec: number) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
-
 /**
- * 문제 풀이 화면. 즉시 채점: 문제마다 제출 → 정답/해설. 시험 모드: 끝까지 풀고 한 번에 채점.
+ * 문제 풀이. 화면은 기본 화면(PracticeView)과 시험 화면(ExamScreen) 둘이고 푸는 중에 답안을 그대로 둔 채 서로 바꿀 수 있다(session.view).
+ * 채점 방식(session.mode)은 화면과 따로다. 즉시 채점: 문제마다 확인 → 정답/해설. 시험 모드: 끝까지 풀고 한 번에 채점.
+ * 시험 화면에는 문제별 확인이 없으므로 어느 방식이든 제출하면 아직 채점하지 않은 답을 한 번에 채점한다.
  * 제한 시간(선택)이 끝나면 시험 모드는 자동 채점, 즉시 채점은 제출한 문제까지로 결과에 넘어간다(나머지는 미응답).
  * 판정 규칙(완전히 맞아야 정답, 부분 점수는 보조 표시)은 gradeQuestion·recordResult가 그대로 따른다.
  */
 export function QuizRunner({ initial, questions }: { initial: QuizSession; questions: ReadonlyMap<string, Question> }) {
   const router = useRouter();
   const [session, setSession] = useState(initial);
-  const [confirming, setConfirming] = useState(false);
-  /** 즉시 채점 "여기까지 풀고 결과 보기" 확인 — 제출 버튼과 떨어진 상단에 두고 한 번 더 묻는다(잘못 누름 방지) */
-  const [confirmingStop, setConfirmingStop] = useState(false);
   const [now, setNow] = useState(() => Date.now());
   /** "비슷한 문제 새로 생성"으로 이번 세션에 끼워 넣은 문제 */
   const [extra, setExtra] = useState<ReadonlyMap<string, Question>>(() => new Map());
@@ -46,6 +41,7 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
   const result: GradeResult | null = q && session.mode === "instant" ? (session.results[q.id] ?? null) : null;
   const total = session.items.length;
   const isExam = session.mode === "exam";
+  const eclass = session.view === "eclass";
   const answeredCount = session.items.filter((it) => {
     const qq = getQ(it.id);
     const a = session.answers[it.id];
@@ -59,6 +55,7 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
     if (index !== session.index) update({ ...session, index });
   };
   const goTo = (index: number) => update({ ...session, index });
+  const setView = (view: ExamView) => update({ ...session, view });
   const setAnswer = (a: AnyAnswer) => q && update({ ...session, answers: { ...session.answers, [q.id]: a } });
 
   const finish = (s: QuizSession) => {
@@ -79,10 +76,13 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
     update(next);
   };
 
-  /** 시험 모드: 답한 문제를 모두 채점·기록하고 결과로. 답하지 않은 문제는 미응답(오답으로 집계, 기록은 남기지 않음) */
+  /**
+   * 한 번에 채점(시험 모드·시험 화면의 제출): 답한 문제를 채점·기록하고 결과로. 답하지 않은 문제는 미응답(오답으로 집계, 기록은 남기지 않음).
+   * 즉시 채점으로 이미 확인한 문제는 다시 채점·기록하지 않는다(풀이 횟수가 두 번 세지지 않게)
+   */
   const gradeAll = () => {
-    const results: Record<string, GradeResult> = {};
-    for (const it of session.items) {
+    const results: Record<string, GradeResult> = { ...session.results };
+    for (const it of itemsToGrade(session)) {
       const qq = getQ(it.id);
       const a = session.answers[it.id];
       if (!qq || a === undefined || !coreFor(qq).isComplete(qq as never, a as never)) continue;
@@ -115,11 +115,10 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
   const onTick = useEffectEvent(() => {
     setNow(Date.now());
     if (session.finished || !session.deadline || Date.now() < session.deadline) return;
-    if (isExam) gradeAll();
+    if (isExam || eclass) gradeAll();
     else finish(session);
   });
-  // 실제 시험 화면은 제한 시간이 없어도 경과 시간을 보이므로 1초마다 갱신한다
-  const eclass = isExam && session.view === "eclass";
+  // 시험 화면은 제한 시간이 없어도 경과 시간을 보이므로 1초마다 갱신한다
   useEffect(() => {
     if (!session.deadline && !eclass) return;
     const t = setInterval(onTick, 1000);
@@ -135,18 +134,13 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
       setAnswer(core.applyChoice(q as never, answer as never, i) as AnyAnswer);
     },
     onEnter: () => {
-      if (isExam) return go(1);
+      if (isExam || eclass) return go(1);
       if (!result) return submit();
       if (session.index < total - 1) go(1);
     },
     onPrev: () => go(-1),
     onNext: () => go(1),
   });
-
-  const btn = "rounded-lg border border-line px-4 py-2 text-sm disabled:opacity-40";
-  const primary = "rounded-lg bg-sumi px-4 py-2 text-sm font-semibold text-paper disabled:opacity-40";
-  const last = session.index === total - 1;
-  const setView = (view: ExamView) => update({ ...session, view });
 
   if (eclass)
     return (
@@ -163,195 +157,25 @@ export function QuizRunner({ initial, questions }: { initial: QuizSession; quest
       />
     );
 
-  // 연습 모드(즉시 채점)는 개편된 화면. 시험 모드(기본 화면·실제 시험 화면)는 기존 화면 그대로
-  if (!isExam)
-    return (
-      <PracticeView
-        session={session}
-        q={q}
-        answer={answer}
-        result={result}
-        complete={complete}
-        gradedCount={gradedCount}
-        remaining={remaining}
-        generating={generating}
-        setAnswer={setAnswer}
-        submit={submit}
-        go={go}
-        goTo={goTo}
-        finish={() => finish(session)}
-        addSimilar={addSimilar}
-      />
-    );
-
   return (
-    <div className="flex flex-col gap-5">
-      {/* 상단: 제목·진행 */}
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
-          <span className="font-semibold">{session.label}</span>
-          <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span className="text-muted">
-              {isExam ? `시험 모드 · 답한 문제 ${answeredCount}/${total}` : `즉시 채점 · 채점 ${gradedCount}/${total}`}
-              {remaining !== null && (
-                <span className={remaining <= 60 ? " font-semibold text-sumi" : ""}>
-                  {" "}
-                  · <span aria-hidden>⏱</span> 남은 시간 {mmss(remaining)}
-                </span>
-              )}
-            </span>
-            {isExam && (
-              <button type="button" onClick={() => setView("eclass")} className="text-muted underline hover:text-sumi">
-                실제 시험 화면으로
-              </button>
-            )}
-            {/* 제출·다음 버튼(하단)과 떨어진 상단에 두고, 누르면 한 번 더 묻는다 */}
-            {!isExam && gradedCount > 0 && !(result && last) && (
-              <button type="button" onClick={() => setConfirmingStop(true)} className="text-muted underline hover:text-sumi">
-                여기까지 풀고 결과 보기
-              </button>
-            )}
-          </span>
-        </div>
-        {confirmingStop && (
-          <div role="alertdialog" aria-labelledby="stop-title" className="flex flex-col gap-3 rounded-lg border border-sumi bg-paper-deep p-4">
-            <p id="stop-title" className="text-sm font-semibold">
-              여기까지 풀고 결과를 볼까요? 채점한 문제 {gradedCount}/{total}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              <button type="button" onClick={() => finish(session)} className={primary}>
-                결과 보기
-              </button>
-              <button type="button" onClick={() => setConfirmingStop(false)} className={btn}>
-                계속 풀기
-              </button>
-            </div>
-          </div>
-        )}
-        <div className="flex items-center gap-3">
-          <span className="shrink-0 text-sm font-semibold">
-            {session.index + 1} / {total}
-          </span>
-          <div
-            role="progressbar"
-            aria-label="진행"
-            aria-valuemin={1}
-            aria-valuemax={total}
-            aria-valuenow={session.index + 1}
-            className="h-1.5 flex-1 overflow-hidden rounded-full bg-paper-deep"
-          >
-            <div className="h-full bg-sumi transition-all" style={{ width: `${((session.index + 1) / total) * 100}%` }} />
-          </div>
-          {q && <BookmarkButton subjectId={item.subject} questionId={q.id} />}
-        </div>
-        <details className="text-xs">
-          <summary className="cursor-pointer text-muted">문제 번호로 이동</summary>
-          <nav aria-label="문제 번호" className="mt-2 flex flex-wrap gap-1.5">
-            {session.items.map((it, i) => {
-              const r = session.results[it.id];
-              const answered = session.answers[it.id] !== undefined;
-              const mark = r ? (r.selfCheck ? "✎" : r.correct ? "✓" : "✗") : answered && isExam ? "•" : "";
-              const label = r ? (r.selfCheck ? "풀었음(자기 채점)" : r.correct ? "정답" : "오답") : answered && isExam ? "답함" : "안 풂";
-              return (
-                <button
-                  key={it.id}
-                  type="button"
-                  onClick={() => goTo(i)}
-                  aria-current={i === session.index ? "step" : undefined}
-                  aria-label={`${i + 1}번 (${label})`}
-                  className={
-                    "min-w-9 rounded border px-1.5 py-1 " +
-                    (i === session.index ? "border-sumi font-semibold" : "border-line text-muted hover:text-sumi")
-                  }
-                >
-                  {i + 1}
-                  {mark && <span aria-hidden> {mark}</span>}
-                </button>
-              );
-            })}
-          </nav>
-        </details>
-      </div>
-
-      {q && answer !== undefined ? (
-        <QuestionRenderer key={q.id} question={q} answer={answer} onAnswer={setAnswer} result={result} />
-      ) : (
-        <p className="rounded-lg border border-line bg-paper-deep p-4 text-sm text-muted">
-          이 문제를 불러올 수 없습니다(데이터가 바뀌었을 수 있음). 다음 문제로 넘어가세요.
-        </p>
-      )}
-
-      {!isExam && result && q?.generator && (
-        <div className="flex flex-wrap items-center gap-2 rounded-lg border border-dashed border-line p-3">
-          <button type="button" onClick={addSimilar} disabled={generating} className={btn + " font-medium hover:border-sumi"}>
-            {generating ? "만드는 중…" : "↻ 비슷한 문제 새로 생성"}
-          </button>
-          <span className="text-xs text-muted">같은 유형을 숫자만 바꿔 새로 만들어 바로 다음에 넣습니다(정답은 시뮬레이터 계산, 기록은 따로).</span>
-        </div>
-      )}
-
-      {/* 하단: 이동·제출 */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
-        <button type="button" onClick={() => go(-1)} disabled={session.index === 0} className={btn}>
-          ← 이전
-        </button>
-        <div className="flex flex-wrap justify-end gap-2">
-          {isExam ? (
-            <>
-              {!last && (
-                <button type="button" onClick={() => go(1)} className={btn}>
-                  다음 →
-                </button>
-              )}
-              <button type="button" onClick={() => setConfirming(true)} className={primary}>
-                답안 제출(채점)
-              </button>
-            </>
-          ) : result ? (
-            last ? (
-              <button type="button" onClick={() => finish(session)} className={primary}>
-                결과 보기
-              </button>
-            ) : (
-              <button type="button" onClick={() => go(1)} className={primary}>
-                다음 →
-              </button>
-            )
-          ) : (
-            <>
-              <button type="button" onClick={submit} disabled={!complete} className={primary}>
-                제출 (Enter)
-              </button>
-              {!last && (
-                <button type="button" onClick={() => go(1)} className={btn}>
-                  건너뛰기 →
-                </button>
-              )}
-            </>
-          )}
-        </div>
-      </div>
-
-      {confirming && (
-        <div role="alertdialog" aria-labelledby="confirm-title" className="flex flex-col gap-3 rounded-lg border border-sumi bg-paper-deep p-4">
-          <p id="confirm-title" className="text-sm font-semibold">
-            답안을 제출할까요? 답한 문제 {answeredCount}/{total}
-            {answeredCount < total && ` — 답하지 않은 ${total - answeredCount}문제는 미응답(오답)으로 처리됩니다`}
-          </p>
-          <div className="flex gap-2">
-            <button type="button" onClick={gradeAll} className={primary}>
-              제출하고 채점
-            </button>
-            <button type="button" onClick={() => setConfirming(false)} className={btn}>
-              계속 풀기
-            </button>
-          </div>
-        </div>
-      )}
-
-      <p className="text-xs text-muted">
-        단축키: 1~5 보기 선택 · Enter {isExam ? "다음" : "제출/다음"} · ←/→ 이전/다음 (입력칸에 커서가 있을 때는 꺼짐)
-      </p>
-    </div>
+    <PracticeView
+      session={session}
+      q={q}
+      answer={answer}
+      result={result}
+      complete={complete}
+      answeredCount={answeredCount}
+      gradedCount={gradedCount}
+      remaining={remaining}
+      generating={generating}
+      setAnswer={setAnswer}
+      submit={submit}
+      go={go}
+      goTo={goTo}
+      finish={() => finish(session)}
+      submitAll={gradeAll}
+      addSimilar={addSimilar}
+      onSwitchView={() => setView("eclass")}
+    />
   );
 }

@@ -23,7 +23,7 @@ export interface SessionItem {
   gen?: GeneratorRef;
 }
 
-/** 시험 모드 화면: "eclass" = 학교 e-Class 시험 화면을 본뜬 화면(components/quiz/ExamScreen.tsx), "app" = 기본 풀이 화면 */
+/** 풀이 화면: "eclass" = 시험 화면(학교 e-Class를 본뜸, components/quiz/ExamScreen.tsx), "app" = 기본 화면(components/practice/PracticeView.tsx) */
 export type ExamView = "app" | "eclass";
 
 export interface QuizSession {
@@ -45,7 +45,7 @@ export interface QuizSession {
   index: number;
   /** 문제를 고른 분류(퀴즈 주소의 source). 힌트관련 세트면 끝까지 푼 회차 점수를 남긴다(lib/quiz/setScores.ts) */
   source?: SourceFilter;
-  /** 시험 모드 화면(없으면 기본 화면). 푸는 중에 바꿀 수 있다 */
+  /** 풀이 화면(없으면 기본 화면). 채점 방식과 상관없이 푸는 중에 바꿀 수 있다 */
   view?: ExamView;
   /** 시험 모드: 한 번에 채점을 마쳤는가 / 즉시 채점: 결과 화면으로 넘어갔는가 */
   finished: boolean;
@@ -175,6 +175,9 @@ export function gradeInSession(session: QuizSession, q: Question, answer: AnyAns
 export function answerForReview(session: QuizSession, q: Question): AnyAnswer {
   return session.answers[q.id] ?? (coreFor(q).emptyAnswer(q as never) as AnyAnswer);
 }
+
+/** 한 번에 채점할 때 채점할 문제: 즉시 채점으로 이미 확인한 문제는 뺀다(다시 기록하지 않는다) */
+export const itemsToGrade = (session: QuizSession) => session.items.filter((it) => !session.results[it.id]);
 
 export function summarizeSession(session: QuizSession, questions: ReadonlyMap<string, Question>): SessionSummary {
   const all = session.items.map((it) => {

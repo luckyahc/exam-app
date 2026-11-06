@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "결과" };
 export default function ResultPage() {
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-6 sm:px-6">
-      {/* 제목은 ResultView가 그린다 — 연습 모드 결과는 점수가 제목 자리에 온다(시험 모드 결과는 이전과 같은 "결과" 제목) */}
+      {/* 제목은 ResultView·PracticeResult가 그린다 — 결과가 있으면 점수가 제목 자리에 온다 */}
       <Suspense
         fallback={
           <>

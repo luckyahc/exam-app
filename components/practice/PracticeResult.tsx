@@ -6,6 +6,7 @@ import { RichText } from "@/components/qtypes/ui";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { List, ListRow } from "@/components/ui/ListRow";
+import { getSubject } from "@/lib/subjects";
 import { Marker } from "@/components/ui/Marker";
 import { coreFor, type Question } from "@/lib/qtypes/registry";
 import {
@@ -29,8 +30,8 @@ function backLabel(href: string) {
 }
 
 /**
- * 연습 모드(즉시 채점) 결과. 맨 위 점수, 주 버튼 "틀린 문제 다시 풀기" 하나, 문제별 정오 목록(누르면 그 문제를 다시 본다).
- * 집계·다시 풀기 세션은 이전 결과 화면과 같은 함수(summarizeSession·newSession)를 쓴다. 시험 모드 결과는 기존 화면(ResultView).
+ * 결과 화면(연습 모드·시험 모드 공통). 맨 위 점수, 주 버튼 "틀린 문제 다시 풀기" 하나, 문제별 정오 목록(누르면 그 문제를 다시 본다).
+ * 집계·다시 풀기 세션은 summarizeSession·newSession을 쓴다.
  */
 export function PracticeResult({
   session,
@@ -71,7 +72,10 @@ export function PracticeResult({
   return (
     <div className="flex flex-col gap-8">
       <header className="flex flex-col gap-1 pt-2">
-        <p className="text-sm text-muted">{session.label}</p>
+        <p className="text-sm text-muted">
+          {session.label}
+          {session.mode === "exam" && " · 시험 모드"}
+        </p>
         <h1 className="sr-only">결과</h1>
         <p className="flex items-baseline gap-2">
           <span className="text-sm font-semibold">정답</span>
@@ -90,9 +94,15 @@ export function PracticeResult({
         ) : (
           <p className="text-base font-semibold">모두 맞혔습니다.</p>
         )}
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           <ButtonLink href={session.backHref} variant="secondary">
             {backLabel(session.backHref)}
+          </ButtonLink>
+          <ButtonLink
+            href={`/review?subject=${sum.bySubject.length === 1 ? sum.bySubject[0].key : "all"}`}
+            variant="secondary"
+          >
+            오답노트
           </ButtonLink>
           <ButtonLink href="/" variant="secondary">
             홈으로
@@ -152,12 +162,15 @@ export function PracticeResult({
 
       <details className="group flex flex-col gap-2">
         <summary className="flex min-h-11 cursor-pointer list-none items-center text-sm font-semibold [&::-webkit-details-marker]:hidden">
-          유형·토픽별 정답률
+          {sum.bySubject.length > 1 ? "유형·토픽·과목별 정답률" : "유형·토픽별 정답률"}
         </summary>
         <div className="flex flex-col gap-4 pt-1">
           {[
             { title: "유형", rows: sum.byType, label: typeLabel },
             { title: "토픽", rows: sum.byTopic, label: (k: string) => k },
+            ...(sum.bySubject.length > 1
+              ? [{ title: "과목", rows: sum.bySubject, label: (k: string) => getSubject(k)?.name ?? k }]
+              : []),
           ].map((g) => (
             <List key={g.title} aria-label={`${g.title}별`}>
               {g.rows.map((r) => (

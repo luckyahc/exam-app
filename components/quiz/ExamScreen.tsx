@@ -315,7 +315,11 @@ export function ExamScreen({ session, getQ, remaining, now, answeredCount, onAns
                     {q.type === "multi" && <span>(복수선택 가능)</span>}
                   </div>
                 </div>
-                <ExamInput q={q} a={answer} onAnswer={onAnswer} />
+                {/* 기본 화면에서 이미 확인(채점)한 문제는 답을 바꿔도 채점에 들어가지 않으므로 잠근다 */}
+                {session.results[q.id] && <p className="text-sm text-[#888]">이미 채점한 문제입니다.</p>}
+                <fieldset disabled={!!session.results[q.id]} className="contents">
+                  <ExamInput q={q} a={answer} onAnswer={onAnswer} />
+                </fieldset>
               </div>
             ) : (
               <p className="text-sm">이 문제를 불러올 수 없습니다(데이터가 바뀌었을 수 있음). 다음 문제로 넘어가세요.</p>

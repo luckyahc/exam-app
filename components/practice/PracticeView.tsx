@@ -23,6 +23,7 @@ export interface PracticeViewProps {
   answer: AnyAnswer | undefined;
   result: GradeResult | null;
   complete: boolean;
+  answeredCount: number;
   gradedCount: number;
   remaining: number | null;
   generating: boolean;
@@ -31,11 +32,16 @@ export interface PracticeViewProps {
   go(delta: number): void;
   goTo(index: number): void;
   finish(): void;
+  /** 시험 모드: 답한 문제를 한 번에 채점하고 결과로 */
+  submitAll(): void;
   addSimilar(): void;
+  /** 시험 화면으로 바꾸기(답안은 그대로) */
+  onSwitchView(): void;
 }
 
 /**
- * 연습 모드(즉시 채점) 풀이 화면. 상태·채점·기록은 QuizRunner가 그대로 맡고, 여기는 표시만 한다.
+ * 기본 풀이 화면(연습 모드·시험 모드 공통, 시험 화면은 components/quiz/ExamScreen.tsx). 상태·채점·기록은 QuizRunner가 맡고, 여기는 표시만 한다.
+ * 시험 모드는 문제별 확인 없이 다음으로 넘어가고, 언제든 답안 제출로 한 번에 채점한다.
  * - 위: ← 나가기 · 7 / 20(누르면 번호 이동·여기까지 결과) · 북마크, 얇은 진행바
  * - 아래 고정: 이전 · 확인/다음/결과 보기(주 버튼) · 건너뛰기. 키보드가 올라오면 그 위로 올라간다
  * 기록 저장: 확인을 누를 때마다 recordResult(과목 기록), 답을 바꿀 때마다 세션(답·위치)이 저장된다.
@@ -47,6 +53,8 @@ export function PracticeView(p: PracticeViewProps) {
   const inset = useKeyboardInset();
   const [jumpOpen, setJumpOpen] = useState(false);
   const [exitOpen, setExitOpen] = useState<null | "unsaved" | "storage">(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const isExam = session.mode === "exam";
   const total = session.items.length;
   const index = session.index;
   const last = index === total - 1;
@@ -60,11 +68,16 @@ export function PracticeView(p: PracticeViewProps) {
     JSON.stringify(answer) !== JSON.stringify(coreFor(q).emptyAnswer(q as never));
   const exit = () => {
     if (!storageWritable()) return setExitOpen("storage");
-    if (pending) return setExitOpen("unsaved");
+    // 시험 모드 답안은 세션에 저장되어 이어서 풀 수 있다
+    if (pending && !isExam) return setExitOpen("unsaved");
     router.push(session.backHref);
   };
 
-  const primary = result
+  const primary = isExam
+    ? last
+      ? { label: "답안 제출", onClick: () => setConfirmOpen(true), disabled: false }
+      : { label: "다음", onClick: () => p.go(1), disabled: false }
+    : result
     ? last
       ? { label: "결과 보기", onClick: p.finish, disabled: false }
       : { label: "다음", onClick: () => p.go(1), disabled: false }
@@ -109,11 +122,21 @@ export function PracticeView(p: PracticeViewProps) {
               </span>
             )}
           </button>
-          {q && item ? (
-            <BookmarkIcon subjectId={item.subject} questionId={q.id} />
-          ) : (
-            <span className="size-11" />
-          )}
+          <div className="flex items-center">
+            <button
+              type="button"
+              onClick={p.onSwitchView}
+              title="답안은 그대로 두고 시험 화면으로 바꿉니다"
+              className="inline-flex min-h-11 items-center px-2 text-sm text-muted"
+            >
+              시험 화면
+            </button>
+            {q && item ? (
+              <BookmarkIcon subjectId={item.subject} questionId={q.id} />
+            ) : (
+              <span className="size-11" />
+            )}
+          </div>
         </div>
         <ProgressBar value={index + 1} max={total} label="진행" className="h-1" />
       </div>
@@ -125,7 +148,7 @@ export function PracticeView(p: PracticeViewProps) {
           answer={answer}
           onAnswer={p.setAnswer}
           result={result}
-          onEnter={() => (result ? primary.onClick() : complete && p.submit())}
+          onEnter={() => (isExam || result ? primary.onClick() : complete && p.submit())}
         />
       ) : (
         <p className="text-sm text-muted">이 문제를 불러올 수 없습니다. 다음 문제로 넘어가세요.</p>
@@ -165,11 +188,22 @@ export function PracticeView(p: PracticeViewProps) {
           <Button onClick={primary.onClick} disabled={primary.disabled} className="min-w-0 flex-1">
             {primary.label}
           </Button>
-          {!result && !last && (
-            <Button variant="text" onClick={() => p.go(1)} className="shrink-0 px-2 text-muted">
-              건너뛰기
-            </Button>
-          )}
+          {isExam
+            ? !last && (
+                <Button
+                  variant="text"
+                  onClick={() => setConfirmOpen(true)}
+                  className="shrink-0 px-2 text-muted"
+                >
+                  제출
+                </Button>
+              )
+            : !result &&
+              !last && (
+                <Button variant="text" onClick={() => p.go(1)} className="shrink-0 px-2 text-muted">
+                  건너뛰기
+                </Button>
+              )}
         </div>
       </div>
 
@@ -178,7 +212,18 @@ export function PracticeView(p: PracticeViewProps) {
         onClose={() => setJumpOpen(false)}
         title={session.label}
         footer={
-          gradedCount > 0 && !(result && last) ? (
+          isExam ? (
+            <Button
+              variant="secondary"
+              block
+              onClick={() => {
+                setJumpOpen(false);
+                setConfirmOpen(true);
+              }}
+            >
+              답안 제출 ({p.answeredCount}/{total})
+            </Button>
+          ) : gradedCount > 0 && !(result && last) ? (
             <Button variant="secondary" block onClick={p.finish}>
               여기까지 풀고 결과 보기 ({gradedCount}/{total})
             </Button>
@@ -188,7 +233,16 @@ export function PracticeView(p: PracticeViewProps) {
         <nav aria-label="문제 번호" className="grid grid-cols-6 gap-2 pt-1">
           {session.items.map((it, i) => {
             const r = session.results[it.id];
-            const state = r ? (r.selfCheck ? "풀었음" : r.correct ? "정답" : "오답") : "안 풂";
+            const answered = isExam && session.answers[it.id] !== undefined;
+            const state = r
+              ? r.selfCheck
+                ? "풀었음"
+                : r.correct
+                  ? "정답"
+                  : "오답"
+              : answered
+                ? "답함"
+                : "안 풂";
             return (
               <button
                 key={it.id}
@@ -205,6 +259,7 @@ export function PracticeView(p: PracticeViewProps) {
                 )}
               >
                 {i + 1}
+                {answered && <span aria-hidden>•</span>}
                 {r &&
                   !r.selfCheck &&
                   (r.correct ? (
@@ -224,6 +279,28 @@ export function PracticeView(p: PracticeViewProps) {
             );
           })}
         </nav>
+      </BottomSheet>
+
+      <BottomSheet
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        title="답안을 제출할까요?"
+        footer={
+          <div className="flex flex-col gap-2">
+            <Button block onClick={p.submitAll}>
+              제출하고 채점
+            </Button>
+            <Button variant="secondary" block onClick={() => setConfirmOpen(false)}>
+              계속 풀기
+            </Button>
+          </div>
+        }
+      >
+        <p className="pt-1 text-base">
+          답한 문제 {p.answeredCount}/{total}
+          {p.answeredCount < total &&
+            ` — 답하지 않은 ${total - p.answeredCount}문제는 미응답(오답)으로 처리됩니다.`}
+        </p>
       </BottomSheet>
 
       <BottomSheet

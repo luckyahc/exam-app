@@ -360,7 +360,7 @@ function Ready({
             <>
               <OptionGroup label="화면">
                 <Chip selected={prefs.view === "eclass"} onClick={() => set({ view: "eclass" })}>
-                  실제 시험 화면
+                  시험 화면
                 </Chip>
                 <Chip selected={prefs.view === "app"} onClick={() => set({ view: "app" })}>
                   기본 화면

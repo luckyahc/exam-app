@@ -1,7 +1,6 @@
 "use client";
 
 import { ButtonLink } from "@/components/ui/Button";
-import { BackLink } from "@/components/layout/PageHeader";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getExam } from "@/data/subjects/exams";
@@ -112,11 +111,5 @@ export function QuizEntry() {
         </div>
       </div>
     );
-  return (
-    <>
-      {/* 시험 모드(기본 화면)의 나가는 길 — 머리를 없앴으므로. 연습 모드는 풀이 화면 위 막대에 따로 있다 */}
-      {state.session.mode === "exam" && <BackLink href={state.session.backHref} label="나가기" />}
-      <QuizRunner key={state.session.id} initial={state.session} questions={state.questions} />
-    </>
-  );
+  return <QuizRunner key={state.session.id} initial={state.session} questions={state.questions} />;
 }

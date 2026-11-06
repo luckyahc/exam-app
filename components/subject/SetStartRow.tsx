@@ -84,7 +84,7 @@ export function SetStartRow({
           {mode === "exam" && (
             <Group label="화면">
               <Chip selected={view === "eclass"} onClick={() => setView("eclass")}>
-                실제 시험 화면
+                시험 화면
               </Chip>
               <Chip selected={view === "app"} onClick={() => setView("app")}>
                 기본 화면
