@@ -8,7 +8,7 @@ const ITEMS = [
   { value: "all", label: "전체" },
 ] as const;
 
-/** 진행상황 범위 전환 [기말 | 전체]. 기본 기말, 고른 값은 설정(localStorage)에 저장되어 홈·과목·통계가 함께 따른다 */
+/** 진행상황 범위 전환 [기말 | 전체]. 기본 기말, 고른 값은 설정(localStorage)에 저장되어 홈·통계가 함께 따른다(과목 화면은 시험 드롭다운을 따른다) */
 export function ProgressScopeToggle({ className }: { className?: string }) {
   const { settings } = useAppSettings();
   return (

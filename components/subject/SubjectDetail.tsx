@@ -8,7 +8,6 @@ import { ButtonLink } from "@/components/ui/Button";
 import { List, ListRow } from "@/components/ui/ListRow";
 import { EXAM_MARK, Marker } from "@/components/ui/Marker";
 import { ProgressBar } from "@/components/ui/ProgressBar";
-import { ProgressScopeToggle } from "@/components/ui/ProgressScopeToggle";
 import { SegmentedControl, segmentPanelProps } from "@/components/ui/SegmentedControl";
 import { SelectInput } from "@/components/ui/SelectInput";
 import { CURRENT_EXAM, type ExamId } from "@/data/subjects/exams";
@@ -134,14 +133,8 @@ function DetailView({ subject, exams, exam, view }: Props & { exam: ExamId; view
 
   const solvedOf = (ids: readonly string[]) =>
     rec ? ids.filter((id) => rec.progress[id]).length : 0;
+  // 진행 표시와 이어 풀기는 머리의 시험 드롭다운에서 고른 범위를 따른다
   const solved = solvedOf(ex.ids);
-  // 진행 표시는 시험 드롭다운과 따로 [기말 | 전체]를 따른다(기본 기말). 이어 풀기 버튼은 고른 시험 범위 그대로
-  const scope = settings.progressScope;
-  const progressIds =
-    scope === "all"
-      ? [...new Set(exams.flatMap((e) => e.ids))]
-      : (exams.find((e) => e.id === CURRENT_EXAM)?.ids ?? []);
-  const progressSolved = solvedOf(progressIds);
   const openWrong = rec ? summarize(rec).openWrong : 0;
   const dday = exam === CURRENT_EXAM ? ddayLabel(settings.examDates[subject.id]) : null;
   const cont = continueLink(subject.id, exam, solved, ex.ids.length, settings);
@@ -173,30 +166,27 @@ function DetailView({ subject, exams, exam, view }: Props & { exam: ExamId; view
           <p className="text-sm text-muted">준비 중</p>
         ) : (
           <>
-            <ProgressScopeToggle className="w-32 self-end" />
             <div className="flex min-h-10 items-end justify-between gap-3">
               {/* 기록이 없으면 0/N 대신 "아직 안 풂"(문제 수만 함께) */}
               {!ready ? (
                 <span />
-              ) : progressIds.length === 0 ? (
-                <p className="text-base text-muted">기말 범위 문제 없음</p>
-              ) : progressSolved > 0 ? (
+              ) : solved > 0 ? (
                 <p className="font-mono text-3xl font-bold tabular-nums">
-                  {progressSolved}
-                  <span className="text-lg font-normal text-muted">/{progressIds.length}</span>
+                  {solved}
+                  <span className="text-lg font-normal text-muted">/{ex.ids.length}</span>
                 </p>
               ) : (
                 <p className="text-base">
-                  아직 안 풂 <span className="text-muted">· {progressIds.length}문제</span>
+                  아직 안 풂 <span className="text-muted">· {ex.ids.length}문제</span>
                 </p>
               )}
               {dday && <p className="font-mono text-lg font-bold">{dday}</p>}
             </div>
-            {ready && progressSolved > 0 && (
+            {ready && solved > 0 && (
               <ProgressBar
-                value={progressSolved}
-                max={progressIds.length}
-                label={scope === "all" ? "전체 진행" : "기말 진행"}
+                value={solved}
+                max={ex.ids.length}
+                label={`${ex.shortName} 진행`}
               />
             )}
             <ButtonLink href={cont.href} block className={ready ? undefined : "invisible"}>
